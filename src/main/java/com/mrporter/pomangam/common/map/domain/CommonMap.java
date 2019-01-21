@@ -5,11 +5,12 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 
+@Table(name = "common_map_tbl")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
 @ToString
-public class CommonMapTbl implements Serializable {
+public class CommonMap implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +23,7 @@ public class CommonMapTbl implements Serializable {
     private String value;
 
     @Builder
-    public CommonMapTbl(String key, String value) {
+    public CommonMap(String key, String value) {
         this.key = key;
         this.value = value;
     }

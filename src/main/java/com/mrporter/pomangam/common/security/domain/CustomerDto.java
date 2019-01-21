@@ -3,11 +3,12 @@ package com.mrporter.pomangam.common.security.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 @Data
 @NoArgsConstructor
-public class CustomerTblDto {
+public class CustomerDto implements Serializable {
 
     private Long idx;
 
@@ -40,8 +41,8 @@ public class CustomerTblDto {
     private Integer point; //
 
 
-    public CustomerTbl toEntity() {
-        return CustomerTbl.builder()
+    public Customer toEntity() {
+        return Customer.builder()
                 .delivery_site_idx(delivery_site_idx)
                 .id(id)
                 .pw(pw)

@@ -1,7 +1,7 @@
 package com.mrporter.pomangam.common.security.controller;
 
-import com.mrporter.pomangam.common.security.domain.CustomerTbl;
-import com.mrporter.pomangam.common.security.domain.CustomerTblDto;
+import com.mrporter.pomangam.common.security.domain.Customer;
+import com.mrporter.pomangam.common.security.domain.CustomerDto;
 import com.mrporter.pomangam.common.security.service.CustomerServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,20 +27,20 @@ public class CustomerController {
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 5) Pageable pageable) {
 
         //localhost:8080/customer?page=0&size=10&sort=idx,desc
-        Page<CustomerTbl> pages =  customerService.findAllCustomers(pageable);
-        return new ResponseEntity<Page<CustomerTbl>>(pages, HttpStatus.OK);
+        Page<Customer> pages =  customerService.findAllCustomers(pageable);
+        return new ResponseEntity<Page<Customer>>(pages, HttpStatus.OK);
     }
 
     @PostAuthorize("isAuthenticated() and (( returnObject.id == principal.username ) or hasRole('ROLE_ADMIN'))")
     @GetMapping("/{id}")
-    public CustomerTbl get(@PathVariable String id) {
+    public Customer get(@PathVariable String id) {
         return customerService.findById(id);
     }
 
     @PreAuthorize("isAnonymous() or hasRole('ROLE_ADMIN')")
     @PostMapping
-    public ResponseEntity<?> post(@RequestBody CustomerTblDto dto) {
-        return new ResponseEntity<CustomerTbl>(
+    public ResponseEntity<?> post(@RequestBody CustomerDto dto) {
+        return new ResponseEntity<Customer>(
                 customerService.saveCustomer(dto.toEntity()),
                 HttpStatus.OK);
     }
@@ -55,8 +55,8 @@ public class CustomerController {
     @PutMapping("/{id}")
     public ResponseEntity put(
             @PathVariable String id,
-            @RequestBody CustomerTblDto dto) {
-        return new ResponseEntity<CustomerTbl>(
+            @RequestBody CustomerDto dto) {
+        return new ResponseEntity<Customer>(
                 customerService.updateCustomer(id, dto.toEntity()),
                 HttpStatus.OK);
     }
@@ -65,8 +65,8 @@ public class CustomerController {
     @PatchMapping("/{id}")
     public ResponseEntity patch(
             @PathVariable String id,
-            @RequestBody CustomerTblDto dto) {
-        return new ResponseEntity<CustomerTbl>(
+            @RequestBody CustomerDto dto) {
+        return new ResponseEntity<Customer>(
                 customerService.patchCustomer(id, dto.toEntity()),
                 HttpStatus.OK);
     }

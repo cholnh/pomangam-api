@@ -1,6 +1,6 @@
 package com.mrporter.pomangam.common.security.service;
 
-import com.mrporter.pomangam.common.security.domain.CustomerTbl;
+import com.mrporter.pomangam.common.security.domain.Customer;
 import com.mrporter.pomangam.common.security.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,29 +16,29 @@ public class CustomerServiceImpl implements CustomerService{
     CustomerRepository customerRepository;
 
     @Override
-    public CustomerTbl findById(String id) {
+    public Customer findById(String id) {
         return customerRepository.findById(id);
     }
 
     @Override
-    public List<CustomerTbl> findAllCustomers() {
+    public List<Customer> findAllCustomers() {
         return customerRepository.findAll();
     }
 
     @Override
-    public Page<CustomerTbl> findAllCustomers(Pageable pageable) {
+    public Page<Customer> findAllCustomers(Pageable pageable) {
         return customerRepository.findAll(pageable);
     }
 
     @Override
-    public CustomerTbl saveCustomer(CustomerTbl customer) {
+    public Customer saveCustomer(Customer customer) {
         return customerRepository.save(customer);
     }
 
     @Override
-    public Boolean isCustomerExist(CustomerTbl customer) {
+    public Boolean isCustomerExist(Customer customer) {
         if(customer.getId() != null) {
-            final CustomerTbl existingCustomer = customerRepository.findById(customer.getId());
+            final Customer existingCustomer = customerRepository.findById(customer.getId());
             return existingCustomer == null ? false : true;
         } else {
             return false;
@@ -46,8 +46,8 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
-    public CustomerTbl updateCustomer(String id, CustomerTbl customer) {
-        final CustomerTbl fetchedCustomer = customerRepository.findById(customer.getId());
+    public Customer updateCustomer(String id, Customer customer) {
+        final Customer fetchedCustomer = customerRepository.findById(customer.getId());
         if (fetchedCustomer == null) {
             return null;
         }
@@ -70,8 +70,8 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
-    public CustomerTbl patchCustomer(String id, CustomerTbl customer) {
-        final CustomerTbl fetchedCustomer = customerRepository.findById(customer.getId());
+    public Customer patchCustomer(String id, Customer customer) {
+        final Customer fetchedCustomer = customerRepository.findById(customer.getId());
         if (fetchedCustomer == null) {
             return null;
         }
@@ -124,7 +124,7 @@ public class CustomerServiceImpl implements CustomerService{
 
     @Override
     public Boolean deleteCustomer(String id) {
-        final CustomerTbl fetchedCustomer = customerRepository.findById(id);
+        final Customer fetchedCustomer = customerRepository.findById(id);
         if (fetchedCustomer == null) {
             return false;
         } else {

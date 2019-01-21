@@ -6,10 +6,11 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
 
+@Table(name = "customer_tbl")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 @Entity
-public class CustomerTbl implements Serializable {
+public class Customer implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,20 +45,20 @@ public class CustomerTbl implements Serializable {
     private Integer point;
 
     @Builder
-    public CustomerTbl(Integer delivery_site_idx,
-                       String id,
-                       String pw,
-                       String name,
-                       String nickname,
-                       Integer gender,
-                       Integer year_of_birth,
-                       Integer month_of_birth,
-                       Integer days_of_birth,
-                       String phone_number,
-                       Integer status,
-                       Date register_date,
-                       Date modify_date,
-                       Integer point) {
+    public Customer(Integer delivery_site_idx,
+                    String id,
+                    String pw,
+                    String name,
+                    String nickname,
+                    Integer gender,
+                    Integer year_of_birth,
+                    Integer month_of_birth,
+                    Integer days_of_birth,
+                    String phone_number,
+                    Integer status,
+                    Date register_date,
+                    Date modify_date,
+                    Integer point) {
         this.delivery_site_idx = delivery_site_idx;
         this.id = id;
         this.pw = pw;
