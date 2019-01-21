@@ -37,7 +37,7 @@ public class CustomerTblDto {
 
     private Date modify_date;
 
-    private Integer point;
+    private Integer point; //
 
 
     public CustomerTbl toEntity() {
