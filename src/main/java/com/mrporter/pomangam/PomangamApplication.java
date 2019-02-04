@@ -6,6 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
+import java.util.TimeZone;
+
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class })
 public class PomangamApplication implements CommandLineRunner {
@@ -15,9 +17,14 @@ public class PomangamApplication implements CommandLineRunner {
     }
 
 
+
     @Override
+    /* 구동 시점에 실행되는 코드 */
     public void run(String... args) throws Exception {
-        /* 구동 시점에 실행되는 코드 */
+
+        /* TZ */
+        TimeZone.setDefault(TimeZone.getTimeZone("KST"));
+
     }
 }
 
