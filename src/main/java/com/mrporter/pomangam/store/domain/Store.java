@@ -35,8 +35,10 @@ public class Store implements Serializable {
 
     private Integer parallel_production;
 
+    private Integer maximum_production;
+
     @Builder
-    public Store(Long delivery_site_idx, String name, String location, String main_phone_number, String description, Integer cnt_like, Time minimum_time, Integer parallel_production) {
+    public Store(Long delivery_site_idx, String name, String location, String main_phone_number, String description, Integer cnt_like, Time minimum_time, Integer parallel_production, Integer maximum_production) {
         this.delivery_site_idx = delivery_site_idx;
         this.name = name;
         this.location = location;
@@ -45,5 +47,6 @@ public class Store implements Serializable {
         this.cnt_like = cnt_like;
         this.minimum_time = minimum_time;
         this.parallel_production = parallel_production;
+        this.maximum_production = maximum_production;
     }
 }

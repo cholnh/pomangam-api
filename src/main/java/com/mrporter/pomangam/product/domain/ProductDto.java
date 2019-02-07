@@ -24,13 +24,7 @@ public class ProductDto implements Serializable {
 
     private String category_name;
 
-    private Integer minimum_time;
-
-    private Integer parallel_production;
-
-    private Integer sales_volume;
-
-    private Integer status;
+    private Integer state_active;
 
     private Integer type;
 

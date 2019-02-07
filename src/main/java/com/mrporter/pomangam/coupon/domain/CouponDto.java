@@ -24,6 +24,8 @@ public class CouponDto implements Serializable {
     private Date end_date;
 
     public Coupon toEntity(String name, Long discount_prc, Integer discount_pct, Date begin_date, Date end_date) {
+        return null;
+       /*
         return Coupon.builder()
                 .name(name)
                 .discount_prc(discount_prc)
@@ -31,5 +33,6 @@ public class CouponDto implements Serializable {
                 .begin_date(begin_date)
                 .end_date(end_date)
                 .build();
+                */
     }
 }

@@ -29,6 +29,8 @@ public class StoreDto implements Serializable {
 
     private Integer parallel_production;
 
+    private Integer maximum_production;
+
     public Store toEntity() {
         return null;
     }

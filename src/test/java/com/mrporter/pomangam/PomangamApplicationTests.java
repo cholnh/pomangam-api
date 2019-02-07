@@ -1,7 +1,7 @@
 package com.mrporter.pomangam;
 
-import com.mrporter.pomangam.common.map.dao.CommonMapRepository;
-import com.mrporter.pomangam.common.map.vo.CommonMapTbl;
+import com.mrporter.pomangam.common.map.repository.CommonMapRepository;
+import com.mrporter.pomangam.common.map.domain.CommonMap;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +17,6 @@ public class PomangamApplicationTests {
 
     @Test
     public void contextLoads() {
-        commonMapRepository.save(CommonMapTbl.builder()
-                .idx(1)
-                .key("test_key")
-                .value("test_value")
-                .build());
     }
 
 }

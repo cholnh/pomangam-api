@@ -7,9 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface StoreService {
-    List<Store> getStoresByIdxes(List<Long> idxes);
+    List<Store> getStoresByIdxes(List<Integer> idxes);
 
-    List<StoreJoinOrderTimeDto> getStoresByArrivalTimeAndDetailDeliverySite(Date arrival_date, Long delivery_site_idx, Long detail_delivery_site_idx);
-
-    //List<OrderTime> getOrderTimeByArrivalTime(Long delivery_site_idx, String arrival_time);
+    List<StoreJoinOrderTimeDto> getStoresByArrivalTimeAndDeliverySite(Date arrival_date, Integer delivery_site_idx);
 }

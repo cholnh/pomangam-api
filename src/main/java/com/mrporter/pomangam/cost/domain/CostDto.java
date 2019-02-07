@@ -27,6 +27,8 @@ public class CostDto implements Serializable {
     private Integer c_commission_pct;
 
     public Cost toEntity(Long product_idx, Long promotion_idx, Long unit_cost, Long s_commission_prc, Integer s_commission_pct, Long c_commission_prc, Integer c_commission_pct) {
+        return null;
+        /*
         return Cost.builder()
                 .product_idx(product_idx)
                 .promotion_idx(promotion_idx)
@@ -36,5 +38,6 @@ public class CostDto implements Serializable {
                 .c_commission_pct(c_commission_pct)
                 .c_commission_prc(c_commission_prc)
                 .build();
+                */
     }
 }

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Time;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
@@ -23,13 +24,15 @@ public class OrderDto implements Serializable {
 
     private Integer mode;
 
-    private Integer status;
+    private Integer state_order;
 
     private Integer total;
 
     private Date register_date;
 
-    private Date receive_date;
+    private Date arrival_date_only;
+
+    private Time arrival_time_only;
 
     public Order toEntity() {
         return null;

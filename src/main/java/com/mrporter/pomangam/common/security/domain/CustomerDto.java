@@ -38,10 +38,10 @@ public class CustomerDto implements Serializable {
 
     private Date modify_date;
 
-    private Integer point; //
-
+    private Integer point;
 
     public Customer toEntity() {
+
         return Customer.builder()
                 .delivery_site_idx(delivery_site_idx)
                 .id(id)
@@ -58,5 +58,6 @@ public class CustomerDto implements Serializable {
                 .modify_date(modify_date)
                 .point(point)
                 .build();
+
     }
 }

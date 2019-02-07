@@ -11,9 +11,12 @@ public class CommonMapDto {
     private String value;
 
     public CommonMap toEntity() {
+        return null;
+        /*
         return CommonMap.builder()
                 .key(key)
                 .value(value)
                 .build();
+                */
     }
 }
