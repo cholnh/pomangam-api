@@ -1,7 +1,6 @@
 package com.mrporter.pomangam;
 
-import com.mrporter.pomangam.common.map.repository.CommonMapRepository;
-import com.mrporter.pomangam.common.map.domain.CommonMap;
+import com.mrporter.pomangam.common.map.repository.CommonMapJpaRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class PomangamApplicationTests {
 
     @Autowired
-    CommonMapRepository commonMapRepository;
+    CommonMapJpaRepository commonMapJpaRepository;
 
     @Test
     public void contextLoads() {

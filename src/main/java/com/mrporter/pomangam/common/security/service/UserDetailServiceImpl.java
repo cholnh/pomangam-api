@@ -1,7 +1,7 @@
 package com.mrporter.pomangam.common.security.service;
 
-import com.mrporter.pomangam.common.security.repository.CustomerRepository;
-import com.mrporter.pomangam.common.security.domain.Customer;
+import com.mrporter.pomangam.orderEntry.customer.repository.CustomerJpaRepository;
+import com.mrporter.pomangam.orderEntry.customer.domain.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -14,11 +14,11 @@ import org.springframework.stereotype.Service;
 public class UserDetailServiceImpl implements UserDetailsService {
 
     @Autowired
-    CustomerRepository customerRepository;
+    CustomerJpaRepository customerJpaRepository;
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        Customer customer = customerRepository.findById(id);
+        Customer customer = customerJpaRepository.findById(id);
         if(customer == null) {
             throw new UsernameNotFoundException(id);
         }

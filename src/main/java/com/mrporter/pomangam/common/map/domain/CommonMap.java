@@ -14,7 +14,7 @@ public class CommonMap implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idx;
+    private Integer idx;
 
     @Column(name = "\"key\"")
     private String key;

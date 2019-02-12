@@ -1,0 +1,74 @@
+package com.mrporter.pomangam.orderEntry.customer.domain;
+
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
+import java.sql.Timestamp;
+
+@Table(name = "customer_tbl")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Data
+@Entity
+public class Customer implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idx;
+
+    private Integer delivery_site_idx;
+
+    @NotBlank
+    private String id;
+
+    @NotBlank
+    private String pw;
+
+    @NotBlank
+    private String name;
+
+    private String nickname;
+
+    private Byte gender;
+
+    private Short year_of_birth;
+
+    private Byte month_of_birth;
+
+    private Byte days_of_birth;
+
+    private String phone_number;
+
+    @NotBlank
+    private Byte state_active;
+
+    @NotBlank
+    private Timestamp register_date;
+
+    private Timestamp modify_date;
+
+    @NotBlank
+    private Integer point;
+
+    @Builder
+    public Customer(Integer delivery_site_idx, String id, String pw, String name, String nickname, Byte gender, Short year_of_birth, Byte month_of_birth, Byte days_of_birth, String phone_number, Byte state_active, Timestamp register_date, Timestamp modify_date, Integer point) {
+        this.delivery_site_idx = delivery_site_idx;
+        this.id = id;
+        this.pw = pw;
+        this.name = name;
+        this.nickname = nickname;
+        this.gender = gender;
+        this.year_of_birth = year_of_birth;
+        this.month_of_birth = month_of_birth;
+        this.days_of_birth = days_of_birth;
+        this.phone_number = phone_number;
+        this.state_active = state_active;
+        this.register_date = register_date;
+        this.modify_date = modify_date;
+        this.point = point;
+    }
+}

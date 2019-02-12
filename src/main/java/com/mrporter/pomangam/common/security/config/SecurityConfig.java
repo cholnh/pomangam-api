@@ -1,6 +1,6 @@
 package com.mrporter.pomangam.common.security.config;
 
-import com.mrporter.pomangam.common.security.repository.CustomerRepository;
+import com.mrporter.pomangam.orderEntry.customer.repository.CustomerJpaRepository;
 import com.mrporter.pomangam.common.security.service.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private CustomerJpaRepository customerJpaRepository;
 
     @Autowired
     private UserDetailServiceImpl userDetailsService;

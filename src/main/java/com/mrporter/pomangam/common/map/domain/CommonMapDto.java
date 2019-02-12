@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CommonMapDto {
-    private Long idx;
+    private Integer idx;
     private String key;
     private String value;
 
