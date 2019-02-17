@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.feedbackHistory.replyForCommentStore.domain;
+package com.mrporter.pomangam.feedbackHistory.commentAll.domain;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -9,19 +9,25 @@ import java.sql.Timestamp;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
-public class ReplyForCommentStoreDto implements Serializable {
+public class CommentAllDto implements Serializable {
 
     private Integer idx;
 
-    private Integer comment_store_idx;
+    private Integer store_idx;
 
     private Integer customer_idx;
-
-    private Integer owner_idx;
 
     private Timestamp register_date;
 
     private Timestamp modify_date;
+
+    private Byte cnt_star;
+
+    private Integer cnt_like;
+
+    private Integer cnt_unlike;
+
+    private Integer cnt_view;
 
     private String contents;
 
@@ -29,7 +35,7 @@ public class ReplyForCommentStoreDto implements Serializable {
 
     private Byte state_anonymous;
 
-    public ReplyForCommentStore toEntity() {
+    public CommentAll toEntity() {
         return null;
     }
 }

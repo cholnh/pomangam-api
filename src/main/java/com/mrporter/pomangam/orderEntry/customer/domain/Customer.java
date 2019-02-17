@@ -43,15 +43,12 @@ public class Customer implements Serializable {
 
     private String phone_number;
 
-    @NotBlank
     private Byte state_active;
 
-    @NotBlank
     private Timestamp register_date;
 
     private Timestamp modify_date;
 
-    @NotBlank
     private Integer point;
 
     @Builder

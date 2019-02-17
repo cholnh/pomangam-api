@@ -15,7 +15,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public int getSalesVolumeByArrivalDateAndTimeAndStoreIdx(String arrival_date, String arrival_time, Integer store_idx) {
         String sql = "SELECT SUM(oit.quantity) " +
-                "FROM order_tbl odr, order_item_tbl oit " +
+                "FROM order_tbl odr, item_for_order_tbl oit " +
                 "WHERE odr.arrival_date_only = ? " +
                 "AND oit.store_idx = ? " +
                 "AND odr.arrival_time_only = ? " +

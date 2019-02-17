@@ -22,7 +22,7 @@ public class OrderDto implements Serializable {
 
     private Integer delivery_site_idx;
 
-    private Byte mode;
+    private Byte type_payment;
 
     private Byte state_order;
 

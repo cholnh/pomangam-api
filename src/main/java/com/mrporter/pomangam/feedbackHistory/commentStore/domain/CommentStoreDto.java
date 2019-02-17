@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
@@ -17,21 +17,19 @@ public class CommentStoreDto implements Serializable {
 
     private Integer customer_idx;
 
-    private Date register_date;
-
-    private Date modify_date;
-
     private Byte cnt_star;
 
     private Integer cnt_like;
 
-    private Integer cnt_unlike;
-
     private String contents;
 
-    private String title;
+    private Timestamp register_date;
+
+    private Timestamp modify_date;
 
     private Byte state_active;
+
+    private Byte state_anonymous;
 
     public CommentStore toEntity() {
         return null;

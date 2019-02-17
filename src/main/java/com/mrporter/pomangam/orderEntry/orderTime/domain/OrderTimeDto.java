@@ -17,17 +17,15 @@ public class OrderTimeDto implements Serializable {
 
     private Integer store_idx;
 
-    private Short offset;
-
     private Byte state_pause;
 
-    private Time start_time;
-
-    private Time end_time;
+    private Time order_deadline;
 
     private Time arrival_time;
 
     private Byte arrival_tomorrow;
+
+    private Short sequence;
 
     public OrderTime toEntity() {
         return null;

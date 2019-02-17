@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Table(name = "order_item_tbl")
+@Table(name = "item_for_order_tbl")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 @Entity
@@ -20,7 +20,7 @@ public class OrderItem implements Serializable {
 
     private Integer order_idx;
 
-    private Integer store_idx;;
+    private Integer store_idx;
 
     private Integer product_idx;
 
