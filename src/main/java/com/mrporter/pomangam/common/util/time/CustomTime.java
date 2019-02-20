@@ -30,8 +30,18 @@ public class CustomTime {
         return minutes;
     }
 
-    public static int isToday(ZonedDateTime date) {
+    public static boolean isToday(ZonedDateTime date) {
         LocalDate today = LocalDate.now(date.getZone());
+        return today.compareTo(date.toLocalDate()) == 0;
+    }
+
+    public static boolean isToday(java.sql.Date date) {
+        LocalDate today = LocalDate.now();
+        return today.compareTo(date.toLocalDate()) == 0;
+    }
+
+    public static int compareToday(java.sql.Date date) {
+        LocalDate today = LocalDate.now();
         return today.compareTo(date.toLocalDate());
     }
 

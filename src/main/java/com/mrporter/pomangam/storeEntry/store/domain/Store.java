@@ -8,8 +8,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Time;
+import java.sql.Timestamp;
 
-@Table(name = "ordertime_for_store_tbl")
+@Table(name = "store_tbl")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 @Entity
@@ -35,8 +36,12 @@ public class Store implements Serializable {
 
     private Integer maximum_production;
 
+    private Timestamp register_date;
+
+    private Timestamp modify_date;
+
     @Builder
-    public Store(String name, String location, String main_phone_number, String description, Integer cnt_like, Time minimum_time, Short parallel_production, Integer maximum_production) {
+    public Store(String name, String location, String main_phone_number, String description, Integer cnt_like, Time minimum_time, Short parallel_production, Integer maximum_production, Timestamp register_date, Timestamp modify_date) {
         this.name = name;
         this.location = location;
         this.main_phone_number = main_phone_number;
@@ -45,5 +50,7 @@ public class Store implements Serializable {
         this.minimum_time = minimum_time;
         this.parallel_production = parallel_production;
         this.maximum_production = maximum_production;
+        this.register_date = register_date;
+        this.modify_date = modify_date;
     }
 }

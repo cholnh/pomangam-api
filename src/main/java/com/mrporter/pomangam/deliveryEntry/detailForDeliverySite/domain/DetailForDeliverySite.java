@@ -19,7 +19,8 @@ public class DetailForDeliverySite implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idx;
 
-    private Integer delivery_site_idx;
+    @Column(name = "delivery_site_idx")
+    private Integer deliverySiteIdx;
 
     private String name;
 
@@ -27,14 +28,15 @@ public class DetailForDeliverySite implements Serializable {
 
     private Integer sequence;
 
-    private Time offset_arrival_time;
+    @Column(name = "offset_arrival_time")
+    private Time offsetArrivalTime;
 
     @Builder
-    public DetailForDeliverySite(Integer delivery_site_idx, String name, String location, Integer sequence, Time offset_arrival_time) {
-        this.delivery_site_idx = delivery_site_idx;
+    public DetailForDeliverySite(Integer deliverySiteIdx, String name, String location, Integer sequence, Time offsetArrivalTime) {
+        this.deliverySiteIdx = deliverySiteIdx;
         this.name = name;
         this.location = location;
         this.sequence = sequence;
-        this.offset_arrival_time = offset_arrival_time;
+        this.offsetArrivalTime = offsetArrivalTime;
     }
 }

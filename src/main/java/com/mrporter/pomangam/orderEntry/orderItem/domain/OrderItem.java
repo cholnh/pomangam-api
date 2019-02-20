@@ -26,17 +26,17 @@ public class OrderItem implements Serializable {
 
     private Integer quantity;
 
-    private Integer unit_total;
-
     private String requirement;
 
+    private Integer parent_item_idx;
+
     @Builder
-    public OrderItem(Integer order_idx, Integer store_idx, Integer product_idx, Integer quantity, Integer unit_total, String requirement) {
+    public OrderItem(Integer order_idx, Integer store_idx, Integer product_idx, Integer quantity, String requirement, Integer parent_item_idx) {
         this.order_idx = order_idx;
         this.store_idx = store_idx;
         this.product_idx = product_idx;
         this.quantity = quantity;
-        this.unit_total = unit_total;
         this.requirement = requirement;
+        this.parent_item_idx = parent_item_idx;
     }
 }

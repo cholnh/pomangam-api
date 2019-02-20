@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
@@ -21,22 +20,17 @@ public class Order implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idx;
 
-    @NotBlank
     private Integer box_no;
 
-    private Integer customer_idx;;
+    private Integer customer_idx;
 
     private Integer employee_idx;
 
     private Integer delivery_site_idx;
 
-    @NotBlank
     private Byte type_payment;
 
     private Byte state_order;
-
-    @NotBlank
-    private Integer total;
 
     private Date register_date;
 
@@ -45,14 +39,13 @@ public class Order implements Serializable {
     private Time arrival_time_only;
 
     @Builder
-    public Order(Integer box_no, Integer customer_idx, Integer employee_idx, Integer delivery_site_idx, Byte type_payment, Byte state_order, Integer total, Date register_date, Date arrival_date_only, Time arrival_time_only) {
+    public Order(Integer box_no, Integer customer_idx, Integer employee_idx, Integer delivery_site_idx, Byte type_payment, Byte state_order, Date register_date, Date arrival_date_only, Time arrival_time_only) {
         this.box_no = box_no;
         this.customer_idx = customer_idx;
         this.employee_idx = employee_idx;
         this.delivery_site_idx = delivery_site_idx;
         this.type_payment = type_payment;
         this.state_order = state_order;
-        this.total = total;
         this.register_date = register_date;
         this.arrival_date_only = arrival_date_only;
         this.arrival_time_only = arrival_time_only;

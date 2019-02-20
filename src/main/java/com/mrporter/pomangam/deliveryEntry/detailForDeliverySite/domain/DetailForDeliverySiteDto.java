@@ -13,7 +13,7 @@ public class DetailForDeliverySiteDto implements Serializable {
 
     private Integer idx;
 
-    private Integer delivery_site_idx;
+    private Integer deliverySiteIdx;
 
     private String name;
 
@@ -21,7 +21,16 @@ public class DetailForDeliverySiteDto implements Serializable {
 
     private Integer sequence;
 
-    private Time offset_arrival_time;
+    private Time offsetArrivalTime;
+
+    public DetailForDeliverySiteDto(Integer idx, Integer deliverySiteIdx, String name, String location, Integer sequence, Time offsetArrivalTime) {
+        this.idx = idx;
+        this.deliverySiteIdx = deliverySiteIdx;
+        this.name = name;
+        this.location = location;
+        this.sequence = sequence;
+        this.offsetArrivalTime = offsetArrivalTime;
+    }
 
     public DetailForDeliverySite toEntity() {
         return null;

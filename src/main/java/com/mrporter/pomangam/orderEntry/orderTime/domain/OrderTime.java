@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.sql.Time;
 
@@ -20,30 +19,34 @@ public class OrderTime implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idx;
 
-    private Integer delivery_site_idx;
+    @Column(name = "delivery_site_idx")
+    private Integer deliverySiteIdx;
 
-    private Integer store_idx;
+    @Column(name = "store_idx")
+    private Integer storeIdx;
 
-    private Byte state_pause;
+    @Column(name = "state_pause")
+    private Byte statePause;
 
-    @NotBlank
-    private Time order_deadline;
+    @Column(name = "order_deadline")
+    private Time orderDeadline;
 
-    @NotBlank
-    private Time arrival_time;
+    @Column(name = "arrival_time")
+    private Time arrivalTime;
 
-    private Byte arrival_tomorrow;
+    @Column(name = "arrival_tomorrow")
+    private Byte arrivalTomorrow;
 
     private Short sequence;
 
     @Builder
-    public OrderTime(Integer delivery_site_idx, Integer store_idx, Byte state_pause, Time order_deadline, Time arrival_time, Byte arrival_tomorrow, Short sequence) {
-        this.delivery_site_idx = delivery_site_idx;
-        this.store_idx = store_idx;
-        this.state_pause = state_pause;
-        this.order_deadline = order_deadline;
-        this.arrival_time = arrival_time;
-        this.arrival_tomorrow = arrival_tomorrow;
+    public OrderTime(Integer deliverySiteIdx, Integer storeIdx, Byte statePause, Time orderDeadline, Time arrivalTime, Byte arrivalTomorrow, Short sequence) {
+        this.deliverySiteIdx = deliverySiteIdx;
+        this.storeIdx = storeIdx;
+        this.statePause = statePause;
+        this.orderDeadline = orderDeadline;
+        this.arrivalTime = arrivalTime;
+        this.arrivalTomorrow = arrivalTomorrow;
         this.sequence = sequence;
     }
 }

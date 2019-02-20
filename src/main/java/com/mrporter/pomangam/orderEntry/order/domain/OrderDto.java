@@ -16,7 +16,7 @@ public class OrderDto implements Serializable {
 
     private Integer box_no;
 
-    private Integer customer_idx;;
+    private Integer customer_idx;
 
     private Integer employee_idx;
 
@@ -25,8 +25,6 @@ public class OrderDto implements Serializable {
     private Byte type_payment;
 
     private Byte state_order;
-
-    private Integer total;
 
     private Date register_date;
 

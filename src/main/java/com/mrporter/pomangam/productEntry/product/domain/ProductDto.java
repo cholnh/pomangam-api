@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
@@ -28,9 +29,13 @@ public class ProductDto implements Serializable {
 
     private Byte type;
 
-    private Integer sequence;
+    private Integer cnt_like;
 
-    private Integer like_count;
+    private Timestamp register_date;
+
+    private Timestamp modify_date;
+
+    private Integer sequence;
 
     public Product toEntity() {
         return null;

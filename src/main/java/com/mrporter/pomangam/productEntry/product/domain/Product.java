@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 @Table(name = "product_tbl")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,12 +35,16 @@ public class Product implements Serializable {
 
     private Byte type;
 
+    private Integer cnt_like;
+
+    private Timestamp register_date;
+
+    private Timestamp modify_date;
+
     private Integer sequence;
 
-    private Integer like_count;
-
     @Builder
-    public Product(Integer store_idx, String name, String description, String sub_description, Integer category_id, String category_name, Byte state_active, Byte type, Integer sequence, Integer like_count) {
+    public Product(Integer store_idx, String name, String description, String sub_description, Integer category_id, String category_name, Byte state_active, Byte type, Integer cnt_like, Timestamp register_date, Timestamp modify_date, Integer sequence) {
         this.store_idx = store_idx;
         this.name = name;
         this.description = description;
@@ -48,7 +53,9 @@ public class Product implements Serializable {
         this.category_name = category_name;
         this.state_active = state_active;
         this.type = type;
+        this.cnt_like = cnt_like;
+        this.register_date = register_date;
+        this.modify_date = modify_date;
         this.sequence = sequence;
-        this.like_count = like_count;
     }
 }

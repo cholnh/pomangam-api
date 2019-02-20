@@ -20,9 +20,9 @@ public class OrderItemDto implements Serializable {
 
     private Integer quantity;
 
-    private Integer unit_total;
-
     private String requirement;
+
+    private Integer parent_item_idx;
 
     public OrderItem toEntity() {
         return null;

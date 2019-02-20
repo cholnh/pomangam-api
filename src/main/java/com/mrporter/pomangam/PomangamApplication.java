@@ -1,14 +1,17 @@
 package com.mrporter.pomangam;
 
+import com.mrporter.pomangam.common.file.config.FileStorageProperties;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 import javax.annotation.PostConstruct;
 import java.util.TimeZone;
 
+@EnableConfigurationProperties({FileStorageProperties.class})
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class })
 public class PomangamApplication implements CommandLineRunner {

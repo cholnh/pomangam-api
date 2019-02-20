@@ -32,7 +32,7 @@ public class InquiryResultDto implements Serializable {
     private Integer maximum_production;
 
     /* ScheduleForStore */
-    private Time end_time;
+    private Time order_deadline;
 
     private Byte state_pause;
 
@@ -50,7 +50,7 @@ public class InquiryResultDto implements Serializable {
                             Time minimum_time,
                             Short parallel_production,
                             Integer maximum_production,
-                            Time end_time,
+                            Time order_deadline,
                             Byte state_pause) {
         this.idx = idx;
         this.name = name;
@@ -61,7 +61,7 @@ public class InquiryResultDto implements Serializable {
         this.minimum_time = minimum_time;
         this.parallel_production = parallel_production;
         this.maximum_production = maximum_production;
-        this.end_time = end_time;
+        this.order_deadline = order_deadline;
         this.state_pause = state_pause;
     }
 }
