@@ -1,7 +1,8 @@
 package com.mrporter.pomangam.view.main.domain;
 
 import com.mrporter.pomangam.advertiseEntry.advertiseForMain.domain.AdvertiseForMainDto;
-import com.mrporter.pomangam.advertiseEntry.imageForMain.domain.ImageForMainDto;
+import com.mrporter.pomangam.advertiseEntry.advertiseForPopup.domain.AdvertiseForPopupDto;
+import com.mrporter.pomangam.advertiseEntry.cmtAdvertiseForMain.domain.cmtAdvertiseForMainWithCommentAllDto;
 import com.mrporter.pomangam.advertiseEntry.subAdvertiseForMain.domain.SubAdvertiseForMainDto;
 import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.domain.DetailForDeliverySiteDto;
 import com.mrporter.pomangam.orderEntry.orderTime.domain.OrderTimeDto;
@@ -15,7 +16,9 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class MainViewDto implements Serializable {
-    private List<AdvertiseForMainDto> advertiseForMainList;
+    private List<AdvertiseForPopupDto> advertiseForPopupDtoList;
+
+    private List<AdvertiseForMainDto> advertiseForMainDtoList;
 
     private List<DetailForDeliverySiteDto> detailSiteDtoList;
 
@@ -23,8 +26,7 @@ public class MainViewDto implements Serializable {
 
     private List<OrderTimeDto> orderTimeDtoList;
 
-    private List<ImageForMainDto> imageForMainDtoList;
+    private List<cmtAdvertiseForMainWithCommentAllDto> cmtAdvertiseForMainWithCommentAllDtoList;
 
     private List<SubAdvertiseForMainDto> subAdvertiseForMainDtoList;
-
 }

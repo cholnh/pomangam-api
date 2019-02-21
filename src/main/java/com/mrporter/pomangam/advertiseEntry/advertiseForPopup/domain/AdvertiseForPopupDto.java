@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.advertiseEntry.imageForMain.domain;
+package com.mrporter.pomangam.advertiseEntry.advertiseForPopup.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @NoArgsConstructor
 @Data
-public class ImageForMainDto implements Serializable {
+public class AdvertiseForPopupDto implements Serializable {
 
     private Integer idx;
 
@@ -21,7 +21,7 @@ public class ImageForMainDto implements Serializable {
 
     private Integer sequence;
 
-    public ImageForMainDto(Integer idx, String imgpath, Byte next_step_type, String next_step_location, Byte state_active, Integer sequence) {
+    public AdvertiseForPopupDto(Integer idx, String imgpath, Byte next_step_type, String next_step_location, Byte state_active, Integer sequence) {
         this.idx = idx;
         this.imgpath = imgpath;
         this.next_step_type = next_step_type;
@@ -30,7 +30,7 @@ public class ImageForMainDto implements Serializable {
         this.sequence = sequence;
     }
 
-    public ImageForMain toEntity() {
+    public AdvertiseForPopup toEntity() {
         return null;
     }
 }

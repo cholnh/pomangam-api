@@ -1,7 +1,8 @@
 package com.mrporter.pomangam.view.main.service;
 
 import com.mrporter.pomangam.advertiseEntry.advertiseForMain.repository.AdvertiseForMainRepositoryImpl;
-import com.mrporter.pomangam.advertiseEntry.imageForMain.repository.ImageForMainRepositoryImpl;
+import com.mrporter.pomangam.advertiseEntry.advertiseForPopup.repository.AdvertiseForPopupRepositoryImpl;
+import com.mrporter.pomangam.advertiseEntry.cmtAdvertiseForMain.repository.CmtAdvertiseForMainRepositoryImpl;
 import com.mrporter.pomangam.advertiseEntry.subAdvertiseForMain.repository.SubAdvertiseForMainRepositoryImpl;
 import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.repository.DetailForDeliverySiteRepositoryImpl;
 import com.mrporter.pomangam.orderEntry.orderTime.domain.OrderTimeDto;
@@ -20,18 +21,20 @@ import java.util.List;
 @AllArgsConstructor
 public class MainServiceImpl implements MainService {
 
+    AdvertiseForPopupRepositoryImpl advertiseForPopupRepository;
     AdvertiseForMainRepositoryImpl advertiseForMainRepository;
     DetailForDeliverySiteRepositoryImpl detailForDeliverySiteRepository;
     OrderTimeRepositoryImpl orderTimeRepository;
-    ImageForMainRepositoryImpl imageForMainRepository;
+    CmtAdvertiseForMainRepositoryImpl cmtAdvertiseForMainRepository;
     SubAdvertiseForMainRepositoryImpl subAdvertiseForMainRepository;
 
     @Override
     public MainViewDto getMainDto(Integer delivery_site_idx) {
         MainViewDto dto = new MainViewDto();
-        dto.setAdvertiseForMainList(advertiseForMainRepository.getAdvertiseMainsByDeliverySiteIdx(delivery_site_idx));
+        dto.setAdvertiseForPopupDtoList(advertiseForPopupRepository.getAdvertisePopupsByDeliverySiteIdx(delivery_site_idx));
+        dto.setAdvertiseForMainDtoList(advertiseForMainRepository.getAdvertiseMainsByDeliverySiteIdx(delivery_site_idx));
         dto.setDetailSiteDtoList(detailForDeliverySiteRepository.getDetailSitesByDeliverySiteIdxOrderBySequence(delivery_site_idx));
-        dto.setImageForMainDtoList(imageForMainRepository.getImagesByDeliverySiteIdx(delivery_site_idx));
+        dto.setCmtAdvertiseForMainWithCommentAllDtoList(cmtAdvertiseForMainRepository.getCmtAdvertiseMainsByDeliverySiteIdx(delivery_site_idx));
         dto.setSubAdvertiseForMainDtoList(subAdvertiseForMainRepository.getSubAdvertiseMainsByDeliverySiteIdx(delivery_site_idx));
 
         List<OrderTimeDto> orderTimeDtoList = orderTimeRepository.getOrderTimesByDeliverySiteIdxAndArrivalTime(delivery_site_idx);
@@ -50,7 +53,8 @@ public class MainServiceImpl implements MainService {
     @Override
     public MainFirstViewDto getMainFirstDto(Integer delivery_site_idx) {
         MainFirstViewDto dto = new MainFirstViewDto();
-        dto.setAdvertiseForMainList(advertiseForMainRepository.getAdvertiseMainsByDeliverySiteIdx(delivery_site_idx));
+        dto.setAdvertiseForPopupDtoList(advertiseForPopupRepository.getAdvertisePopupsByDeliverySiteIdx(delivery_site_idx));
+        dto.setAdvertiseForMainDtoList(advertiseForMainRepository.getAdvertiseMainsByDeliverySiteIdx(delivery_site_idx));
         dto.setDetailSiteDtoList(detailForDeliverySiteRepository.getDetailSitesByDeliverySiteIdxOrderBySequence(delivery_site_idx));
 
         List<OrderTimeDto> orderTimeDtoList = orderTimeRepository.getOrderTimesByDeliverySiteIdxAndArrivalTime(delivery_site_idx);
@@ -69,7 +73,7 @@ public class MainServiceImpl implements MainService {
     @Override
     public MainSecondViewDto getMainSecondDto(Integer delivery_site_idx) {
         MainSecondViewDto dto = new MainSecondViewDto();
-        dto.setImageForMainDtoList(imageForMainRepository.getImagesByDeliverySiteIdx(delivery_site_idx));
+        dto.setCmtAdvertiseForMainWithCommentAllDtoList(cmtAdvertiseForMainRepository.getCmtAdvertiseMainsByDeliverySiteIdx(delivery_site_idx));
         dto.setSubAdvertiseForMainDtoList(subAdvertiseForMainRepository.getSubAdvertiseMainsByDeliverySiteIdx(delivery_site_idx));
         return dto;
     }

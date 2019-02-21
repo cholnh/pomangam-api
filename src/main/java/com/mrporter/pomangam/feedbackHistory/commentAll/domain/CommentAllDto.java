@@ -29,6 +29,8 @@ public class CommentAllDto implements Serializable {
 
     private Integer cnt_view;
 
+    private String title;
+
     private String contents;
 
     private Byte state_active;

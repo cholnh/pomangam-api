@@ -50,8 +50,13 @@ public class CartRepositoryImpl implements CartRepository {
         Query nativeQuery = em.createNativeQuery(sql);
         nativeQuery.setParameter(1, customer_idx);
         JpaResultMapper jpaResultMapper = new JpaResultMapper();
-        CartDto cart = jpaResultMapper.uniqueResult(nativeQuery, CartDto.class);
 
+        List<CartDto> carts = jpaResultMapper.list(nativeQuery, CartDto.class);
+        if(carts.isEmpty()) {
+            return ResponseEntity.ok(0);
+        }
+
+        CartDto cart = carts.get(0);
         Date arrivalDate = cart.getArrivalDate();
         if(CustomTime.compareToday(arrivalDate) > 0) {
             sql = "UPDATE cart_tbl SET arrival_date = ? WHERE idx = ?";

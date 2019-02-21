@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.advertiseEntry.imageForMain.domain;
+package com.mrporter.pomangam.advertiseEntry.advertiseForPopup.domain;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Table(name = "imgpath_for_main_tbl")
+@Table(name = "advertise_for_popup_tbl")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 @Entity
-public class ImageForMain {
+public class AdvertiseForPopup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idx;
@@ -27,7 +27,7 @@ public class ImageForMain {
     private Integer sequence;
 
     @Builder
-    public ImageForMain(String imgpath, Byte next_step_type, String next_step_location, Byte state_active, Integer sequence) {
+    public AdvertiseForPopup(String imgpath, Byte next_step_type, String next_step_location, Byte state_active, Integer sequence) {
         this.imgpath = imgpath;
         this.next_step_type = next_step_type;
         this.next_step_location = next_step_location;
