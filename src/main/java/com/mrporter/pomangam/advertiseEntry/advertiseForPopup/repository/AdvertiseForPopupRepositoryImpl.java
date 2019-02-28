@@ -22,7 +22,7 @@ public class AdvertiseForPopupRepositoryImpl implements AdvertiseForPopupReposit
                 "FROM advertise_for_popup_tbl " +
                 "WHERE idx IN " +
                     "(SELECT advertise_popup_idx " +
-                    "FROM dstie_link_advertise_popup_tbl " +
+                    "FROM dsite_link_advertise_popup_tbl " +
                     "WHERE delivery_site_idx = ?)" +
                 "ORDER BY sequence";
         Query nativeQuery = em.createNativeQuery(sql);

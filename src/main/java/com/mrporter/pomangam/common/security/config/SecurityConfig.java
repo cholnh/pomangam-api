@@ -1,9 +1,11 @@
 package com.mrporter.pomangam.common.security.config;
 
+import com.mrporter.pomangam.common.security.service.UserDetailsServiceImpl;
 import com.mrporter.pomangam.orderEntry.customer.repository.CustomerJpaRepository;
-import com.mrporter.pomangam.common.security.service.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -11,7 +13,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
+@Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -19,23 +29,41 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private CustomerJpaRepository customerJpaRepository;
 
     @Autowired
-    private UserDetailServiceImpl userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public TokenStore tokenStore() {
+        return new InMemoryTokenStore();
+    }
+
+    @Bean
+    @Override
+    protected AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-/* 1 */      .authorizeRequests()
+            .anonymous()
+                .disable()
+
+            .authorizeRequests()
                 .antMatchers("/admin/**").hasRole("ADMIN")
-	            .antMatchers("/**") //.hasRole("USER")
-                .permitAll()
-            .and()
+//                .antMatchers("/jpa/**").authenticated()
+//	            .antMatchers("/**").permitAll()
+                .and()
+
+            .cors()
+                .and()
+
 //
-///* 2 */	    .formLogin()
+//      	 .formLogin()
 //                .loginPage("/login")
 //                .usernameParameter("id")
 //                .passwordParameter("pw")
@@ -44,14 +72,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .permitAll()
 //            .and()
 //
-///* 3 */	    .logout()
+//       	  .logout()
 //                .logoutUrl("/customLogout")
 //                .logoutSuccessUrl("/")
 //                .invalidateHttpSession(true)
 //                .permitAll()
 //            .and()
 //
-/* 4 */	    .csrf()
+            .csrf()
                 .disable();
 
     }
@@ -66,4 +94,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/resources/**");
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource()
+    {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 }

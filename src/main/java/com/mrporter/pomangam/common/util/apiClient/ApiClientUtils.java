@@ -37,7 +37,6 @@ public class ApiClientUtils {
             List list = new ArrayList<>();
             list.add(body);
             bodyAsString = objectMapper.writeValueAsString(list);
-            System.out.println("bodyAsString : " + bodyAsString);
         } catch (IOException e) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
