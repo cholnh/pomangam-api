@@ -1,9 +1,9 @@
 package com.mrporter.pomangam.common.util.apiClient;
 
-import org.springframework.http.ResponseEntity;
+        import org.springframework.http.ResponseEntity;
 
-import java.util.HashMap;
-import java.util.Map;
+        import java.util.HashMap;
+        import java.util.Map;
 
 public class BizmApi {
     private static final String userId = "mrporter";
