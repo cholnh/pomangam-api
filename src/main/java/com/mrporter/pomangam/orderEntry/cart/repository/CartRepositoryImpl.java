@@ -144,6 +144,76 @@ public class CartRepositoryImpl implements CartRepository {
             }
         }
 
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(result);
     }
+
+
+/*
+    public ResponseEntity<?> getCartWithArrivalTime(Integer cart_Idx) {
+        List<CartWithArrivalTimeDto> result = new ArrayList<>();
+
+        // TZ 설정
+        ZonedDateTime arrTimeWithZone = ZonedDateTime.of(
+                arrival_date,
+                zoneId);
+
+        // protocol : {store_idx}-{quantity},
+        // quantity 는 product.type - Main 메뉴에 해당하는 물품 개수만 측정.
+        for(String ch : store_idxes.split(",")) {
+            Integer store_idx;
+            int quantity;
+            try {
+                store_idx = Integer.parseInt(ch.split("-")[0]);
+                quantity = Integer.parseInt(ch.split("-")[1]);
+            } catch (NumberFormatException e) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            List<SalesVolumeDto> svList = orderRepository.getSalesVolumeByArrivalDateAndStoreIdx(
+                    arrival_date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    store_idx);
+            Store storeInfo = storeJpaRepository.getOne(store_idx);
+            int rc; // remaining capacity 현재까지 남은 주문 가능 수량
+            int pp = storeInfo.getParallel_production();  // 병렬 생산량
+            int mt = storeInfo.getMinimum_time().toLocalTime().getMinute();   // 최소 생산 시간 (분 단위)
+            int mp = storeInfo.getMaximum_production();   // 최대 가능 생산량
+
+            for(SalesVolumeDto svDto : svList) {
+                Time arrival_time = svDto.getArrival_time();
+                int sv = svDto.getSv().intValue();
+                if(sv > mp) {
+                    // 판매량이 최대 생산량을 초과한 경우
+                    continue;
+                }
+
+                OrderTime orderTime = orderTimeJpaRepository.getByStoreIdxAndDeliverySiteIdxAndAndArrivalTime(store_idx, delivery_site_idx, arrival_time.toString());
+                int isPause = orderTime.getStatePause(); // 주문 정지 유무
+
+                if(CustomTime.isToday(arrTimeWithZone)){
+                    if (isPause == 1) {
+                        continue;
+                    }
+                }
+
+                ZonedDateTime endTimeWithZone = ZonedDateTime.of(   // (해당 시간대) 주문 마감 시간
+                        LocalDateTime.of(arrival_date.toLocalDate(), orderTime.getOrderDeadline().toLocalTime()),
+                        zoneId);
+
+                // 남은 시간 계산
+                long td = CustomTime.getMinuteByCurrentTimeDifference(endTimeWithZone);
+
+                // 주문 가능 수량 계산
+                long temp = (td*pp/mt)-sv;
+                rc = temp > mp ? mp : (int)temp;
+
+                if(rc < quantity) {
+                    // td가 -1일 경우 (parse error) or 현재까지 남은 주문_가능_수량이 없는 경우
+                } else {
+                    result.put(store_idx, arrival_time); // list 로 할까??
+                }
+            }
+        }
+
+        return ResponseEntity.ok(result);
+    }
+*/
 }
