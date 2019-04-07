@@ -11,5 +11,6 @@ import java.util.List;
 public interface CartItemJpaRepository extends JpaRepository<CartItem, Integer> {
     List<CartItem> findByCartIdx(@Param("cidx") Integer idx);
     int countByCartIdx(@Param("cidx") Integer idx);
+
 }
 

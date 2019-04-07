@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.orderEntry.customer.domain;
+package com.mrporter.pomangam.common.security.user.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor
-public class CustomerDto implements Serializable {
+public class UserDto implements Serializable {
 
     private Integer idx;
 
@@ -40,8 +40,8 @@ public class CustomerDto implements Serializable {
 
     private Integer point;
 
-    public Customer toEntity() {
-        return Customer.builder()
+    public User toEntity() {
+        return User.builder()
                 .delivery_site_idx(delivery_site_idx)
                 .id(id)
                 .pw(pw)

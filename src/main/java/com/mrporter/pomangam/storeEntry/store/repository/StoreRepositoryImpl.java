@@ -88,9 +88,6 @@ public class StoreRepositoryImpl implements StoreRepository {
                 }
             }
 
-            //System.out.println("[dto]");
-            //System.out.println(dto);
-
             // 판매량 계산
             int sv = orderRepositoryImpl.getSalesVolumeByArrivalDateAndTimeAndStoreIdx(
                     arrTimeWithZone.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
@@ -105,11 +102,9 @@ public class StoreRepositoryImpl implements StoreRepository {
             long td = CustomTime.getMinuteByCurrentTimeDifference(endTimeWithZone);
 
             // 주문 가능 수량 계산
-            long temp = (td*pp/mt)-sv;
+            long temp = td*pp/mt;
             rc = temp > mp ? mp : (int)temp;
-
-            //System.out.println("sv : " + sv + " td : " + td + " rc : " + rc);
-            //System.out.println();
+            rc -= sv;
 
             if(rc <= 0) {
                 // td가 -1일 경우 (parse error) or 현재까지 남은 주문_가능_수량이 없는 경우

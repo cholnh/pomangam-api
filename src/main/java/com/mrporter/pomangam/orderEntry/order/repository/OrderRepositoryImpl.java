@@ -1,6 +1,6 @@
 package com.mrporter.pomangam.orderEntry.order.repository;
 
-import com.mrporter.pomangam.orderEntry.order.domain.SalesVolumeDto;
+import com.mrporter.pomangam.orderEntry.order.domain.OrderTimeSalesVolumeDto;
 import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.stereotype.Repository;
 
@@ -37,7 +37,8 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public List<SalesVolumeDto> getSalesVolumeByArrivalDateAndStoreIdx(String arrival_date, Integer store_idx) {
+    public List<OrderTimeSalesVolumeDto> getSalesVolumeByArrivalDateAndStoreIdx(String arrival_date, Integer store_idx) {
+        /*
         String sql = "SELECT od.arrival_time_only AS arrival_time, SUM(oi.quantity) AS sv " +
                 "FROM item_for_order_tbl oi, order_tbl od " +
                 "WHERE oi.order_idx = od.idx " +
@@ -45,11 +46,31 @@ public class OrderRepositoryImpl implements OrderRepository {
                 "AND od.arrival_date_only = ? " +
                 "AND od.arrival_time_only > NOW()" +
                 "GROUP BY arrival_time_only";
-        Query nativeQuery = em.createNativeQuery(sql);
-        nativeQuery.setParameter(1, arrival_date);
-        nativeQuery.setParameter(2, store_idx);
+        */
 
-        List<SalesVolumeDto> svList = new JpaResultMapper().list(nativeQuery, SalesVolumeDto.class);
+        String sql = "SELECT " +
+                    "    ot.order_deadline, ot.state_pause, ot.arrival_time, t.sv " +
+                    "FROM " +
+                    "    ordertime_for_store_tbl ot " +
+                    "        LEFT OUTER JOIN " +
+                    "    (SELECT  " +
+                    "        od.arrival_time_only AS arrival_time, SUM(oi.quantity) AS sv " +
+                    "    FROM " +
+                    "        item_for_order_tbl oi, order_tbl od " +
+                    "    WHERE " +
+                    "        oi.order_idx = od.idx " +
+                    "            AND oi.store_idx = ? " +
+                    "            AND od.arrival_date_only = ?) t " +
+                    "ON ot.arrival_time = t.arrival_time " +
+                    "WHERE " +
+                    "    ot.store_idx = ?";
+
+        Query nativeQuery = em.createNativeQuery(sql);
+        nativeQuery.setParameter(1, store_idx);
+        nativeQuery.setParameter(2, arrival_date);
+        nativeQuery.setParameter(3, store_idx);
+
+        List<OrderTimeSalesVolumeDto> svList = new JpaResultMapper().list(nativeQuery, OrderTimeSalesVolumeDto.class);
 
         return svList;
     }

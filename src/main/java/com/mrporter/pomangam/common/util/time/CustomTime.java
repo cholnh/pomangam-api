@@ -30,6 +30,16 @@ public class CustomTime {
         return minutes;
     }
 
+    public static boolean isPast(ZonedDateTime date) {
+        LocalDate today = LocalDate.now(date.getZone());
+        return today.compareTo(date.toLocalDate()) > 0;
+    }
+
+    public static boolean isFuture(ZonedDateTime date) {
+        LocalDate today = LocalDate.now(date.getZone());
+        return today.compareTo(date.toLocalDate()) < 0;
+    }
+
     public static boolean isToday(ZonedDateTime date) {
         LocalDate today = LocalDate.now(date.getZone());
         return today.compareTo(date.toLocalDate()) == 0;

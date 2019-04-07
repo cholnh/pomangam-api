@@ -17,7 +17,7 @@ public class CartViewController {
     CartServiceImpl cartService;
 
     @GetMapping
-    public ResponseEntity<?> getAll(@RequestParam("didx") Integer delivery_site_idx) {
-        return new ResponseEntity<>(cartService.getCartDto(), HttpStatus.OK);
+    public ResponseEntity<?> getAll(@RequestParam("cidx") Integer cart_idx) {
+        return new ResponseEntity<>(cartService.getCartDto(cart_idx), HttpStatus.OK);
     }
 }

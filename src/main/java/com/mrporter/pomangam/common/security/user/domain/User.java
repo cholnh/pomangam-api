@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.orderEntry.customer.domain;
+package com.mrporter.pomangam.common.security.user.domain;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,11 +10,11 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-@Table(name = "customer_tbl")
+@Table(name = "user_tbl")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 @Entity
-public class Customer implements Serializable {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +23,7 @@ public class Customer implements Serializable {
     private Integer delivery_site_idx;
 
     @NotBlank
+    @Column(name = "id")
     private String id;
 
     @NotBlank
@@ -52,7 +53,7 @@ public class Customer implements Serializable {
     private Integer point;
 
     @Builder
-    public Customer(Integer delivery_site_idx, String id, String pw, String name, String nickname, Byte gender, Short year_of_birth, Byte month_of_birth, Byte days_of_birth, String phone_number, Byte state_active, Timestamp register_date, Timestamp modify_date, Integer point) {
+    public User(Integer delivery_site_idx, String id, String pw, String name, String nickname, Byte gender, Short year_of_birth, Byte month_of_birth, Byte days_of_birth, String phone_number, Byte state_active, Timestamp register_date, Timestamp modify_date, Integer point) {
         this.delivery_site_idx = delivery_site_idx;
         this.id = id;
         this.pw = pw;
