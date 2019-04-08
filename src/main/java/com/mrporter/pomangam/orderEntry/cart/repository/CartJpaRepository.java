@@ -7,7 +7,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource(exported = true)
 public interface CartJpaRepository extends JpaRepository<Cart, Integer>, CartRepository{
-    Cart getByCustomerIdx(@Param("cidx") Integer idx);
+    Cart getByCustomerIdx(@Param("idx") Integer idx);
     // 장바구니 클릭 시, 장바구니 내부에서 아이템들이 각각 언제언제 도착 가능한지 계산해야함.
 }
 

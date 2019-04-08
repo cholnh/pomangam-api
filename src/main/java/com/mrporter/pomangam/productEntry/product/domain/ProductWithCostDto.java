@@ -1,26 +1,20 @@
 package com.mrporter.pomangam.productEntry.product.domain;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 
-@Table(name = "product_tbl")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
-@Entity
-public class Product implements Serializable {
+public class ProductWithCostDto implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idx;
 
-    @Column(name="store_idx")
-    private Integer storeIdx;
+    private Integer store_idx;
 
     private String name;
 
@@ -44,9 +38,11 @@ public class Product implements Serializable {
 
     private Integer sequence;
 
-    @Builder
-    public Product(Integer storeIdx, String name, String description, String sub_description, Integer category_id, String category_name, Byte state_active, Byte type, Integer cnt_like, Timestamp register_date, Timestamp modify_date, Integer sequence) {
-        this.storeIdx = storeIdx;
+    private Integer final_cost;
+
+    public ProductWithCostDto(Integer idx, Integer store_idx, String name, String description, String sub_description, Integer category_id, String category_name, Byte state_active, Byte type, Integer cnt_like, Timestamp register_date, Timestamp modify_date, Integer sequence, BigInteger final_cost) {
+        this.idx = idx;
+        this.store_idx = store_idx;
         this.name = name;
         this.description = description;
         this.sub_description = sub_description;
@@ -58,5 +54,6 @@ public class Product implements Serializable {
         this.register_date = register_date;
         this.modify_date = modify_date;
         this.sequence = sequence;
+        this.final_cost = final_cost==null?0:final_cost.intValue();
     }
 }

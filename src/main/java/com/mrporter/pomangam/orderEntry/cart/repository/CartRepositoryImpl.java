@@ -164,7 +164,6 @@ public class CartRepositoryImpl implements CartRepository {
                         "where idx = ?"
         );
         nativeQuery1.setParameter(1, cart_Idx);
-        JpaResultMapper jpaResultMapper = new JpaResultMapper();
         CartDto cart = new JpaResultMapper().uniqueResult(nativeQuery1, CartDto.class);
 
         Query nativeQuery2 = em.createNativeQuery(
@@ -174,8 +173,7 @@ public class CartRepositoryImpl implements CartRepository {
                 "and cart_idx = ? " +
                 "group by store_idx");
         nativeQuery2.setParameter(1, cart_Idx);
-        new JpaResultMapper().list(nativeQuery2, CartInStoreQuantityDto.class);
-        List<CartInStoreQuantityDto> dtoList = jpaResultMapper.list(nativeQuery2, CartInStoreQuantityDto.class);
+        List<CartInStoreQuantityDto> dtoList = new JpaResultMapper().list(nativeQuery2, CartInStoreQuantityDto.class);
 
         // TZ 설정
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

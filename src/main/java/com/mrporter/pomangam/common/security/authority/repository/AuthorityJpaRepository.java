@@ -7,5 +7,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource(exported = false)
 public interface AuthorityJpaRepository extends JpaRepository<Authority, Integer> {
-    Authority findByUserId(@Param("user_id") String id);
+    Authority findByUserId(@Param("id") String id);
 }

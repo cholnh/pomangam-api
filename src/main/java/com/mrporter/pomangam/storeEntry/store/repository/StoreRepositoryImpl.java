@@ -7,8 +7,6 @@ import com.mrporter.pomangam.orderEntry.order.repository.OrderRepositoryImpl;
 import com.mrporter.pomangam.orderEntry.orderTime.repository.OrderTimeRepositoryImpl;
 import com.mrporter.pomangam.storeEntry.store.domain.InquiryResultDto;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -29,18 +27,24 @@ public class StoreRepositoryImpl implements StoreRepository {
     DetailForDeliverySiteJpaRepository detailForDeliverySiteJpaRepository;
 
     @Override
-    public ResponseEntity<?> getInquiryResult(String arrival_date, Integer detail_for_delivery_site_idx) {
+    public List<InquiryResultDto> getInquiryResult(String arrival_date, Integer detail_for_delivery_site_idx) {
+        if(arrival_date == null || detail_for_delivery_site_idx == null) {
+            return null;
+        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime ldt;
         try {
             ldt = LocalDateTime.parse(arrival_date, formatter);
         } catch (DateTimeParseException dpe) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return null;
         }
         return getInquiryResult(ldt, detail_for_delivery_site_idx, ZoneId.of("Asia/Seoul"));
     }
 
-    public ResponseEntity<?> getInquiryResult(LocalDateTime arrival_date, Integer detail_for_delivery_site_idx, ZoneId zoneId) {
+    public List<InquiryResultDto> getInquiryResult(LocalDateTime arrival_date, Integer detail_for_delivery_site_idx, ZoneId zoneId) {
+        if(arrival_date == null || detail_for_delivery_site_idx == null) {
+            return null;
+        }
 
         // 상세 배달지 도착시간 설정
         DetailForDeliverySite detailForDeliverySite = detailForDeliverySiteJpaRepository.getDetailForDeliverySiteByIdx(detail_for_delivery_site_idx);
@@ -114,6 +118,6 @@ public class StoreRepositoryImpl implements StoreRepository {
                 result.add(dto);
             }
         }
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return result;
     }
 }

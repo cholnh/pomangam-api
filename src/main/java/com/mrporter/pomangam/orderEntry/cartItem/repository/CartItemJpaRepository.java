@@ -9,8 +9,8 @@ import java.util.List;
 
 @RepositoryRestResource(exported = true)
 public interface CartItemJpaRepository extends JpaRepository<CartItem, Integer> {
-    List<CartItem> findByCartIdx(@Param("cidx") Integer idx);
-    int countByCartIdx(@Param("cidx") Integer idx);
+    List<CartItem> findByCartIdx(@Param("idx") Integer idx);
+    int countByCartIdx(@Param("idx") Integer idx);
 
 }
 
