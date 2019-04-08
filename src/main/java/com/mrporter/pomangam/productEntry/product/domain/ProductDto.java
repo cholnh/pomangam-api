@@ -37,7 +37,19 @@ public class ProductDto implements Serializable {
 
     private Integer sequence;
 
-    public Product toEntity() {
-        return null;
+    public ProductDto(Integer idx, Integer store_idx, String name, String description, String sub_description, Integer category_id, String category_name, Byte state_active, Byte type, Integer cnt_like, Timestamp register_date, Timestamp modify_date, Integer sequence) {
+        this.idx = idx;
+        this.store_idx = store_idx;
+        this.name = name;
+        this.description = description;
+        this.sub_description = sub_description;
+        this.category_id = category_id;
+        this.category_name = category_name;
+        this.state_active = state_active;
+        this.type = type;
+        this.cnt_like = cnt_like;
+        this.register_date = register_date;
+        this.modify_date = modify_date;
+        this.sequence = sequence;
     }
 }

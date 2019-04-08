@@ -30,11 +30,10 @@ public class ProductRepositoryImpl implements ProductRepository {
         int sum_prc = promotionSumDto.getSum_prc() == null ? 0 : promotionSumDto.getSum_prc();
         int sum_pct = promotionSumDto.getSum_pct() == null ? 0 : promotionSumDto.getSum_pct();
 
-        System.out.println(sum_prc + " " + sum_pct);
-
         Query nativeQuery1 = em.createNativeQuery(
+
                 "SELECT  " +
-                        "    p.*, " +
+                        "    p.idx, p.store_idx, p.name, p.description, p.sub_description, p.category_id, p.category_name, p.state_active, p.type, p.cnt_like, p.register_date, p.modify_date, p.sequence, " +
                         "    CAST((c.unit_cost + c.c_commission_prc + (c.unit_cost * c.c_commission_pct / 100)) " +
                         "       - " + sum_prc + " - (c.unit_cost * " + sum_pct + " / 100) " +
                         "        AS SIGNED INTEGER) AS final_cost " +
@@ -46,10 +45,11 @@ public class ProductRepositoryImpl implements ProductRepository {
                         "    AND store_idx = ? " +
                         "    AND p.state_active = 1 " +
                         "ORDER BY sequence DESC "
+
+
         );
         nativeQuery1.setParameter(1, store_idx);
         List<ProductWithCostDto> productWithCostDtoList = new JpaResultMapper().list(nativeQuery1, ProductWithCostDto.class);
-        System.out.println("productWithCostDtoList : "+productWithCostDtoList);
         return productWithCostDtoList;
     }
 }
