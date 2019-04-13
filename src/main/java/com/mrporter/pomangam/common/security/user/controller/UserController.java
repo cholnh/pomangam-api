@@ -99,7 +99,7 @@ public class UserController {
         if(user != null) {
             if(id.equals(user.getId()) || (authentication != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))) {
                 return new ResponseEntity<>(
-                        userService.updateUser(id, dto.toEntity()),
+                        removePassword(userService.updateUser(id, dto.toEntity())),
                         HttpStatus.OK);
             }
         }
@@ -119,7 +119,7 @@ public class UserController {
         if(user != null) {
             if(id.equals(user.getId()) || (authentication != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))) {
                 return new ResponseEntity<>(
-                        userService.patchUser(id, dto.toEntity()),
+                        removePassword(userService.patchUser(id, dto.toEntity())),
                         HttpStatus.OK);
             }
         }

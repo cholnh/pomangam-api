@@ -3,12 +3,34 @@ package com.mrporter.pomangam.common.util.time;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 
 public class CustomTime {
+
+    public static String curDate() {
+        return new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));
+    }
+
+    public static String curTime() {
+        return new SimpleDateFormat("HH:mm:ss").format(new Date(System.currentTimeMillis()));
+    }
+
+    public static String curDateTime() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()));
+    }
+
+    public static java.sql.Date curDateTimeSql() {
+        java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
+        return date;
+    }
+
+    public static java.sql.Timestamp curTimestampSql() {
+        java.sql.Timestamp timestamp = new java.sql.Timestamp(System.currentTimeMillis());
+        return timestamp;
+    }
 
     public static String toTimeByDate(java.sql.Date date) {
         return date.toLocalDate().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
@@ -65,12 +87,7 @@ public class CustomTime {
     }
 
     public static void main(String...args) {
-        //System.out.println(CustomTime.getMinuteByTimeDifference("11:40:00", "12:00:00"));
-        //System.out.println(CustomTime.toTimeOnlyByDate(Calendar.getInstance().getTime()));
-        //System.out.println(CustomTime.getMinuteByTimeDifference(CustomTime.toTimeOnlyByDate(Calendar.getInstance().getTime()), "4:40:00"));
-        //getMinuteByCurrentTimeDifference("", "");
-        final LocalDateTime localDateTime = LocalDateTime.now();
-        final ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, ZoneId.of("Asia/Seoul"));
-        System.out.println(localDateTime);
+
+        System.out.println(curTimestampSql());
     }
 }

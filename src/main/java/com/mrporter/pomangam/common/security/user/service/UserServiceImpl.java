@@ -4,6 +4,7 @@ import com.mrporter.pomangam.common.security.authority.domain.Authority;
 import com.mrporter.pomangam.common.security.authority.repository.AuthorityJpaRepository;
 import com.mrporter.pomangam.common.security.user.domain.User;
 import com.mrporter.pomangam.common.security.user.repository.UserJpaRepository;
+import com.mrporter.pomangam.common.util.time.CustomTime;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,7 +39,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User saveUser(User user) {
         authorityJpaRepository.save(new Authority(user.getId(), "ROLE_USER"));
+
+        user.setRegister_date(CustomTime.curTimestampSql());
         user.setPw(passwordEncoder.encode(user.getPw()));
+
         return userJpaRepository.save(user);
     }
 
@@ -64,13 +68,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(String id, User user) {
-        final User fetchedUser = userJpaRepository.findById(user.getId());
+        final User fetchedUser = userJpaRepository.findById(id);
         if (fetchedUser == null) {
             return null;
         }
         fetchedUser.setDelivery_site_idx(user.getDelivery_site_idx());
         fetchedUser.setId(user.getId());
-        fetchedUser.setPw(user.getPw());
+        fetchedUser.setPw(passwordEncoder.encode(user.getPw()));
         fetchedUser.setName(user.getName());
         fetchedUser.setNickname(user.getNickname());
         fetchedUser.setGender(user.getGender());
@@ -79,8 +83,10 @@ public class UserServiceImpl implements UserService {
         fetchedUser.setDays_of_birth(user.getDays_of_birth());
         fetchedUser.setPhone_number(user.getPhone_number());
         fetchedUser.setState_active(user.getState_active());
-        fetchedUser.setRegister_date(user.getRegister_date());
-        fetchedUser.setModify_date(user.getModify_date());
+
+        //fetchedUser.setRegister_date(user.getRegister_date());
+        fetchedUser.setModify_date(CustomTime.curTimestampSql());
+
         fetchedUser.setPoint(user.getPoint());
         userJpaRepository.save(fetchedUser);
         return fetchedUser;
@@ -88,7 +94,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User patchUser(String id, User user) {
-        final User fetchedUser = userJpaRepository.findById(user.getId());
+        final User fetchedUser = userJpaRepository.findById(id);
         if (fetchedUser == null) {
             return null;
         }
@@ -100,7 +106,8 @@ public class UserServiceImpl implements UserService {
             fetchedUser.setId(user.getId());
         }
         if (user.getPw() != null) {
-            fetchedUser.setPw(user.getPw());
+            fetchedUser.setPw(passwordEncoder.encode(user.getPw()));
+            //fetchedUser.setPw(user.getPw());
         }
         if (user.getName() != null) {
             fetchedUser.setName(user.getName());
@@ -126,12 +133,12 @@ public class UserServiceImpl implements UserService {
         if (user.getState_active() != null) {
             fetchedUser.setState_active(user.getState_active());
         }
-        if (user.getRegister_date() != null) {
-            fetchedUser.setRegister_date(user.getRegister_date());
-        }
-        if (user.getModify_date() != null) {
-            fetchedUser.setModify_date(user.getModify_date());
-        }
+
+        //if (user.getRegister_date() != null) {
+        //    fetchedUser.setRegister_date(user.getRegister_date());
+        //}
+        fetchedUser.setModify_date(CustomTime.curTimestampSql());
+
         if (user.getPoint() != null) {
             fetchedUser.setPoint(user.getPoint());
         }
