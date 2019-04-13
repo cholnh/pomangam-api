@@ -35,7 +35,7 @@ public interface UserService {
      * @return true if exist; otherwise, return false
      */
     Boolean isUserExist(User user);
-
+    Boolean isUserExist(String id);
     /**
      * @param user updated user entity
      * @return updated user entity

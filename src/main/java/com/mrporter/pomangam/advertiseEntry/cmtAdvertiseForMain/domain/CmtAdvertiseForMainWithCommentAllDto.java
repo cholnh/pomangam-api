@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @NoArgsConstructor
 @Data
-public class cmtAdvertiseForMainWithCommentAllDto implements Serializable {
+public class CmtAdvertiseForMainWithCommentAllDto implements Serializable {
 
     private Integer comment_all_idx;
 
@@ -25,7 +25,7 @@ public class cmtAdvertiseForMainWithCommentAllDto implements Serializable {
 
     private Integer sequence;
 
-    public cmtAdvertiseForMainWithCommentAllDto(Integer comment_all_idx, Integer store_idx, String title, String contents, Byte c_state_active, String imgpath, Byte a_state_active, Integer sequence) {
+    public CmtAdvertiseForMainWithCommentAllDto(Integer comment_all_idx, Integer store_idx, String title, String contents, Byte c_state_active, String imgpath, Byte a_state_active, Integer sequence) {
         this.comment_all_idx = comment_all_idx;
         this.store_idx = store_idx;
         this.title = title;

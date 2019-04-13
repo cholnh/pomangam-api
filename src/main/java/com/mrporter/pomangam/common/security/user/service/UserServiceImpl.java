@@ -1,10 +1,13 @@
 package com.mrporter.pomangam.common.security.user.service;
 
+import com.mrporter.pomangam.common.security.authority.domain.Authority;
+import com.mrporter.pomangam.common.security.authority.repository.AuthorityJpaRepository;
 import com.mrporter.pomangam.common.security.user.domain.User;
 import com.mrporter.pomangam.common.security.user.repository.UserJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +16,9 @@ import java.util.List;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    PasswordEncoder passwordEncoder;
     UserJpaRepository userJpaRepository;
+    AuthorityJpaRepository authorityJpaRepository;
 
     @Override
     public User findById(String id) {
@@ -32,6 +37,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(User user) {
+        authorityJpaRepository.save(new Authority(user.getId(), "ROLE_USER"));
+        user.setPw(passwordEncoder.encode(user.getPw()));
         return userJpaRepository.save(user);
     }
 
@@ -39,6 +46,16 @@ public class UserServiceImpl implements UserService {
     public Boolean isUserExist(User user) {
         if(user.getId() != null) {
             final User existingUser = userJpaRepository.findById(user.getId());
+            return existingUser == null ? false : true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean isUserExist(String id) {
+        if(id != null) {
+            final User existingUser = userJpaRepository.findById(id);
             return existingUser == null ? false : true;
         } else {
             return false;

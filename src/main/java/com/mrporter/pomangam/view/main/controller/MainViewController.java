@@ -17,17 +17,17 @@ public class MainViewController {
     MainServiceImpl mainService;
 
     @GetMapping
-    public ResponseEntity<?> getAll(@RequestParam("didx") Integer delivery_site_idx) {
+    public ResponseEntity<?> getAll(@RequestParam("deliverySiteIdx") Integer delivery_site_idx) {
         return new ResponseEntity<>(mainService.getMainDto(delivery_site_idx), HttpStatus.OK);
     }
 
     @GetMapping("/first")
-    public ResponseEntity<?> getFirst(@RequestParam("didx") Integer delivery_site_idx) {
+    public ResponseEntity<?> getFirst(@RequestParam("deliverySiteIdx") Integer delivery_site_idx) {
         return new ResponseEntity<>(mainService.getMainFirstDto(delivery_site_idx), HttpStatus.OK);
     }
 
     @GetMapping("/second")
-    public ResponseEntity<?> getSecond(@RequestParam("didx") Integer delivery_site_idx) {
+    public ResponseEntity<?> getSecond(@RequestParam("deliverySiteIdx") Integer delivery_site_idx) {
         return new ResponseEntity<>(mainService.getMainSecondDto(delivery_site_idx), HttpStatus.OK);
     }
 }

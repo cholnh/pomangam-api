@@ -16,7 +16,7 @@ public class PromotionRepositoryImpl implements PromotionRepository {
     EntityManager em;
 
     @Override
-    public PromotionSumDto getSumByStoreIdx(Integer store_idx){
+    public PromotionSumDto getSumByStoreIdx(Integer store_idx) {
         Query nativeQuery1 = em.createNativeQuery(
                 "SELECT " +
                         "    SUM(discount_prc) AS sum_prc, SUM(discount_pct) AS sum_pct " +
@@ -30,8 +30,8 @@ public class PromotionRepositoryImpl implements PromotionRepository {
                         "        AND prm.end_date >= now() "
         );
         nativeQuery1.setParameter(1, store_idx);
-        PromotionSumDto promotionSumDto = new JpaResultMapper().uniqueResult(nativeQuery1, PromotionSumDto.class);
 
+        PromotionSumDto promotionSumDto = new JpaResultMapper().uniqueResult(nativeQuery1, PromotionSumDto.class);
         return promotionSumDto;
     }
 }

@@ -1,6 +1,6 @@
 package com.mrporter.pomangam.advertiseEntry.cmtAdvertiseForMain.repository;
 
-import com.mrporter.pomangam.advertiseEntry.cmtAdvertiseForMain.domain.cmtAdvertiseForMainWithCommentAllDto;
+import com.mrporter.pomangam.advertiseEntry.cmtAdvertiseForMain.domain.CmtAdvertiseForMainWithCommentAllDto;
 import lombok.AllArgsConstructor;
 import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.stereotype.Repository;
@@ -12,12 +12,12 @@ import java.util.List;
 
 @Repository
 @AllArgsConstructor
-public class CmtAdvertiseForMainRepositoryImpl implements cmtAdvertiseForMainRepository {
+public class CmtAdvertiseForMainRepositoryImpl implements CmtAdvertiseForMainRepository {
     @PersistenceContext
     EntityManager em;
 
     @Override
-    public List<cmtAdvertiseForMainWithCommentAllDto> getCmtAdvertiseMainsByDeliverySiteIdx(Integer delivery_site_idx) {
+    public List<CmtAdvertiseForMainWithCommentAllDto> getCmtAdvertiseMainsByDeliverySiteIdx(Integer delivery_site_idx) {
         String sql = "SELECT ca.idx AS comment_all_idx," +
                             "ca.store_idx AS store_idx," +
                             "ca.title AS title," +
@@ -36,7 +36,7 @@ public class CmtAdvertiseForMainRepositoryImpl implements cmtAdvertiseForMainRep
         Query nativeQuery = em.createNativeQuery(sql);
         nativeQuery.setParameter(1, delivery_site_idx);
 
-        List<cmtAdvertiseForMainWithCommentAllDto> cmtList = new JpaResultMapper().list(nativeQuery, cmtAdvertiseForMainWithCommentAllDto.class);
+        List<CmtAdvertiseForMainWithCommentAllDto> cmtList = new JpaResultMapper().list(nativeQuery, CmtAdvertiseForMainWithCommentAllDto.class);
 
         return cmtList;
     }

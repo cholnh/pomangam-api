@@ -146,15 +146,29 @@ public class CartRepositoryImpl implements CartRepository {
         return ResponseEntity.ok(result);
     }
 */
+    @Override
+    public Map<Integer, Time> getCartWithArrivalTimeByCustomerIdx(Integer customer_idx) {
+        String sql = "SELECT * FROM cart_tbl WHERE customer_idx = ?";
+        Query nativeQuery = em.createNativeQuery(sql);
+        nativeQuery.setParameter(1, customer_idx);
+        JpaResultMapper jpaResultMapper = new JpaResultMapper();
+
+        CartDto cart = jpaResultMapper.uniqueResult(nativeQuery, CartDto.class);
+        if(cart==null) {
+            return null;
+        }
+
+        return getCartWithArrivalTime(cart.getIdx(), ZoneId.of("Asia/Seoul"));
+    }
 
     @Override
-    public Map<Integer, Time> getCartWithArrivalTime(Integer cart_Idx) {
+    public Map<Integer, Time> getCartWithArrivalTimeByCartIdx(Integer cart_Idx) {
 
         return getCartWithArrivalTime(cart_Idx, ZoneId.of("Asia/Seoul"));
     }
 
     // quantity 는 product.type - Main 메뉴에 해당하는 물품 개수만 측정.
-    @Override
+    //@Override
     public Map<Integer, Time> getCartWithArrivalTime(Integer cart_Idx, ZoneId zoneId) {
         Map<Integer, Time> result = new HashMap<>();
 

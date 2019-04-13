@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException(id);
         }
         Authority authority = authorityJpaRepository.findByUserId(id);
-        String[] authorities = authority.getAuthorities().split(",");
+        String[] authorities = authority!=null?authority.getAuthorities().split(","):null;
         return new org.springframework.security.core.userdetails.User(user.getId(), user.getPw(), AuthorityUtils.createAuthorityList(authorities));
     }
 }

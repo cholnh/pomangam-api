@@ -41,7 +41,7 @@ public class UserController {
     public ResponseEntity<?> get(HttpSession session) {
         User user = SessionConverter.getCustomer(session);
         Authentication authentication = SessionConverter.getAuthentication(session);
-        if(user != null || authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+        if(authentication != null && user != null) {
             return ResponseEntity.ok(removePassword(user));
         } else {
             return new ResponseEntity("UNAUTHORIZED",HttpStatus.UNAUTHORIZED);
@@ -51,6 +51,14 @@ public class UserController {
     private User removePassword(User user) {
         user.setPw(null);
         return user;
+    }
+
+    @GetMapping("/isExist")
+    public ResponseEntity<?> get(@RequestParam("id") String id) {
+        if(id == null) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(userService.isUserExist(id));
     }
 
     // 비밀번호 암호화 필요
@@ -63,13 +71,15 @@ public class UserController {
 
     //@PreAuthorize("isAuthenticated() and (( id == principal.id ) or hasRole('ROLE_ADMIN'))")
     //@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
-    @DeleteMapping
-    public ResponseEntity delete(String id,
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable String id,
                                  HttpSession session) {
+
         User user = SessionConverter.getCustomer(session);
         Authentication authentication = SessionConverter.getAuthentication(session);
-        if(user != null || authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-            if(id.equals(user.getId())) {
+
+        if(user != null) {
+            if(id.equals(user.getId()) || (authentication != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))) {
                 return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.OK);
             }
         }
@@ -86,8 +96,8 @@ public class UserController {
 
         User user = SessionConverter.getCustomer(session);
         Authentication authentication = SessionConverter.getAuthentication(session);
-        if(user != null || authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-            if(id.equals(user.getId())) {
+        if(user != null) {
+            if(id.equals(user.getId()) || (authentication != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))) {
                 return new ResponseEntity<>(
                         userService.updateUser(id, dto.toEntity()),
                         HttpStatus.OK);
@@ -106,9 +116,8 @@ public class UserController {
 
         User user = SessionConverter.getCustomer(session);
         Authentication authentication = SessionConverter.getAuthentication(session);
-        if(user != null || authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-
-            if(id.equals(user.getId())) {
+        if(user != null) {
+            if(id.equals(user.getId()) || (authentication != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))) {
                 return new ResponseEntity<>(
                         userService.patchUser(id, dto.toEntity()),
                         HttpStatus.OK);

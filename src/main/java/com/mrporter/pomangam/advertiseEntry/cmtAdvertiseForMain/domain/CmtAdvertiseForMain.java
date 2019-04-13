@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 @Entity
-public class cmtAdvertiseForMain {
+public class CmtAdvertiseForMain {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idx;
@@ -25,7 +25,7 @@ public class cmtAdvertiseForMain {
     private Integer sequence;
 
     @Builder
-    public cmtAdvertiseForMain(String imgpath, Integer comment_all_idx, Byte state_active, Integer sequence) {
+    public CmtAdvertiseForMain(String imgpath, Integer comment_all_idx, Byte state_active, Integer sequence) {
         this.imgpath = imgpath;
         this.comment_all_idx = comment_all_idx;
         this.state_active = state_active;

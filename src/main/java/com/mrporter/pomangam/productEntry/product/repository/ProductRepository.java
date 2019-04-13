@@ -1,10 +1,9 @@
 package com.mrporter.pomangam.productEntry.product.repository;
 
-import com.mrporter.pomangam.productEntry.product.domain.ProductWithCostDto;
 import org.springframework.data.repository.query.Param;
-
-import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 public interface ProductRepository {
-    List<ProductWithCostDto> findByStoreIdx(@Param("idx") Integer store_idx);
+    ResponseEntity<?> findByStoreIdx(@Param("storeIdx") Integer store_idx);
+    ResponseEntity<?> findByProductIdx(@Param("productIdx") Integer product_idx);
 }

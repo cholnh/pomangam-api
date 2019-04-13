@@ -8,9 +8,9 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource(exported = true)
 public interface OrderTimeJpaRepository extends JpaRepository<OrderTime, Integer> {
     OrderTime getByStoreIdxAndDeliverySiteIdxAndAndArrivalTime(
-            @Param("sidx") Integer store_idx,
-            @Param("didx") Integer delivery_site_idx,
-            @Param("time") String arrival_time
+            @Param("storeIdx") Integer store_idx,
+            @Param("deliverySiteIdx") Integer delivery_site_idx,
+            @Param("arrivalTime") String arrival_time
     );
 }
 

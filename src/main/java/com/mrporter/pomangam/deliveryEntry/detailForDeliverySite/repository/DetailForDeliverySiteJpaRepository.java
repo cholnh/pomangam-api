@@ -7,5 +7,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource(exported = true)
 public interface DetailForDeliverySiteJpaRepository extends JpaRepository<DetailForDeliverySite, Integer> {
-    DetailForDeliverySite getDetailForDeliverySiteByIdx(@Param("idx") Integer idx);
+    DetailForDeliverySite getDetailForDeliverySiteByIdx(@Param("detailForDeliverySiteIdx") Integer detail_for_delivery_site_idx);
 }
