@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
@@ -20,12 +21,15 @@ public class DeliverySiteDto implements Serializable {
 
     private String campus;
 
-    public DeliverySiteDto(Integer idx, String name, String location, Integer regionCategoryIdx, String campus) {
+    private long count;
+
+    public DeliverySiteDto(Integer idx, String name, String location, Integer regionCategoryIdx, String campus, BigInteger count) {
         this.idx = idx;
         this.name = name;
         this.location = location;
         this.regionCategoryIdx = regionCategoryIdx;
         this.campus = campus;
+        this.count = count==null?0:count.longValue();
     }
 
     public DeliverySite toEntity() {

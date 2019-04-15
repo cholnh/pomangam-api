@@ -3,7 +3,6 @@ package com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.repository;
 import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.domain.DetailForDeliverySiteDto;
 import lombok.AllArgsConstructor;
 import org.qlrm.mapper.JpaResultMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -32,7 +31,7 @@ public class DetailForDeliverySiteRepositoryImpl implements DetailForDeliverySit
     }
 
     @Override
-    public ResponseEntity<?> findByDeliverySiteIdxOrderBySequence(Integer delivery_site_idx) {
+    public List<DetailForDeliverySiteDto> findByDeliverySiteIdxOrderBySequence(Integer delivery_site_idx) {
         String sql = "SELECT d.* " +
                 "FROM detail_for_delivery_site_tbl d " +
                 "WHERE delivery_site_idx = ? " +
@@ -42,7 +41,7 @@ public class DetailForDeliverySiteRepositoryImpl implements DetailForDeliverySit
 
         List<DetailForDeliverySiteDto> dList = new JpaResultMapper().list(nativeQuery, DetailForDeliverySiteDto.class);
 
-        return ResponseEntity.ok(dList);
+        return dList;
     }
 
 }

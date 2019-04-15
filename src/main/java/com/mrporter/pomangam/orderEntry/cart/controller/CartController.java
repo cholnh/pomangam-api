@@ -16,8 +16,8 @@ public class CartController {
 
     CartServiceImpl cartService;
 
-    @GetMapping("/search/getBlahBlah")
-    public ResponseEntity<?> getBlahBlah(@RequestParam("blah") String blah) {
-        return new ResponseEntity(blah, HttpStatus.OK);
+    @GetMapping("/search/countCart")
+    public ResponseEntity<?> countCart(@RequestParam("customerIdx") Integer customerIdx) {
+        return new ResponseEntity(cartService.countCart(customerIdx), HttpStatus.OK);
     }
 }

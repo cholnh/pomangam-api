@@ -3,7 +3,6 @@ package com.mrporter.pomangam.deliveryEntry.deliverySite.repository;
 import com.mrporter.pomangam.deliveryEntry.deliverySite.domain.DeliverySiteDto;
 import lombok.AllArgsConstructor;
 import org.qlrm.mapper.JpaResultMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -18,26 +17,27 @@ public class DeliverySiteRepositoryImpl implements DeliverySiteRepository {
     EntityManager em;
 
     @Override
-    public ResponseEntity<?> findByQuery(String query) {
-        String sql = "SELECT * FROM delivery_site_tbl ds where ds.name like ?1 OR ds.location like ?2 ";
+    public List<DeliverySiteDto> findByQuery(String query) {
+        String sql = "(SELECT ds.*, cnt.count FROM delivery_site_tbl ds LEFT OUTER JOIN count_search_delivery_site_tbl cnt ON ds.idx = cnt.delivery_site_idx where ds.name like :name ORDER BY cnt.count DESC) " +
+                     " UNION " +
+                     "(SELECT ds.*, cnt.count FROM delivery_site_tbl ds LEFT OUTER JOIN count_search_delivery_site_tbl cnt ON ds.idx = cnt.delivery_site_idx where ds.name not like :name AND ds.location like :name ORDER BY cnt.count DESC)";
         Query nativeQuery = em.createNativeQuery(sql);
-        nativeQuery.setParameter(1, "%"+query+"%");
-        nativeQuery.setParameter(2, "%"+query+"%");
+        nativeQuery.setParameter("name", "%"+query+"%");
 
         List<DeliverySiteDto> dList = new JpaResultMapper().list(nativeQuery, DeliverySiteDto.class);
 
-        return ResponseEntity.ok(dList);
+        return dList;
     }
 
     @Override
-    public ResponseEntity<?> findByRegionCategoryIdx(Integer regionCategoryIdx) {
+    public List<DeliverySiteDto> findByRegionCategoryIdx(Integer regionCategoryIdx) {
         String sql = "SELECT * FROM delivery_site_tbl ds where ds.region_category_idx = ?";
         Query nativeQuery = em.createNativeQuery(sql);
         nativeQuery.setParameter(1, regionCategoryIdx);
 
         List<DeliverySiteDto> dList = new JpaResultMapper().list(nativeQuery, DeliverySiteDto.class);
 
-        return ResponseEntity.ok(dList);
+        return dList;
     }
 
    @Override

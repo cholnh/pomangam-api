@@ -6,8 +6,6 @@ import com.mrporter.pomangam.promotionEntry.promotion.domain.PromotionSumDto;
 import com.mrporter.pomangam.promotionEntry.promotion.repository.PromotionRepositoryImpl;
 import lombok.AllArgsConstructor;
 import org.qlrm.mapper.JpaResultMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -24,9 +22,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     PromotionRepositoryImpl promotionRepository;
 
     @Override
-    public ResponseEntity<?> findByProductIdx(Integer product_idx) {
+    public ProductWithCostDto findByProductIdx(Integer product_idx) {
         if(product_idx == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return null;
         }
 
         Query nativeQuery1 = em.createNativeQuery(
@@ -60,13 +58,13 @@ public class ProductRepositoryImpl implements ProductRepository {
         nativeQuery2.setParameter(1, product_idx);
         ProductWithCostDto productWithCostDto = new JpaResultMapper().uniqueResult(nativeQuery2, ProductWithCostDto.class);
 
-        return ResponseEntity.ok(productWithCostDto);
+        return productWithCostDto;
     }
 
     @Override
-    public ResponseEntity<?> findByStoreIdx(Integer store_idx) {
+    public List<ProductWithCostDto> findByStoreIdx(Integer store_idx) {
         if(store_idx == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return null;
         }
         PromotionSumDto promotionSumDto = promotionRepository.getSumByStoreIdx(store_idx);
 
@@ -91,6 +89,6 @@ public class ProductRepositoryImpl implements ProductRepository {
         );
         nativeQuery1.setParameter(1, store_idx);
         List<ProductWithCostDto> productWithCostDtoList = new JpaResultMapper().list(nativeQuery1, ProductWithCostDto.class);
-        return ResponseEntity.ok(productWithCostDtoList);
+        return productWithCostDtoList;
     }
 }

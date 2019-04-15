@@ -2,11 +2,11 @@ package com.mrporter.pomangam.deliveryEntry.deliverySite.repository;
 
 import com.mrporter.pomangam.deliveryEntry.deliverySite.domain.DeliverySiteDto;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 public interface DeliverySiteRepository {
     DeliverySiteDto getByDeliverySiteIdx(@Param("deliverySiteIdx") Integer deliverySiteIdx);
-
-    ResponseEntity<?> findByQuery(@Param("query") String query);
-    ResponseEntity<?> findByRegionCategoryIdx(@Param("regionCategoryIdx") Integer regionCategoryIdx);
+    List<DeliverySiteDto> findByQuery(@Param("query") String query);
+    List<DeliverySiteDto> findByRegionCategoryIdx(@Param("regionCategoryIdx") Integer regionCategoryIdx);
 }
