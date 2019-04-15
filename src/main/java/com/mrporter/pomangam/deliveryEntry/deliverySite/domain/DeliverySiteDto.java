@@ -16,7 +16,17 @@ public class DeliverySiteDto implements Serializable {
 
     private String location;
 
-    private Integer region_category_idx;
+    private Integer regionCategoryIdx;
+
+    private String campus;
+
+    public DeliverySiteDto(Integer idx, String name, String location, Integer regionCategoryIdx, String campus) {
+        this.idx = idx;
+        this.name = name;
+        this.location = location;
+        this.regionCategoryIdx = regionCategoryIdx;
+        this.campus = campus;
+    }
 
     public DeliverySite toEntity() {
         return null;

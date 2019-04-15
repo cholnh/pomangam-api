@@ -5,6 +5,7 @@ import com.mrporter.pomangam.advertiseEntry.advertiseForMain.domain.AdvertiseFor
 import com.mrporter.pomangam.advertiseEntry.advertiseForPopup.domain.AdvertiseForPopupDto;
 import com.mrporter.pomangam.advertiseEntry.cmtAdvertiseForMain.domain.CmtAdvertiseForMainWithCommentAllDto;
 import com.mrporter.pomangam.advertiseEntry.subAdvertiseForMain.domain.SubAdvertiseForMainDto;
+import com.mrporter.pomangam.deliveryEntry.deliverySite.domain.DeliverySiteDto;
 import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.domain.DetailForDeliverySiteDto;
 import com.mrporter.pomangam.orderEntry.orderTime.domain.OrderTimeDto;
 import lombok.Data;
@@ -21,6 +22,8 @@ public class MainViewDto implements Serializable {
 
     private List<AdvertiseForMainDto> advertiseForMainDtoList;
 
+    private DeliverySiteDto deliverySiteDto;
+
     private List<DetailForDeliverySiteDto> detailSiteDtoList;
 
     private Date arrival_date;
@@ -30,4 +33,5 @@ public class MainViewDto implements Serializable {
     private List<CmtAdvertiseForMainWithCommentAllDto> cmtAdvertiseForMainWithCommentAllDtoList;
 
     private List<SubAdvertiseForMainDto> subAdvertiseForMainDtoList;
+
 }

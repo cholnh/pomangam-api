@@ -41,6 +41,8 @@ public class InquiryResultDto implements Serializable {
 
     private ZonedDateTime arrival_time;
 
+    private String imgpath;
+
     public InquiryResultDto(Integer idx,
                             String name,
                             String location,
@@ -51,7 +53,8 @@ public class InquiryResultDto implements Serializable {
                             Short parallel_production,
                             Integer maximum_production,
                             Time order_deadline,
-                            Byte state_pause) {
+                            Byte state_pause,
+                            String imgpath) {
         this.idx = idx;
         this.name = name;
         this.location = location;
@@ -63,5 +66,6 @@ public class InquiryResultDto implements Serializable {
         this.maximum_production = maximum_production;
         this.order_deadline = order_deadline;
         this.state_pause = state_pause;
+        this.imgpath = imgpath;
     }
 }

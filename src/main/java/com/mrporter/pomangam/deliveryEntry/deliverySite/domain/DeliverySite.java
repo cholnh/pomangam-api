@@ -22,12 +22,16 @@ public class DeliverySite implements Serializable {
 
     private String location;
 
-    private Integer region_category_idx;
+    @Column(name = "region_category_idx")
+    private Integer regionCategoryIdx;
+
+    private String campus;
 
     @Builder
-    public DeliverySite(String name, String location, Integer region_category_idx) {
+    public DeliverySite(String name, String location, Integer regionCategoryIdx, String campus) {
         this.name = name;
         this.location = location;
-        this.region_category_idx = region_category_idx;
+        this.regionCategoryIdx = regionCategoryIdx;
+        this.campus = campus;
     }
 }

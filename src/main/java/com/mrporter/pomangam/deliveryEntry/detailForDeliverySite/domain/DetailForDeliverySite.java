@@ -31,12 +31,18 @@ public class DetailForDeliverySite implements Serializable {
     @Column(name = "offset_arrival_time")
     private Time offsetArrivalTime;
 
+    private Double latitude;
+
+    private Double longitude;
+
     @Builder
-    public DetailForDeliverySite(Integer deliverySiteIdx, String name, String location, Integer sequence, Time offsetArrivalTime) {
+    public DetailForDeliverySite(Integer deliverySiteIdx, String name, String location, Integer sequence, Time offsetArrivalTime, Double latitude, Double longitude) {
         this.deliverySiteIdx = deliverySiteIdx;
         this.name = name;
         this.location = location;
         this.sequence = sequence;
         this.offsetArrivalTime = offsetArrivalTime;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 }

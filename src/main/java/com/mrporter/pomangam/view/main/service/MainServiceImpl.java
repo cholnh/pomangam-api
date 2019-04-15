@@ -4,6 +4,7 @@ import com.mrporter.pomangam.advertiseEntry.advertiseForMain.repository.Advertis
 import com.mrporter.pomangam.advertiseEntry.advertiseForPopup.repository.AdvertiseForPopupRepositoryImpl;
 import com.mrporter.pomangam.advertiseEntry.cmtAdvertiseForMain.repository.CmtAdvertiseForMainRepositoryImpl;
 import com.mrporter.pomangam.advertiseEntry.subAdvertiseForMain.repository.SubAdvertiseForMainRepositoryImpl;
+import com.mrporter.pomangam.deliveryEntry.deliverySite.repository.DeliverySiteJpaRepository;
 import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.repository.DetailForDeliverySiteRepositoryImpl;
 import com.mrporter.pomangam.orderEntry.orderTime.domain.OrderTimeDto;
 import com.mrporter.pomangam.orderEntry.orderTime.repository.OrderTimeRepositoryImpl;
@@ -23,6 +24,7 @@ public class MainServiceImpl implements MainService {
 
     AdvertiseForPopupRepositoryImpl advertiseForPopupRepository;
     AdvertiseForMainRepositoryImpl advertiseForMainRepository;
+    DeliverySiteJpaRepository deliverySiteJpaRepository;
     DetailForDeliverySiteRepositoryImpl detailForDeliverySiteRepository;
     OrderTimeRepositoryImpl orderTimeRepository;
     CmtAdvertiseForMainRepositoryImpl cmtAdvertiseForMainRepository;
@@ -33,6 +35,7 @@ public class MainServiceImpl implements MainService {
         MainViewDto dto = new MainViewDto();
         dto.setAdvertiseForPopupDtoList(advertiseForPopupRepository.getAdvertisePopupsByDeliverySiteIdx(delivery_site_idx));
         dto.setAdvertiseForMainDtoList(advertiseForMainRepository.getAdvertiseMainsByDeliverySiteIdx(delivery_site_idx));
+        dto.setDeliverySiteDto(deliverySiteJpaRepository.getByDeliverySiteIdx(delivery_site_idx));
         dto.setDetailSiteDtoList(detailForDeliverySiteRepository.getDetailSitesByDeliverySiteIdxOrderBySequence(delivery_site_idx));
         dto.setCmtAdvertiseForMainWithCommentAllDtoList(cmtAdvertiseForMainRepository.getCmtAdvertiseMainsByDeliverySiteIdx(delivery_site_idx));
         dto.setSubAdvertiseForMainDtoList(subAdvertiseForMainRepository.getSubAdvertiseMainsByDeliverySiteIdx(delivery_site_idx));
@@ -55,6 +58,7 @@ public class MainServiceImpl implements MainService {
         MainFirstViewDto dto = new MainFirstViewDto();
         dto.setAdvertiseForPopupDtoList(advertiseForPopupRepository.getAdvertisePopupsByDeliverySiteIdx(delivery_site_idx));
         dto.setAdvertiseForMainDtoList(advertiseForMainRepository.getAdvertiseMainsByDeliverySiteIdx(delivery_site_idx));
+        dto.setDeliverySiteDto(deliverySiteJpaRepository.getByDeliverySiteIdx(delivery_site_idx));
         dto.setDetailSiteDtoList(detailForDeliverySiteRepository.getDetailSitesByDeliverySiteIdxOrderBySequence(delivery_site_idx));
 
         List<OrderTimeDto> orderTimeDtoList = orderTimeRepository.getOrderTimesByDeliverySiteIdxAndArrivalTime(delivery_site_idx);

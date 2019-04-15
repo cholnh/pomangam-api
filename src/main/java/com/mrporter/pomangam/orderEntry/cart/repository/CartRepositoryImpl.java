@@ -19,12 +19,12 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.sql.Date;
-import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -147,7 +147,7 @@ public class CartRepositoryImpl implements CartRepository {
     }
 */
     @Override
-    public Map<Integer, Time> getCartWithArrivalTimeByCustomerIdx(Integer customer_idx) {
+    public Map<Integer, LocalDateTime> getCartWithArrivalTimeByCustomerIdx(Integer customer_idx) {
         String sql = "SELECT * FROM cart_tbl WHERE customer_idx = ?";
         Query nativeQuery = em.createNativeQuery(sql);
         nativeQuery.setParameter(1, customer_idx);
@@ -162,15 +162,15 @@ public class CartRepositoryImpl implements CartRepository {
     }
 
     @Override
-    public Map<Integer, Time> getCartWithArrivalTimeByCartIdx(Integer cart_Idx) {
+    public Map<Integer, LocalDateTime> getCartWithArrivalTimeByCartIdx(Integer cart_Idx) {
 
         return getCartWithArrivalTime(cart_Idx, ZoneId.of("Asia/Seoul"));
     }
 
     // quantity 는 product.type - Main 메뉴에 해당하는 물품 개수만 측정.
     //@Override
-    public Map<Integer, Time> getCartWithArrivalTime(Integer cart_Idx, ZoneId zoneId) {
-        Map<Integer, Time> result = new HashMap<>();
+    public Map<Integer, LocalDateTime> getCartWithArrivalTime(Integer cart_Idx, ZoneId zoneId) {
+        Map<Integer, LocalDateTime> result = new HashMap<>();
 
         Query nativeQuery1 = em.createNativeQuery(
                 "SELECT * " +
@@ -188,25 +188,25 @@ public class CartRepositoryImpl implements CartRepository {
                 "group by store_idx");
         nativeQuery2.setParameter(1, cart_Idx);
         List<CartInStoreQuantityDto> dtoList = new JpaResultMapper().list(nativeQuery2, CartInStoreQuantityDto.class);
-
-        // TZ 설정
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime ldt;
-        try {
-            ldt = LocalDateTime.parse(cart.getArrivalDate().toString() + " 12:00:00", formatter);
-        } catch (DateTimeParseException dpe) {
-            return null;
-        }
-        ZonedDateTime arrTimeWithZone = ZonedDateTime.of(
-                ldt,
-                zoneId);
-        if(CustomTime.isPast(arrTimeWithZone)) {
-            ldt = LocalDateTime.now();
-            arrTimeWithZone = ZonedDateTime.now(zoneId);
-        }
-
         if(!dtoList.isEmpty()) {
             for(CartInStoreQuantityDto dto : dtoList) {
+
+                // TZ 설정
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime ldt;
+                try {
+                    ldt = LocalDateTime.parse(cart.getArrivalDate().toString() + " 12:00:00", formatter);
+                } catch (DateTimeParseException dpe) {
+                    return null;
+                }
+                ZonedDateTime arrTimeWithZone = ZonedDateTime.of(
+                        ldt,
+                        zoneId);
+                if(CustomTime.isPast(arrTimeWithZone)) {
+                    ldt = LocalDateTime.now();
+                    arrTimeWithZone = ZonedDateTime.now(zoneId);
+                }
+
                 Integer store_idx = dto.getStore_idx();
                 int quantity = dto.getQuantity();
 
@@ -219,13 +219,19 @@ public class CartRepositoryImpl implements CartRepository {
                 int mt = storeInfo.getMinimum_time().toLocalTime().getMinute();   // 최소 생산 시간 (분 단위)
                 int mp = storeInfo.getMaximum_production();   // 최대 가능 생산량
 
+                System.out.println("store start : " + storeInfo.getName());
+
                 boolean isTomorrow = true;
                 do {
                     if(svList == null || svList.isEmpty()) {
                         break;
                     }
                     for(OrderTimeSalesVolumeDto svDto : svList) {
-                        Time arrival_time = svDto.getArrival_time();
+                        System.out.println("svDto : " + svDto);
+                        System.out.println("ldt : " + ldt);
+
+                        LocalDateTime arrival_time = LocalDateTime.of(ldt.toLocalDate(), svDto.getArrival_time().toLocalTime());
+
                         int sv = svDto.getSv()==null?0:svDto.getSv().intValue();
                         if(sv > mp) {
                             // 판매량이 최대 생산량을 초과한 경우
@@ -255,6 +261,8 @@ public class CartRepositoryImpl implements CartRepository {
                         rc = temp > mp ? mp : (int)temp;
                         rc -= sv;
 
+                        System.out.println("temp : "+temp + " rc : " + rc + " quantity : " + quantity);
+
                         if(rc < quantity) {
                             // td가 -1일 경우 (parse error) or 현재까지 남은 주문_가능_수량이 없는 경우
                         } else {
@@ -262,6 +270,10 @@ public class CartRepositoryImpl implements CartRepository {
                             result.put(store_idx, arrival_time); // list 로 할까??
                             break;
                         }
+                    }
+                    if(isTomorrow) {
+                        ldt = ldt.plus(1, ChronoUnit.DAYS);
+                        System.out.println("다음날");
                     }
                 } while(isTomorrow);
             }
