@@ -20,7 +20,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class MainServiceImpl implements MainService {
+public class MainViewServiceImpl implements MainViewService {
 
     AdvertiseForPopupRepositoryImpl advertiseForPopupRepository;
     AdvertiseForMainRepositoryImpl advertiseForMainRepository;

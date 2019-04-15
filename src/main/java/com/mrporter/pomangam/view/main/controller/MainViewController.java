@@ -1,6 +1,6 @@
 package com.mrporter.pomangam.view.main.controller;
 
-import com.mrporter.pomangam.view.main.service.MainServiceImpl;
+import com.mrporter.pomangam.view.main.service.MainViewServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class MainViewController {
 
-    MainServiceImpl mainService;
+    MainViewServiceImpl mainService;
 
     @GetMapping
     public ResponseEntity<?> getAll(@RequestParam("deliverySiteIdx") Integer delivery_site_idx) {

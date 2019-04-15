@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class CartServiceImpl implements CartService {
+public class CartViewServiceImpl implements CartViewService {
 
     CartRepositoryImpl cartRepository;
     CartJpaRepository cartJpaRepository;

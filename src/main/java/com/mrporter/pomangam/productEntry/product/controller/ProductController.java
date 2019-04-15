@@ -1,6 +1,6 @@
-package com.mrporter.pomangam.view.cart.controller;
+package com.mrporter.pomangam.productEntry.product.controller;
 
-import com.mrporter.pomangam.view.cart.service.CartViewServiceImpl;
+import com.mrporter.pomangam.productEntry.product.service.ProductServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/views/cart")
+@RequestMapping("/products")
 @RestController
 @AllArgsConstructor
-public class CartViewController {
+public class ProductController {
 
-    CartViewServiceImpl cartService;
+    ProductServiceImpl productService;
 
-    @GetMapping
-    public ResponseEntity<?> getAll(@RequestParam("customerIdx") Integer customer_idx) {
-        return new ResponseEntity<>(cartService.getCartDto(customer_idx), HttpStatus.OK);
+    @GetMapping("/search/getBlahBlah")
+    public ResponseEntity<?> getBlahBlah(@RequestParam("blah") String blah) {
+        return new ResponseEntity(blah, HttpStatus.OK);
     }
 }
