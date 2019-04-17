@@ -25,7 +25,7 @@ public class KakaoAuthController {
     KakaoAuthServiceImpl kakaoAuthService;
     UserServiceImpl userService;
 
-    @GetMapping("/generateAuthCode")
+    @GetMapping("/generateAuthCodeForId")
     public ResponseEntity<?> generateAuthCode(@RequestParam("phn") String phone_number) {
         if(kakaoAuthService.checkAbusing(Ip.getInfo())) {
             return new ResponseEntity(HttpStatus.TOO_MANY_REQUESTS);
@@ -46,12 +46,13 @@ public class KakaoAuthController {
         }
     }
 
-    @GetMapping("/checkAuthCode")
-    public ResponseEntity<?> checkAuthCode(@RequestParam("phn") String phone_number,
-                                           @RequestParam("code") String auth_code) {
-        boolean isValidAuthCode = kakaoAuthService.checkAuthCode(phone_number, auth_code);
-        if(isValidAuthCode) {
-            return new ResponseEntity(isValidAuthCode, HttpStatus.OK);
+    @GetMapping("/checkAuthCodeForId")
+    public ResponseEntity<?> checkAuthCodeForId(@RequestParam("phn") String phone_number,
+                                                @RequestParam("code") String auth_code) {
+        if(kakaoAuthService.checkAuthCode(phone_number, auth_code)) {
+            User user = userService.findByPhoneNumber(phone_number);
+            user.setPw(null);
+            return new ResponseEntity(user, HttpStatus.OK);
         } else {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
@@ -65,6 +66,17 @@ public class KakaoAuthController {
         return generateAuthCode(phone_number);
     }
 
+    @GetMapping("/checkAuthCodeForJoin")
+    public ResponseEntity<?> checkAuthCode(@RequestParam("phn") String phone_number,
+                                           @RequestParam("code") String auth_code) {
+        boolean isValidAuthCode = kakaoAuthService.checkAuthCode(phone_number, auth_code);
+        if(isValidAuthCode) {
+            return new ResponseEntity(isValidAuthCode, HttpStatus.OK);
+        } else {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping("/generateAuthCodeForPw")
     public ResponseEntity<?> generateAuthCodeForPw(@RequestParam("id") String id,
                                                    @RequestParam("phn") String phone_number) {
@@ -72,18 +84,6 @@ public class KakaoAuthController {
             return new ResponseEntity("User not found", HttpStatus.BAD_REQUEST);
         }
         return generateAuthCode(phone_number);
-    }
-
-    @GetMapping("/checkAuthCodeForId")
-    public ResponseEntity<?> checkAuthCodeForId(@RequestParam("phn") String phone_number,
-                                                @RequestParam("code") String auth_code) {
-        if(kakaoAuthService.checkAuthCode(phone_number, auth_code)) {
-            User user = userService.findByPhoneNumber(phone_number);
-            user.setPw(null);
-            return new ResponseEntity(user, HttpStatus.OK);
-        } else {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
     }
 
     @GetMapping("/checkAuthCodeForPw")

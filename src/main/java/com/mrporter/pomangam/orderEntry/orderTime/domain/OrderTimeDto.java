@@ -26,7 +26,9 @@ public class OrderTimeDto implements Serializable {
 
     private Short sequence;
 
-    public OrderTimeDto(Integer idx, Integer delivery_site_idx, Integer store_idx, Byte state_pause, Time order_deadline, Time arrival_time, Byte arrival_tomorrow, Short sequence) {
+    private String pause_description;
+
+    public OrderTimeDto(Integer idx, Integer delivery_site_idx, Integer store_idx, Byte state_pause, Time order_deadline, Time arrival_time, Byte arrival_tomorrow, Short sequence, String pause_description) {
         this.idx = idx;
         this.delivery_site_idx = delivery_site_idx;
         this.store_idx = store_idx;
@@ -35,9 +37,6 @@ public class OrderTimeDto implements Serializable {
         this.arrival_time = arrival_time;
         this.arrival_tomorrow = arrival_tomorrow;
         this.sequence = sequence;
-    }
-
-    public OrderTime toEntity() {
-        return null;
+        this.pause_description = pause_description;
     }
 }

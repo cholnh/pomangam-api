@@ -39,8 +39,10 @@ public class OrderTime implements Serializable {
 
     private Short sequence;
 
+    private String pause_description;
+
     @Builder
-    public OrderTime(Integer deliverySiteIdx, Integer storeIdx, Byte statePause, Time orderDeadline, Time arrivalTime, Byte arrivalTomorrow, Short sequence) {
+    public OrderTime(Integer deliverySiteIdx, Integer storeIdx, Byte statePause, Time orderDeadline, Time arrivalTime, Byte arrivalTomorrow, Short sequence, String pause_description) {
         this.deliverySiteIdx = deliverySiteIdx;
         this.storeIdx = storeIdx;
         this.statePause = statePause;
@@ -48,5 +50,6 @@ public class OrderTime implements Serializable {
         this.arrivalTime = arrivalTime;
         this.arrivalTomorrow = arrivalTomorrow;
         this.sequence = sequence;
+        this.pause_description = pause_description;
     }
 }

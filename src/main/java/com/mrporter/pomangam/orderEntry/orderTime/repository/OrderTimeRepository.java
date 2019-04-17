@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface OrderTimeRepository {
     List<InquiryResultDto> getInquiryResult(Integer delivery_site_idx, String arrival_time);
-    InquiryResultDto getInquiryResult(Integer delivery_site_idx, String arrival_time, Integer store_idx);
+    //InquiryResultDto getInquiryResult(Integer delivery_site_idx, String arrival_time, Integer store_idx);
     List<OrderTimeDto> getOrderTimesByDeliverySiteIdx(Integer delivery_site_idx);
     List<OrderTimeDto> getOrderTimesByDeliverySiteIdxAndArrivalTime(Integer delivery_site_idx);
 }

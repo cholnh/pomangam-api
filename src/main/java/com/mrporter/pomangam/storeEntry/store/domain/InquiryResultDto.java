@@ -43,6 +43,8 @@ public class InquiryResultDto implements Serializable {
 
     private String imgpath;
 
+    //private String pause_description;
+
     public InquiryResultDto(Integer idx,
                             String name,
                             String location,
@@ -54,7 +56,8 @@ public class InquiryResultDto implements Serializable {
                             Integer maximum_production,
                             Time order_deadline,
                             Byte state_pause,
-                            String imgpath) {
+                            String imgpath
+                            ) {
         this.idx = idx;
         this.name = name;
         this.location = location;

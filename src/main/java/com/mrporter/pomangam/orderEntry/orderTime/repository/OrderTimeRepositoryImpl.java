@@ -35,6 +35,7 @@ public class OrderTimeRepositoryImpl implements OrderTimeRepository {
         return products;
     }
 
+    /*
     @Override
     public InquiryResultDto getInquiryResult(Integer delivery_site_idx, String arrival_time, Integer store_idx) {
         String sql = "SELECT str.idx, str.name, str.location, str.main_phone_number, str.description, str.cnt_like, str.minimum_time, str.parallel_production, str.maximum_production, " +
@@ -54,6 +55,7 @@ public class OrderTimeRepositoryImpl implements OrderTimeRepository {
         InquiryResultDto products = jpaResultMapper.uniqueResult(nativeQuery, InquiryResultDto.class);
         return products;
     }
+     */
 
     @Override
     public List<OrderTimeDto> getOrderTimesByDeliverySiteIdxAndArrivalTime(Integer delivery_site_idx) {

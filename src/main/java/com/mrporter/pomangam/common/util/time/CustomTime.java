@@ -62,6 +62,7 @@ public class CustomTime {
         return today.compareTo(date.toLocalDate()) < 0;
     }
 
+    // 과거:1 현재:0 미래:-1
     public static boolean isToday(ZonedDateTime date) {
         LocalDate today = LocalDate.now(date.getZone());
         return today.compareTo(date.toLocalDate()) == 0;

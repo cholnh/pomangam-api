@@ -19,7 +19,8 @@ public class ScheduleForStore implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idx;
 
-    private Integer store_idx;
+    @Column(name = "store_idx")
+    private Integer storeIdx;
 
     private Time open_time;
 
@@ -40,8 +41,8 @@ public class ScheduleForStore implements Serializable {
     private Byte fourth_week_close;
 
     @Builder
-    public ScheduleForStore(Integer store_idx, Time open_time, Time close_time, Byte state_active, Byte state_pause, String pause_description, Byte first_week_close, Byte second_week_close, Byte third_week_close, Byte fourth_week_close) {
-        this.store_idx = store_idx;
+    public ScheduleForStore(Integer storeIdx, Time open_time, Time close_time, Byte state_active, Byte state_pause, String pause_description, Byte first_week_close, Byte second_week_close, Byte third_week_close, Byte fourth_week_close) {
+        this.storeIdx = storeIdx;
         this.open_time = open_time;
         this.close_time = close_time;
         this.state_active = state_active;
