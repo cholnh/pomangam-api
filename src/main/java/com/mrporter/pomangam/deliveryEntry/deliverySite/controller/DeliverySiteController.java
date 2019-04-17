@@ -1,6 +1,7 @@
 package com.mrporter.pomangam.deliveryEntry.deliverySite.controller;
 
 import com.mrporter.pomangam.deliveryEntry.deliverySite.domain.DeliverySiteDto;
+import com.mrporter.pomangam.deliveryEntry.deliverySite.domain.DeliverySiteWithCountDto;
 import com.mrporter.pomangam.deliveryEntry.deliverySite.service.DeliverySiteServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,7 @@ public class DeliverySiteController {
 
     @GetMapping("/search/findByQuery")
     public ResponseEntity<?> findByQuery(@RequestParam("query") String query) {
-        List<DeliverySiteDto> deliverySiteDtoList = deliverySiteService.findByQuery(query);
+        List<DeliverySiteWithCountDto> deliverySiteDtoList = deliverySiteService.findByQuery(query);
         if(deliverySiteDtoList == null) {
             return  new ResponseEntity(HttpStatus.BAD_REQUEST);
         } else {

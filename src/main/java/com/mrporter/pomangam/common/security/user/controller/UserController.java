@@ -38,7 +38,7 @@ public class UserController {
     //@PostAuthorize("isAuthenticated() and (( returnObject.id == principal.id ) or hasRole('ROLE_ADMIN'))")
     @PostAuthorize("isAuthenticated()")
     @GetMapping("/myInfo")
-    public ResponseEntity<?> get(HttpSession session) {
+    public ResponseEntity<?> myInfo(HttpSession session) {
         User user = SessionConverter.getCustomer(session);
         Authentication authentication = SessionConverter.getAuthentication(session);
         if(authentication != null && user != null) {
@@ -54,11 +54,19 @@ public class UserController {
     }
 
     @GetMapping("/isExist")
-    public ResponseEntity<?> get(@RequestParam("id") String id) {
+    public ResponseEntity<?> isExist(@RequestParam("id") String id) {
         if(id == null) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(userService.isUserExist(id));
+    }
+
+    @GetMapping("/isExistByPhoneNumber")
+    public ResponseEntity<?> isUserExistByPhoneNumber(@RequestParam("phone_number") String phone_number) {
+        if(phone_number == null) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(userService.isUserExistByPhoneNumber(phone_number), HttpStatus.OK);
     }
 
     // 비밀번호 암호화 필요

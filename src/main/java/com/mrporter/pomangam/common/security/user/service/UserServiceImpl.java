@@ -27,6 +27,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByPhoneNumber(String phone_number) {
+        return userJpaRepository.findByPhoneNumber(phone_number);
+    }
+
+    @Override
     public List<User> findAllUsers() {
         return userJpaRepository.findAll();
     }
@@ -67,6 +72,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Boolean isUserExistByPhoneNumber(String phone_number) {
+        if(phone_number != null) {
+            final User existingUser = userJpaRepository.findByPhoneNumber(phone_number);
+            return existingUser == null ? false : true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean isUserExistByIdAndPhoneNumber(String id, String phone_number) {
+        if(phone_number != null) {
+            final User existingUser = userJpaRepository.findByIdAndPhoneNumber(id, phone_number);
+            return existingUser == null ? false : true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public User updateUser(String id, User user) {
         final User fetchedUser = userJpaRepository.findById(id);
         if (fetchedUser == null) {
@@ -81,13 +106,26 @@ public class UserServiceImpl implements UserService {
         fetchedUser.setYear_of_birth(user.getYear_of_birth());
         fetchedUser.setMonth_of_birth(user.getMonth_of_birth());
         fetchedUser.setDays_of_birth(user.getDays_of_birth());
-        fetchedUser.setPhone_number(user.getPhone_number());
+        fetchedUser.setPhoneNumber(user.getPhoneNumber());
         fetchedUser.setState_active(user.getState_active());
 
         //fetchedUser.setRegister_date(user.getRegister_date());
         fetchedUser.setModify_date(CustomTime.curTimestampSql());
 
         fetchedUser.setPoint(user.getPoint());
+        userJpaRepository.save(fetchedUser);
+        return fetchedUser;
+    }
+
+    @Override
+    public User updateUserPw(String id, String pw) {
+        final User fetchedUser = userJpaRepository.findById(id);
+        if (fetchedUser == null) {
+            return null;
+        }
+        fetchedUser.setPw(passwordEncoder.encode(pw));
+        fetchedUser.setModify_date(CustomTime.curTimestampSql());
+
         userJpaRepository.save(fetchedUser);
         return fetchedUser;
     }
@@ -127,8 +165,8 @@ public class UserServiceImpl implements UserService {
         if (user.getDays_of_birth() != null) {
             fetchedUser.setDays_of_birth(user.getDays_of_birth());
         }
-        if (user.getPhone_number() != null) {
-            fetchedUser.setPhone_number(user.getPhone_number());
+        if (user.getPhoneNumber() != null) {
+            fetchedUser.setPhoneNumber(user.getPhoneNumber());
         }
         if (user.getState_active() != null) {
             fetchedUser.setState_active(user.getState_active());

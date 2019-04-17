@@ -6,5 +6,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource(exported = true)
 public interface DeliverySiteJpaRepository extends JpaRepository<DeliverySite, Integer>, DeliverySiteRepository {
-    //List<DeliverySite> findByRegionCategoryIdx(@Param("regionCategoryIdx") Integer regionCategoryIdx);
+    //List<KakaoAuth> findByRegionCategoryIdx(@Param("regionCategoryIdx") Integer regionCategoryIdx);
 }

@@ -51,7 +51,7 @@ public class UserDto implements Serializable {
                 .year_of_birth(year_of_birth)
                 .month_of_birth(month_of_birth)
                 .days_of_birth(days_of_birth)
-                .phone_number(phone_number)
+                .phoneNumber(phone_number)
                 .state_active(state_active)
                 .register_date(register_date)
                 .modify_date(modify_date)

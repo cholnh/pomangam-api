@@ -53,7 +53,6 @@ public class CartRepositoryImpl implements CartRepository {
         if(carts.isEmpty()) {
             return 0;
         }
-
         CartDto cart = carts.get(0);
         Date arrivalDate = cart.getArrivalDate();
         if(CustomTime.compareToday(arrivalDate) > 0) {
@@ -219,7 +218,7 @@ public class CartRepositoryImpl implements CartRepository {
                 int mt = storeInfo.getMinimum_time().toLocalTime().getMinute();   // 최소 생산 시간 (분 단위)
                 int mp = storeInfo.getMaximum_production();   // 최대 가능 생산량
 
-                System.out.println("store start : " + storeInfo.getName());
+                //System.out.println("store start : " + storeInfo.getName());
 
                 boolean isTomorrow = true;
                 do {
@@ -227,8 +226,8 @@ public class CartRepositoryImpl implements CartRepository {
                         break;
                     }
                     for(OrderTimeSalesVolumeDto svDto : svList) {
-                        System.out.println("svDto : " + svDto);
-                        System.out.println("ldt : " + ldt);
+                        //System.out.println("svDto : " + svDto);
+                        //System.out.println("ldt : " + ldt);
 
                         LocalDateTime arrival_time = LocalDateTime.of(ldt.toLocalDate(), svDto.getArrival_time().toLocalTime());
 
@@ -261,7 +260,7 @@ public class CartRepositoryImpl implements CartRepository {
                         rc = temp > mp ? mp : (int)temp;
                         rc -= sv;
 
-                        System.out.println("temp : "+temp + " rc : " + rc + " quantity : " + quantity);
+                        //System.out.println("temp : "+temp + " rc : " + rc + " quantity : " + quantity);
 
                         if(rc < quantity) {
                             // td가 -1일 경우 (parse error) or 현재까지 남은 주문_가능_수량이 없는 경우
@@ -273,7 +272,7 @@ public class CartRepositoryImpl implements CartRepository {
                     }
                     if(isTomorrow) {
                         ldt = ldt.plus(1, ChronoUnit.DAYS);
-                        System.out.println("다음날");
+                        //System.out.println("다음날");
                     }
                 } while(isTomorrow);
             }

@@ -1,6 +1,7 @@
 package com.mrporter.pomangam.deliveryEntry.deliverySite.repository;
 
 import com.mrporter.pomangam.deliveryEntry.deliverySite.domain.DeliverySiteDto;
+import com.mrporter.pomangam.deliveryEntry.deliverySite.domain.DeliverySiteWithCountDto;
 import lombok.AllArgsConstructor;
 import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.stereotype.Repository;
@@ -17,14 +18,14 @@ public class DeliverySiteRepositoryImpl implements DeliverySiteRepository {
     EntityManager em;
 
     @Override
-    public List<DeliverySiteDto> findByQuery(String query) {
+    public List<DeliverySiteWithCountDto> findByQuery(String query) {
         String sql = "(SELECT ds.*, cnt.count FROM delivery_site_tbl ds LEFT OUTER JOIN count_search_delivery_site_tbl cnt ON ds.idx = cnt.delivery_site_idx where ds.name like :name ORDER BY cnt.count DESC) " +
                      " UNION " +
                      "(SELECT ds.*, cnt.count FROM delivery_site_tbl ds LEFT OUTER JOIN count_search_delivery_site_tbl cnt ON ds.idx = cnt.delivery_site_idx where ds.name not like :name AND ds.location like :name ORDER BY cnt.count DESC)";
         Query nativeQuery = em.createNativeQuery(sql);
         nativeQuery.setParameter("name", "%"+query+"%");
 
-        List<DeliverySiteDto> dList = new JpaResultMapper().list(nativeQuery, DeliverySiteDto.class);
+        List<DeliverySiteWithCountDto> dList = new JpaResultMapper().list(nativeQuery, DeliverySiteWithCountDto.class);
 
         return dList;
     }

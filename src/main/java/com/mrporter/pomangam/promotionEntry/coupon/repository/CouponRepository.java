@@ -1,11 +1,12 @@
-package com.mrporter.pomangam.promotionEntry.coupon.service;
+package com.mrporter.pomangam.promotionEntry.coupon.repository;
 
 import com.mrporter.pomangam.promotionEntry.coupon.domain.CouponDto;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface CouponService {
-    int countCoupon(Integer customerIdx) throws Exception;
+public interface CouponRepository {
+    int countCoupon(@Param("customerIdx") Integer customerIdx) throws Exception;
     CouponDto findByIdx(Integer idx) throws Exception;
     List<CouponDto> findAll() throws Exception;
     List<CouponDto> findValidByCustomerIdx(Integer customer_idx) throws Exception;

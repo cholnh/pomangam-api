@@ -28,6 +28,7 @@ public class DetailForDeliverySiteDto implements Serializable {
     private Double longitude;
 
     public DetailForDeliverySiteDto(Integer idx, Integer deliverySiteIdx, String name, String location, Integer sequence, Time offsetArrivalTime, Double latitude, Double longitude) {
+        this.idx = idx;
         this.deliverySiteIdx = deliverySiteIdx;
         this.name = name;
         this.location = location;

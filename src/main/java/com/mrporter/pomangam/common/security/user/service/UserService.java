@@ -15,6 +15,8 @@ public interface UserService {
      */
     User findById(String id);
 
+    User findByPhoneNumber(String phone_number);
+
     /**
      * @return the list of all users
      */
@@ -30,6 +32,8 @@ public interface UserService {
      */
     User saveUser(User user);
 
+    User updateUserPw(String id, String pw);
+
     /**
      * @param user User entity to check existence
      * @return true if exist; otherwise, return false
@@ -41,6 +45,9 @@ public interface UserService {
      * @return updated user entity
      */
     User updateUser(String id, User user);
+
+    Boolean isUserExistByPhoneNumber(String phone_number);
+    Boolean isUserExistByIdAndPhoneNumber(String id, String phone_number);
 
     /**
      * @param user updated user entity

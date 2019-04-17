@@ -1,6 +1,7 @@
 package com.mrporter.pomangam.deliveryEntry.deliverySite.service;
 
 import com.mrporter.pomangam.deliveryEntry.deliverySite.domain.DeliverySiteDto;
+import com.mrporter.pomangam.deliveryEntry.deliverySite.domain.DeliverySiteWithCountDto;
 import com.mrporter.pomangam.deliveryEntry.deliverySite.repository.DeliverySiteRepositoryImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class DeliverySiteServiceImpl implements DeliverySiteService {
     }
 
     @Override
-    public List<DeliverySiteDto> findByQuery(String query) {
+    public List<DeliverySiteWithCountDto> findByQuery(String query) {
         return deliverySiteRepository.findByQuery(query);
     }
 

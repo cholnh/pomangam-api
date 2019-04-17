@@ -42,7 +42,8 @@ public class User implements Serializable {
 
     private Byte days_of_birth;
 
-    private String phone_number;
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
     private Byte state_active;
 
@@ -53,7 +54,7 @@ public class User implements Serializable {
     private Integer point;
 
     @Builder
-    public User(Integer delivery_site_idx, String id, String pw, String name, String nickname, Byte gender, Short year_of_birth, Byte month_of_birth, Byte days_of_birth, String phone_number, Byte state_active, Timestamp register_date, Timestamp modify_date, Integer point) {
+    public User(Integer delivery_site_idx, String id, String pw, String name, String nickname, Byte gender, Short year_of_birth, Byte month_of_birth, Byte days_of_birth, String phoneNumber, Byte state_active, Timestamp register_date, Timestamp modify_date, Integer point) {
         this.delivery_site_idx = delivery_site_idx;
         this.id = id;
         this.pw = pw;
@@ -63,7 +64,7 @@ public class User implements Serializable {
         this.year_of_birth = year_of_birth;
         this.month_of_birth = month_of_birth;
         this.days_of_birth = days_of_birth;
-        this.phone_number = phone_number;
+        this.phoneNumber = phoneNumber;
         this.state_active = state_active;
         this.register_date = register_date;
         this.modify_date = modify_date;
