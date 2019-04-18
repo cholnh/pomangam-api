@@ -1,11 +1,41 @@
 package com.mrporter.pomangam.storeEntry.store.repository;
 
+import com.mrporter.pomangam.storeEntry.store.domain.StoreDto;
 import lombok.AllArgsConstructor;
+import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.List;
 
 @Repository
 @AllArgsConstructor
 public class StoreRepositoryImpl implements StoreRepository {
+    @PersistenceContext
+    EntityManager em;
+
+    @Override
+    public List<StoreDto> findByQuery(String query, Integer delivery_site_idx) {
+        Query nativeQuery = em
+                .createNativeQuery("SELECT  " +
+                        "    s.* " +
+                        "FROM " +
+                        "    store_tbl s, " +
+                        "    schedule_for_store_tbl sc " +
+                        "WHERE " +
+                        "   s.idx IN (SELECT store_idx FROM ordertime_for_store_tbl WHERE delivery_site_idx = :didx group by store_idx) " +
+                        "        AND s.idx = sc.store_idx " +
+                        "        AND sc.state_active = 1 " +
+                        "        AND sc.state_pause = 0 " +
+                        "        AND s.name LIKE :name ")
+                .setParameter("didx", delivery_site_idx)
+                .setParameter("name", "%"+query+"%");
+        List<StoreDto> storeDtoList = new JpaResultMapper().list(nativeQuery, StoreDto.class);
+
+        return storeDtoList;
+    }
 
 //    OrderTimeRepositoryImpl orderTimeRepository;
 //    OrderRepositoryImpl orderRepositoryImpl;

@@ -40,4 +40,10 @@ public class ProductController {
             return new ResponseEntity(dto, HttpStatus.OK);
         }
     }
+
+    @GetMapping("/search/findByQuery")
+    public ResponseEntity<?> findByQuery(@RequestParam("query") String query,
+                                         @RequestParam("deliverySiteIdx") Integer delivery_site_idx) {
+            return new ResponseEntity(productService.findByQuery(query, delivery_site_idx), HttpStatus.OK);
+    }
 }

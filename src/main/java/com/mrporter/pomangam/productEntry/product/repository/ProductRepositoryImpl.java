@@ -2,6 +2,7 @@ package com.mrporter.pomangam.productEntry.product.repository;
 
 import com.mrporter.pomangam.common.util.sqlInjection.SqlInjection;
 import com.mrporter.pomangam.productEntry.product.domain.ProductDto;
+import com.mrporter.pomangam.productEntry.product.domain.ProductSummaryDto;
 import com.mrporter.pomangam.productEntry.product.domain.ProductWithCostDto;
 import com.mrporter.pomangam.promotionEntry.promotion.domain.PromotionSumDto;
 import com.mrporter.pomangam.promotionEntry.promotion.repository.PromotionRepositoryImpl;
@@ -105,5 +106,29 @@ public class ProductRepositoryImpl implements ProductRepository {
 
         List<ProductWithCostDto> productWithCostDtoList = new JpaResultMapper().list(nativeQuery1, ProductWithCostDto.class);
         return productWithCostDtoList;
+    }
+
+    @Override
+    public List<ProductSummaryDto> findByQuery(String query, Integer delivery_site_idx) {
+        Query nativeQuery = em
+                .createNativeQuery("SELECT " +
+                        "    p.idx as product_idx, p.store_idx as store_idx, s.name as store_name, p.name as product_name, p.category_id as category_id, p.category_name as category_name, p.type as product_type " +
+                        "FROM " +
+                        "    product_tbl p, " +
+                        "    store_tbl s, " +
+                        "    schedule_for_store_tbl sc " +
+                        "WHERE " +
+                        "    s.idx IN (SELECT store_idx FROM ordertime_for_store_tbl WHERE delivery_site_idx = :didx group by store_idx) " +
+                        "        AND p.store_idx = s.idx " +
+                        "        AND s.idx = sc.store_idx " +
+                        "        AND p.name LIKE :name " +
+                        "        AND p.state_active = 1 " +
+                        "        AND sc.state_active = 1 " +
+                        "        AND sc.state_pause = 0 ")
+                .setParameter("didx", delivery_site_idx)
+                .setParameter("name", "%"+query+"%");
+        List<ProductSummaryDto> productDtoList = new JpaResultMapper().list(nativeQuery, ProductSummaryDto.class);
+
+        return productDtoList;
     }
 }

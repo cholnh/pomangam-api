@@ -54,7 +54,7 @@ public class KakaoAuthController {
             user.setPw(null);
             return new ResponseEntity(user, HttpStatus.OK);
         } else {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(false, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -73,7 +73,7 @@ public class KakaoAuthController {
         if(isValidAuthCode) {
             return new ResponseEntity(isValidAuthCode, HttpStatus.OK);
         } else {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(isValidAuthCode, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -104,10 +104,10 @@ public class KakaoAuthController {
                 user.setPw(null);
                 return new ResponseEntity(user, HttpStatus.OK);
             } else {
-                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity("USER NOT EXIST", HttpStatus.BAD_REQUEST);
             }
         } else {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(false, HttpStatus.BAD_REQUEST);
         }
     }
 
