@@ -1,6 +1,7 @@
 package com.mrporter.pomangam.productEntry.product.repository;
 
 import com.mrporter.pomangam.common.util.sqlInjection.SqlInjection;
+import com.mrporter.pomangam.productEntry.product.domain.AdditionalDto;
 import com.mrporter.pomangam.productEntry.product.domain.ProductDto;
 import com.mrporter.pomangam.productEntry.product.domain.ProductSummaryDto;
 import com.mrporter.pomangam.productEntry.product.domain.ProductWithCostDto;
@@ -33,8 +34,12 @@ public class ProductRepositoryImpl implements ProductRepository {
         Query nativeQuery1 = em
                 .createNativeQuery("SELECT * FROM product_tbl WHERE idx = ?")
                 .setParameter(1, product_idx);
-        ProductDto productDto = new JpaResultMapper().uniqueResult(nativeQuery1, ProductDto.class);
+        List<ProductDto> productDtoList = new JpaResultMapper().list(nativeQuery1, ProductDto.class);
+        if(productDtoList.isEmpty()) {
+            return null;
+        }
 
+        ProductDto productDto = productDtoList.get(0);
         PromotionSumDto promotionSumDto = promotionRepository.getSumByStoreIdx(productDto.getStore_idx());
 
         int sum_prc = promotionSumDto.getSum_prc() == null ? 0 : promotionSumDto.getSum_prc();
@@ -96,7 +101,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                         "    p.idx = c.product_idx " +
                         "    AND store_idx = :storeIdx " +
                         "    AND p.state_active = 1 " +
-                        (type != null ? "AND p.type = :type ":"") +
+                        (type != null ? "AND p.type = :type ":"AND p.type IN (0, 1, 3) ") +   // 메인, 서브, 음료 (토핑 제외)
                         (orderBy != null && !sqlInjection.isSQLInjection(orderBy) ? "ORDER BY " + orderBy :"ORDER BY sequence DESC "))
                 .setParameter("storeIdx", store_idx);
 
@@ -124,10 +129,34 @@ public class ProductRepositoryImpl implements ProductRepository {
                         "        AND p.name LIKE :name " +
                         "        AND p.state_active = 1 " +
                         "        AND sc.state_active = 1 " +
-                        "        AND sc.state_pause = 0 ")
+                        "        AND sc.state_pause = 0 " +
+                        "        AND p.type IN (0, 1, 3) ")
                 .setParameter("didx", delivery_site_idx)
                 .setParameter("name", "%"+query+"%");
         List<ProductSummaryDto> productDtoList = new JpaResultMapper().list(nativeQuery, ProductSummaryDto.class);
+
+        return productDtoList;
+    }
+
+    @Override
+    public List<AdditionalDto> findAdditionalByType(Integer productIdx, Integer type) {
+        Query nativeQuery = em
+                .createNativeQuery("SELECT " +
+                        "    pd.*, CAST(c.unit_cost + c.c_commission_prc + (c.unit_cost * c.c_commission_pct / 100) AS SIGNED INTEGER) AS prime_cost " +
+                        "FROM " +
+                        "    product_tbl pd, " +
+                        "    additional_for_product_tbl link, " +
+                        "    cost_tbl c " +
+                        "WHERE " +
+                        "   link.product_idx = :productIdx " +
+                        "    AND pd.idx = link.map_product_idx " +
+                        "    AND pd.idx = c.product_idx " +
+                        "    AND state_active = 1 " +
+                        "    AND pd.type = :type " +
+                        "    ORDER BY sequence DESC ")
+                .setParameter("productIdx", productIdx)
+                .setParameter("type", type);
+        List<AdditionalDto> productDtoList = new JpaResultMapper().list(nativeQuery, AdditionalDto.class);
 
         return productDtoList;
     }

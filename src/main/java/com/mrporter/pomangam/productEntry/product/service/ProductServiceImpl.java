@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.productEntry.product.service;
 
+import com.mrporter.pomangam.productEntry.product.domain.DetailOrderDto;
 import com.mrporter.pomangam.productEntry.product.domain.ProductWithCostDto;
 import com.mrporter.pomangam.productEntry.product.domain.SearchProductDto;
 import com.mrporter.pomangam.productEntry.product.repository.ProductRepositoryImpl;
@@ -28,9 +29,23 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public SearchProductDto findByQuery(String query, Integer delivery_site_idx) {
-        SearchProductDto dto = new SearchProductDto(
-                storeRepository.findByQuery(query, delivery_site_idx),
-                productRepository.findByQuery(query, delivery_site_idx));
+        SearchProductDto dto = new SearchProductDto();
+
+        dto.setProductSummaryDtoList(productRepository.findByQuery(query, delivery_site_idx));
+        dto.setStoreDtoList(storeRepository.findByQuery(query, delivery_site_idx));
+
+        return dto;
+    }
+
+    @Override
+    public DetailOrderDto getDetailOrder(Integer productIdx) {
+        DetailOrderDto dto = new DetailOrderDto();
+
+        dto.setProductWithCostDto(productRepository.findByProductIdx(productIdx));
+        dto.setSubMenuList(productRepository.findAdditionalByType(productIdx, 1));
+        dto.setToppingMenuList(productRepository.findAdditionalByType(productIdx, 2));
+        dto.setBeverageMenuList(productRepository.findAdditionalByType(productIdx, 3));
+
         return dto;
     }
 }

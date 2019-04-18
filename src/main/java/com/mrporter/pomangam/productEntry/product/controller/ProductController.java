@@ -46,4 +46,10 @@ public class ProductController {
                                          @RequestParam("deliverySiteIdx") Integer delivery_site_idx) {
             return new ResponseEntity(productService.findByQuery(query, delivery_site_idx), HttpStatus.OK);
     }
+
+    @GetMapping("/search/getDetailOrder")
+    public ResponseEntity<?> getDetailOrder(@RequestParam("productIdx") Integer productIdx) {
+        return new ResponseEntity(productService.getDetailOrder(productIdx), HttpStatus.OK);
+    }
+
 }
