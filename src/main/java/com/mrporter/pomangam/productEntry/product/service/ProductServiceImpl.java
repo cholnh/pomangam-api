@@ -14,8 +14,8 @@ public class ProductServiceImpl implements ProductService {
     ProductRepositoryImpl productRepository;
 
     @Override
-    public List<ProductWithCostDto> findByStoreIdx(Integer store_idx) {
-        return productRepository.findByStoreIdx(store_idx);
+    public List<ProductWithCostDto> findByStoreIdx(Integer store_idx, Integer type, String orderBy) {
+        return productRepository.findByStoreIdx(store_idx, type, orderBy);
     }
 
     @Override

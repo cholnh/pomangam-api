@@ -20,8 +20,10 @@ public class ProductController {
     ProductServiceImpl productService;
 
     @GetMapping("/search/findByStoreIdx")
-    public ResponseEntity<?> findByStoreIdx(@RequestParam("storeIdx") Integer store_idx) {
-        List<ProductWithCostDto> dtoList =  productService.findByStoreIdx(store_idx);
+    public ResponseEntity<?> findByStoreIdx(@RequestParam(value = "storeIdx") Integer store_idx,
+                                            @RequestParam(value = "type", required = false) Integer type,
+                                            @RequestParam(value = "orderBy", required = false) String orderBy) {
+        List<ProductWithCostDto> dtoList =  productService.findByStoreIdx(store_idx, type, orderBy);
         if(dtoList == null) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         } else {

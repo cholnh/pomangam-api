@@ -38,9 +38,13 @@ public class ProductWithCostDto implements Serializable {
 
     private Integer sequence;
 
+    private Integer prime_cost;
+
     private Integer final_cost;
 
-    public ProductWithCostDto(Integer idx, Integer store_idx, String name, String description, String sub_description, Integer category_id, String category_name, Byte state_active, Byte type, Integer cnt_like, Timestamp register_date, Timestamp modify_date, Integer sequence, BigInteger final_cost) {
+    private String imgpath;
+
+    public ProductWithCostDto(Integer idx, Integer store_idx, String name, String description, String sub_description, Integer category_id, String category_name, Byte state_active, Byte type, Integer cnt_like, Timestamp register_date, Timestamp modify_date, Integer sequence, BigInteger prime_cost, BigInteger final_cost, String imgpath) {
         this.idx = idx;
         this.store_idx = store_idx;
         this.name = name;
@@ -54,6 +58,8 @@ public class ProductWithCostDto implements Serializable {
         this.register_date = register_date;
         this.modify_date = modify_date;
         this.sequence = sequence;
+        this.prime_cost = prime_cost==null?0:prime_cost.intValue();
         this.final_cost = final_cost==null?0:final_cost.intValue();
+        this.imgpath = imgpath;
     }
 }

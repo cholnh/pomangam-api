@@ -34,7 +34,20 @@ public class StoreDto implements Serializable {
 
     private Timestamp modify_date;
 
-    public Store toEntity() {
-        return null;
+    private Integer sequence;
+
+    public StoreDto(Integer idx, String name, String location, String main_phone_number, String description, Integer cnt_like, Time minimum_time, Short parallel_production, Integer maximum_production, Timestamp register_date, Timestamp modify_date, Integer sequence) {
+        this.idx = idx;
+        this.name = name;
+        this.location = location;
+        this.main_phone_number = main_phone_number;
+        this.description = description;
+        this.cnt_like = cnt_like;
+        this.minimum_time = minimum_time;
+        this.parallel_production = parallel_production;
+        this.maximum_production = maximum_production;
+        this.register_date = register_date;
+        this.modify_date = modify_date;
+        this.sequence = sequence;
     }
 }

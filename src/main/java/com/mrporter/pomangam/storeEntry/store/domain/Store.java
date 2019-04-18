@@ -40,8 +40,10 @@ public class Store implements Serializable {
 
     private Timestamp modify_date;
 
+    private Integer sequence;
+
     @Builder
-    public Store(String name, String location, String main_phone_number, String description, Integer cnt_like, Time minimum_time, Short parallel_production, Integer maximum_production, Timestamp register_date, Timestamp modify_date) {
+    public Store(String name, String location, String main_phone_number, String description, Integer cnt_like, Time minimum_time, Short parallel_production, Integer maximum_production, Timestamp register_date, Timestamp modify_date, Integer sequence) {
         this.name = name;
         this.location = location;
         this.main_phone_number = main_phone_number;
@@ -52,5 +54,6 @@ public class Store implements Serializable {
         this.maximum_production = maximum_production;
         this.register_date = register_date;
         this.modify_date = modify_date;
+        this.sequence = sequence;
     }
 }

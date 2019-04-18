@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.productEntry.product.repository;
 
+import com.mrporter.pomangam.common.util.sqlInjection.SqlInjection;
 import com.mrporter.pomangam.productEntry.product.domain.ProductDto;
 import com.mrporter.pomangam.productEntry.product.domain.ProductWithCostDto;
 import com.mrporter.pomangam.promotionEntry.promotion.domain.PromotionSumDto;
@@ -20,6 +21,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     EntityManager em;
 
     PromotionRepositoryImpl promotionRepository;
+    SqlInjection sqlInjection;
 
     @Override
     public ProductWithCostDto findByProductIdx(Integer product_idx) {
@@ -40,15 +42,18 @@ public class ProductRepositoryImpl implements ProductRepository {
         Query nativeQuery2 = em
                 .createNativeQuery(
                 "SELECT  " +
-                        "    p.idx, p.store_idx, p.name, p.description, p.sub_description, p.category_id, p.category_name, p.state_active, p.type, p.cnt_like, p.register_date, p.modify_date, p.sequence, " +
+                        "    p.idx, p.store_idx, p.name, p.description, p.sub_description, p.category_id, p.category_name, p.state_active, p.type, p.cnt_like, p.register_date, p.modify_date, p.sequence,  " +
+                        "    CAST(c.unit_cost + c.c_commission_prc + (c.unit_cost * c.c_commission_pct / 100) AS SIGNED INTEGER) AS prime_cost, " +
                         //"    CAST((c.unit_cost + c.c_commission_prc + (c.unit_cost * c.c_commission_pct / 100)) " +
                         //"       - " + sum_prc + " - (c.unit_cost * " + sum_pct + " / 100) " +
                         "    CAST((c.unit_cost + c.c_commission_prc + (c.unit_cost * c.c_commission_pct / 100)) * " +
                         "       (1 - " + sum_pct + " / 100) - " + sum_prc +
-                        "        AS SIGNED INTEGER) AS final_cost " +
+                        "        AS SIGNED INTEGER) AS final_cost, img.imgpath " +
                         "FROM " +
-                        "    product_tbl p, " +
-                        "    cost_tbl c " +
+                        "    cost_tbl c, " +
+                        "    product_tbl p " +
+                        "LEFT OUTER JOIN imgpath_for_product_tbl img " +
+                        "ON img.product_idx = p.idx AND img.type = 0 " +
                         "WHERE " +
                         "    p.idx = c.product_idx " +
                         "    AND p.idx = ? " +
@@ -61,10 +66,11 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<ProductWithCostDto> findByStoreIdx(Integer store_idx) {
+    public List<ProductWithCostDto> findByStoreIdx(Integer store_idx, Integer type, String orderBy) {
         if(store_idx == null) {
             return null;
         }
+
         PromotionSumDto promotionSumDto = promotionRepository.getSumByStoreIdx(store_idx);
 
         int sum_prc = promotionSumDto.getSum_prc() == null ? 0 : promotionSumDto.getSum_prc();
@@ -74,18 +80,28 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .createNativeQuery(
                 "SELECT  " +
                         "    p.idx, p.store_idx, p.name, p.description, p.sub_description, p.category_id, p.category_name, p.state_active, p.type, p.cnt_like, p.register_date, p.modify_date, p.sequence, " +
-                        "    CAST((c.unit_cost + c.c_commission_prc + (c.unit_cost * c.c_commission_pct / 100)) " +
-                        "       - " + sum_prc + " - (c.unit_cost * " + sum_pct + " / 100) " +
-                        "        AS SIGNED INTEGER) AS final_cost " +
+                        "    CAST(c.unit_cost + c.c_commission_prc + (c.unit_cost * c.c_commission_pct / 100) AS SIGNED INTEGER) AS prime_cost, " +
+                        //"    CAST((c.unit_cost + c.c_commission_prc + (c.unit_cost * c.c_commission_pct / 100)) " +
+                        //"       - " + sum_prc + " - (c.unit_cost * " + sum_pct + " / 100) " +
+                        "    CAST((c.unit_cost + c.c_commission_prc + (c.unit_cost * c.c_commission_pct / 100)) * " +
+                        "       (1 - " + sum_pct + " / 100) - " + sum_prc +
+                        "        AS SIGNED INTEGER) AS final_cost, img.imgpath  " +
                         "FROM " +
-                        "    product_tbl p, " +
-                        "    cost_tbl c " +
+                        "    cost_tbl c, " +
+                        "    product_tbl p " +
+                        "LEFT OUTER JOIN imgpath_for_product_tbl img " +
+                        "ON img.product_idx = p.idx AND img.type = 0 " +
                         "WHERE " +
                         "    p.idx = c.product_idx " +
-                        "    AND store_idx = ? " +
+                        "    AND store_idx = :storeIdx " +
                         "    AND p.state_active = 1 " +
-                        "ORDER BY sequence DESC ")
-                .setParameter(1, store_idx);
+                        (type != null ? "AND p.type = :type ":"") +
+                        (orderBy != null && !sqlInjection.isSQLInjection(orderBy) ? "ORDER BY " + orderBy :"ORDER BY sequence DESC "))
+                .setParameter("storeIdx", store_idx);
+
+        if(type != null) {
+            nativeQuery1.setParameter("type", type);
+        }
 
         List<ProductWithCostDto> productWithCostDtoList = new JpaResultMapper().list(nativeQuery1, ProductWithCostDto.class);
         return productWithCostDtoList;
