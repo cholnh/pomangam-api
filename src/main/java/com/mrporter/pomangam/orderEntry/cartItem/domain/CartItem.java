@@ -31,16 +31,17 @@ public class CartItem implements Serializable {
 
     private String requirement;
 
-    @Column(name = "parentItemIdx")
-    private Integer parent_item_idx;
+    @Column(name = "parent_item_idx")
+    private Integer parentItemIdx;
 
     @Builder
-    public CartItem(Integer cartIdx, Integer productIdx, Integer storeIdx, Integer quantity, String requirement, Integer parent_item_idx) {
+    public CartItem(Integer idx, Integer cartIdx, Integer productIdx, Integer storeIdx, Integer quantity, String requirement, Integer parentItemIdx) {
+        this.idx = idx;
         this.cartIdx = cartIdx;
         this.productIdx = productIdx;
         this.storeIdx = storeIdx;
         this.quantity = quantity;
         this.requirement = requirement;
-        this.parent_item_idx = parent_item_idx;
+        this.parentItemIdx = parentItemIdx;
     }
 }

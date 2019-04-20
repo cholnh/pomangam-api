@@ -2,6 +2,7 @@ package com.mrporter.pomangam;
 
 import com.mrporter.pomangam.common.file.config.FileStorageProperties;
 import org.apache.commons.dbutils.QueryRunner;
+import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -40,6 +41,12 @@ public class PomangamApplication implements CommandLineRunner {
     @Primary
     QueryRunner queryRunner (DataSource dataSource) {
         return new QueryRunner(dataSource);
+    }
+
+    @Bean
+    @Primary
+    JpaResultMapper jpaResultMapper () {
+        return new JpaResultMapper();
     }
 }
 

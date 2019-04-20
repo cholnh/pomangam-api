@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Table(name = "cart_tbl")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,10 +26,11 @@ public class Cart implements Serializable {
     private Integer detailSiteIdx;
 
     @Column(name = "arrival_date")
-    private Date arrivalDate;
+    private Timestamp arrivalDate;
 
     @Builder
-    public Cart(Integer customerIdx, Integer detailSiteIdx, Date arrivalDate) {
+    public Cart(Integer idx, Integer customerIdx, Integer detailSiteIdx, Timestamp arrivalDate) {
+        this.idx = idx;
         this.customerIdx = customerIdx;
         this.detailSiteIdx = detailSiteIdx;
         this.arrivalDate = arrivalDate;

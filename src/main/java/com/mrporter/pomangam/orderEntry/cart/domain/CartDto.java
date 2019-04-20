@@ -1,13 +1,13 @@
 package com.mrporter.pomangam.orderEntry.cart.domain;
 
-import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Data
 public class CartDto implements Serializable {
 
@@ -17,16 +17,22 @@ public class CartDto implements Serializable {
 
     private Integer detailSiteIdx;
 
-    private Date arrivalDate;
+    private LocalDateTime arrivalDate;
 
-    public CartDto(Integer idx, Integer customerIdx, Integer detailSiteIdx, Date arrivalDate) {
+    public CartDto(Integer idx, Integer customerIdx, Integer detailSiteIdx, Timestamp arrivalDate) {
         this.idx = idx;
         this.customerIdx = customerIdx;
         this.detailSiteIdx = detailSiteIdx;
-        this.arrivalDate = arrivalDate;
+        this.arrivalDate = arrivalDate.toLocalDateTime();
     }
 
     public Cart toEntity() {
-        return null;
+        return Cart
+                .builder()
+                .idx(idx)
+                .customerIdx(customerIdx)
+                .detailSiteIdx(detailSiteIdx)
+                .arrivalDate(Timestamp.valueOf(arrivalDate))
+                .build();
     }
 }
