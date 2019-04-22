@@ -1,6 +1,5 @@
 package com.mrporter.pomangam.productEntry.product.domain;
 
-import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,7 +7,7 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Data
 public class ProductWithCostDto implements Serializable {
 
@@ -38,9 +37,9 @@ public class ProductWithCostDto implements Serializable {
 
     private Integer sequence;
 
-    private Integer prime_cost;
+    private BigInteger prime_cost;
 
-    private Integer final_cost;
+    private BigInteger final_cost;
 
     private String imgpath;
 
@@ -58,8 +57,10 @@ public class ProductWithCostDto implements Serializable {
         this.register_date = register_date;
         this.modify_date = modify_date;
         this.sequence = sequence;
-        this.prime_cost = prime_cost==null?0:prime_cost.intValue();
-        this.final_cost = final_cost==null?0:final_cost.intValue();
+        this.prime_cost = prime_cost;
+        this.final_cost = final_cost;
+        //this.prime_cost = prime_cost==null?0:prime_cost.intValue();
+        //this.final_cost = final_cost==null?0:final_cost.intValue();
         this.imgpath = imgpath;
     }
 }

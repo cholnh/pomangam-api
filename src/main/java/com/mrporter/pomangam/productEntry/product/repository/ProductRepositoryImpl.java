@@ -7,7 +7,9 @@ import com.mrporter.pomangam.productEntry.product.domain.ProductSummaryDto;
 import com.mrporter.pomangam.productEntry.product.domain.ProductWithCostDto;
 import com.mrporter.pomangam.promotionEntry.promotion.domain.PromotionSumDto;
 import com.mrporter.pomangam.promotionEntry.promotion.repository.PromotionRepositoryImpl;
+import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import lombok.AllArgsConstructor;
+import org.hibernate.transform.Transformers;
 import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.stereotype.Repository;
 
@@ -77,17 +79,20 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<ProductWithCostDto> findByStoreIdx(Integer store_idx, Integer type, String orderBy) {
+    public List<ProductWithCostDto> findByStoreIdx(Integer store_idx, Integer type, String orderBy, PageRequest pageRequest) {
         if(store_idx == null) {
             return null;
         }
+
+        int page = pageRequest == null ? 0 : pageRequest.getPage();
+        int size = pageRequest == null ? 100 : pageRequest.getSize();
 
         PromotionSumDto promotionSumDto = promotionRepository.getSumByStoreIdx(store_idx);
 
         int sum_prc = promotionSumDto.getSum_prc() == null ? 0 : promotionSumDto.getSum_prc();
         int sum_pct = promotionSumDto.getSum_pct() == null ? 0 : promotionSumDto.getSum_pct();
 
-        Query nativeQuery1 = em
+        Query nativeQuery = em
                 .createNativeQuery(
                 "SELECT  " +
                         "    p.idx, p.store_idx, p.name, p.description, p.sub_description, p.category_id, p.category_name, p.state_active, p.type, p.cnt_like, p.register_date, p.modify_date, p.sequence, " +
@@ -111,10 +116,17 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .setParameter("storeIdx", store_idx);
 
         if(type != null) {
-            nativeQuery1.setParameter("type", type);
+            nativeQuery.setParameter("type", type);
         }
 
-        List<ProductWithCostDto> productWithCostDtoList = new JpaResultMapper().list(nativeQuery1, ProductWithCostDto.class);
+        List<ProductWithCostDto> productWithCostDtoList = nativeQuery
+                .unwrap( org.hibernate.query.NativeQuery.class )
+                .setResultTransformer( Transformers.aliasToBean( ProductWithCostDto.class ) )
+                .setFirstResult(page*size)
+                .setMaxResults(size)
+                .getResultList();
+
+        //List<ProductWithCostDto> productWithCostDtoList = new JpaResultMapper().list(nativeQuery, ProductWithCostDto.class);
         return productWithCostDtoList;
     }
 

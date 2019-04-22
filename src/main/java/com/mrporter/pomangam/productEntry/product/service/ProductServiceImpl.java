@@ -5,6 +5,7 @@ import com.mrporter.pomangam.productEntry.product.domain.ProductWithCostDto;
 import com.mrporter.pomangam.productEntry.product.domain.SearchProductDto;
 import com.mrporter.pomangam.productEntry.product.repository.ProductRepositoryImpl;
 import com.mrporter.pomangam.storeEntry.store.repository.StoreRepositoryImpl;
+import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,8 @@ public class ProductServiceImpl implements ProductService {
     StoreRepositoryImpl storeRepository;
 
     @Override
-    public List<ProductWithCostDto> findByStoreIdx(Integer store_idx, Integer type, String orderBy) {
-        return productRepository.findByStoreIdx(store_idx, type, orderBy);
+    public List<ProductWithCostDto> findByStoreIdx(Integer store_idx, Integer type, String orderBy, PageRequest pageRequest) {
+        return productRepository.findByStoreIdx(store_idx, type, orderBy, pageRequest);
     }
 
     @Override

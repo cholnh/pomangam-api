@@ -16,6 +16,7 @@ import com.mrporter.pomangam.orderEntry.order.repository.OrderJpaRepository;
 import com.mrporter.pomangam.orderEntry.order.repository.OrderRepositoryImpl;
 import com.mrporter.pomangam.orderEntry.order.service.OrderServiceImpl;
 import com.mrporter.pomangam.orderEntry.orderItem.domain.OrderItem;
+import com.mrporter.pomangam.orderEntry.orderItem.domain.OrderItemDto;
 import com.mrporter.pomangam.orderEntry.orderItem.repository.OrderItemJpaRepository;
 import com.mrporter.pomangam.orderEntry.orderLog.repository.OrderLogJpaRepository;
 import com.mrporter.pomangam.orderEntry.payment.domain.PaymentAnnotation;
@@ -23,13 +24,18 @@ import com.mrporter.pomangam.orderEntry.payment.domain.PaymentInputDto;
 import com.mrporter.pomangam.orderEntry.payment.domain.PaymentResultDto;
 import com.mrporter.pomangam.promotionEntry.coupon.domain.CouponDto;
 import com.mrporter.pomangam.promotionEntry.coupon.repository.CouponRepositoryImpl;
+import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import lombok.AllArgsConstructor;
+import org.hibernate.transform.Transformers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.format.DateTimeFormatter;
@@ -54,6 +60,9 @@ public class PaymentTestController {
     OrderLogJpaRepository orderLogJpaRepository;
     CommonMapServiceImpl commonMapService;
 
+    @PersistenceContext
+    EntityManager em;
+
     public static void main(String...args) {
         System.out.println(System.currentTimeMillis());
     }
@@ -64,6 +73,27 @@ public class PaymentTestController {
         model.addAttribute("title", "Payment Test");
 
         return "payment";
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<?> test(PageRequest pageRequest) {
+        int page = pageRequest == null ? 0 : pageRequest.getPage();
+        int size = pageRequest == null ? 100 : pageRequest.getSize();
+
+        Query queryTotal = em.createNativeQuery("SELECT COUNT(*) FROM item_for_order_tbl");
+        int total = Integer.parseInt(queryTotal.getSingleResult()+"");
+        int last = (total / size) + 1;
+
+        int start = page*size;
+        List<OrderItemDto> commonMapDtos = em
+                .createNativeQuery("SELECT * FROM item_for_order_tbl")
+                .unwrap( org.hibernate.query.NativeQuery.class )
+                .setResultTransformer( Transformers.aliasToBean( OrderItemDto.class ) )
+                .setFirstResult(start)
+                .setMaxResults(size)
+                .getResultList();
+
+        return new ResponseEntity(commonMapDtos, HttpStatus.OK);
     }
 
     @PostMapping("/serverSideWork")

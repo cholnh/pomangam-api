@@ -10,13 +10,9 @@ public class CommonMapDto {
     private String key;
     private String value;
 
-    public CommonMap toEntity() {
-        return null;
-        /*
-        return CommonMap.builder()
-                .key(key)
-                .value(value)
-                .build();
-                */
+    public CommonMapDto(Integer idx, String key, String value) {
+        this.idx = idx;
+        this.key = key;
+        this.value = value;
     }
 }

@@ -2,6 +2,7 @@ package com.mrporter.pomangam.productEntry.product.controller;
 
 import com.mrporter.pomangam.productEntry.product.domain.ProductWithCostDto;
 import com.mrporter.pomangam.productEntry.product.service.ProductServiceImpl;
+import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,9 @@ public class ProductController {
     @GetMapping("/search/findByStoreIdx")
     public ResponseEntity<?> findByStoreIdx(@RequestParam(value = "storeIdx") Integer store_idx,
                                             @RequestParam(value = "type", required = false) Integer type,
-                                            @RequestParam(value = "orderBy", required = false) String orderBy) {
-        List<ProductWithCostDto> dtoList =  productService.findByStoreIdx(store_idx, type, orderBy);
+                                            @RequestParam(value = "orderBy", required = false) String orderBy,
+                                            PageRequest pageRequest) {
+        List<ProductWithCostDto> dtoList =  productService.findByStoreIdx(store_idx, type, orderBy, pageRequest);
         if(dtoList == null) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         } else {
