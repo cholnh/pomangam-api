@@ -11,8 +11,9 @@ public interface CouponRepository {
     List<CouponDto> findAll() throws Exception;
     List<CouponDto> findValidByCustomerIdx(Integer customer_idx) throws Exception;
     CouponDto getValidCouponByCode(String couponCode) throws Exception;
+    CouponDto getValidCouponByIdx(Integer couponIdx);
     boolean isValid(String couponCode) throws Exception;
-    void useCoupon(Integer couponIdx, Integer customerIdx, Integer orderIdx) throws Exception;
+    void useCoupon(Integer couponIdx, Integer customerIdx, Integer guestIdx, Integer orderIdx) throws Exception;
 
     CouponDto save(CouponDto coupon) throws Exception;
     CouponDto update(Integer idx, CouponDto user) throws Exception;

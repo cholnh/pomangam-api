@@ -2,6 +2,7 @@ package com.mrporter.pomangam.orderEntry.cart.repository;
 
 import com.mrporter.pomangam.orderEntry.cart.domain.CartDto;
 import com.mrporter.pomangam.orderEntry.cart.domain.CartInStoreQuantityDto;
+import com.mrporter.pomangam.orderEntry.cart.domain.CartViewDto;
 import com.mrporter.pomangam.orderEntry.cartItem.repository.CartItemJpaRepository;
 import lombok.AllArgsConstructor;
 import org.qlrm.mapper.JpaResultMapper;
@@ -22,7 +23,7 @@ public class CartRepositoryImpl implements CartRepository {
     JpaResultMapper jpaResultMapper;
 
     @Override
-    public int countCart(Integer customer_idx) {
+    public int countCartByCustomerIdx(Integer customer_idx) {
         Query nativeQuery = em
                 .createNativeQuery("SELECT * FROM cart_tbl WHERE customer_idx = ?")
                 .setParameter(1, customer_idx);
@@ -60,6 +61,18 @@ public class CartRepositoryImpl implements CartRepository {
         }
     }
 
+    public CartDto getByGuestIdx(Integer guest_idx) {
+        Query nativeQuery = em
+                .createNativeQuery("SELECT * FROM cart_tbl WHERE guest_idx = ?")
+                .setParameter(1, guest_idx);
+        List<CartDto> cartDtoList = jpaResultMapper.list(nativeQuery, CartDto.class);
+        if(cartDtoList.isEmpty()) {
+            return null;
+        } else {
+            return cartDtoList.get(0);
+        }
+    }
+
     @Override
     public List<CartInStoreQuantityDto> findCartInStoreQuantityByIdx(Integer cart_Idx) {
         Query nativeQuery2 = em
@@ -72,5 +85,23 @@ public class CartRepositoryImpl implements CartRepository {
                 .setParameter(1, cart_Idx);
         List<CartInStoreQuantityDto> dtoList = jpaResultMapper.list(nativeQuery2, CartInStoreQuantityDto.class);
         return dtoList;
+    }
+
+    @Override
+    public int countCartByGuestIdx(Integer guestIdx) {
+        Query nativeQuery = em
+                .createNativeQuery("SELECT * FROM cart_tbl WHERE guest_idx = ?")
+                .setParameter(1, guestIdx);
+
+        List<CartDto> carts = jpaResultMapper.list(nativeQuery, CartDto.class);
+        if(carts.isEmpty()) {
+            return 0;
+        }
+        return cartItemJpaRepository.countByCartIdx(carts.get(0).getIdx());
+    }
+
+    @Override
+    public CartViewDto getCartDtoByGuestIdx(Integer guestIdx) {
+        return null;
     }
 }

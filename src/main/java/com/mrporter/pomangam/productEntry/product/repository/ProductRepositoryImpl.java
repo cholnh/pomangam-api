@@ -66,9 +66,14 @@ public class ProductRepositoryImpl implements ProductRepository {
                         "    AND p.state_active = 1 " +
                         "ORDER BY sequence DESC ")
                 .setParameter(1, product_idx);
-        ProductWithCostDto productWithCostDto = new JpaResultMapper().uniqueResult(nativeQuery2, ProductWithCostDto.class);
 
-        return productWithCostDto;
+        //ProductWithCostDto productWithCostDto = new JpaResultMapper().uniqueResult(nativeQuery2, ProductWithCostDto.class);
+        List<ProductWithCostDto> productWithCostDtoList = new JpaResultMapper().list(nativeQuery2, ProductWithCostDto.class);
+        if(productWithCostDtoList.isEmpty()) {
+            return null;
+        } else {
+            return productWithCostDtoList.get(0);
+        }
     }
 
     @Override

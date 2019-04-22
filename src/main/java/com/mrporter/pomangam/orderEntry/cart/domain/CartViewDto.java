@@ -1,6 +1,6 @@
 package com.mrporter.pomangam.orderEntry.cart.domain;
 
-import com.mrporter.pomangam.orderEntry.cartItem.domain.CartItemDto;
+import com.mrporter.pomangam.orderEntry.cartItem.domain.CartItemViewDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +11,6 @@ import java.util.List;
 @Data
 public class CartViewDto implements Serializable {
     CartDto cart;
-    List<CartItemDto> cartItems;
+    List<CartItemViewDto> cartItems;
     List<CartTimeMapDto> cartTimeMapDtoList;
 }

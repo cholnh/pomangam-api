@@ -4,6 +4,7 @@ import com.mrporter.pomangam.common.util.time.CustomTime;
 import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.domain.DetailForDeliverySite;
 import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.repository.DetailForDeliverySiteJpaRepository;
 import com.mrporter.pomangam.orderEntry.order.repository.OrderRepositoryImpl;
+import com.mrporter.pomangam.orderEntry.orderTime.repository.OrderTimeJpaRepository;
 import com.mrporter.pomangam.orderEntry.orderTime.repository.OrderTimeRepositoryImpl;
 import com.mrporter.pomangam.storeEntry.scheduleForStore.domain.ScheduleForStore;
 import com.mrporter.pomangam.storeEntry.scheduleForStore.repository.ScheduleForStoreJpaRepository;
@@ -28,6 +29,7 @@ public class StoreServiceImpl implements StoreService {
 
     StoreJpaRepository storeJpaRepository;
     OrderTimeRepositoryImpl orderTimeRepository;
+    OrderTimeJpaRepository orderTimeJpaRepository;
     OrderRepositoryImpl orderRepositoryImpl;
     DetailForDeliverySiteJpaRepository detailForDeliverySiteJpaRepository;
     ScheduleForStoreJpaRepository scheduleForStoreJpaRepository;

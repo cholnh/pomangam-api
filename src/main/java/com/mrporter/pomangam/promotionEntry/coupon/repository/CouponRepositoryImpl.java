@@ -63,11 +63,31 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
-    public CouponDto getValidCouponByCode(String couponCode) throws Exception {
+    public CouponDto getValidCouponByCode(String couponCode) {
+        if(couponCode == null) {
+            return null;
+        }
         Query nativeQuery = em.createNativeQuery(
                 "SELECT * FROM coupon_tbl cp where cp.code = ? AND state_active = 1 AND begin_date <= NOW() AND (end_date IS NULL OR end_date > NOW())"
         );
         nativeQuery.setParameter(1, couponCode);
+        List<CouponDto> dtoList = new JpaResultMapper().list(nativeQuery, CouponDto.class);
+        if(dtoList == null || dtoList.isEmpty()) {
+            return null;
+        } else {
+            return dtoList.get(0);
+        }
+    }
+
+    @Override
+    public CouponDto getValidCouponByIdx(Integer couponIdx) {
+        if(couponIdx == null) {
+            return null;
+        }
+        Query nativeQuery = em.createNativeQuery(
+                "SELECT * FROM coupon_tbl cp where cp.idx ? AND state_active = 1 AND begin_date <= NOW() AND (end_date IS NULL OR end_date > NOW())"
+        );
+        nativeQuery.setParameter(1, couponIdx);
         List<CouponDto> dtoList = new JpaResultMapper().list(nativeQuery, CouponDto.class);
         if(dtoList == null || dtoList.isEmpty()) {
             return null;
@@ -83,7 +103,7 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
-    public void useCoupon(Integer couponIdx, Integer customerIdx, Integer orderIdx) throws Exception {
+    public void useCoupon(Integer couponIdx, Integer customerIdx, Integer guestIdx, Integer orderIdx) throws Exception {
         queryRunner.update("UPDATE coupon_tbl cp SET cp.state_active = 0 WHERE cp.idx = ?", couponIdx);
 
         int sequence = 1;
@@ -91,7 +111,7 @@ public class CouponRepositoryImpl implements CouponRepository {
         if(map != null) {
             sequence = Integer.parseInt(map.get("sequence")+"");
         }
-        queryRunner.update("INSERT INTO log_for_coupon_tbl (`coupon_idx`, `customer_idx`, `order_idx`, `register_date`, `type`, `sequence`) VALUES (?, ?, ?, now(), '2', ?)", couponIdx, customerIdx, orderIdx, sequence);
+        queryRunner.update("INSERT INTO log_for_coupon_tbl (`coupon_idx`, `customer_idx`, `guest_idx`, `order_idx`, `register_date`, `type`, `sequence`) VALUES (?, ?, ?, now(), '2', ?)", couponIdx, customerIdx, guestIdx, orderIdx, sequence);
     }
 
     @Override

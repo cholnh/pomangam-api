@@ -53,4 +53,25 @@ public class ApiClientUtils {
                 new HttpEntity(bodyAsString, headers),
                 String.class);
     }
+
+    public ResponseEntity<?> sendByPostNotBodyList(Map<String, String> header, Map<String, Object> body, String subUrl) {
+        String bodyAsString;
+        try {
+            bodyAsString = objectMapper.writeValueAsString(body);
+        } catch (IOException e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+        if(header != null && !header.isEmpty()) {
+            header.forEach((k, v)-> {
+                headers.add(k, v);
+            });
+        }
+        return restTemplate.postForEntity(
+                (apiUrl + subUrl),
+                new HttpEntity(bodyAsString, headers),
+                String.class);
+    }
 }

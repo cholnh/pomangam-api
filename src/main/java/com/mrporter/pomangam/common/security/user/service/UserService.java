@@ -60,4 +60,10 @@ public interface UserService {
      * @return true, if deleted; otherwise, return false
      */
     Boolean deleteUser(String id);
+
+    int getPointByIdx(Integer idx);
+
+    int plusPointByIdx(Integer idx, Integer point);
+
+    int minusPointByIdx(Integer idx, Integer point);
 }

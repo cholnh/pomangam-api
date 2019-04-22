@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+
 @Table(name = "cart_tbl")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
@@ -22,6 +23,9 @@ public class Cart implements Serializable {
     @Column(name = "customer_idx")
     private Integer customerIdx;
 
+    @Column(name = "guest_idx")
+    private Integer guestIdx;
+
     @Column(name = "detail_site_idx")
     private Integer detailSiteIdx;
 
@@ -29,9 +33,10 @@ public class Cart implements Serializable {
     private Timestamp arrivalDate;
 
     @Builder
-    public Cart(Integer idx, Integer customerIdx, Integer detailSiteIdx, Timestamp arrivalDate) {
+    public Cart(Integer idx, Integer customerIdx, Integer guestIdx, Integer detailSiteIdx, Timestamp arrivalDate) {
         this.idx = idx;
         this.customerIdx = customerIdx;
+        this.guestIdx = guestIdx;
         this.detailSiteIdx = detailSiteIdx;
         this.arrivalDate = arrivalDate;
     }

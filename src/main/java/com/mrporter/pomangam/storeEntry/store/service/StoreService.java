@@ -11,6 +11,5 @@ public interface StoreService {
     List<Store> getStoresByIdxes(List<Integer> idxes);
 
     List<InquiryResultDto> getInquiryResult(String arrival_date, Integer detail_for_delivery_site_idx) ;
-
     List<InquiryResultDto> getInquiryResult(LocalDateTime arrival_date, Integer detail_for_delivery_site_idx, ZoneId zoneId);
 }

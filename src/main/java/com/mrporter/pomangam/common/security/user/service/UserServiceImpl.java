@@ -194,4 +194,29 @@ public class UserServiceImpl implements UserService {
             return true;
         }
     }
+
+    @Override
+    public int getPointByIdx(Integer idx) {
+        return userJpaRepository.getOne(idx).getPoint().intValue();
+    }
+
+    @Override
+    public int plusPointByIdx(Integer idx, Integer point) {
+        User user = userJpaRepository.getOne(idx);
+        int p = user.getPoint().intValue() + point.intValue();
+        user.setPoint(p);
+        userJpaRepository.save(user);
+        return p;
+    }
+
+    @Override
+    public int minusPointByIdx(Integer idx, Integer point) {
+        User user = userJpaRepository.getOne(idx);
+        int p = user.getPoint().intValue() - point.intValue();
+        user.setPoint(p);
+        userJpaRepository.save(user);
+        return p;
+    }
+
+
 }

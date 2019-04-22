@@ -15,6 +15,8 @@ public class OrderRepositoryImpl implements OrderRepository {
     @PersistenceContext
     EntityManager em;
 
+    JpaResultMapper jpaResultMapper;
+
     @Override
     public int getSalesVolumeByArrivalDateAndTimeAndStoreIdx(String arrival_date, String arrival_time, Integer store_idx) {
         Query nativeQuery = em
@@ -62,5 +64,19 @@ public class OrderRepositoryImpl implements OrderRepository {
         List<OrderTimeSalesVolumeDto> svList = new JpaResultMapper().list(nativeQuery, OrderTimeSalesVolumeDto.class);
 
         return svList;
+    }
+
+    @Override
+    public int getBoxNo(Integer delivery_site_idx, String arrival_date_only, String arrival_time_only) {
+        Query nativeQuery = em
+                .createNativeQuery("SELECT MAX(box_no)+1 AS nextbn FROM order_tbl WHERE delivery_site_idx = ? AND arrival_date_only = ? AND arrival_time_only = ?")
+                .setParameter(1, delivery_site_idx)
+                .setParameter(2, arrival_date_only)
+                .setParameter(3, arrival_time_only);
+        Object obj = nativeQuery.getSingleResult();
+        if(obj == null) {
+            return 0;
+        }
+        return Integer.parseInt(obj+"");
     }
 }

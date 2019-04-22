@@ -1,13 +1,12 @@
 package com.mrporter.pomangam.orderEntry.order.controller;
 
+import com.mrporter.pomangam.orderEntry.order.domain.OrderInputDto;
+import com.mrporter.pomangam.orderEntry.order.domain.StateOrder;
 import com.mrporter.pomangam.orderEntry.order.service.OrderServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/orders")
 @RestController
@@ -16,8 +15,15 @@ public class OrderController {
 
     OrderServiceImpl orderService;
 
-    @GetMapping("/search/getBlahBlah")
-    public ResponseEntity<?> getBlahBlah(@RequestParam("blah") String blah) {
-        return new ResponseEntity(blah, HttpStatus.OK);
+    @PostMapping()
+    public ResponseEntity<?> post(@RequestBody OrderInputDto order) {
+        //orderService.saveOrderInput(order);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/fail")
+    public ResponseEntity<?> fail(@PathVariable(name = "id") Integer order_idx) {
+        orderService.setState(order_idx, StateOrder.ORDER_FAIL);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

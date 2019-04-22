@@ -16,9 +16,9 @@ public class CartController {
 
     CartServiceImpl cartService;
 
-    @GetMapping
-    public ResponseEntity<?> getView(@RequestParam("customerIdx") Integer customer_idx) {
-        CartViewDto dto = cartService.getCartDto(customer_idx);
+    @GetMapping("/search/getViewByCustomerIdx")
+    public ResponseEntity<?> getViewByCustomerIdx(@RequestParam("customerIdx") Integer customer_idx) {
+        CartViewDto dto = cartService.getCartDtoByCustomerIdx(customer_idx);
         if(dto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
@@ -26,15 +26,29 @@ public class CartController {
         }
     }
 
-    @GetMapping("/search/countCart")
-    public ResponseEntity<?> countCart(@RequestParam("customerIdx") Integer customerIdx) {
-        return new ResponseEntity(cartService.countCart(customerIdx), HttpStatus.OK);
+    @GetMapping("/search/getViewByGuestIdx")
+    public ResponseEntity<?> getViewByGuestIdx(@RequestParam("guestIdx") Integer guestIdx) {
+        CartViewDto dto = cartService.getCartDtoByGuestIdx(guestIdx);
+            if(dto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(dto, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/search/countCartByCustomerIdx")
+    public ResponseEntity<?> countCartByCustomerIdx(@RequestParam("customerIdx") Integer customerIdx) {
+        return new ResponseEntity(cartService.countCartByCustomerIdx(customerIdx), HttpStatus.OK);
+    }
+
+    @GetMapping("/search/countCartByGuestIdx")
+    public ResponseEntity<?> countCartByGuestIdx(@RequestParam("guestIdx") Integer guestIdx) {
+        return new ResponseEntity(cartService.countCartByGuestIdx(guestIdx), HttpStatus.OK);
     }
 
     @PostMapping()
     public ResponseEntity<?> post(@RequestBody CartItemInputDto cartItem) {
-        cartService.saveCartItemInput(cartItem);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(cartService.saveCartItemInput(cartItem), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+import java.util.Locale;
 import java.util.TimeZone;
 
 @EnableConfigurationProperties({FileStorageProperties.class})
@@ -30,6 +31,7 @@ public class PomangamApplication implements CommandLineRunner {
     public void initApplication() {
         /* TZ */
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+        Locale.setDefault(Locale.KOREA);
     }
 
     @Override

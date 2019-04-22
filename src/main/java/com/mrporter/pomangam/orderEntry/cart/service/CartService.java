@@ -10,16 +10,21 @@ import java.time.ZoneId;
 import java.util.List;
 
 public interface CartService {
-    int countCart(Integer customerIdx);
+    int countCartByCustomerIdx(Integer customerIdx);
 
     Cart update(Integer cart_idx, CartDto dto);
     Cart patch(Integer cart_idx, CartDto dto);
     Boolean delete(Integer cart_idx);
 
-    CartViewDto getCartDto(Integer cart_idx);
+    CartViewDto getCartDtoByCustomerIdx(Integer cart_idx);
     List<CartTimeMapDto> getCartWithArrivalTime(Integer cart_Idx, ZoneId zoneId);
     List<CartTimeMapDto> getCartWithArrivalTimeByCartIdx(Integer cart_Idx);
     List<CartTimeMapDto> getCartWithArrivalTimeByCustomerIdx(Integer customer_idx);
     Cart saveCart(Cart cart);
-    void saveCartItemInput(CartItemInputDto cartItems);
+    Cart saveCartItemInput(CartItemInputDto cartItems);
+
+    int countCartByGuestIdx(Integer guestIdx);
+    CartViewDto getCartDtoByGuestIdx(Integer guestIdx);
+
+    int getTotalAmount(Integer cartIdx);
 }

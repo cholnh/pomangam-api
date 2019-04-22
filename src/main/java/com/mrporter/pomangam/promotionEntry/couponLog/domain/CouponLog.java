@@ -25,6 +25,8 @@ public class CouponLog implements Serializable {
 
     private Integer customer_idx;
 
+    private Integer guest_idx;
+
     private Integer order_idx;
 
     private Timestamp register_date;
@@ -34,10 +36,11 @@ public class CouponLog implements Serializable {
     private Integer sequence;
 
     @Builder
-    public CouponLog(Integer employee_idx, Integer coupon_idx, Integer customer_idx, Integer order_idx, Timestamp register_date, Byte type, Integer sequence) {
+    public CouponLog(Integer employee_idx, Integer coupon_idx, Integer customer_idx, Integer guest_idx, Integer order_idx, Timestamp register_date, Byte type, Integer sequence) {
         this.employee_idx = employee_idx;
         this.coupon_idx = coupon_idx;
         this.customer_idx = customer_idx;
+        this.guest_idx = guest_idx;
         this.order_idx = order_idx;
         this.register_date = register_date;
         this.type = type;

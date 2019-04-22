@@ -22,8 +22,8 @@ public class OrderTimeController {
 
     @GetMapping("/search/getByStoreIdxAndDeliverySiteIdxAndAndArrivalTime")
     public ResponseEntity<?> getByStoreIdxAndDeliverySiteIdxAndAndArrivalTime(@RequestParam("storeIdx") Integer store_idx,
-                                         @RequestParam("deliverySiteIdx") Integer delivery_site_idx,
-                                         @RequestParam("arrivalTime") String arrival_time) {
+                                                                              @RequestParam("deliverySiteIdx") Integer delivery_site_idx,
+                                                                              @RequestParam("arrivalTime") String arrival_time) {
         OrderTime result = orderTimeService.getByStoreIdxAndDeliverySiteIdxAndAndArrivalTime(store_idx, delivery_site_idx, arrival_time);
         if(result == null) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);

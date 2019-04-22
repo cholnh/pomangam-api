@@ -7,14 +7,16 @@ import com.mrporter.pomangam.orderEntry.cart.repository.CartRepositoryImpl;
 import com.mrporter.pomangam.orderEntry.cartItem.domain.CartItem;
 import com.mrporter.pomangam.orderEntry.cartItem.domain.CartItemDto;
 import com.mrporter.pomangam.orderEntry.cartItem.domain.CartItemInputDto;
+import com.mrporter.pomangam.orderEntry.cartItem.domain.CartItemViewDto;
 import com.mrporter.pomangam.orderEntry.cartItem.repository.CartItemJpaRepository;
 import com.mrporter.pomangam.orderEntry.order.domain.OrderTimeSalesVolumeDto;
 import com.mrporter.pomangam.orderEntry.order.repository.OrderRepositoryImpl;
+import com.mrporter.pomangam.productEntry.product.domain.ProductWithCostDto;
+import com.mrporter.pomangam.productEntry.product.repository.ProductRepositoryImpl;
 import com.mrporter.pomangam.storeEntry.store.domain.Store;
 import com.mrporter.pomangam.storeEntry.store.repository.StoreJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -34,6 +36,7 @@ public class CartServiceImpl implements CartService {
     CartItemJpaRepository cartItemJpaRepository;
     OrderRepositoryImpl orderRepository;
     StoreJpaRepository storeJpaRepository;
+    ProductRepositoryImpl productRepository;
 
     @Override
     public Cart update(Integer cart_idx, CartDto dto) {
@@ -43,6 +46,7 @@ public class CartServiceImpl implements CartService {
         }
 
         fetched.setCustomerIdx(dto.getCustomerIdx());
+        fetched.setGuestIdx(dto.getGuestIdx());
         fetched.setDetailSiteIdx(dto.getDetailSiteIdx());
         fetched.setArrivalDate(Timestamp.valueOf(dto.getArrivalDate()));
 
@@ -58,6 +62,9 @@ public class CartServiceImpl implements CartService {
 
         if (dto.getCustomerIdx() != null) {
             fetched.setCustomerIdx(dto.getCustomerIdx());
+        }
+        if (dto.getGuestIdx() != null) {
+            fetched.setGuestIdx(dto.getGuestIdx());
         }
         if (dto.getDetailSiteIdx() != null) {
             fetched.setDetailSiteIdx(dto.getDetailSiteIdx());
@@ -80,76 +87,81 @@ public class CartServiceImpl implements CartService {
         }
     }
 
-    private List<CartItemDto> recursiveSort(List<CartItem> items, Integer parentIdx) {
-        List<CartItemDto> result = new ArrayList<>();
+    private List<CartItemViewDto> recursiveSort(List<CartItemViewDto> items, Integer parentIdx) {
+        List<CartItemViewDto> result = new ArrayList<>();
         if(items == null) {
             return null;
         }
-        for(CartItem item : items) {
+        for(CartItemViewDto item : items) {
             if(item.getParentItemIdx() == parentIdx) {
-                List<CartItemDto> subItems = recursiveSort(items, item.getIdx());
-                CartItemDto cart = new CartItemDto();
-                cart.setIdx(item.getIdx());
-                cart.setCartIdx(item.getCartIdx());
-                cart.setProductIdx(item.getProductIdx());
-                cart.setStoreIdx(item.getStoreIdx());
-                cart.setQuantity(item.getQuantity());
-                cart.setRequirement(item.getRequirement());
-                cart.setParentItemIdx(item.getParentItemIdx());
-                cart.setSubItems(subItems);
-                result.add(cart);
+                List<CartItemViewDto> subItems = recursiveSort(items, item.getIdx());
+                item.setSubItems(subItems);
+                result.add(item);
             }
         }
         return result;
     }
 
-    private List<CartItemDto> iterativeSort(List<CartItem> items) {
-        List<CartItemDto> cartItemDtoList = new ArrayList<>();
+    private List<CartItemViewDto> iterativeSort(List<CartItemViewDto> items) {
+        List<CartItemViewDto> cartItemDtoList = new ArrayList<>();
         if(items == null) {
             return null;
         }
-        for(CartItem mainItem : items) {
+        for(CartItemViewDto mainItem : items) {
             Integer parentIdx = mainItem.getParentItemIdx();
             if(parentIdx == null) {
-                CartItemDto mid = new CartItemDto();
-                mid.setIdx(mainItem.getIdx());
-                mid.setCartIdx(mainItem.getCartIdx());
-                mid.setProductIdx(mainItem.getProductIdx());
-                mid.setStoreIdx(mainItem.getStoreIdx());
-                mid.setQuantity(mainItem.getQuantity());
-                mid.setRequirement(mainItem.getRequirement());
-                mid.setParentItemIdx(mainItem.getParentItemIdx());
-
-                List<CartItemDto> subDtoList = new ArrayList<>();
-                for(CartItem subItem : items) {
+                List<CartItemViewDto> subDtoList = new ArrayList<>();
+                for(CartItemViewDto subItem : items) {
                     Integer subItemParentIdx = subItem.getParentItemIdx();
                     if(subItemParentIdx != null && subItemParentIdx.intValue() == mainItem.getIdx()) {
-                        CartItemDto sid = new CartItemDto();
-                        sid.setIdx(subItem.getIdx());
-                        sid.setCartIdx(subItem.getCartIdx());
-                        sid.setProductIdx(subItem.getProductIdx());
-                        sid.setStoreIdx(subItem.getStoreIdx());
-                        sid.setQuantity(subItem.getQuantity());
-                        sid.setRequirement(subItem.getRequirement());
-                        sid.setParentItemIdx(subItem.getParentItemIdx());
-                        subDtoList.add(sid);
+                        subDtoList.add(subItem);
                     }
                 }
-                mid.setSubItems(subDtoList);
-                cartItemDtoList.add(mid);
+                mainItem.setSubItems(subDtoList);
+                cartItemDtoList.add(mainItem);
             }
         }
         return cartItemDtoList;
     }
 
     @Override
-    public CartViewDto getCartDto(Integer customer_idx) {
-        CartViewDto dto = new CartViewDto();
+    public CartViewDto getCartDtoByCustomerIdx(Integer customer_idx) {
         CartDto cart = cartRepository.getByCustomerIdx(customer_idx);
+        return getCartDto(cart);
+    }
 
+    @Override
+    public CartViewDto getCartDtoByGuestIdx(Integer guestIdx) {
+        CartDto cart = cartRepository.getByGuestIdx(guestIdx);
+        return getCartDto(cart);
+    }
+
+    @Override
+    public int getTotalAmount(Integer cartIdx) {
+        int totalAmount = 0;
+        List<CartItem> cartItems = cartItemJpaRepository.findByCartIdx(cartIdx);
+        for(CartItem it : cartItems) {
+            ProductWithCostDto product = productRepository.findByProductIdx(it.getProductIdx());
+            if(product != null) {
+                int amount = product.getFinal_cost().intValue();
+                int quantity = it.getQuantity().intValue();
+                totalAmount += amount * quantity;
+            }
+        }
+        return totalAmount;
+    }
+
+    private CartViewDto getCartDto(CartDto cart) {
+        CartViewDto dto = new CartViewDto();
         if(cart != null) {
             List<CartItem> cartItems = cartItemJpaRepository.findByCartIdx(cart.getIdx());
-            dto.setCartItems(iterativeSort(cartItems));
+            List<CartItemViewDto> cartItemViewDtoList = new ArrayList<>();
+            for(CartItem it : cartItems) {
+                CartItemViewDto cvDto = new CartItemViewDto(it);
+                cvDto.setProduct(productRepository.findByProductIdx(it.getProductIdx()));
+                cartItemViewDtoList.add(cvDto);
+            }
+            dto.setCartItems(iterativeSort(cartItemViewDtoList));
 
             List<CartTimeMapDto> cartTimeMapDtoList = getCartWithArrivalTimeByCartIdx(cart.getIdx());
             dto.setCartTimeMapDtoList(cartTimeMapDtoList);
@@ -183,8 +195,8 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public int countCart(@RequestParam("customerIdx") Integer customerIdx) {
-        return cartRepository.countCart(customerIdx);
+    public int countCartByCustomerIdx(Integer customerIdx) {
+        return cartRepository.countCartByCustomerIdx(customerIdx);
     }
 
     @Override
@@ -300,14 +312,27 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void saveCartItemInput(CartItemInputDto cartItems) {
+    public Cart saveCartItemInput(CartItemInputDto cartItems) {
 
         Integer customerIdx = cartItems.getCustomerIdx();
-        CartDto dto = cartRepository.getByCustomerIdx(customerIdx);
-        if(dto == null) {
-            dto = new CartDto();
+        Integer guestIdx = cartItems.getGuestIdx();
+
+        CartDto dto;
+
+        if(customerIdx == null) {
+            dto = cartRepository.getByGuestIdx(guestIdx);
+            if(dto == null) {
+                dto = new CartDto();
+            }
+            dto.setGuestIdx(guestIdx);
+        } else {
+            dto = cartRepository.getByCustomerIdx(customerIdx);
+            if(dto == null) {
+                dto = new CartDto();
+            }
+            dto.setCustomerIdx(customerIdx);
         }
-        dto.setCustomerIdx(customerIdx);
+
         dto.setDetailSiteIdx(cartItems.getDetailForDeliverySiteIdx());
         dto.setArrivalDate(cartItems.getArrivalDate());
         Cart cart = cartJpaRepository.save(dto.toEntity());
@@ -324,5 +349,11 @@ public class CartServiceImpl implements CartService {
                 cartItemJpaRepository.save(c.toEntity());
             }
         }
+        return cart;
+    }
+
+    @Override
+    public int countCartByGuestIdx(Integer guestIdx) {
+        return cartRepository.countCartByGuestIdx(guestIdx);
     }
 }

@@ -15,13 +15,16 @@ public class CartDto implements Serializable {
 
     private Integer customerIdx;
 
+    private Integer guestIdx;
+
     private Integer detailSiteIdx;
 
     private LocalDateTime arrivalDate;
 
-    public CartDto(Integer idx, Integer customerIdx, Integer detailSiteIdx, Timestamp arrivalDate) {
+    public CartDto(Integer idx, Integer customerIdx, Integer guestIdx, Integer detailSiteIdx, Timestamp arrivalDate) {
         this.idx = idx;
         this.customerIdx = customerIdx;
+        this.guestIdx = guestIdx;
         this.detailSiteIdx = detailSiteIdx;
         this.arrivalDate = arrivalDate.toLocalDateTime();
     }
@@ -31,6 +34,7 @@ public class CartDto implements Serializable {
                 .builder()
                 .idx(idx)
                 .customerIdx(customerIdx)
+                .guestIdx(guestIdx)
                 .detailSiteIdx(detailSiteIdx)
                 .arrivalDate(Timestamp.valueOf(arrivalDate))
                 .build();

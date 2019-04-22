@@ -17,6 +17,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public @ResponseBody String handleException(Exception e) {
         logger.error(e.toString());
+        e.printStackTrace();
         return "INTERNAL_SERVER_ERROR";
     }
 }

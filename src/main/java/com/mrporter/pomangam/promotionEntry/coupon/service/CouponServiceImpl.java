@@ -46,11 +46,6 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public void useCoupon(Integer couponIdx, Integer customerIdx, Integer orderIdx) throws Exception {
-        couponRepository.useCoupon(couponIdx, customerIdx, orderIdx);
-    }
-
-    @Override
     public CouponDto save(CouponDto coupon) throws Exception {
         return null;
     }

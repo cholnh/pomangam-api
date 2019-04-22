@@ -13,6 +13,8 @@ public class CartItemInputDto implements Serializable {
 
     private Integer customerIdx;
 
+    private Integer guestIdx;
+
     private Integer detailForDeliverySiteIdx;
 
     private LocalDateTime arrivalDate;

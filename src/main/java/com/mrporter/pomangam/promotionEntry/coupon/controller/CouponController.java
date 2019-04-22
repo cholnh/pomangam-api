@@ -73,6 +73,7 @@ public class CouponController {
         }
     }
 
+    /* Payment 과정에서 CouponService 의 useCoupon을 사용하므로..
     @GetMapping("/useCoupon")
     public ResponseEntity<?> useCoupon(@RequestParam("couponIdx") Integer couponIdx,
                                        @RequestParam("orderIdx") Integer orderIdx,
@@ -91,5 +92,6 @@ public class CouponController {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+     */
 
 }
