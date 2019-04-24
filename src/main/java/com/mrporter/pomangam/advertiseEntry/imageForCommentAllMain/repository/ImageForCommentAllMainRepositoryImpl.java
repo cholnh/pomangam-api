@@ -1,6 +1,6 @@
-package com.mrporter.pomangam.advertiseEntry.cmtAdvertiseForMain.repository;
+package com.mrporter.pomangam.advertiseEntry.imageForCommentAllMain.repository;
 
-import com.mrporter.pomangam.advertiseEntry.cmtAdvertiseForMain.domain.CmtAdvertiseForMainWithCommentAllDto;
+import com.mrporter.pomangam.advertiseEntry.imageForCommentAllMain.domain.ImageForCommentAllMainWithCommentAllDto;
 import lombok.AllArgsConstructor;
 import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.stereotype.Repository;
@@ -12,12 +12,12 @@ import java.util.List;
 
 @Repository
 @AllArgsConstructor
-public class CmtAdvertiseForMainRepositoryImpl implements CmtAdvertiseForMainRepository {
+public class ImageForCommentAllMainRepositoryImpl implements ImageForCommentAllMainRepository {
     @PersistenceContext
     EntityManager em;
 
     @Override
-    public List<CmtAdvertiseForMainWithCommentAllDto> getCmtAdvertiseMainsByDeliverySiteIdx(Integer delivery_site_idx) {
+    public List<ImageForCommentAllMainWithCommentAllDto> getImageForCommentAllMainByDeliverySiteIdx(Integer delivery_site_idx) {
         String sql = "SELECT ca.idx AS comment_all_idx," +
                             "ca.store_idx AS store_idx," +
                             "ca.title AS title," +
@@ -26,7 +26,7 @@ public class CmtAdvertiseForMainRepositoryImpl implements CmtAdvertiseForMainRep
                             "ad.imgpath AS imgpath," +
                             "ad.state_active AS a_state_active," +
                             "ad.sequence AS sequence " +
-                    "FROM comment_for_all_tbl ca, cmt_advertise_for_main_tbl ad " +
+                    "FROM comment_for_all_tbl ca, imgpath_for_comment_all_main_tbl ad " +
                     "WHERE ca.idx = ad.comment_all_idx " +
                     "AND ad.idx IN " +
                         "(SELECT cmt_advertise_main_idx " +
@@ -36,7 +36,7 @@ public class CmtAdvertiseForMainRepositoryImpl implements CmtAdvertiseForMainRep
         Query nativeQuery = em.createNativeQuery(sql);
         nativeQuery.setParameter(1, delivery_site_idx);
 
-        List<CmtAdvertiseForMainWithCommentAllDto> cmtList = new JpaResultMapper().list(nativeQuery, CmtAdvertiseForMainWithCommentAllDto.class);
+        List<ImageForCommentAllMainWithCommentAllDto> cmtList = new JpaResultMapper().list(nativeQuery, ImageForCommentAllMainWithCommentAllDto.class);
 
         return cmtList;
     }

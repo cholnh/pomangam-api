@@ -22,9 +22,10 @@ import com.mrporter.pomangam.orderEntry.orderLog.repository.OrderLogJpaRepositor
 import com.mrporter.pomangam.orderEntry.payment.domain.PaymentAnnotation;
 import com.mrporter.pomangam.orderEntry.payment.domain.PaymentInputDto;
 import com.mrporter.pomangam.orderEntry.payment.domain.PaymentResultDto;
+import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
+import com.mrporter.pomangam.productEntry.product.repository.ProductRepositoryImpl;
 import com.mrporter.pomangam.promotionEntry.coupon.domain.CouponDto;
 import com.mrporter.pomangam.promotionEntry.coupon.repository.CouponRepositoryImpl;
-import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import lombok.AllArgsConstructor;
 import org.hibernate.transform.Transformers;
 import org.springframework.http.HttpStatus;
@@ -59,6 +60,7 @@ public class PaymentTestController {
     CouponRepositoryImpl couponRepository;
     OrderLogJpaRepository orderLogJpaRepository;
     CommonMapServiceImpl commonMapService;
+    ProductRepositoryImpl productRepository;
 
     @PersistenceContext
     EntityManager em;
@@ -189,7 +191,8 @@ public class PaymentTestController {
                         ci.getProductIdx(),
                         ci.getQuantity(),
                         ci.getRequirement(),
-                        ci.getParentItemIdx()
+                        ci.getParentItemIdx(),
+                        productRepository.findByProductIdx(ci.getProductIdx()).getFinal_cost().intValue()
                 );
                 orderItems.add(oi);
             }

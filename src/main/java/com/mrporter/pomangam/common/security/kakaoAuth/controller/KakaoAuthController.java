@@ -2,6 +2,7 @@ package com.mrporter.pomangam.common.security.kakaoAuth.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mrporter.pomangam.common.security.kakaoAuth.domain.UpdateInputDto;
 import com.mrporter.pomangam.common.security.kakaoAuth.service.KakaoAuthServiceImpl;
 import com.mrporter.pomangam.common.security.user.domain.User;
 import com.mrporter.pomangam.common.security.user.service.UserServiceImpl;
@@ -10,10 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -93,14 +91,13 @@ public class KakaoAuthController {
         return new ResponseEntity(kakaoAuthService.checkAuthCodeNotDelete(phone_number, auth_code), HttpStatus.OK);
     }
 
-    @GetMapping("/updatePw")
-    public ResponseEntity<?> updatePw(@RequestParam("id") String id,
-                                      @RequestParam("pw") String pw,
-                                      @RequestParam("phn") String phone_number,
-                                      @RequestParam("code") String auth_code) {
+    @PostMapping("/updatePw")
+    public ResponseEntity<?> updatePw(@RequestParam("phn") String phone_number,
+                                      @RequestParam("code") String auth_code,
+                                      @RequestBody UpdateInputDto dto) {
         if(kakaoAuthService.checkAuthCode(phone_number, auth_code)) {
-            if(userService.isUserExistByIdAndPhoneNumber(id, phone_number)) {
-                User user = userService.updateUserPw(id, pw);
+            if(userService.isUserExistByIdAndPhoneNumber(dto.getId(), phone_number)) {
+                User user = userService.updateUserPw(dto.getId(), dto.getPw());
                 user.setPw(null);
                 return new ResponseEntity(user, HttpStatus.OK);
             } else {

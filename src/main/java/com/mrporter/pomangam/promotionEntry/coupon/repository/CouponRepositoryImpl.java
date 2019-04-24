@@ -27,7 +27,7 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
-    public CouponDto findByIdx(Integer idx) throws Exception {
+    public CouponDto findByIdx(Integer idx) {
         Query nativeQuery = em.createNativeQuery(
                 "SELECT * FROM coupon_tbl cp where cp.idx = ?"
         );
@@ -42,7 +42,7 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
-    public List<CouponDto> findAll() throws Exception {
+    public List<CouponDto> findAll() {
         Query nativeQuery = em.createNativeQuery(
                 "SELECT * FROM coupon_tbl"
         );
@@ -52,11 +52,11 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
-    public List<CouponDto> findValidByCustomerIdx(Integer customer_idx) throws Exception {
+    public List<CouponDto> findValidByCustomerId(String customer_id) {
         Query nativeQuery = em.createNativeQuery(
-                "SELECT * FROM coupon_tbl cp where cp.customer_idx = ? AND state_active = 1 AND begin_date <= NOW() AND (end_date IS NULL OR end_date > NOW())"
+                "SELECT cp.* FROM coupon_tbl cp, user_tbl u where u.id = ? AND cp.customer_idx = u.idx AND cp.state_active = 1 AND cp.begin_date <= NOW() AND (cp.end_date IS NULL OR cp.end_date > NOW())"
         );
-        nativeQuery.setParameter(1, customer_idx);
+        nativeQuery.setParameter(1, customer_id);
 
         List<CouponDto> dtoList = new JpaResultMapper().list(nativeQuery, CouponDto.class);
         return dtoList;
@@ -115,12 +115,12 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
-    public CouponDto save(CouponDto coupon) throws Exception {
+    public CouponDto save(CouponDto coupon) {
         return null;
     }
 
     @Override
-    public CouponDto update(Integer idx, CouponDto user) throws Exception {
+    public CouponDto update(Integer idx, CouponDto user) {
         return null;
     }
 

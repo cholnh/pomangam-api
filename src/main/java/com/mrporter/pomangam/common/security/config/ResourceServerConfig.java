@@ -1,6 +1,6 @@
 package com.mrporter.pomangam.common.security.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -12,12 +12,10 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 @Configuration
 @EnableResourceServer
+@AllArgsConstructor
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
-    @Autowired
     AuthenticationFailureHandler failureHandler;
-
-    @Autowired
     AuthenticationSuccessHandler successHandler;
 
     @Override
@@ -28,29 +26,31 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
+                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                //.and()
                 .anonymous().disable()
                 .authorizeRequests()
                 .antMatchers("/**").authenticated()
                 .and()
                 .exceptionHandling()
-                .accessDeniedHandler(new OAuth2AccessDeniedHandler())
-                .and()
-
-                .formLogin()
-                    .loginPage("/login")
-                    .usernameParameter("id")
-                    .passwordParameter("pw")
-                    .loginProcessingUrl("/login")
-                    .defaultSuccessUrl("/")
-                    .successHandler(successHandler)
-                    .failureHandler(failureHandler)
-                    .permitAll()
-                .and()
-                    .logout()
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/")
-                    .invalidateHttpSession(true)
-                    .permitAll()
-                ;
+                .accessDeniedHandler(new OAuth2AccessDeniedHandler());
+//                .and()
+//
+//                .formLogin()
+//                    .loginPage("/login")
+//                    .usernameParameter("id")
+//                    .passwordParameter("pw")
+//                    .loginProcessingUrl("/login")
+//                    .defaultSuccessUrl("/")
+//                    .successHandler(successHandler)
+//                    .failureHandler(failureHandler)
+//                    .permitAll()
+//                .and()
+//                    .logout()
+//                    .logoutUrl("/logout")
+//                    .logoutSuccessUrl("/")
+//                    .invalidateHttpSession(true)
+//                    .permitAll()
+//                ;
     }
 }

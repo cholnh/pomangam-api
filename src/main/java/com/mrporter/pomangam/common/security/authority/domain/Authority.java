@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
+@Deprecated
 @Table(name = "authority_tbl")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data

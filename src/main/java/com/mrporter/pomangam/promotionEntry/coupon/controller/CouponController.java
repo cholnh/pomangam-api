@@ -1,20 +1,17 @@
 package com.mrporter.pomangam.promotionEntry.coupon.controller;
 
-import com.mrporter.pomangam.common.security.user.domain.User;
-import com.mrporter.pomangam.common.util.security.SessionConverter;
 import com.mrporter.pomangam.promotionEntry.coupon.domain.CouponDto;
 import com.mrporter.pomangam.promotionEntry.coupon.service.CouponServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.List;
 
 @RequestMapping("/coupons")
@@ -24,6 +21,7 @@ public class CouponController {
 
     CouponServiceImpl couponService;
 
+    @PreAuthorize("isAuthenticated() and !hasRole('ROLE_GUEST')")
     @GetMapping("/search/countCoupon")
     public ResponseEntity<?> countCoupon(@RequestParam("customerIdx") Integer customerIdx) {
         try {
@@ -33,17 +31,11 @@ public class CouponController {
         }
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() and !hasRole('ROLE_GUEST')")
     @GetMapping("/search/myValidCoupon")
-    public ResponseEntity<?> findValidByCustomerIdx(HttpSession session) {
+    public ResponseEntity<?> findValidByCustomerIdx(Principal principal) {
         try {
-            User user = SessionConverter.getCustomer(session);
-            Authentication authentication = SessionConverter.getAuthentication(session);
-            if(authentication == null || user == null) {
-                return new ResponseEntity("UNAUTHORIZED",HttpStatus.UNAUTHORIZED);
-            }
-
-            List<CouponDto> dtoList = couponService.findValidByCustomerIdx(user.getIdx());
+            List<CouponDto> dtoList = couponService.findValidByCustomerId(principal.getName());
             return new ResponseEntity(dtoList, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);

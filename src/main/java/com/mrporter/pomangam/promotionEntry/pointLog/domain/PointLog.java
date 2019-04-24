@@ -1,6 +1,5 @@
 package com.mrporter.pomangam.promotionEntry.pointLog.domain;
 
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Table(name = "log_for_point_tbl")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Data
 @Entity
 public class PointLog implements Serializable {

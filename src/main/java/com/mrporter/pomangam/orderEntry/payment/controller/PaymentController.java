@@ -21,8 +21,11 @@ import com.mrporter.pomangam.orderEntry.orderLog.repository.OrderLogJpaRepositor
 import com.mrporter.pomangam.orderEntry.payment.domain.PaymentAnnotation;
 import com.mrporter.pomangam.orderEntry.payment.domain.PaymentInputDto;
 import com.mrporter.pomangam.orderEntry.payment.domain.PaymentResultDto;
+import com.mrporter.pomangam.productEntry.product.repository.ProductRepositoryImpl;
 import com.mrporter.pomangam.promotionEntry.coupon.domain.CouponDto;
 import com.mrporter.pomangam.promotionEntry.coupon.repository.CouponRepositoryImpl;
+import com.mrporter.pomangam.promotionEntry.pointLog.domain.StatePointLog;
+import com.mrporter.pomangam.promotionEntry.pointLog.service.PointLogServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +54,8 @@ public class PaymentController {
     CouponRepositoryImpl couponRepository;
     OrderLogJpaRepository orderLogJpaRepository;
     CommonMapServiceImpl commonMapService;
+    ProductRepositoryImpl productRepository;
+    PointLogServiceImpl pointLogService;
 
     @PostMapping("/prepare")
     public ResponseEntity<?> prepare(@RequestBody PaymentInputDto dto) {
@@ -145,7 +150,8 @@ public class PaymentController {
                         ci.getProductIdx(),
                         ci.getQuantity(),
                         ci.getRequirement(),
-                        ci.getParentItemIdx()
+                        ci.getParentItemIdx(),
+                        productRepository.findByProductIdx(ci.getProductIdx()).getFinal_cost().intValue()
                 );
                 orderItems.add(oi);
             }
@@ -240,6 +246,7 @@ public class PaymentController {
                     return new ResponseEntity<>("INVALID POINT VALUE", HttpStatus.BAD_REQUEST);
                 } else {
                     userService.minusPointByIdx(customerIdx, usingPoint);
+                    pointLogService.logUsed(customerIdx, orderIdx, usingPoint, StatePointLog.USED_BY_PAYMENT);
                 }
             }
 
@@ -247,7 +254,7 @@ public class PaymentController {
             Integer usingCouponIdx = order.getUsing_coupon_idx();
             CouponDto coupon = couponRepository.getValidCouponByIdx(usingCouponIdx);
             if(coupon != null) {
-                couponRepository.useCoupon(coupon.getIdx(), customerIdx, guestIdx, orderIdx);
+                couponRepository.useCoupon(coupon.getIdx(), customerIdx, guestIdx, orderIdx); // 로깅 포함
             }
 
             /* 포인트 적립(회원) */
@@ -256,7 +263,8 @@ public class PaymentController {
                 int pointSavingPct = Integer.parseInt(commonMapService.getValue("point-saving-pct-1") + "");
                 int pointSavingPrc = Integer.parseInt(commonMapService.getValue("point-saving-prc-1") + "");
                 savingPoint = imp_amount * (1 - pointSavingPct / 100) - pointSavingPrc;
-                userService.minusPointByIdx(customerIdx, savingPoint);
+                userService.plusPointByIdx(customerIdx, savingPoint);
+                pointLogService.logSaved(customerIdx, orderIdx, usingPoint, StatePointLog.ISSUE_BY_PAYMENT);
             }
 
             return new ResponseEntity(HttpStatus.OK);

@@ -3,7 +3,7 @@ package com.mrporter.pomangam.view.main.domain;
 
 import com.mrporter.pomangam.advertiseEntry.advertiseForMain.domain.AdvertiseForMainDto;
 import com.mrporter.pomangam.advertiseEntry.advertiseForPopup.domain.AdvertiseForPopupDto;
-import com.mrporter.pomangam.advertiseEntry.cmtAdvertiseForMain.domain.CmtAdvertiseForMainWithCommentAllDto;
+import com.mrporter.pomangam.advertiseEntry.imageForCommentAllMain.domain.ImageForCommentAllMainWithCommentAllDto;
 import com.mrporter.pomangam.advertiseEntry.subAdvertiseForMain.domain.SubAdvertiseForMainDto;
 import com.mrporter.pomangam.deliveryEntry.deliverySite.domain.DeliverySiteDto;
 import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.domain.DetailForDeliverySiteDto;
@@ -30,7 +30,9 @@ public class MainViewDto implements Serializable {
 
     private List<OrderTimeDto> orderTimeDtoList;
 
-    private List<CmtAdvertiseForMainWithCommentAllDto> cmtAdvertiseForMainWithCommentAllDtoList;
+    private List<Hour> hours;
+
+    private List<ImageForCommentAllMainWithCommentAllDto> imageForCommentAllMainWithCommentAllDtos;
 
     private List<SubAdvertiseForMainDto> subAdvertiseForMainDtoList;
 

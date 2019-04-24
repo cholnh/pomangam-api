@@ -62,7 +62,7 @@ public class StoreRepositoryImpl implements StoreRepository {
 //        }
 //
 //        // 상세 배달지 도착시간 설정
-//        CountSearchDeliverySite detailForDeliverySite = detailForDeliverySiteJpaRepository.getDetailForDeliverySiteByIdx(detail_for_delivery_site_idx);
+//        Oauth2ClientDetail detailForDeliverySite = detailForDeliverySiteJpaRepository.getDetailForDeliverySiteByIdx(detail_for_delivery_site_idx);
 //        int delivery_site_idx = detailForDeliverySite.getDeliverySiteIdx();
 //        LocalTime lt = detailForDeliverySite.getOffsetArrivalTime().toLocalTime();
 //        ZonedDateTime zdt = ZonedDateTime.of(arrival_date, zoneId)

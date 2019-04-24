@@ -7,6 +7,7 @@ import com.mrporter.pomangam.orderEntry.cartItem.domain.CartItemInputDto;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/carts")
@@ -16,6 +17,7 @@ public class CartController {
 
     CartServiceImpl cartService;
 
+    @PreAuthorize("isAuthenticated() and !hasRole('ROLE_GUEST')")
     @GetMapping("/search/getViewByCustomerIdx")
     public ResponseEntity<?> getViewByCustomerIdx(@RequestParam("customerIdx") Integer customer_idx) {
         CartViewDto dto = cartService.getCartDtoByCustomerIdx(customer_idx);
@@ -26,6 +28,7 @@ public class CartController {
         }
     }
 
+    @PreAuthorize("isAuthenticated() and hasRole('ROLE_GUEST')")
     @GetMapping("/search/getViewByGuestIdx")
     public ResponseEntity<?> getViewByGuestIdx(@RequestParam("guestIdx") Integer guestIdx) {
         CartViewDto dto = cartService.getCartDtoByGuestIdx(guestIdx);
@@ -36,11 +39,13 @@ public class CartController {
         }
     }
 
+    @PreAuthorize("isAuthenticated() and !hasRole('ROLE_GUEST')")
     @GetMapping("/search/countCartByCustomerIdx")
     public ResponseEntity<?> countCartByCustomerIdx(@RequestParam("customerIdx") Integer customerIdx) {
         return new ResponseEntity(cartService.countCartByCustomerIdx(customerIdx), HttpStatus.OK);
     }
 
+    @PreAuthorize("isAuthenticated() and hasRole('ROLE_GUEST')")
     @GetMapping("/search/countCartByGuestIdx")
     public ResponseEntity<?> countCartByGuestIdx(@RequestParam("guestIdx") Integer guestIdx) {
         return new ResponseEntity(cartService.countCartByGuestIdx(guestIdx), HttpStatus.OK);

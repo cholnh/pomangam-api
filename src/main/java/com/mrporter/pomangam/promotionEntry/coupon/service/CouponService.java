@@ -8,7 +8,7 @@ public interface CouponService {
     int countCoupon(Integer customerIdx) throws Exception;
     CouponDto findByIdx(Integer idx) throws Exception;
     List<CouponDto> findAll() throws Exception;
-    List<CouponDto> findValidByCustomerIdx(Integer customer_idx) throws Exception;
+    List<CouponDto> findValidByCustomerId(String customer_id) throws Exception;
     CouponDto getValidCouponByCode(String couponCode) throws Exception;
     boolean isValid(String couponCode) throws Exception;
     //void useCoupon(Integer couponIdx, Integer customerIdx, Integer orderIdx) throws Exception;

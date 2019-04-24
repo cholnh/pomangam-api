@@ -40,6 +40,8 @@ public class UserDto implements Serializable {
 
     private Integer point;
 
+    private String authorities;
+
     public User toEntity() {
         return User.builder()
                 .delivery_site_idx(delivery_site_idx)
@@ -56,6 +58,7 @@ public class UserDto implements Serializable {
                 .register_date(register_date)
                 .modify_date(modify_date)
                 .point(point)
+                .authorities(authorities)
                 .build();
 
     }

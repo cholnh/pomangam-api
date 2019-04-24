@@ -53,8 +53,10 @@ public class User implements Serializable {
 
     private Integer point;
 
+    private String authorities;
+
     @Builder
-    public User(Integer delivery_site_idx, String id, String pw, String name, String nickname, Byte gender, Short year_of_birth, Byte month_of_birth, Byte days_of_birth, String phoneNumber, Byte state_active, Timestamp register_date, Timestamp modify_date, Integer point) {
+    public User(Integer delivery_site_idx, String id, String pw, String name, String nickname, Byte gender, Short year_of_birth, Byte month_of_birth, Byte days_of_birth, String phoneNumber, Byte state_active, Timestamp register_date, Timestamp modify_date, Integer point, String authorities) {
         this.delivery_site_idx = delivery_site_idx;
         this.id = id;
         this.pw = pw;
@@ -69,5 +71,6 @@ public class User implements Serializable {
         this.register_date = register_date;
         this.modify_date = modify_date;
         this.point = point;
+        this.authorities = authorities;
     }
 }

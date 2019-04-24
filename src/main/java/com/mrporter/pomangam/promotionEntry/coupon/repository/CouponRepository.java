@@ -9,7 +9,7 @@ public interface CouponRepository {
     int countCoupon(@Param("customerIdx") Integer customerIdx) throws Exception;
     CouponDto findByIdx(Integer idx) throws Exception;
     List<CouponDto> findAll() throws Exception;
-    List<CouponDto> findValidByCustomerIdx(Integer customer_idx) throws Exception;
+    List<CouponDto> findValidByCustomerId(String customer_id) throws Exception;
     CouponDto getValidCouponByCode(String couponCode) throws Exception;
     CouponDto getValidCouponByIdx(Integer couponIdx);
     boolean isValid(String couponCode) throws Exception;

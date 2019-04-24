@@ -2,8 +2,8 @@ package com.mrporter.pomangam.common.security.config;
 
 import com.mrporter.pomangam.common.security.handler.CustomLoginFailureHandler;
 import com.mrporter.pomangam.common.security.handler.CustomLoginSuccessHandler;
+import com.mrporter.pomangam.common.security.provider.CustomAuthenticationProvider;
 import com.mrporter.pomangam.common.security.service.UserDetailsServiceImpl;
-import com.mrporter.pomangam.common.security.user.repository.UserJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
@@ -37,14 +36,11 @@ import java.util.Arrays;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserJpaRepository customerJpaRepository;
-
-    @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder() {};
     }
 
     @Bean
@@ -78,12 +74,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new CustomLoginFailureHandler();
     }
 
-    @Bean(name = "myUserDetailsService")
-    @Override
-    public UserDetailsService userDetailsServiceBean() throws Exception {
-        return super.userDetailsServiceBean();
-    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -94,37 +84,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").hasRole("ADMIN")
 //                .antMatchers("/jpa/**").authenticated()
 //	            .antMatchers("/**").permitAll()
-                .and()
+                .and().userDetailsService(userDetailsService)
 
             .cors()
                 .and()
-
-
-//      	 .formLogin()
-//                .loginPage("/login")
-//                .usernameParameter("id")
-//                .passwordParameter("pw")
-//                .loginProcessingUrl("/login")
-//                .defaultSuccessUrl("/")
-//                .permitAll()
-//                .successHandler(successHandler())
-//            .and()
-//
-//
-//       	  .logout()
-//                .logoutUrl("/customLogout")
-//                .logoutSuccessUrl("/")
-//                .invalidateHttpSession(true)
-//                .permitAll()
-//            .and()
 
             .csrf()
                 .disable();
 
     }
 
-//    @Autowired
-//    private CustomAuthenticationProvider authProvider;
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -132,21 +101,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         authenticationProvider.setPasswordEncoder(passwordEncoder()); //패스워드를 암호활 경우 사용한다
         return authenticationProvider;
     }
+
+    @Autowired
+    CustomAuthenticationProvider customAuthenticationProvider;
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider()); // .authenticationProvider(authProvider)
+        auth
+                .authenticationProvider(authenticationProvider());
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         web
-                .ignoring().antMatchers("/resources/**")
 
-                .and().ignoring().antMatchers("/tests/**")
-                .and().ignoring().antMatchers("/payments/complete/**");
+                //.ignoring().antMatchers("/**");
 
-                /*
-                .ignoring().antMatchers("/v2/api-docs",
+                .ignoring().antMatchers("/assets/**")
+
+                //.and().ignoring().antMatchers("/tests/**")
+                .and().ignoring().antMatchers("/payments/complete/**")
+
+                .and().ignoring().antMatchers("/v2/api-docs",
                                                         "/configuration/ui",
                                                         "/swagger-resources",
                                                         "/configuration/security",
@@ -154,12 +130,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                                         "/webjars/**",
                                                         "/swagger-resources/configuration/ui",
                                                         "/swagger-resources/configuration/security");
-                                                        */
+
     }
 
+
     @Bean
-    public CorsConfigurationSource corsConfigurationSource()
-    {
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("*"));

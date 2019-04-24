@@ -38,13 +38,10 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
             super.onAuthenticationSuccess(request, response, authentication);
         }
         */
-
         User user = userJpaRepository.findById(authentication.getName());
         request.getSession().setAttribute("user", user);
         request.getSession().setAttribute("authentication", authentication);
         super.onAuthenticationSuccess(request, response, authentication);
-
-
-
     }
+
 }

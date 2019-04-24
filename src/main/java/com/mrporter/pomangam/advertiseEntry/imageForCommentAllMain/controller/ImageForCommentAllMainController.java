@@ -1,6 +1,6 @@
-package com.mrporter.pomangam.advertiseEntry.cmtAdvertiseForMain.controller;
+package com.mrporter.pomangam.advertiseEntry.imageForCommentAllMain.controller;
 
-import com.mrporter.pomangam.advertiseEntry.cmtAdvertiseForMain.service.CmtAdvertiseForMainServiceImpl;
+import com.mrporter.pomangam.advertiseEntry.imageForCommentAllMain.service.ImageForCommentAllMainServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/cmtAdvertiseForMains")
 @AllArgsConstructor
-public class CmtAdvertiseForMainController {
+public class ImageForCommentAllMainController {
 
-    CmtAdvertiseForMainServiceImpl cmtAdvertiseForMainService;
+    ImageForCommentAllMainServiceImpl cmtAdvertiseForMainService;
 
     @GetMapping("/search/getValue")
     public ResponseEntity<?> getValue(@RequestParam("key") String key) {

@@ -1,7 +1,7 @@
 package com.mrporter.pomangam.common.security.user.service;
 
-import com.mrporter.pomangam.common.security.authority.domain.Authority;
-import com.mrporter.pomangam.common.security.authority.repository.AuthorityJpaRepository;
+import com.mrporter.pomangam.common.security.oauth2ClientDetail.domain.Oauth2ClientDetail;
+import com.mrporter.pomangam.common.security.oauth2ClientDetail.repository.Oauth2ClientDetailJpaRepository;
 import com.mrporter.pomangam.common.security.user.domain.User;
 import com.mrporter.pomangam.common.security.user.repository.UserJpaRepository;
 import com.mrporter.pomangam.common.util.time.CustomTime;
@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
 
     PasswordEncoder passwordEncoder;
     UserJpaRepository userJpaRepository;
-    AuthorityJpaRepository authorityJpaRepository;
+    Oauth2ClientDetailJpaRepository oauth2ClientDetailJpaRepository;
 
     @Override
     public User findById(String id) {
@@ -43,10 +43,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(User user) {
-        authorityJpaRepository.save(new Authority(user.getId(), "ROLE_USER"));
-
         user.setRegister_date(CustomTime.curTimestampSql());
         user.setPw(passwordEncoder.encode(user.getPw()));
+        user.setAuthorities("ROLE_USER");
 
         return userJpaRepository.save(user);
     }
@@ -65,7 +64,8 @@ public class UserServiceImpl implements UserService {
     public Boolean isUserExist(String id) {
         if(id != null) {
             final User existingUser = userJpaRepository.findById(id);
-            return existingUser == null ? false : true;
+            final Oauth2ClientDetail existingClient = oauth2ClientDetailJpaRepository.getOne(id);
+            return (existingUser != null && existingClient != null) ? true : false;
         } else {
             return false;
         }
@@ -113,6 +113,7 @@ public class UserServiceImpl implements UserService {
         fetchedUser.setModify_date(CustomTime.curTimestampSql());
 
         fetchedUser.setPoint(user.getPoint());
+        //fetchedUser.setAuthorities(user.getAuthorities());
         userJpaRepository.save(fetchedUser);
         return fetchedUser;
     }
@@ -180,6 +181,10 @@ public class UserServiceImpl implements UserService {
         if (user.getPoint() != null) {
             fetchedUser.setPoint(user.getPoint());
         }
+        //if(user.getAuthorities() != null) {
+        //    fetchedUser.setAuthorities(user.getAuthorities());
+        //}
+
         userJpaRepository.save(fetchedUser);
         return fetchedUser;
     }

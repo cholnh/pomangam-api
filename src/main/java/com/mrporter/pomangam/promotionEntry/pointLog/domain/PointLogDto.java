@@ -1,13 +1,12 @@
 package com.mrporter.pomangam.promotionEntry.pointLog.domain;
 
-import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Data
 public class PointLogDto implements Serializable {
 

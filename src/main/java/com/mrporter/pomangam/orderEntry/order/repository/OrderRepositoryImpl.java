@@ -1,6 +1,9 @@
 package com.mrporter.pomangam.orderEntry.order.repository;
 
+import com.mrporter.pomangam.orderEntry.order.domain.OrderDto;
 import com.mrporter.pomangam.orderEntry.order.domain.OrderTimeSalesVolumeDto;
+import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
+import org.hibernate.transform.Transformers;
 import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.stereotype.Repository;
 
@@ -78,5 +81,26 @@ public class OrderRepositoryImpl implements OrderRepository {
             return 0;
         }
         return Integer.parseInt(obj+"");
+    }
+
+    public List<OrderDto> getTodayOrderByCustomerIdx(Integer customerIdx, PageRequest pageRequest) {
+        int page = pageRequest == null ? 0 : pageRequest.getPage();
+        int size = pageRequest == null ? 100 : pageRequest.getSize();
+
+        List<OrderDto> orderDtos = em
+                .createNativeQuery("" +
+                        "SELECT * " +
+                        "FROM order_tbl " +
+                        "WHERE " +
+                        "customer_idx = ? " +
+                        "AND arrival_date_only = DATE_FORMAT(NOW(), '%Y-%m-%d') " +
+                        "ORDER BY arrival_time_only DESC, box_no DESC ")
+                .setParameter(1, customerIdx)
+                .unwrap( org.hibernate.query.NativeQuery.class )
+                .setResultTransformer( Transformers.aliasToBean( OrderDto.class ) )
+                .setFirstResult(page*size)
+                .setMaxResults(size)
+                .getResultList();
+        return orderDtos;
     }
 }

@@ -31,8 +31,8 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public List<CouponDto> findValidByCustomerIdx(Integer customer_idx) throws Exception {
-        return couponRepository.findValidByCustomerIdx(customer_idx);
+    public List<CouponDto> findValidByCustomerId(String customer_id) throws Exception {
+        return couponRepository.findValidByCustomerId(customer_id);
     }
 
     @Override

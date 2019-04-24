@@ -1,8 +1,8 @@
 package com.mrporter.pomangam.common.security.user.controller;
 
+import com.mrporter.pomangam.common.security.guest.service.GuestServiceImpl;
 import com.mrporter.pomangam.common.security.user.domain.User;
 import com.mrporter.pomangam.common.security.user.domain.UserDto;
-import com.mrporter.pomangam.common.util.security.SessionConverter;
 import com.mrporter.pomangam.common.security.user.service.UserServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,11 +12,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/user")
@@ -24,33 +23,23 @@ import javax.servlet.http.HttpSession;
 public class UserController {
 
     UserServiceImpl userService;
+    GuestServiceImpl guestService;
 
     @PostAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<?> get(
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 5) Pageable pageable) {
 
-        //localhost:8080/user?page=0&size=10&sort=idx,desc
         Page<User> pages =  userService.findAllUsers(pageable);
         return new ResponseEntity<>(pages, HttpStatus.OK);
     }
 
-    //@PostAuthorize("isAuthenticated() and (( returnObject.id == principal.id ) or hasRole('ROLE_ADMIN'))")
-    @PostAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() and !hasRole('ROLE_GUEST')")
+    @PostAuthorize("hasRole('ROLE_ADMIN') or ( returnObject != null && returnObject.id == principal.username )")
     @GetMapping("/myInfo")
-    public ResponseEntity<?> myInfo(HttpSession session) {
-        User user = SessionConverter.getCustomer(session);
-        Authentication authentication = SessionConverter.getAuthentication(session);
-        if(authentication != null && user != null) {
-            return ResponseEntity.ok(removePassword(user));
-        } else {
-            return new ResponseEntity("UNAUTHORIZED",HttpStatus.UNAUTHORIZED);
-        }
-    }
-
-    private User removePassword(User user) {
-        user.setPw(null);
-        return user;
+    public User myInfo(Principal principal) {
+        User user = userService.findById(principal.getName());
+        return removePassword(user);
     }
 
     @GetMapping("/isExist")
@@ -69,68 +58,36 @@ public class UserController {
         return new ResponseEntity(userService.isUserExistByPhoneNumber(phone_number), HttpStatus.OK);
     }
 
-    // 비밀번호 암호화 필요
+    //
     @PostMapping
     public ResponseEntity<?> post(@RequestBody UserDto dto) {
-        return new ResponseEntity<>(
-                removePassword(userService.saveUser(dto.toEntity())),
-                HttpStatus.OK);
+        return new ResponseEntity<>(removePassword(userService.saveUser(dto.toEntity())), HttpStatus.OK);
     }
 
-    //@PreAuthorize("isAuthenticated() and (( id == principal.id ) or hasRole('ROLE_ADMIN'))")
-    //@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN') or ( #id == principal.username ))")
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable String id,
-                                 HttpSession session) {
-
-        User user = SessionConverter.getCustomer(session);
-        Authentication authentication = SessionConverter.getAuthentication(session);
-
-        if(user != null) {
-            if(id.equals(user.getId()) || (authentication != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))) {
-                return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.OK);
-            }
-        }
-        return new ResponseEntity("UNAUTHORIZED",HttpStatus.UNAUTHORIZED);
+    public ResponseEntity delete(@PathVariable String id) {
+        return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.OK);
     }
 
-    //@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
-    //@PreAuthorize("isAuthenticated() and (( id == principal.id ) or hasRole('ROLE_ADMIN'))")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN') or ( #dto.id == principal.username ))")
     @PutMapping("/{id}")
-    public ResponseEntity put(
-            @PathVariable String id,
-            @RequestBody UserDto dto,
-            HttpSession session) {
-
-        User user = SessionConverter.getCustomer(session);
-        Authentication authentication = SessionConverter.getAuthentication(session);
-        if(user != null) {
-            if(id.equals(user.getId()) || (authentication != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))) {
-                return new ResponseEntity<>(
-                        removePassword(userService.updateUser(id, dto.toEntity())),
-                        HttpStatus.OK);
-            }
-        }
-        return new ResponseEntity("UNAUTHORIZED",HttpStatus.UNAUTHORIZED);
+    public ResponseEntity put(@PathVariable String id,
+                              @RequestBody UserDto dto) {
+        return new ResponseEntity<>(removePassword(userService.updateUser(id, dto.toEntity())), HttpStatus.OK);
     }
 
-    //@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
-    //@PreAuthorize("isAuthenticated() and (( id == principal.id ) or hasRole('ROLE_ADMIN'))")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN') or ( #dto.id == principal.username ))")
     @PatchMapping("/{id}")
-    public ResponseEntity patch(
-            @PathVariable String id,
-            @RequestBody UserDto dto,
-            HttpSession session) {
+    public ResponseEntity patch(@PathVariable String id,
+                                @RequestBody UserDto dto) {
+        return new ResponseEntity<>(removePassword(userService.patchUser(id, dto.toEntity())), HttpStatus.OK);
+    }
 
-        User user = SessionConverter.getCustomer(session);
-        Authentication authentication = SessionConverter.getAuthentication(session);
+    private User removePassword(User user) {
         if(user != null) {
-            if(id.equals(user.getId()) || (authentication != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))) {
-                return new ResponseEntity<>(
-                        removePassword(userService.patchUser(id, dto.toEntity())),
-                        HttpStatus.OK);
-            }
+            user.setPw(null);
         }
-        return new ResponseEntity("UNAUTHORIZED",HttpStatus.UNAUTHORIZED);
+        return user;
     }
 }

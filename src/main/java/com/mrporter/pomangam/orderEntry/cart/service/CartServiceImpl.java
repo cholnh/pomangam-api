@@ -186,7 +186,7 @@ public class CartServiceImpl implements CartService {
         LocalDateTime max = timeMapList.get(0).getArrivalTime();
         for(CartTimeMapDto dto : timeMapList) {
             LocalDateTime ldt = dto.getArrivalTime();
-            if(ldt.isAfter(max)) {
+            if(ldt != null && ldt.isAfter(max)) {
                 max = ldt;
             }
         }
@@ -246,8 +246,19 @@ public class CartServiceImpl implements CartService {
                 int mt = storeInfo.getMinimum_time().toLocalTime().getMinute();   // 최소 생산 시간 (분 단위)
                 int mp = storeInfo.getMaximum_production();   // 최대 가능 생산량
 
+                int roopCnt = 0;
                 boolean isTomorrow = true;
                 do {
+                    if(++roopCnt > 20) {
+                        // 무한 루프 방지
+                        CartTimeMapDto cartTimeMapDto = new CartTimeMapDto();
+                        cartTimeMapDto.setStore_idx(store_idx);
+                        cartTimeMapDto.setArrivalTime(null);
+                        cartTimeMapDto.setRemaining_capacity(0);
+                        result.add(cartTimeMapDto);
+                        break;
+                    }
+
                     if(svList == null || svList.isEmpty()) {
                         break;
                     }
@@ -283,6 +294,17 @@ public class CartServiceImpl implements CartService {
 
                         if(rc < quantity) {
                             // td가 -1일 경우 (parse error) or 현재까지 남은 주문_가능_수량이 없는 경우
+                            if(rc > 0) {
+                                // quantity에 문제가 생긴 경우
+                                isTomorrow = false;
+
+                                CartTimeMapDto cartTimeMapDto = new CartTimeMapDto();
+                                cartTimeMapDto.setStore_idx(store_idx);
+                                cartTimeMapDto.setArrivalTime(arrival_time);
+                                cartTimeMapDto.setRemaining_capacity(rc-quantity);
+                                result.add(cartTimeMapDto);
+                                break;
+                            }
                         } else {
                             isTomorrow = false; // 금일 주문이 가능한 경우 이므로 다음날로 넘어가진 않음 (false)
 
