@@ -1,6 +1,7 @@
 package com.mrporter.pomangam.test.payment.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -17,6 +18,14 @@ import java.security.Principal;
 @Slf4j
 public class AuthTestController {
     public static void main(String[] args) {
+    }
+
+    @Autowired
+    TestServiceImpl testService;
+
+    @GetMapping("/insert")
+    public ResponseEntity insert() {
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @PermitAll  // not working

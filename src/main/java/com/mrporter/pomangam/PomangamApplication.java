@@ -2,6 +2,7 @@ package com.mrporter.pomangam;
 
 import com.mrporter.pomangam.common.file.config.FileStorageProperties;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.dbutils.QueryRunner;
 import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.boot.CommandLineRunner;
@@ -11,7 +12,9 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
@@ -20,6 +23,9 @@ import javax.sql.DataSource;
 import java.util.Locale;
 import java.util.TimeZone;
 
+@Slf4j
+@EnableCaching
+@EnableAspectJAutoProxy
 @EnableConfigurationProperties({FileStorageProperties.class})
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class })

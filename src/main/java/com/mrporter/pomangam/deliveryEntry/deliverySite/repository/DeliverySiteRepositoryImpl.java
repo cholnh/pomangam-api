@@ -47,9 +47,29 @@ public class DeliverySiteRepositoryImpl implements DeliverySiteRepository {
        Query nativeQuery = em.createNativeQuery(sql);
        nativeQuery.setParameter(1, deliverySiteIdx);
 
-       DeliverySiteDto dto = new JpaResultMapper().uniqueResult(nativeQuery, DeliverySiteDto.class);
-
-       return dto;
+       List<DeliverySiteDto> dto = new JpaResultMapper().list(nativeQuery, DeliverySiteDto.class);
+       if(dto.isEmpty()) {
+           return null;
+       } else {
+           return dto.get(0);
+       }
    }
 
+    public List<DeliverySiteDto> findAll() {
+        String sql = "SELECT * FROM delivery_site_tbl";
+        Query nativeQuery = em.createNativeQuery(sql);
+
+        List<DeliverySiteDto> dto = new JpaResultMapper().list(nativeQuery, DeliverySiteDto.class);
+        return dto;
+    }
+
+    @Override
+    public List<DeliverySiteWithCountDto> findByConsonantQuery(String query) {
+        Query nativeQuery = em.createNativeQuery("SELECT ds.*, cnt.count FROM initial_consonant_for_dsite_tbl con, delivery_site_tbl ds LEFT OUTER JOIN count_search_delivery_site_tbl cnt ON ds.idx = cnt.delivery_site_idx WHERE initial_consonant LIKE :consonant AND con.delivery_site_idx = ds.idx ORDER BY cnt.count DESC ");
+        nativeQuery.setParameter("consonant", "%"+query+"%");
+
+        List<DeliverySiteWithCountDto> dList = new JpaResultMapper().list(nativeQuery, DeliverySiteWithCountDto.class);
+
+        return dList;
+    }
 }

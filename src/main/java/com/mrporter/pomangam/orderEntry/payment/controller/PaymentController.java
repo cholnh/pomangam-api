@@ -115,6 +115,7 @@ public class PaymentController {
                             usingCouponIdx,
                             final_amount,
                             merchant_uid,
+                            null,
                             null
                     ));
             orderIdx = order.getIdx();
@@ -219,7 +220,7 @@ public class PaymentController {
 
             /* amount 가 가맹점에서 계산한 {실제 주문금액}과 일치하는지 최종 검증 */
             int imp_amount = paymentInfo.getAmount().intValue();
-            int cli_amount = order.getFinal_amount().intValue();
+            int cli_amount = order.getFinal_amount();
             if(imp_amount != cli_amount) {
                 // fail
                 orderService.setState(orderIdx, StateOrder.ORDER_FAIL);
@@ -231,15 +232,18 @@ public class PaymentController {
             cartJpaRepository.deleteById(cartIdx);
 
             /* 결제 상태 변경 */
-            orderService.setState(orderIdx, StateOrder.ORDER_SUCCESS);
-            orderService.setImpUid(orderIdx, imp_uid);
+            //orderService.setState(orderIdx, StateOrder.ORDER_SUCCESS);
+            //orderService.setImpUid(orderIdx, imp_uid);
+            order.setState_order(StateOrder.ORDER_SUCCESS.getCode());
+            order.setImp_uid(imp_uid);
+
 
             /* 사용 포인트 제거, 쿠폰 제거 */
 
             /* 포인트 */
             Integer customerIdx = order.getCustomer_idx();
             Integer guestIdx = order.getGuest_idx();
-            int usingPoint = order.getUsing_point() == null ? 0 : order.getUsing_point().intValue();
+            int usingPoint = order.getUsing_point() == null ? 0 : order.getUsing_point();
             if(customerIdx != null) {
                 if(usingPoint > userService.getPointByIdx(customerIdx)) {
                     orderService.setState(orderIdx, StateOrder.ORDER_FAIL);
@@ -259,15 +263,16 @@ public class PaymentController {
 
             /* 포인트 적립(회원) */
             if(customerIdx != null) {
-                int savingPoint;
+                int savedPoint;
                 int pointSavingPct = Integer.parseInt(commonMapService.getValue("point-saving-pct-1") + "");
                 int pointSavingPrc = Integer.parseInt(commonMapService.getValue("point-saving-prc-1") + "");
-                savingPoint = imp_amount * (1 - pointSavingPct / 100) - pointSavingPrc;
-                userService.plusPointByIdx(customerIdx, savingPoint);
+                savedPoint = imp_amount * (1 - pointSavingPct / 100) - pointSavingPrc;
+                userService.plusPointByIdx(customerIdx, savedPoint);
                 pointLogService.logSaved(customerIdx, orderIdx, usingPoint, StatePointLog.ISSUE_BY_PAYMENT);
+                order.setSaved_point(savedPoint);
             }
 
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity(orderJpaRepository.save(order), HttpStatus.OK);
 
         } catch (Exception e) {
             e.printStackTrace();

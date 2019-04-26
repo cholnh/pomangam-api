@@ -35,8 +35,10 @@ public class DetailForDeliverySite implements Serializable {
 
     private Double longitude;
 
+    private String abbreviation;
+
     @Builder
-    public DetailForDeliverySite(Integer deliverySiteIdx, String name, String location, Integer sequence, Time offsetArrivalTime, Double latitude, Double longitude) {
+    public DetailForDeliverySite(Integer deliverySiteIdx, String name, String location, Integer sequence, Time offsetArrivalTime, Double latitude, Double longitude, String abbreviation) {
         this.deliverySiteIdx = deliverySiteIdx;
         this.name = name;
         this.location = location;
@@ -44,5 +46,6 @@ public class DetailForDeliverySite implements Serializable {
         this.offsetArrivalTime = offsetArrivalTime;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.abbreviation = abbreviation;
     }
 }

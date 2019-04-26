@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
+         updateCheck="false">
+    <diskStore path="java.io.tmpdir" />
+
+    <!--
+    - 최대 10000개의 객체를 저장
+    - 5분 이상 사용되지 않거나 또는 10분 이상 캐시에 저장되어 있을 경우, 캐시에서 제거
+    - 저장되는 객체가 10000개를 넘길 경우, 디스크 캐시에 저장
+    -->
+    <defaultCache>
+            maxEntriesLocalHeap="10000"
+            maxEntriesLocalDisk="1000"
+            eternal="false"
+            diskSpoolBufferSizeMB="20"
+            timeToIdleSeconds="300" timeToLiveSeconds="600"
+            memoryStoreEvictionPolicy="LFU"
+            transactionalMode="off">
+        <persistence strategy="localTempSwap" />
+    </defaultCache>
+</ehcache>

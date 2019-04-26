@@ -27,7 +27,9 @@ public class DetailForDeliverySiteDto implements Serializable {
 
     private Double longitude;
 
-    public DetailForDeliverySiteDto(Integer idx, Integer deliverySiteIdx, String name, String location, Integer sequence, Time offsetArrivalTime, Double latitude, Double longitude) {
+    private String abbreviation;
+
+    public DetailForDeliverySiteDto(Integer idx, Integer deliverySiteIdx, String name, String location, Integer sequence, Time offsetArrivalTime, Double latitude, Double longitude, String abbreviation) {
         this.idx = idx;
         this.deliverySiteIdx = deliverySiteIdx;
         this.name = name;
@@ -36,9 +38,6 @@ public class DetailForDeliverySiteDto implements Serializable {
         this.offsetArrivalTime = offsetArrivalTime;
         this.latitude = latitude;
         this.longitude = longitude;
-    }
-
-    public DetailForDeliverySite toEntity() {
-        return null;
+        this.abbreviation = abbreviation;
     }
 }

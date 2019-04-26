@@ -14,7 +14,7 @@ public class HomeController {
 
     private final HomeServiceImpl homeService;
 
-    @GetMapping("/{name}")
+    @GetMapping("/{name}") 
     public ResponseEntity<?> get(@PathVariable String name) {
         // 가져오기 서비스 (GET)
         // homeService.get();

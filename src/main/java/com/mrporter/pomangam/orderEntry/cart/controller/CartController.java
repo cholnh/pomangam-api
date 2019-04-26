@@ -17,6 +17,7 @@ public class CartController {
 
     CartServiceImpl cartService;
 
+    //@LogExecutionTime // First : 242ms, after : 27~28ms
     @PreAuthorize("isAuthenticated() and !hasRole('ROLE_GUEST')")
     @GetMapping("/search/getViewByCustomerIdx")
     public ResponseEntity<?> getViewByCustomerIdx(@RequestParam("customerIdx") Integer customer_idx) {

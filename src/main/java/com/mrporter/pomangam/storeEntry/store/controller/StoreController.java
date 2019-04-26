@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.storeEntry.store.controller;
 
+import com.mrporter.pomangam.common.annotation.LogExecutionTime;
 import com.mrporter.pomangam.storeEntry.store.domain.InquiryResultDto;
 import com.mrporter.pomangam.storeEntry.store.service.StoreServiceImpl;
 import lombok.AllArgsConstructor;

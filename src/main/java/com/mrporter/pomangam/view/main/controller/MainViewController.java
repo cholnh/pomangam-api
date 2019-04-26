@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.view.main.controller;
 
+import com.mrporter.pomangam.common.annotation.LogExecutionTime;
 import com.mrporter.pomangam.view.main.service.MainViewServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

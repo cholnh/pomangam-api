@@ -44,4 +44,16 @@ public class DetailForDeliverySiteRepositoryImpl implements DetailForDeliverySit
         return dList;
     }
 
+    public DetailForDeliverySiteDto getByIdx(Integer detail_site_idx) {
+        Query nativeQuery = em
+                .createNativeQuery("SELECT * FROM detail_for_delivery_site_tbl ds where ds.idx = ?")
+                .setParameter(1, detail_site_idx);
+
+        List<DetailForDeliverySiteDto> dto = new JpaResultMapper().list(nativeQuery, DetailForDeliverySiteDto.class);
+        if(dto.isEmpty()) {
+            return null;
+        } else {
+            return dto.get(0);
+        }
+    }
 }

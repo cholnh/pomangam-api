@@ -70,14 +70,14 @@ public class UserController {
         return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.OK);
     }
 
-    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN') or ( #dto.id == principal.username ))")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN') or ( #id == principal.username ))")
     @PutMapping("/{id}")
     public ResponseEntity put(@PathVariable String id,
                               @RequestBody UserDto dto) {
         return new ResponseEntity<>(removePassword(userService.updateUser(id, dto.toEntity())), HttpStatus.OK);
     }
 
-    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN') or ( #dto.id == principal.username ))")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN') or ( #id == principal.username ))")
     @PatchMapping("/{id}")
     public ResponseEntity patch(@PathVariable String id,
                                 @RequestBody UserDto dto) {
