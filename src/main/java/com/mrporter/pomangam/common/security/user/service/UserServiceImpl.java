@@ -43,8 +43,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(User user) {
-        user.setRegister_date(CustomTime.curTimestampSql());
         user.setPw(passwordEncoder.encode(user.getPw()));
+        user.setState_active(Byte.valueOf("1"));
+        user.setRegister_date(CustomTime.curTimestampSql());
+        user.setPoint(user.getPoint() == null ? 0 : user.getPoint());
         user.setAuthorities("ROLE_USER");
 
         return userJpaRepository.save(user);

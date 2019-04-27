@@ -60,6 +60,5 @@ public class UserDto implements Serializable {
                 .point(point)
                 .authorities(authorities)
                 .build();
-
     }
 }

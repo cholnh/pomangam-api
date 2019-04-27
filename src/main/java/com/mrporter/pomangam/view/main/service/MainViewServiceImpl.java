@@ -13,6 +13,7 @@ import com.mrporter.pomangam.view.main.domain.MainFirstViewDto;
 import com.mrporter.pomangam.view.main.domain.MainSecondViewDto;
 import com.mrporter.pomangam.view.main.domain.MainViewDto;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -34,6 +35,11 @@ public class MainViewServiceImpl implements MainViewService {
 
     @Override
     public MainViewDto getMainDto(Integer delivery_site_idx) {
+        return getMainDtoNoCache(getMainDtoCache(delivery_site_idx), delivery_site_idx);
+    }
+
+    @Cacheable(value="getMainDtoCache", key="#delivery_site_idx")
+    public MainViewDto getMainDtoCache(Integer delivery_site_idx) {
         MainViewDto dto = new MainViewDto();
         dto.setAdvertiseForPopupDtoList(advertiseForPopupRepository.getAdvertisePopupsByDeliverySiteIdx(delivery_site_idx));
         dto.setAdvertiseForMainDtoList(advertiseForMainRepository.getAdvertiseMainsByDeliverySiteIdx(delivery_site_idx));
@@ -41,7 +47,10 @@ public class MainViewServiceImpl implements MainViewService {
         dto.setDetailSiteDtoList(detailForDeliverySiteRepository.getDetailSitesByDeliverySiteIdxOrderBySequence(delivery_site_idx));
         dto.setImageForCommentAllMainWithCommentAllDtos(cmtAdvertiseForMainRepository.getImageForCommentAllMainByDeliverySiteIdx(delivery_site_idx));
         dto.setSubAdvertiseForMainDtoList(subAdvertiseForMainRepository.getSubAdvertiseMainsByDeliverySiteIdx(delivery_site_idx));
+        return dto;
+    }
 
+    public MainViewDto getMainDtoNoCache(MainViewDto dto, Integer delivery_site_idx) {
         List<OrderTimeDto> orderTimeDtoList = orderTimeRepository.getOrderTimesByDeliverySiteIdxAndArrivalTime(delivery_site_idx);
         Calendar c = Calendar.getInstance();
         if(orderTimeDtoList.isEmpty()) {
@@ -73,6 +82,8 @@ public class MainViewServiceImpl implements MainViewService {
 
         return dto;
     }
+
+
 
     @Override
     public MainFirstViewDto getMainFirstDto(Integer delivery_site_idx) {

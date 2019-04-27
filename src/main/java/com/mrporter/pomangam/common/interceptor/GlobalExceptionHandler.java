@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public @ResponseBody String handleException(Exception e) {
         HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-        log.error("[" + req.getRequestURL() + (req.getQueryString() == null ? "" :  "?" + req.getQueryString()) + "] - " + e.toString());
+        log.error("[" + req.getMethod() + " " + req.getRequestURL() + (req.getQueryString() == null ? "" :  "?" + req.getQueryString()) + "] - " + e.toString());
         //e.printStackTrace();
         return "INTERNAL_SERVER_ERROR" + System.lineSeparator() +
                 "Cause : " + e.toString();

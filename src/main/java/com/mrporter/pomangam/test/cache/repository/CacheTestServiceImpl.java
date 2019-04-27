@@ -24,7 +24,7 @@ public class CacheTestServiceImpl implements CacheTestService {
     }
 
     @Override
-    @Cacheable(value="findUserCache", key="#id")
+    @Cacheable(value = "test", key="#id")
     public User findByIdCache(String id) {
         slowQuery(2000);
         User user = userJpaRepository.findById(id);
@@ -32,7 +32,7 @@ public class CacheTestServiceImpl implements CacheTestService {
     }
 
     @Override
-    @CacheEvict(value = "findUserCache", key="#id")
+    @CacheEvict(value = "test", key="#id")
     public void refresh(String id) {
         log.info(id + "의 Cache Clear!");
     }
@@ -46,7 +46,7 @@ public class CacheTestServiceImpl implements CacheTestService {
         }
     }
 
-    @CachePut(value = "findUserCache", key="#id")
+    @CachePut(value = "test", key="#id")
     public User put(String id, String name) {
         User user = userJpaRepository.findById(id);
         user.setName(name);
