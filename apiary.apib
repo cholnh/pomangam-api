@@ -1,0 +1,2729 @@
+FORMAT: 1A
+HOST: https://www.pomangam.com:9530/api
+
+# 포만감 API v1.00
+
+#### 히스토리
+
+> ##### 2019-04-26
+> 주문내역 추가  
+> (size,page)파라미터 달려있는 API들은 리스트뷰 동적으로 추가되게 해주세요.   
+
+> ##### 2019-04-23
+> PG 결제 모듈 추가, 제품 API (26번) 페이징 기능 추가  
+> 결제수단 중 네이버페이 제거 → 가상계좌 변경 필요  
+> 결제정보에서 비회원 결제 중 [비밀번호] 제거 필요  
+
+----
+#### 개요
+본 문서는 https 프로토콜을 통해 데이터를 json 형식으로 가공, POST method 를 사용하여
+전송하고, json 형식의 결과 데이터를 parsing 하여 처리할 수 있음을 전제로 작성되었습니다.  
+
+----
+#### 선결조건
+- Oauth2 인증토큰을 발급 받기 위해, Client id/secret 정보 필요  
+- 로그인을 위해 유저 id/pw 정보 필요
+
+----
+#### API 서버 Host
+
+- [운영서버] https://www.pomangam.com:9530/api
+
+
+
+## 1. Oauth2 [/v1/oauth/token]  
+----
+#### Oauth2 로그인 과정
+
+- 앱에 하드코딩으로 박혀있는 정보(헤더에 넣으면 됨)  
+    a. `비회원로그인용 계정`  
+    b. `회원로그인용 계정`
+
+1. 초기 (or 비회원) 
+    * `1-1`을 통해 `인증 토큰`만 받아온다. - (a) 사용
+    * 여기에는 반환 값 중 `재발급 토큰` 들어있지 않습니다. (재발급x 재로그인 o)
+    * `인증 토큰`이 만료된 오류(401)를 받으면, 다시 비회원 로그인(`1-1`) 시도
+
+2. 로그인 (회원)
+    * `1-2`를 통해 `인증 토큰` + `재발급 토큰` 받아온다. - (b) 사용 
+    * 토큰들을 (되도록이면) `AccountManager`에 저장 (`sharedPreference`는 보안이슈가 많음)
+    * 로그인에 사용된 유저 `id`, `pw` 삭제
+    * `인증 토큰`이 만료된 오류(401)를 받으면, 토큰 재발급(`1-3`) 시도 -> `인증 토큰`, `재발급 토큰` 다시 저장
+
+3. 로그아웃 
+    * 저장되어있는 `인증 토큰`, `재발급 토큰` 만료시키고(삭제) -> 다시 `1`번으로 돌아가면 됨.
+
+
+### 1-1. 토큰 발급 (비회원) [POST]
+
+Oauth2 인증 토큰 발급 (게스트 권한 토큰)  
+- Authorization-type : Basic Auth  
+- Grant-type : `client_credentials`    
+- `refresh_token` 반환 하지 않음  
+
+> [게스트 전용 계정]  
+> client id : guest  
+> client secret : sZEJ^9E]ekjj.{vc  
+
+
++ Request ()
+
+    + Headers
+    
+            Authorization: Basic Z3Vlc3Q6c1pFSl45RV1la2pqLnt2Yw==
+        
+    + Body
+    
+            grant_type=client_credentials
+
++ Response 200 (application/json)
+    + Body
+
+            {
+                "access_token": "3f410ddf-dafb-4ac2-8bf2-ff88e09c3391",
+                "token_type": "bearer",
+                "expires_in": 36069,
+                "scope": "read write trust"
+            }
+
+### 1-2. 토큰 발급 (회원) [POST]
+
+Oauth2 인증 토큰 발급 (유저 권한 토큰)  
+- Authorization-type : Basic Auth  
+- Grant-type : `password`  
+- `refresh_token` 반환  
+
+> [로그인 전용 계정]  
+> client id : login  
+> client secret : y7FL[MsZ>3^p(M6z   
+
+> [Headers]   
+> Authorization : {base64encoding(client_id:client_secret)}  
+
+> [Body]  
+> grant_type : password  
+> username : {유저 아이디}  
+> password : {유저 패스워드} 
+
++ Request ()
+
+    + Headers
+    
+            Authorization: Basic bG9naW46eTdGTFtNc1o+M15wKE02eg==
+        
+    + Body
+    
+            grant_type=password&username=admin&password=1234
+            
+
++ Response 200 (application/json)
+    + Body
+
+            {
+                "access_token": "23786200-8418-438f-a379-86fce5fae275",
+                "token_type": "bearer",
+                "refresh_token": "0a79c3a2-d86c-4668-874b-524f46be3d40",
+                "expires_in": 42251,
+                "scope": "read write trust"
+            }
+            
+
+### 1-3. 토큰 재발급 (회원) [POST]
+
+Oauth2 인증 토큰 재발급 (로그인한 회원만 가능)  
+- Authorization-type : Basic Auth  
+- Grant-type : `refresh_token`    
+
+> [로그인 전용 계정]  
+> client id : login  
+> client secret : y7FL[MsZ>3^p(M6z  
+
+> [Headers]   
+> Authorization : {base64encoding(client_id:client_secret)}  
+
+> [Body]  
+> grant_type : refresh_token  
+> refresh_token : {refresh_token}  
+
+
++ Request ()
+
+    + Headers
+    
+            Authorization: Basic Z3Vlc3Q6c1pFSl45RV1la2pqLnt2Yw==
+        
+    + Body
+    
+            grant_type=refresh_token&refresh_token=0a79c3a2-d86c-4668-874b-524f46be3d40
+
++ Response 200 (application/json)
+    + Body
+
+            {
+                "access_token": "3f410ddf-dafb-4ac2-8bf2-ff88e09c3391",
+                "token_type": "bearer",
+                "expires_in": 36069,
+                "scope": "read write trust"
+            }
+
+
+
+## 2. 메인 [/v1/views/main{?deliverySiteIdx}]
+
+### 2-1. List All Main View [GET]
+
+Main에 뿌려질 정보 dto 반환  
+
++ [`MainViewDto`](https://www.pomangam.com/resources/src/dto/MainViewDto.java)
+> + List\<[`AdvertiseForPopupDto`](https://www.pomangam.com/resources/src/dto/AdvertiseForPopupDto.java)\>
+> + List\<[`AdvertiseForMainDto`](https://www.pomangam.com/resources/src/dto/AdvertiseForMainDto.java)\>
+> + [`DeliverySiteDto`](https://www.pomangam.com/resources/src/dto/DeliverySiteDto.java)
+> + List\<[`DetailForDeliverySiteDto`](https://www.pomangam.com/resources/src/dto/DetailForDeliverySiteDto.java)\>
+> + List\<[`OrderTimeDto`](https://www.pomangam.com/resources/src/dto/OrderTimeDto.java)\>
+> + List\<[`CmtAdvertiseForMainWithCommentAllDto`](https://www.pomangam.com/resources/src/dto/CmtAdvertiseForMainWithCommentAllDto.java)\>
+> + List\<[`SubAdvertiseForMainDto`](https://www.pomangam.com/resources/src/dto/SubAdvertiseForMainDto.java)\>
+> + List\<[`Hour`](https://www.pomangam.com/resources/src/entity/Hour.java)\>
+
+![main](https://www.pomangam.com/resources/src/img/2.png)
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+    + deliverySiteIdx - 배달 도착 장소
+
+
++ Response 200 (application/json)
+
+        {
+            "advertiseForPopupDtoList": [],
+            "advertiseForMainDtoList": [
+                {
+                    "idx": 1,
+                    "imgpath": "c:/resources/advertises/main/1.png",
+                    "next_step_type": 2,
+                    "next_step_location": "products/1",
+                    "state_active": 1,
+                    "sequence": 1
+                },
+                {
+                    "idx": 2,
+                    "imgpath": "c:/resources/advertises/main/2.png",
+                    "next_step_type": 3,
+                    "next_step_location": "events/1",
+                    "state_active": 1,
+                    "sequence": 2
+                },
+                {
+                    "idx": 3,
+                    "imgpath": "c:/resources/advertises/main/3.png",
+                    "next_step_type": 4,
+                    "next_step_location": "notices/1",
+                    "state_active": 1,
+                    "sequence": 3
+                }
+            ],
+            "deliverySiteDto": {
+                "idx": 1,
+                "name": "한국항공대학교",
+                "location": "화전",
+                "regionCategoryIdx": 2,
+                "campus": null
+            },
+            "detailSiteDtoList": [
+                {
+                    "idx": null,
+                    "deliverySiteIdx": 1,
+                    "name": "학생회관 뒤",
+                    "location": "항공대 학생회관 뒤편",
+                    "sequence": 0,
+                    "offsetArrivalTime": "00:00:00",
+                    "latitude": 37.600326,
+                    "longitude": 126.864485
+                },
+                {
+                    "idx": null,
+                    "deliverySiteIdx": 1,
+                    "name": "기숙사 정문",
+                    "location": "항공대 기숙사 정문",
+                    "sequence": 1,
+                    "offsetArrivalTime": "00:05:00",
+                    "latitude": 37.598048,
+                    "longitude": 126.866489
+                }
+            ],
+            "arrival_date": "2019-04-15",
+            "orderTimeDtoList": [
+                {
+                    "idx": 3,
+                    "delivery_site_idx": 1,
+                    "store_idx": 1,
+                    "state_pause": 0,
+                    "order_deadline": "16:40:00",
+                    "arrival_time": "17:00:00",
+                    "arrival_tomorrow": 0,
+                    "sequence": 3
+                },
+                {
+                    "idx": 4,
+                    "delivery_site_idx": 1,
+                    "store_idx": 1,
+                    "state_pause": 0,
+                    "order_deadline": "17:40:00",
+                    "arrival_time": "18:00:00",
+                    "arrival_tomorrow": 0,
+                    "sequence": 4
+                },
+                {
+                    "idx": 5,
+                    "delivery_site_idx": 1,
+                    "store_idx": 1,
+                    "state_pause": 0,
+                    "order_deadline": "18:50:00",
+                    "arrival_time": "19:00:00",
+                    "arrival_tomorrow": 0,
+                    "sequence": 5
+                }
+            ],
+            "cmtAdvertiseForMainWithCommentAllDtoList": [
+                {
+                    "comment_all_idx": 1,
+                    "store_idx": 1,
+                    "title": "리뷰제목",
+                    "contents": "맛있어요 내용무...",
+                    "c_state_active": 1,
+                    "imgpath": "/view/main/image/1.png",
+                    "a_state_active": 1,
+                    "sequence": 1
+                },
+                {
+                    "comment_all_idx": 2,
+                    "store_idx": 1,
+                    "title": "리뷰제목2",
+                    "contents": "존맛탱 구리 구분자 (del...",
+                    "c_state_active": 1,
+                    "imgpath": "/view/main/image/2.png",
+                    "a_state_active": 1,
+                    "sequence": 2
+                }
+            ],
+            "subAdvertiseForMainDtoList": [
+                {
+                    "idx": 1,
+                    "imgpath": "c:/resources/subadvertises/main/1.png",
+                    "next_step_type": 2,
+                    "next_step_location": "products/1",
+                    "state_active": 1,
+                    "sequence": 1
+                },
+                {
+                    "idx": 2,
+                    "imgpath": "c:/resources/subadvertises/main/2.png",
+                    "next_step_type": 3,
+                    "next_step_location": "events/1",
+                    "state_active": 1,
+                    "sequence": 2
+                },
+                {
+                    "idx": 3,
+                    "imgpath": "c:/resources/subadvertises/main/3.png",
+                    "next_step_type": 4,
+                    "next_step_location": "notices/1",
+                    "state_active": 1,
+                    "sequence": 3
+                }
+            ]
+        }
+
+
+## 3. 업체 조회 [/v1/stores/search/getInquiryResult{?arrivalDate,detailForDeliverySiteIdx}]
+
+### 3-1. Get Inquiry Result [GET]
+
+배달 도착 시간과 배달 도착 장소를 입력 받아 '배달 가능 업체리스트' 반환  
+(ResponseEntity 형태로 반환)  
+
++ List\<[`InquiryResultDto`](https://www.pomangam.com/resources/src/dto/InquiryResultDto.java)\>
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+    + arrivalDate - 배달 도착 시간 (format : 'yyyy-MM-dd hh:mm:ss')
+    + detailForDeliverySiteIdx - 배달 도착 상세 장소 (ex. 학생회관 idx, 기숙사 idx 등)
+
++ Response 200 (application/json)
+    + Body
+
+            [
+              {
+                "idx": 1,
+                "name": "맘스터치 (가라뫼점)",
+                "location": "가라뫼",
+                "main_phone_number": "010-1234-1234",
+                "description": "햄버거가게",
+                "cnt_like": 345,
+                "minimum_time": "00:03:00",
+                "parallel_production": 2,
+                "maximum_production": 20,
+                "order_deadline": "11:40:00",
+                "state_pause": 0,
+                "remaining_capacity": 20,
+                "arrival_time": "2019-04-16T12:00:00+09:00",
+                "imgpath": "/img/store/1.png"
+              },
+              {
+                "idx": 2,
+                "name": "피자스쿨 (가라뫼점)",
+                "location": "가라뫼",
+                "main_phone_number": "010-1234-1234",
+                "description": "피자가게",
+                "cnt_like": 123,
+                "minimum_time": "00:10:00",
+                "parallel_production": 2,
+                "maximum_production": 20,
+                "order_deadline": "11:40:00",
+                "state_pause": 0,
+                "remaining_capacity": 20,
+                "arrival_time": "2019-04-16T12:00:00+09:00",
+                "imgpath": "/img/store/2.png"
+              },
+              {
+                "idx": 3,
+                "name": "서브웨이 (행신점)",
+                "location": "행신",
+                "main_phone_number": "010-1234-1234",
+                "description": "샌드위치가게",
+                "cnt_like": 32,
+                "minimum_time": "00:03:00",
+                "parallel_production": 1,
+                "maximum_production": 20,
+                "order_deadline": "11:40:00",
+                "state_pause": 0,
+                "remaining_capacity": 20,
+                "arrival_time": "2019-04-16T12:00:00+09:00",
+                "imgpath": null
+              }
+            ]
+
+
+## 4. 로그인 - Deprecated [/v1/login]
+
+### 4-1. Login User - Deprecated [POST]
+
+<del>유저 로그인</del> (Deprecated)  
+> 유저 로그인 기능은 `1-2`로 변경
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+    
+    + Body
+    
+            id=cholnh&pw=1234
+
++ Response 200 (application/json)
+    + Body
+
+            this is home
+            
++ Response 401 (application/json)
+    + Body
+    
+            {"exception":"Bad credentials","timestamp":1555144319929}
+
+    
+## 5. 유저 [/v1/user/{id}]
+
++ [`User`](https://www.pomangam.com/resources/src/entity/User.java)
+
+### 5-1. Create User [POST]
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+            Content-Type: application/json
+    
+    + Body
+    
+            {
+              "delivery_site_idx" : 1,
+              "id" : "test_make2",
+              "pw" : "12345",
+              "name" : "테스트",
+              "nickname" : "dd",
+              "gender" : 0,
+              "year_of_birth" : 2018,
+              "month_of_birth" : 2,
+              "days_of_birth" : 3,
+              "phone_number" : "010-1234-1234",
+              "state_active" : 0,
+              "point" : 0
+            }
+
++ Response 200 (application/json)
+    + Body
+
+            {
+                "idx": 6,
+                "delivery_site_idx": 1,
+                "id": "test_make2",
+                "pw": null,
+                "name": "테스트",
+                "nickname": "dd",
+                "gender": 0,
+                "year_of_birth": 2018,
+                "month_of_birth": 2,
+                "days_of_birth": 3,
+                "phone_number": "010-1234-1234",
+                "state_active": 0,
+                "register_date": null,
+                "modify_date": null,
+                "point": 0
+            }
+
++ Response 500 (application/json)
+    + Body
+    
+            {
+                "timestamp": "2019-04-13T11:06:05.974+0000",
+                "status": 500,
+                "error": "Internal Server Error",
+                "message": "could not execute statement; SQL [n/a]; constraint [cust_id_UNIQUE]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement",
+                "path": "/api/v1/user"
+            }
+
+### 5-2. Delete User [DELETE]
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
+
++ Parameters
+    + id - 고객 아이디
+
+
++ Response 200 (application/json)
+    + Body
+
+            true
+
++ Response 401 (application/json)
+    + Body
+    
+            UNAUTHORIZED
+
+
+### 5-3. Put User [PUT]
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+            Content-Type: application/json
+
+    + Body
+    
+            {
+              "idx" : 0,
+              "delivery_site_idx" : 1,
+              "id" : "test_make",
+              "pw" : "1234",
+              "name" : "테스트",
+              "nickname" : "dd",
+              "gender" : 0,
+              "year_of_birth" : 2018,
+              "month_of_birth" : 2,
+              "days_of_birth" : 3,
+              "phone_number" : "010-1234-1234",
+              "state_active" : 0,
+              "point" : 0
+            }
+            
+    
++ Parameters
+    + id - 고객 아이디
+
+
++ Response 200 (application/json)
+    + Body
+
+            {
+                "idx": 6,
+                "delivery_site_idx": 1,
+                "id": "test_make2",
+                "pw": null,
+                "name": "테스트",
+                "nickname": "dd",
+                "gender": 0,
+                "year_of_birth": 2018,
+                "month_of_birth": 2,
+                "days_of_birth": 3,
+                "phone_number": "010-1234-1234",
+                "state_active": 0,
+                "register_date": null,
+                "modify_date": null,
+                "point": 0
+            }
+
+
++ Response 401 (application/json)
+    + Body
+    
+            UNAUTHORIZED
+
+
++ Response 500 (application/json)
+    + Body
+    
+            {
+                "timestamp": "2019-04-13T11:06:05.974+0000",
+                "status": 500,
+                "error": "Internal Server Error",
+                "message": "could not execute statement; SQL [n/a]; constraint [cust_id_UNIQUE]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement",
+                "path": "/api/v1/user"
+            }
+
+### 5-4. Patch User [PATCH]
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+            Content-Type: application/json
+
+    + Body
+        
+            {
+              "pw" : "12345",
+              "nickname" : "test!"
+            }
+            
+    
++ Parameters
+    + id - 고객 아이디
+
+
++ Response 200 (application/json)
+    + Body
+
+            {
+                "idx": 6,
+                "delivery_site_idx": 1,
+                "id": "test_make2",
+                "pw": null,
+                "name": "테스트",
+                "nickname": "test!",
+                "gender": 0,
+                "year_of_birth": 2018,
+                "month_of_birth": 2,
+                "days_of_birth": 3,
+                "phone_number": "010-1234-1234",
+                "state_active": 0,
+                "register_date": null,
+                "modify_date": null,
+                "point": 0
+            }
+
+
++ Response 401 (application/json)
+    + Body
+    
+            UNAUTHORIZED
+
+
++ Response 500 (application/json)
+    + Body
+    
+            {
+                "timestamp": "2019-04-13T11:06:05.974+0000",
+                "status": 500,
+                "error": "Internal Server Error",
+                "message": "could not execute statement; SQL [n/a]; constraint [cust_id_UNIQUE]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement",
+                "path": "/api/v1/user"
+            }
+
+
+## 6. 유저 - 내 정보 [/v1/user/myInfo]
+
+### 6-1. Get MyInfo [GET]
+
+로그인 된 유저의 정보 반환
+
++ [`User`](https://www.pomangam.com/resources/src/entity/User.java)
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
+
++ Response 200 (application/json)
+    + Body
+
+            {
+                "idx": 1,
+                "delivery_site_idx": 1,
+                "id": "cholnh",
+                "pw": null,
+                "name": "홍길동",
+                "nickname": "낙지",
+                "gender": 0,
+                "year_of_birth": 2019,
+                "month_of_birth": 12,
+                "days_of_birth": 31,
+                "phone_number": "010-1234-1234",
+                "state_active": 1,
+                "register_date": "2019-01-08T05:52:27.000+0000",
+                "modify_date": "2019-01-08T05:52:27.000+0000",
+                "point": 3000
+            }
+            
++ Response 401 (application/json)
+    + Body
+    
+            UNAUTHORIZED
+
+  
+## 7. 유저 - 중복검사 [/v1/user/isExist{?id}]
+
+### 7-1. Check User Exist [GET]
+
+유저 아이디 중복 확인
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+    + id - 고객 아이디
+    
+    
++ Response 200 (application/json)
+    + Body
+
+            true
+
+
+## 8. 회원가입 - 인증 코드 보내기 [/v1/kakaos/generateAuthCodeForJoin{?phn}]
+
+### 8-1. Generate Auth Code [GET]
+
+카카오톡(알림톡) 인증번호를 통한 핸드폰 인증
+> 인증 코드 보내기 -> 인증 코드 확인 순
+
++ Request ()
+    + Headers
+         
+            Authorization: Bearer {token}
+
++ Parameters
+    + phn - 인증 받을 핸드폰 번호
+    
+    
++ Response 200 (application/json)
+    + Body
+
+            {
+                "code": "success",
+                "data": {
+                    "msgid": "WEB20190417193538989207"
+                },
+                "message": "K000"
+            }
+
+
++ Response 500 (application/json)
+    + Body
+    
+            {
+                "code": "fail",
+                "data": {
+                    "msgid": "WEB20190413225824058762"
+                },
+                "message": "E104:InvalidPhoneNumber"
+            }
+
++ Response 400 (application/json)
+
+            User already registered
+
++ Response 429 (application/json)
+
+
+## 9. 회원가입 - 인증 코드 확인 [/v1/kakaos/checkAuthCodeForJoin{?phn,code}]
+
+### 9-1. Check Auth Code [GET]
+
+서버에서 보낸 인증코드와 고객이 받은 인증코드 일치여부 확인
+(TRUE, FALSE 반환)
+> 인증 코드 보내기 -> 인증 코드 확인 순
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+    + phn - 인증 받은 핸드폰 번호
+    + code - 인증 코드
+    
+    
++ Response 200 (application/json)
+    + Body
+
+            true
+
+
++ Response 400 (application/json)
+
+
+## 10. 아이디 찾기 - 인증 코드 보내기 [/v1/kakaos/generateAuthCodeForId{?phn}]
+
+### 10-1. Generate Auth Code [GET]
+
+카카오톡(알림톡) 인증번호를 통한 핸드폰 인증
+> 인증 코드 보내기 -> 인증 코드 확인 순
+
++ Request ()
+    + Headers
+         
+            Authorization: Bearer {token}
+
++ Parameters
+    + phn - 인증 받을 핸드폰 번호
+    
+    
++ Response 200 (application/json)
+    + Body
+
+            {
+                "code": "success",
+                "data": {
+                    "msgid": "WEB20190417193538989207"
+                },
+                "message": "K000"
+            }
+
+
++ Response 500 (application/json)
+    + Body
+    
+            {
+                "code": "fail",
+                "data": {
+                    "msgid": "WEB20190413225824058762"
+                },
+                "message": "E104:InvalidPhoneNumber"
+            }
+
++ Response 429 (application/json)
+
+
+## 11. 아이디 찾기 - 인증 코드 확인 [/v1/kakaos/checkAuthCodeForId{?phn,code}]
+
+### 11-1. Check Auth Code [GET]
+
+서버에서 보낸 인증코드와 고객이 받은 인증코드 일치여부 확인
+(User 반환)
+> 인증 코드 보내기 -> 인증 코드 확인 순
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+    + phn - 인증 받은 핸드폰 번호
+    + code - 인증 코드
+    
+    
++ Response 200 (application/json)
+    + Body
+
+            {
+                "idx": 1,
+                "delivery_site_idx": 1,
+                "id": "cholnh",
+                "pw": null,
+                "name": "홍길동",
+                "nickname": "낙지",
+                "gender": 0,
+                "year_of_birth": 2019,
+                "month_of_birth": 12,
+                "days_of_birth": 31,
+                "phone_number": "010-1234-1234",
+                "state_active": 1,
+                "register_date": "2019-01-08T05:52:27.000+0000",
+                "modify_date": "2019-01-08T05:52:27.000+0000",
+                "point": 3000
+            }
+
+
++ Response 400 (application/json)
+
+
+## 12. 비밀번호 찾기 - 인증 코드 보내기 [/v1/kakaos/generateAuthCodeForPw{?id,phn}]
+
+### 12-1. Generate Auth Code [GET]
+
+카카오톡(알림톡) 인증번호를 통한 핸드폰 인증
+> 인증 코드 보내기 -> 인증 코드 확인 -> 비밀번호 변경 순
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+            Content-Type: application/json
+
+
++ Parameters
+    + id - 찾을 고객 아이디
+    + phn - 인증 받을 핸드폰 번호
+    
+    
++ Response 200 (application/json)
+    + Body
+
+            {
+                "code": "success",
+                "data": {
+                    "msgid": "WEB20190417193538989207"
+                },
+                "message": "K000"
+            }
+
+
++ Response 500 (application/json)
+    + Body
+    
+            {
+                "code": "fail",
+                "data": {
+                    "msgid": "WEB20190413225824058762"
+                },
+                "message": "E104:InvalidPhoneNumber"
+            }
+
++ Response 400 (application/json)
+    + Body
+            
+            User not found
+
++ Response 429 (application/json)
+
+
+
+## 13. 비밀번호 찾기 - 인증 코드 확인 [/v1/kakaos/checkAuthCodeForPw{?phn,code}]
+
+### 13-1. Check Auth Code [GET]
+
+서버에서 보낸 인증코드와 고객이 받은 인증코드 일치여부 확인
+(TRUE, FALSE 반환)
+> 인증 코드 보내기 -> 인증 코드 확인 -> 비밀번호 변경 순
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+    + phn - 인증 받은 핸드폰 번호
+    + code - 인증 코드
+    
+    
++ Response 200 (application/json)
+    + Body
+
+            true
+
+
++ Response 400 (application/json)
+
+
+## 14. 비밀번호 찾기 - 비밀번호 변경 [/v1/kakaos/updatePw{phn,code}]
+
+### 14-1. Update Pw [POST]
+
+서버에서 보낸 인증코드와 고객이 받은 인증코드 일치여부 확인
+(비밀번호 변경 후 User 반환)
+> 인증 코드 보내기 -> 인증 코드 확인 -> 비밀번호 변경 순
+
++ [`UpdateInputDto`](https://www.pomangam.com/resources/src/dto/UpdateInputDto.java)
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
+    + Body
+            
+            {
+                "id" : "cholnh",
+                "pw" : "1234"
+            }
+
++ Parameters
+    + phn - 인증 받은 핸드폰 번호
+    + code - 인증 코드
+    
+    
++ Response 200 (application/json)
+    + Body
+
+            {
+                "idx": 1,
+                "delivery_site_idx": 1,
+                "id": "cholnh",
+                "pw": null,
+                "name": "홍길동",
+                "nickname": "낙지",
+                "gender": 0,
+                "year_of_birth": 2019,
+                "month_of_birth": 12,
+                "days_of_birth": 31,
+                "phone_number": "010-1234-1234",
+                "state_active": 1,
+                "register_date": "2019-01-08T05:52:27.000+0000",
+                "modify_date": "2019-01-08T05:52:27.000+0000",
+                "point": 3000
+            }
+
+
++ Response 400 (application/json)
+
+
+
+
+## 15. 배달 도착 장소 - 지역검색 [/v1/deliverySites/search/findByRegionCategoryIdx{?regionCategoryIdx}]
+
+### 15-1. 지역검색 [GET]
+
+지역 인덱스에 해당하는 배달지 반환 
+
++ List\<[`DeliverySiteDto`](https://www.pomangam.com/resources/src/dto/DeliverySiteDto.java)\>
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+
+    + regionCategoryIdx - 지역 인덱스
+    
++ Response 200 (application/json)
+    + Body
+
+            [
+                {
+                    "idx": 415,
+                    "name": "제주산업정보대학",
+                    "location": "제주특별자치도 제주시 516로 2870 (영평동)",
+                    "regionCategoryIdx": 17,
+                    "campus": "본교"
+                },
+                {
+                    "idx": 416,
+                    "name": "제주한라대학교",
+                    "location": "제주특별자치도 제주시 한라대학로 38",
+                    "regionCategoryIdx": 17,
+                    "campus": "본교"
+                },
+                {
+                    "idx": 417,
+                    "name": "제주관광대학교",
+                    "location": "제주특별자치도 제주시 애월읍 평화로 2715 제주관광대학교",
+                    "regionCategoryIdx": 17,
+                    "campus": "본교"
+                },
+                {
+                    "idx": 418,
+                    "name": "제주국제대학교",
+                    "location": "제주 제주시 516로 2870(영평동) ",
+                    "regionCategoryIdx": 17,
+                    "campus": "본교"
+                },
+                {
+                    "idx": 419,
+                    "name": "제주대학교",
+                    "location": "제주특별자치도 제주시 제주대학로 102(아라일동, 제주대학교)",
+                    "regionCategoryIdx": 17,
+                    "campus": "본교"
+                },
+                {
+                    "idx": 420,
+                    "name": "탐라대학교",
+                    "location": "제주특별자치도 제주시 516로 2870 (영평동)",
+                    "regionCategoryIdx": 17,
+                    "campus": "본교"
+                }
+            ]
+
+## 16. 배달 도착 장소 - 검색어 [/v1/deliverySites/search/findByQuery{?query}]
+
+### 16-1. 검색어 검색 [GET]
+
+검색어에 해당하는 배달장소 반환
+1. 학교 이름 검색 (검색한 클릭 수가 높은 순 대로 반환)
+2. 학교 소재지 검색
+
++ List\<[`DeliverySiteWithCountDto`](https://www.pomangam.com/resources/src/dto/DeliverySiteWithCountDto.java)\>
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+
+    + query - 검색어 (학교이름 or 지역)
+    
++ Response 200 (application/json)
+    + Body
+
+            [
+                {
+                    "idx": 94,
+                    "name": "평택대학교",
+                    "location": "경기도 평택시 서동대로 3825 (용이동, 평택대학교)",
+                    "regionCategoryIdx": 2,
+                    "campus": "본교",
+                    "count": 0
+                },
+                {
+                    "idx": 48,
+                    "name": "한국복지대학교",
+                    "location": "경기 평택시 삼남로 283",
+                    "regionCategoryIdx": 2,
+                    "campus": "본교",
+                    "count": 0
+                },
+                {
+                    "idx": 52,
+                    "name": "국제대학교",
+                    "location": "경기 평택시 장안웃길 56번지",
+                    "regionCategoryIdx": 2,
+                    "campus": "본교",
+                    "count": 0
+                }
+            ]
+
+   
+## 17. 배달 도착 상세 장소 [/v1/detailForDeliverySites/search/findByDeliverySiteIdxOrderBySequence{?deliverySiteIdx}]
+
+### 17-1. 배달 도착 상세 장소 반환 [GET]
+
+예)  
+배달 도착 장소 : 서울대학교  
+배달 도착 상세 장소 : 학생회관 (서울대학교 내), 기숙사 (서울대학교 내) 등   
+
++ List\<[`DetailForDeliverySiteDto`](https://www.pomangam.com/resources/src/dto/DetailForDeliverySiteDto.java)\>
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+
+    + deliverySiteIdx - 배달 도착 장소
+    
++ Response 200 (application/json)
+    + Body
+
+            [
+                {
+                    "idx": null,
+                    "deliverySiteIdx": 1,
+                    "name": "학생회관 뒤",
+                    "location": "항공대 학생회관 뒤편",
+                    "sequence": 0,
+                    "offsetArrivalTime": "00:00:00",
+                    "latitude": 37.600326,
+                    "longitude": 126.864485
+                },
+                {
+                    "idx": null,
+                    "deliverySiteIdx": 1,
+                    "name": "기숙사 정문",
+                    "location": "항공대 기숙사 정문",
+                    "sequence": 1,
+                    "offsetArrivalTime": "00:05:00",
+                    "latitude": 37.598048,
+                    "longitude": 126.866489
+                }
+            ]
+
+
+## 18. 배달 도착 장소 - 검색 수 증가 [/v1/countSearchDeliverySites/addCount{?deliverySiteIdx}]
+
+### 18-1. 검색 수 증가 [GET]
+
+통계에 필요한 검색 빈도 수 증가  
+(배달 도착 장소를 검색한 후 검색장소를 클릭할 때 빈도 수가 측정되어야 함)
+
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+
+    + deliverySiteIdx - 배달 도착 장소
+    
++ Response 200 (application/json)
+     + Body
+
+
+## 19. 주문 시간 - 전체  [/v1/orderTimes/search/getOrderTimesByDeliverySiteIdx{?deliverySiteIdx}]
+
+### 19-1. 주문 시간 전체 반환 [GET]
+
+deliverySiteIdx에 해당되는 주문 시간표 반환
+
++ List\<[`OrderTimeDto`](https://www.pomangam.com/resources/src/dto/OrderTimeDto.java)\>
+
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+
+    + deliverySiteIdx - 배달 도착 장소
+    
++ Response 200 (application/json)
+    + Body
+            
+            [
+                {
+                    "idx": 1,
+                    "delivery_site_idx": 1,
+                    "store_idx": 1,
+                    "state_pause": 0,
+                    "order_deadline": "11:40:00",
+                    "arrival_time": "12:00:00",
+                    "arrival_tomorrow": 0,
+                    "sequence": 1
+                },
+                {
+                    "idx": 2,
+                    "delivery_site_idx": 1,
+                    "store_idx": 1,
+                    "state_pause": 0,
+                    "order_deadline": "12:40:00",
+                    "arrival_time": "13:00:00",
+                    "arrival_tomorrow": 0,
+                    "sequence": 2
+                },
+                {
+                    "idx": 3,
+                    "delivery_site_idx": 1,
+                    "store_idx": 1,
+                    "state_pause": 0,
+                    "order_deadline": "16:40:00",
+                    "arrival_time": "17:00:00",
+                    "arrival_tomorrow": 0,
+                    "sequence": 3
+                },
+                {
+                    "idx": 4,
+                    "delivery_site_idx": 1,
+                    "store_idx": 1,
+                    "state_pause": 0,
+                    "order_deadline": "17:40:00",
+                    "arrival_time": "18:00:00",
+                    "arrival_tomorrow": 0,
+                    "sequence": 4
+                },
+                {
+                    "idx": 5,
+                    "delivery_site_idx": 1,
+                    "store_idx": 1,
+                    "state_pause": 0,
+                    "order_deadline": "18:50:00",
+                    "arrival_time": "19:00:00",
+                    "arrival_tomorrow": 0,
+                    "sequence": 5
+                }
+            ]
+
+
+## 20. 주문 시간 - 부분  [/v1/orderTimes/search/getOrderTimesNowByDeliverySiteIdx{?deliverySiteIdx}]
+
+### 20-1. 주문 가능한 시간 만 반환 [GET]
+
+deliverySiteIdx에 해당되는 주문 시간표 반환
+(이미 지난 주문시간은 제외 됨)
+
++ List\<[`OrderTimeDto`](https://www.pomangam.com/resources/src/dto/OrderTimeDto.java)\>
+
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+
+    + deliverySiteIdx - 배달 도착 장소
+    
++ Response 200 (application/json)
+    + Body
+
+            [
+                {
+                    "idx": 3,
+                    "delivery_site_idx": 1,
+                    "store_idx": 1,
+                    "state_pause": 0,
+                    "order_deadline": "16:40:00",
+                    "arrival_time": "17:00:00",
+                    "arrival_tomorrow": 0,
+                    "sequence": 3
+                },
+                {
+                    "idx": 4,
+                    "delivery_site_idx": 1,
+                    "store_idx": 1,
+                    "state_pause": 0,
+                    "order_deadline": "17:40:00",
+                    "arrival_time": "18:00:00",
+                    "arrival_tomorrow": 0,
+                    "sequence": 4
+                },
+                {
+                    "idx": 5,
+                    "delivery_site_idx": 1,
+                    "store_idx": 1,
+                    "state_pause": 0,
+                    "order_deadline": "18:50:00",
+                    "arrival_time": "19:00:00",
+                    "arrival_tomorrow": 0,
+                    "sequence": 5
+                }
+            ]
+
+
+## 21. 쿠폰 - 수량  [/v1/coupons/countCoupon{?customerIdx}]
+
+### 21-1. 쿠폰 수량 반환 [GET]
+
+고객이 보유하고 있는 쿠폰의 수량 반환
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+
+    + customerIdx - 고객 인덱스
+    
++ Response 200 (application/json)
+    + Body
+
+            1
+
+
+## 22. 쿠폰 - 내 쿠폰  [/v1/coupons/search/myValidCoupon]
+
+### 22-1. 내 쿠폰 정보 반환 [GET]
+
+자신이 보유하고 있는 모든 쿠폰 정보 반환
+(로그인 필요)
+
++ List\<[`CouponDto`](https://www.pomangam.com/resources/src/dto/CouponDto.java)\>
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
+    
++ Response 200 (application/json)
+    + Body
+
+            [
+                {
+                    "idx": 3,
+                    "issuer_idx": 1,
+                    "modifier_idx": null,
+                    "name": "신 학기 쿠폰",
+                    "discount_prc": 4000,
+                    "discount_pct": 0,
+                    "begin_date": "2019-04-16T19:04:20.000+0000",
+                    "end_date": null,
+                    "register_date": "2019-04-16T19:04:20.000+0000",
+                    "modify_date": "2019-04-16T19:04:45.000+0000",
+                    "code": "TEST-878F-1234",
+                    "state_active": 1,
+                    "customer_idx": 2
+                }
+            ]
+
+            
+## 23. 쿠폰 - 쿠폰 코드 검사  [/v1/coupons/search/getValidCoupon{?couponCode}]
+
+### 23-1. 쿠폰 코드 유효검사 [GET]
+
+해당 쿠폰코드가 유효한 쿠폰인지 검사
+검사 후 쿠폰 정보 반환
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+
+    + couponCode - 쿠폰 코드
+    
+
++ Response 200 (application/json)
+    + Body
+
+            [
+                {
+                    "idx": 3,
+                    "issuer_idx": 1,
+                    "modifier_idx": null,
+                    "name": "신 학기 쿠폰",
+                    "discount_prc": 4000,
+                    "discount_pct": 0,
+                    "begin_date": "2019-04-16T19:04:20.000+0000",
+                    "end_date": null,
+                    "register_date": "2019-04-16T19:04:20.000+0000",
+                    "modify_date": "2019-04-16T19:04:45.000+0000",
+                    "code": "TEST-878F-1234",
+                    "state_active": 1,
+                    "customer_idx": 2
+                }
+            ]
+
+
+## 24. 쿠폰 - 쿠폰 코드 검사 2  [/v1/coupons/search/isValid{?couponCode}]
+
+### 24-1. 쿠폰 코드 유효검사 [GET]
+
+해당 쿠폰코드가 유효한 쿠폰인지 검사
+검사 후 TRUE/FALSE 반환
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+
+    + couponCode - 쿠폰 코드
+    
+
++ Response 200 (application/json)
+    + Body
+
+            true
+
+
+## 25. 쿠폰 - 사용  [/v1/coupons/useCoupon{?couponIdx,orderIdx}]
+
+### 25-1. 쿠폰 사용 [GET]
+
+쿠폰 사용처리, 로깅처리
+(로그인 필요)
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+
+    + couponIdx - 쿠폰 인덱스
+    + orderIdx - 쿠폰이 사용 된 주문 번호
+    
+
++ Response 200 (application/json)
+
+ 
+## 26. 제품  [/v1/products/search/findByStoreIdx{?storeIdx,type,orderBy,size,page}]
+
+### 26-1. 제품 반환 [GET]
+
+업체가 판매하는 모든 제품 반환.  
+최종 가격(final_prc)은 promotion이 반영된 가격이며, 고객commission 이 더해서 나온 값이다.  
+> **필터 - 상품 판매 종류 (type)**  
+> 0 - 메인  
+> 1 - 서브  
+> 2 - 토핑  
+> 3 - 음료  
+> 미 입력 시 default : 모든 종류 반환
+  
+> **필터 - 정렬 (orderBy)**  
+> final_cost ASC - 낮은 가격 순  
+> final_cost DESC - 높은 가격 순  
+> cnt_like ASC - 낮은 좋아요 순  
+> cnt_like DESC - 높은 좋아요 순  
+> 미 입력 시 default : sequence 순
+
++ List\<[`ProductWithCostDto`](https://www.pomangam.com/resources/src/dto/ProductWithCostDto.java)\>
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+
+    + storeIdx - 업체 인덱스
+    + type (optional) - 필터 - 상품 판매 종류
+    + orderBy (optional) - 필터 - 정렬
+    + size (optional) - 페이징 - 반환 사이즈
+    + page (optional) - 페이징 - 순서 인덱스
+
+
++ Response 200 (application/json)
+    + Body
+
+            [
+                {
+                    "idx": 10,
+                    "store_idx": 1,
+                    "name": "케이준 후라이",
+                    "description": "감자튀김",
+                    "sub_description": "감튀",
+                    "category_id": null,
+                    "category_name": null,
+                    "state_active": 1,
+                    "type": 1,
+                    "cnt_like": 12,
+                    "register_date": "2019-02-11T14:00:05.000+0000",
+                    "modify_date": "2019-02-11T14:00:05.000+0000",
+                    "sequence": 3,
+                    "prime_cost": 1500,
+                    "final_cost": -530,
+                    "imgpath": "/img/product/10.jpg"
+                },
+                {
+                    "idx": 3,
+                    "store_idx": 1,
+                    "name": "불고기버거",
+                    "description": "햄버거",
+                    "sub_description": "햄버거",
+                    "category_id": null,
+                    "category_name": null,
+                    "state_active": 1,
+                    "type": 0,
+                    "cnt_like": 654,
+                    "register_date": "2019-02-11T14:00:05.000+0000",
+                    "modify_date": "2019-02-11T14:00:05.000+0000",
+                    "sequence": 2,
+                    "prime_cost": 5500,
+                    "final_cost": 3390,
+                    "imgpath": "/img/product/3.jpg"
+                },
+                {
+                    "idx": 2,
+                    "store_idx": 1,
+                    "name": "불싸이버거",
+                    "description": "햄버거",
+                    "sub_description": "햄버거",
+                    "category_id": null,
+                    "category_name": null,
+                    "state_active": 1,
+                    "type": 0,
+                    "cnt_like": 534,
+                    "register_date": "2019-02-11T14:00:05.000+0000",
+                    "modify_date": "2019-02-11T14:00:05.000+0000",
+                    "sequence": 1,
+                    "prime_cost": 6500,
+                    "final_cost": 4370,
+                    "imgpath": "/img/product/2.jpg"
+                },
+                {
+                    "idx": 1,
+                    "store_idx": 1,
+                    "name": "싸이버거",
+                    "description": "햄버거",
+                    "sub_description": "햄버거",
+                    "category_id": 0,
+                    "category_name": "기본",
+                    "state_active": 1,
+                    "type": 0,
+                    "cnt_like": 234,
+                    "register_date": "2019-02-11T14:00:05.000+0000",
+                    "modify_date": "2019-04-08T05:18:05.000+0000",
+                    "sequence": 0,
+                    "prime_cost": 6000,
+                    "final_cost": 3880,
+                    "imgpath": "/img/product/1.jpg"
+                }
+            ]
+
++ Response 400 (application/json)
+
+
+
+## 27. 제품 - 인덱스 검색  [/v1/products/search/findByProductIdx{?productIdx}]
+
+### 27-1. 제품 낱개 반환 [GET]
+
+인덱스에 해당하는 제품 반환.  
+최종 가격(final_prc)은 promotion이 반영된 가격이며, 고객commission 이 더해서 나온 값이다.  
+> **상품 판매 종류 (type)**  
+> 0 - 메인  
+> 1 - 서브  
+> 2 - 토핑  
+> 3 - 음료  
+
++ [`ProductWithCostDto`](https://www.pomangam.com/resources/src/dto/ProductWithCostDto.java)
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+
+    + productIdx - 제품 인덱스
+ 
+
++ Response 200 (application/json)
+    + Body
+
+            {
+                "idx": 1,
+                "store_idx": 1,
+                "name": "싸이버거",
+                "description": "햄버거",
+                "sub_description": "햄버거",
+                "category_id": 0,
+                "category_name": "기본",
+                "state_active": 1,
+                "type": 0,
+                "cnt_like": 234,
+                "register_date": "2019-02-11T14:00:05.000+0000",
+                "modify_date": "2019-04-08T05:18:05.000+0000",
+                "sequence": 0,
+                "prime_cost": 6000,
+                "final_cost": 3880,
+                "imgpath": "/img/product/1.jpg"
+            }
+
++ Response 400 (application/json)
+
+
+## 28. 상세 주문  [/v1/products/search/getDetailOrder{?productIdx}]
+
+### 28-1. 상세 주문 확인 [GET]
+
+제품 정보와 제품과 연결 되어있는 추가메뉴 반환  
+> **추가메뉴 (type)**  
+> 1 - 서브  
+> 2 - 토핑  
+> 3 - 음료  
+
++ [`DetailOrderDto`](https://www.pomangam.com/resources/src/dto/DetailOrderDto.java)
++ [`ProductWithCostDto`](https://www.pomangam.com/resources/src/dto/ProductWithCostDto.java)
++ List\<[`AdditionalDto`](https://www.pomangam.com/resources/src/dto/AdditionalDto.java)\>
+
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+
+    + productIdx - 제품 인덱스
+ 
+
++ Response 200 (application/json)
+    + Body
+
+            {
+                "productWithCostDto": {
+                    "idx": 1,
+                    "store_idx": 1,
+                    "name": "싸이버거",
+                    "description": "햄버거",
+                    "sub_description": "햄버거",
+                    "category_id": 0,
+                    "category_name": "기본",
+                    "state_active": 1,
+                    "type": 0,
+                    "cnt_like": 234,
+                    "register_date": "2019-02-11T14:00:05.000+0000",
+                    "modify_date": "2019-04-08T05:18:05.000+0000",
+                    "sequence": 0,
+                    "prime_cost": 6000,
+                    "final_cost": 3880,
+                    "imgpath": "/img/product/1.jpg"
+                },
+                "subMenuList": [
+                    {
+                        "idx": 10,
+                        "store_idx": 1,
+                        "name": "케이준 후라이",
+                        "description": "감자튀김",
+                        "sub_description": "감튀",
+                        "category_id": null,
+                        "category_name": null,
+                        "state_active": 1,
+                        "type": 1,
+                        "cnt_like": 12,
+                        "register_date": "2019-02-11T14:00:05.000+0000",
+                        "modify_date": "2019-02-11T14:00:05.000+0000",
+                        "sequence": 3,
+                        "prime_cost": 1500
+                    },
+                    {
+                        "idx": 12,
+                        "store_idx": 3,
+                        "name": "쿠키 (화이트 마카다미아)",
+                        "description": "쿠키",
+                        "sub_description": "쿠키",
+                        "category_id": null,
+                        "category_name": null,
+                        "state_active": 1,
+                        "type": 1,
+                        "cnt_like": 23,
+                        "register_date": "2019-02-11T14:00:05.000+0000",
+                        "modify_date": "2019-02-11T14:00:05.000+0000",
+                        "sequence": 3,
+                        "prime_cost": 1000
+                    }
+                ],
+                "toppingMenuList": [],
+                "beverageMenuList": [
+                    {
+                        "idx": 11,
+                        "store_idx": 2,
+                        "name": "코카콜라(1.5L)",
+                        "description": "음료수",
+                        "sub_description": "음료수",
+                        "category_id": null,
+                        "category_name": null,
+                        "state_active": 1,
+                        "type": 3,
+                        "cnt_like": 123,
+                        "register_date": "2019-02-11T14:00:05.000+0000",
+                        "modify_date": "2019-02-11T14:00:05.000+0000",
+                        "sequence": 3,
+                        "prime_cost": 1500
+                    }
+                ]
+            }
+
+
+## 29. 장바구니 [/v1/carts/search/getViewByCustomerIdx{?customerIdx}]
+
+### 29-1. List All Cart View [GET]
+
+장바구니 화면에 뿌려질 정보 dto 반환  
+
++ [`CartViewDto`](https://www.pomangam.com/resources/src/dto/CartViewDto.java)
++ [`CartDto`](https://www.pomangam.com/resources/src/dto/CartDto.java)
++ List\<[`CartItemViewDto`](https://www.pomangam.com/resources/src/dto/CartItemViewDto.java)\>
++ List\<[`CartTimeMapDto`](https://www.pomangam.com/resources/src/dto/CartTimeMapDto.java)\>
+
+![cart](https://www.pomangam.com/resources/src/img/4.png)
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+    + customerIdx - 고객 인덱스
+
+
++ Response 200 (application/json)
+    + Body
+
+            {
+                "cart": {
+                    "idx": 5,
+                    "customerIdx": 2,
+                    "guestIdx": 1,
+                    "detailSiteIdx": 1,
+                    "arrivalDate": "2019-04-22T19:00:00"
+                },
+                "cartItems": [
+                    {
+                        "idx": 10,
+                        "cartIdx": 5,
+                        "productIdx": 1,
+                        "storeIdx": 1,
+                        "quantity": 2,
+                        "requirement": "요구사항",
+                        "parentItemIdx": null,
+                        "subItems": [
+                            {
+                                "idx": 11,
+                                "cartIdx": 5,
+                                "productIdx": 3,
+                                "storeIdx": 1,
+                                "quantity": 3,
+                                "requirement": null,
+                                "parentItemIdx": 10,
+                                "subItems": null,
+                                "product": {
+                                    "idx": 3,
+                                    "store_idx": 1,
+                                    "name": "불고기버거",
+                                    "description": "햄버거",
+                                    "sub_description": "햄버거",
+                                    "category_id": null,
+                                    "category_name": null,
+                                    "state_active": 1,
+                                    "type": 0,
+                                    "cnt_like": 654,
+                                    "register_date": "2019-02-11T14:00:05.000+0000",
+                                    "modify_date": "2019-02-11T14:00:05.000+0000",
+                                    "sequence": 2,
+                                    "prime_cost": 5500,
+                                    "final_cost": 3390,
+                                    "imgpath": "/img/product/3.jpg"
+                                }
+                            },
+                            {
+                                "idx": 12,
+                                "cartIdx": 5,
+                                "productIdx": 4,
+                                "storeIdx": 1,
+                                "quantity": 1,
+                                "requirement": null,
+                                "parentItemIdx": 10,
+                                "subItems": null,
+                                "product": {
+                                    "idx": 4,
+                                    "store_idx": 2,
+                                    "name": "불고기피자",
+                                    "description": "피자",
+                                    "sub_description": "피자",
+                                    "category_id": null,
+                                    "category_name": null,
+                                    "state_active": 1,
+                                    "type": 0,
+                                    "cnt_like": 234,
+                                    "register_date": "2019-02-11T14:00:05.000+0000",
+                                    "modify_date": "2019-02-11T14:00:05.000+0000",
+                                    "sequence": 0,
+                                    "prime_cost": 9300,
+                                    "final_cost": 9300,
+                                    "imgpath": null
+                                }
+                            }
+                        ],
+                        "product": {
+                            "idx": 1,
+                            "store_idx": 1,
+                            "name": "싸이버거",
+                            "description": "햄버거",
+                            "sub_description": "햄버거",
+                            "category_id": 0,
+                            "category_name": "기본",
+                            "state_active": 1,
+                            "type": 0,
+                            "cnt_like": 234,
+                            "register_date": "2019-02-11T14:00:05.000+0000",
+                            "modify_date": "2019-04-08T05:18:05.000+0000",
+                            "sequence": 0,
+                            "prime_cost": 6000,
+                            "final_cost": 3880,
+                            "imgpath": "/img/product/1.jpg"
+                        }
+                    },
+                    {
+                        "idx": 20,
+                        "cartIdx": 5,
+                        "productIdx": 1,
+                        "storeIdx": 1,
+                        "quantity": 2,
+                        "requirement": "23",
+                        "parentItemIdx": null,
+                        "subItems": [
+                            {
+                                "idx": 21,
+                                "cartIdx": 5,
+                                "productIdx": 3,
+                                "storeIdx": 1,
+                                "quantity": 3,
+                                "requirement": null,
+                                "parentItemIdx": 20,
+                                "subItems": null,
+                                "product": {
+                                    "idx": 3,
+                                    "store_idx": 1,
+                                    "name": "불고기버거",
+                                    "description": "햄버거",
+                                    "sub_description": "햄버거",
+                                    "category_id": null,
+                                    "category_name": null,
+                                    "state_active": 1,
+                                    "type": 0,
+                                    "cnt_like": 654,
+                                    "register_date": "2019-02-11T14:00:05.000+0000",
+                                    "modify_date": "2019-02-11T14:00:05.000+0000",
+                                    "sequence": 2,
+                                    "prime_cost": 5500,
+                                    "final_cost": 3390,
+                                    "imgpath": "/img/product/3.jpg"
+                                }
+                            },
+                            {
+                                "idx": 22,
+                                "cartIdx": 5,
+                                "productIdx": 4,
+                                "storeIdx": 1,
+                                "quantity": 1,
+                                "requirement": null,
+                                "parentItemIdx": 20,
+                                "subItems": null,
+                                "product": {
+                                    "idx": 4,
+                                    "store_idx": 2,
+                                    "name": "불고기피자",
+                                    "description": "피자",
+                                    "sub_description": "피자",
+                                    "category_id": null,
+                                    "category_name": null,
+                                    "state_active": 1,
+                                    "type": 0,
+                                    "cnt_like": 234,
+                                    "register_date": "2019-02-11T14:00:05.000+0000",
+                                    "modify_date": "2019-02-11T14:00:05.000+0000",
+                                    "sequence": 0,
+                                    "prime_cost": 9300,
+                                    "final_cost": 9300,
+                                    "imgpath": null
+                                }
+                            }
+                        ],
+                        "product": {
+                            "idx": 1,
+                            "store_idx": 1,
+                            "name": "싸이버거",
+                            "description": "햄버거",
+                            "sub_description": "햄버거",
+                            "category_id": 0,
+                            "category_name": "기본",
+                            "state_active": 1,
+                            "type": 0,
+                            "cnt_like": 234,
+                            "register_date": "2019-02-11T14:00:05.000+0000",
+                            "modify_date": "2019-04-08T05:18:05.000+0000",
+                            "sequence": 0,
+                            "prime_cost": 6000,
+                            "final_cost": 3880,
+                            "imgpath": "/img/product/1.jpg"
+                        }
+                    }
+                ],
+                "cartTimeMapDtoList": [
+                    {
+                        "store_idx": 1,
+                        "arrivalTime": "2019-04-22T19:00:00",
+                        "remaining_capacity": 16
+                    }
+                ]
+            } 
+
+
+## 30. 장바구니 - 비회원 [/v1/carts/search/getViewByGuestIdx{?guestIdx}]
+
+### 30-1. List All Cart View [GET]
+
+장바구니 화면에 뿌려질 정보 dto 반환  
+
++ [`CartViewDto`](https://www.pomangam.com/resources/src/dto/CartViewDto.java)
++ [`CartDto`](https://www.pomangam.com/resources/src/dto/CartDto.java)
++ List\<[`CartItemViewDto`](https://www.pomangam.com/resources/src/dto/CartItemViewDto.java)\>
++ List\<[`CartTimeMapDto`](https://www.pomangam.com/resources/src/dto/CartTimeMapDto.java)\>
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+    + guestIdx - 비회원 인덱스
+
+
++ Response 200 (application/json)
+    + Body
+
+            {
+                "cart": {
+                    "idx": 6,
+                    "customerIdx": null,
+                    "guestIdx": 2,
+                    "detailSiteIdx": 1,
+                    "arrivalDate": "2019-04-22T19:00:00"
+                },
+                "cartItems": [
+                    {
+                        "idx": 23,
+                        "cartIdx": 6,
+                        "productIdx": 1,
+                        "storeIdx": 1,
+                        "quantity": 1,
+                        "requirement": "ff",
+                        "parentItemIdx": null,
+                        "subItems": [],
+                        "product": {
+                            "idx": 1,
+                            "store_idx": 1,
+                            "name": "싸이버거",
+                            "description": "햄버거",
+                            "sub_description": "햄버거",
+                            "category_id": 0,
+                            "category_name": "기본",
+                            "state_active": 1,
+                            "type": 0,
+                            "cnt_like": 234,
+                            "register_date": "2019-02-11T14:00:05.000+0000",
+                            "modify_date": "2019-04-08T05:18:05.000+0000",
+                            "sequence": 0,
+                            "prime_cost": 6000,
+                            "final_cost": 3880,
+                            "imgpath": "/img/product/1.jpg"
+                        }
+                    }
+                ],
+                "cartTimeMapDtoList": [
+                    {
+                        "store_idx": 1,
+                        "arrivalTime": "2019-04-22T19:00:00",
+                        "remaining_capacity": 19
+                    }
+                ]
+            }
+
+
+
+## 31. 장바구니 [/v1/carts/{id}]
+
++ [`CartItemInputDto`](https://www.pomangam.com/resources/src/dto/CartItemInputDto.java)
++ [`CartItemDto`](https://www.pomangam.com/resources/src/dto/CartItemDto.java)
++ [`CartDto`](https://www.pomangam.com/resources/src/dto/CartDto.java)
++ [`Cart`](https://www.pomangam.com/resources/src/entity/Cart.java)
+
+### 31-2. Create Cart [POST]
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+            Content-Type: application/json
+    
+    + Body
+
+            {
+                "customerIdx" : 2,
+                "detailForDeliverySiteIdx" : 1,
+                "arrivalDate" : "2019-04-22T12:00:00",
+                "mainItem" : {
+                "productIdx" : 1,
+                "storeIdx" : 1,
+                "quantity" : 2,
+                "requirement" : "요구사항",
+                "subItems" : [
+                        {
+                            "productIdx" : 3,
+                            "storeIdx" : 1,
+                            "quantity" : 3
+                        },
+                        {
+                            "productIdx" : 4,
+                            "storeIdx" : 1,
+                            "quantity" : 1
+                        }
+                    ]
+                }
+            }
+
++ Response 200 (application/json)
+
+
++ Response 500 (application/json)
+    + Body
+
+            INTERNAL_SERVER_ERROR
+
+
+### 31-2. Delete Cart [DELETE]
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
+
++ Parameters
+    + id - 카트 인덱스
+
+
++ Response 200 (application/json)
+    + Body
+
+            true
+
++ Response 500 (application/json)
+    + Body
+    
+            INTERNAL_SERVER_ERROR
+
+
+### 31-3. Put Cart [PUT]
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+            Content-Type: application/json
+
+    + Body
+
+            {
+                "customerIdx": 2,
+                "detailSiteIdx": 1,
+                "arrivalDate": "2019-04-22T03:00:00.000+0000"
+            }
+    
++ Parameters
+    + id - 카트 인덱스
+
+
++ Response 200 (application/json)
+    + Body
+
+            {
+                "idx": 5,
+                "customerIdx": 2,
+                "detailSiteIdx": 1,
+                "arrivalDate": "2019-04-22T03:00:00.000+0000"
+            }
+
+
++ Response 500 (application/json)
+    + Body
+    
+            INTERNAL_SERVER_ERROR
+
+
+### 31-4. Patch Cart [PATCH]
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+            Content-Type: application/json
+
+    + Body
+
+            {
+                "detailSiteIdx": 1,
+                "arrivalDate": "2019-04-22T03:00:00.000+0000"
+            }
+            
+    
++ Parameters
+    + id - 카트 인덱스
+
+
++ Response 200 (application/json)
+    + Body
+
+            {
+                "idx": 5,
+                "customerIdx": 2,
+                "detailSiteIdx": 1,
+                "arrivalDate": "2019-04-22T03:00:00.000+0000"
+            }
+
+
++ Response 500 (application/json)
+    + Body
+    
+            INTERNAL_SERVER_ERROR
+ 
+
+## 32. 장바구니 - 개수 반환 - 회원 [/v1/carts/search/countCartByCustomerIdx{?customerIdx}]
+
+### 32-1. Count Cart [GET]
+
+카트 수량 반환 (int)
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+    + customerIdx - 고객 인덱스
+
++ Response 200 (application/json)
+    + Body
+
+            4
+
+## 33. 장바구니 - 개수 반환 - 비회원 [/v1/carts/search/countCartByGuestIdx{?guestIdx}]
+
+### 33-1. Count Cart [GET]
+
+카트 수량 반환 (int)
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
++ Parameters
+    + guestIdx - 비회원 인덱스
+
++ Response 200 (application/json)
+    + Body
+
+            1
+
+
+## 34. 장바구니 물품 [/v1/cartItems/{id}]
+
++ [`CartItem`](https://www.pomangam.com/resources/src/entity/CartItem.java)
++ [`CartItemDto`](https://www.pomangam.com/resources/src/dto/CartItemDto.java)
+
+### 34-1. Delete Cart [DELETE]
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+
+
++ Parameters
+    + id - 물품 인덱스 (cart_item_idx)
+
+
++ Response 200 (application/json)
+    + Body
+
+            true
+
++ Response 500 (application/json)
+    + Body
+    
+            INTERNAL_SERVER_ERROR
+
+
+### 34-2. Put Cart [PUT]
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+            Content-Type: application/json
+
+    + Body
+
+            {
+                "cartIdx": 5,
+                "productIdx": 3,
+                "storeIdx": 1,
+                "quantity": 3,
+                "requirement": null,
+                "parentItemIdx": 10
+            }
+    
++ Parameters
+    + id - 물품 인덱스 (cart_item_idx)
+
+
++ Response 200 (application/json)
+    + Body
+
+            {
+                "idx": 11,
+                "cartIdx": 5,
+                "productIdx": 3,
+                "storeIdx": 1,
+                "quantity": 3,
+                "requirement": null,
+                "parentItemIdx": 10
+            }
+
+
++ Response 500 (application/json)
+    + Body
+    
+            INTERNAL_SERVER_ERROR
+
+
+### 34-3. Patch User [PATCH]
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+            Content-Type: application/json
+
+    + Body
+
+            {
+                "quantity": 6
+            }
+            
+    
++ Parameters
+    + id - 물품 인덱스 (cart_item_idx)
+
+
++ Response 200 (application/json)
+    + Body
+
+            {
+                "idx": 11,
+                "cartIdx": 5,
+                "productIdx": 3,
+                "storeIdx": 1,
+                "quantity": 6,
+                "requirement": null,
+                "parentItemIdx": 10
+            }
+
+
++ Response 500 (application/json)
+    + Body
+    
+            INTERNAL_SERVER_ERROR
+
+
+## 35. 비회원 등록 [/v1/guest]
+### 35-1. POST GUEST [POST]
+
+비회원 인덱스 반환  
+
+> 앱 최초 실행 시, 비회원 등록을 하여  
+> 앱 내부 저장소에 비회원 인덱스 저장 필요. (sharedpreferences 라든지)   
+
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+            Content-Type: application/json
+
+
++ Response 200 (application/json)
+    + Body
+
+            1
+
+
++ Response 500 (application/json)
+    + Body
+    
+            INTERNAL_SERVER_ERROR
+
+
+## 36. PG 외부 모듈 - 사전준비 [/v1/payments/prepare]
+### 36-1. Prepare [POST]
+
+PG 모듈 실행 전, 서버에 사전 정보 저장.  
+저장된 [`Order`](https://www.pomangam.com/resources/src/entity/Order.java) 반환
+
++ [`PaymentInputDto`](https://www.pomangam.com/resources/src/dto/PaymentInputDto.java)
+
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+            Content-Type: application/json
+
+
++ Response 200 (application/json)
+    + Body
+    
+            {
+                "idx": 55,
+                "box_no": 16,
+                "customer_idx": 2,
+                "guest_idx": 1,
+                "employee_idx": null,
+                "delivery_site_idx": 1,
+                "detail_site_idx": 1,
+                "type_payment": 4,
+                "state_order": 0,
+                "register_date": "2019-04-22T19:24:31.813+0000",
+                "arrival_date_only": "2019-04-22",
+                "arrival_time_only": "12:00:00",
+                "using_point": 0,
+                "using_coupon_idx": null,
+                "final_amount": 54460,
+                "merchantUid": "merchant_5_1555961071602",
+                "imp_uid": null
+            }
+
+
++ Response 500 (application/json)
+    + Body
+    
+            INTERNAL_SERVER_ERROR
+
+
+
+## 37. PG 외부 모듈 - 결제완료 REDIRECT URL [/v1/payments/complete]
+### 37-1. Complete [POST]
+
+PG 모듈 실행 후, 결제 완료에 대한 처리 담당
+
++ [`PaymentResultDto`](https://www.pomangam.com/resources/src/dto/PaymentResultDto.java)
+
+
++ Request ()
+    + Headers
+        
+            Content-Type: application/json
+
+
++ Response 200 (application/json)
+
+
++ Response 500 (application/json)
+    + Body
+    
+            INTERNAL_SERVER_ERROR
+
+
+## 38. PG 외부 모듈 - 결제완료 MOBILE REDIRECT URL [/v1/payments/complete/mobile{?imp_uid,merchant_uid}]
+### 38-1. Complete Mobile [POST]
+
+PG 모듈 실행 후, 결제 완료에 대한 처리 담당.  
+(url query만 다르고 나머지는 37-1과 같음)
+
++ Request ()
+    + Headers
+        
+            Content-Type: application/json
+
++ Parameters
+    + imp_uid - 주문 인덱스
+    + merchant_uid - 주문 인덱스
+
++ Response 200 (application/json)
+
+
++ Response 500 (application/json)
+    + Body
+    
+            INTERNAL_SERVER_ERROR
+
+
+## 39. PG 외부 모듈 - 결제실패 [/v1/payments/{id}/fail]
+### 39-1. Fail [POST]
+
+PG 모듈 실행 후, 결제 실패에 대한 처리 담당
+
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+            Content-Type: application/json
+
++ Parameters
+    + id - 주문 인덱스 (order_idx)
+
+
++ Response 200 (application/json)
+
+
++ Response 500 (application/json)
+    + Body
+    
+            INTERNAL_SERVER_ERROR
+
+
+## 40. 주문 내역 - 현재, 회원 [/v1/orders/search/myCurrentInfo{?size,page}]
+### 40-1. 주문 내역 얻기 [GET]
+
+기간 : 현재  
+대상 : 회원
+
++ List\<[`OrderInfoDto`](https://www.pomangam.com/resources/src/dto/OrderInfoDto.java)\>
++ List\<[`OrderInfoItemDto`](https://www.pomangam.com/resources/src/dto/OrderInfoItemDto.java)\>
+
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+            Content-Type: application/json
+
++ Parameters
+    + size (optional) - 페이징 - 반환 사이즈
+    + page (optional) - 페이징 - 순서 인덱스
+
+
++ Response 200 (application/json)
+    + Body
+    
+            [
+                {
+                    "order_idx": 7,
+                    "box_no": "ㅎ-17",
+                    "delivery_site_name": "한국항공대학교",
+                    "detail_site_name": "학생회관 뒤",
+                    "register_date": "2019-04-26T14:39:03.000+0000",
+                    "type_payment": "신용카드",
+                    "state_order": "주문대기",
+                    "arrival_date_only": "2019-04-26",
+                    "arrival_time_only": "12:00:00",
+                    "using_point": 0,
+                    "using_coupon_name": null,
+                    "using_coupon_amount": 0,
+                    "final_amount": 54460,
+                    "merchant_uid": "merchant_5_1555945461884",
+                    "imp_uid": "imp_437464023207",
+                    "orderItems": [
+                        {
+                            "order_item_idx": 7,
+                            "product_name": "불싸이버거",
+                            "quantity": 1,
+                            "requirement": null,
+                            "parent_item_idx": null,
+                            "unit_amount": null
+                        },
+                        {
+                            "order_item_idx": 8,
+                            "product_name": "포테이토피자",
+                            "quantity": 1,
+                            "requirement": null,
+                            "parent_item_idx": null,
+                            "unit_amount": null
+                        }
+                    ]
+                }
+            ]
+
++ Response 500 (application/json)
+    + Body
+    
+            INTERNAL_SERVER_ERROR
+
+
+## 41. 주문 내역 - 현재, 비회원 [/v1/orders/search/guestCurrentInfo{?guestIdx,size,page}]
+### 41-1. 주문 내역 얻기 [GET]
+
+기간 : 현재  
+대상 : 비회원  
+
++ List\<[`OrderInfoDto`](https://www.pomangam.com/resources/src/dto/OrderInfoDto.java)\>
++ List\<[`OrderInfoItemDto`](https://www.pomangam.com/resources/src/dto/OrderInfoItemDto.java)\>
+
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+            Content-Type: application/json
+
++ Parameters
+    + guestIdx - 비회원 인덱스
+    + size (optional) - 페이징 - 반환 사이즈
+    + page (optional) - 페이징 - 순서 인덱스
+
+
++ Response 200 (application/json)
+    + Body
+    
+            [
+                {
+                    "order_idx": 7,
+                    "box_no": "ㅎ-17",
+                    "delivery_site_name": "한국항공대학교",
+                    "detail_site_name": "학생회관 뒤",
+                    "register_date": "2019-04-26T14:39:03.000+0000",
+                    "type_payment": "신용카드",
+                    "state_order": "주문대기",
+                    "arrival_date_only": "2019-04-26",
+                    "arrival_time_only": "12:00:00",
+                    "using_point": 0,
+                    "using_coupon_name": null,
+                    "using_coupon_amount": 0,
+                    "final_amount": 54460,
+                    "merchant_uid": "merchant_5_1555945461884",
+                    "imp_uid": "imp_437464023207",
+                    "orderItems": [
+                        {
+                            "order_item_idx": 7,
+                            "product_name": "불싸이버거",
+                            "quantity": 1,
+                            "requirement": null,
+                            "parent_item_idx": null,
+                            "unit_amount": null
+                        },
+                        {
+                            "order_item_idx": 8,
+                            "product_name": "포테이토피자",
+                            "quantity": 1,
+                            "requirement": null,
+                            "parent_item_idx": null,
+                            "unit_amount": null
+                        }
+                    ]
+                }
+            ]
+
++ Response 500 (application/json)
+    + Body
+    
+            INTERNAL_SERVER_ERROR
+
+
+## 42. 주문 내역 - 과거, 회원 [/v1/orders/search/myPastInfo{?size,page}]
+### 42-1. 주문 내역 얻기 [GET]
+
+기간 : 과거  
+대상 : 회원
+
++ List\<[`OrderInfoDto`](https://www.pomangam.com/resources/src/dto/OrderInfoDto.java)\>
++ List\<[`OrderInfoItemDto`](https://www.pomangam.com/resources/src/dto/OrderInfoItemDto.java)\>
+
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+            Content-Type: application/json
+
++ Parameters
+    + size (optional) - 페이징 - 반환 사이즈
+    + page (optional) - 페이징 - 순서 인덱스
+
+
++ Response 200 (application/json)
+    + Body
+    
+            [
+                {
+                    "order_idx": 7,
+                    "box_no": "ㅎ-17",
+                    "delivery_site_name": "한국항공대학교",
+                    "detail_site_name": "학생회관 뒤",
+                    "register_date": "2019-04-26T14:39:03.000+0000",
+                    "type_payment": "신용카드",
+                    "state_order": "주문대기",
+                    "arrival_date_only": "2019-04-26",
+                    "arrival_time_only": "12:00:00",
+                    "using_point": 0,
+                    "using_coupon_name": null,
+                    "using_coupon_amount": 0,
+                    "final_amount": 54460,
+                    "merchant_uid": "merchant_5_1555945461884",
+                    "imp_uid": "imp_437464023207",
+                    "orderItems": [
+                        {
+                            "order_item_idx": 7,
+                            "product_name": "불싸이버거",
+                            "quantity": 1,
+                            "requirement": null,
+                            "parent_item_idx": null,
+                            "unit_amount": null
+                        },
+                        {
+                            "order_item_idx": 8,
+                            "product_name": "포테이토피자",
+                            "quantity": 1,
+                            "requirement": null,
+                            "parent_item_idx": null,
+                            "unit_amount": null
+                        }
+                    ]
+                }
+            ]
+
++ Response 500 (application/json)
+    + Body
+    
+            INTERNAL_SERVER_ERROR
+
+
+## 43. 주문 내역 - 과거, 비회원 [/v1/orders/search/guestPastInfo{?guestIdx,size,page}]
+### 43-1. 주문 내역 얻기 [GET]
+
+기간 : 과거  
+대상 : 비회원
+
+
++ Request ()
+    + Headers
+        
+            Authorization: Bearer {token}
+            Content-Type: application/json
+
++ Parameters
+    + guestIdx - 비회원 인덱스
+    + size (optional) - 페이징 - 반환 사이즈
+    + page (optional) - 페이징 - 순서 인덱스
+
+
++ Response 200 (application/json)
+    + Body
+    
+            [
+                {
+                    "order_idx": 7,
+                    "box_no": "ㅎ-17",
+                    "delivery_site_name": "한국항공대학교",
+                    "detail_site_name": "학생회관 뒤",
+                    "register_date": "2019-04-26T14:39:03.000+0000",
+                    "type_payment": "신용카드",
+                    "state_order": "주문대기",
+                    "arrival_date_only": "2019-04-26",
+                    "arrival_time_only": "12:00:00",
+                    "using_point": 0,
+                    "using_coupon_name": null,
+                    "using_coupon_amount": 0,
+                    "final_amount": 54460,
+                    "merchant_uid": "merchant_5_1555945461884",
+                    "imp_uid": "imp_437464023207",
+                    "orderItems": [
+                        {
+                            "order_item_idx": 7,
+                            "product_name": "불싸이버거",
+                            "quantity": 1,
+                            "requirement": null,
+                            "parent_item_idx": null,
+                            "unit_amount": null
+                        },
+                        {
+                            "order_item_idx": 8,
+                            "product_name": "포테이토피자",
+                            "quantity": 1,
+                            "requirement": null,
+                            "parent_item_idx": null,
+                            "unit_amount": null
+                        }
+                    ]
+                }
+            ]
+
++ Response 500 (application/json)
+    + Body
+    
+            INTERNAL_SERVER_ERROR
