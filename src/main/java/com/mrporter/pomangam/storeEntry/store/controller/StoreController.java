@@ -33,7 +33,7 @@ public class StoreController {
     }
 
     @GetMapping("/search/findByType")
-    public ResponseEntity findByType(@RequestParam("delivery_site_idx") Integer delivery_site_idx,
+    public ResponseEntity findByType(@RequestParam("deliverySiteIdx") Integer delivery_site_idx,
                                      @RequestParam("type") Integer type,
                                      @RequestParam(value = "orderBy", required = false) String orderBy,
                                      PageRequest pageRequest) {

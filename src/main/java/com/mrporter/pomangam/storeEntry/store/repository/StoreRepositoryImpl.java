@@ -50,10 +50,12 @@ public class StoreRepositoryImpl implements StoreRepository {
         List storeDtoList = em
                 .createNativeQuery(
                         "SELECT  " +
-                                "    s.idx, s.name, s.description, s.cnt_like, s.cnt_comment, s.sequence, s.type " +
+                                "    s.idx, s.name, s.description, s.cnt_like, s.cnt_comment, s.sequence, s.type, img.imgpath " +
                                 "FROM " +
-                                "    store_tbl s, " +
-                                "    schedule_for_store_tbl sc " +
+                                "    schedule_for_store_tbl sc, " +
+                                "    store_tbl s " +
+                                "LEFT OUTER JOIN imgpath_for_store_tbl img " +
+                                "ON img.store_idx = s.idx AND img.type = 0 " +
                                 "WHERE " +
                                 "   s.idx IN (SELECT store_idx FROM ordertime_for_store_tbl WHERE delivery_site_idx = :didx group by store_idx) " +
                                 "        AND s.idx = sc.store_idx " +

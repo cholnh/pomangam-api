@@ -20,7 +20,9 @@ public class StoreSummaryDto {
 
     private Byte type;
 
-    public StoreSummaryDto(Integer idx, String name, String description, Integer cnt_like, Integer cnt_comment, Integer sequence, Byte type) {
+    private String imgpath;
+
+    public StoreSummaryDto(Integer idx, String name, String description, Integer cnt_like, Integer cnt_comment, Integer sequence, Byte type, String imgpath) {
         this.idx = idx;
         this.name = name;
         this.description = description;
@@ -28,5 +30,6 @@ public class StoreSummaryDto {
         this.cnt_comment = cnt_comment;
         this.sequence = sequence;
         this.type = type;
+        this.imgpath = imgpath;
     }
 }
