@@ -18,16 +18,19 @@ public class StoreWithCategoryDto {
 
     private Integer cnt_comment;
 
+    private Double avg_star;
+
     private Byte type;
 
     private List<CategoryDto> categories;
 
     @Builder
-    public StoreWithCategoryDto(Integer idx, String name, Integer cnt_like, Integer cnt_comment, Byte type, List<CategoryDto> categories) {
+    public StoreWithCategoryDto(Integer idx, String name, Integer cnt_like, Integer cnt_comment, Double avg_star, Byte type, List<CategoryDto> categories) {
         this.idx = idx;
         this.name = name;
         this.cnt_like = cnt_like;
         this.cnt_comment = cnt_comment;
+        this.avg_star = avg_star;
         this.type = type;
         this.categories = categories;
     }

@@ -3,6 +3,7 @@ package com.mrporter.pomangam.storeEntry.store.service;
 import com.mrporter.pomangam.common.util.time.CustomTime;
 import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.domain.DetailForDeliverySite;
 import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.repository.DetailForDeliverySiteJpaRepository;
+import com.mrporter.pomangam.feedbackHistory.commentStore.repository.CommentStoreRepository;
 import com.mrporter.pomangam.orderEntry.order.repository.OrderRepositoryImpl;
 import com.mrporter.pomangam.orderEntry.orderTime.repository.OrderTimeJpaRepository;
 import com.mrporter.pomangam.orderEntry.orderTime.repository.OrderTimeRepositoryImpl;
@@ -40,6 +41,7 @@ public class StoreServiceImpl implements StoreService {
     DetailForDeliverySiteJpaRepository detailForDeliverySiteJpaRepository;
     ScheduleForStoreJpaRepository scheduleForStoreJpaRepository;
     ProductRepositoryImpl productRepository;
+    CommentStoreRepository commentStoreRepository;
 
     @Override
     public List<Store> getStoresByIdxes(List<Integer> idxes) {
@@ -176,6 +178,7 @@ public class StoreServiceImpl implements StoreService {
                 .name(store.getName())
                 .cnt_comment(store.getCnt_comment())
                 .cnt_like(store.getCnt_like())
+                .avg_star(commentStoreRepository.getAvgStar(storeIdx))
                 .type(store.getType())
                 .categories(productRepository.findCategory(storeIdx))
                 .build();
