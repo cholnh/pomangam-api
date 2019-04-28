@@ -16,7 +16,7 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 
     @Override
     public List<OrderInfoItemDto> findOrderInfoItem(Integer orderIdx) {
-        List<OrderInfoItemDto> orderInfoItemDtoList = em
+        List orderInfoItemDtoList = em
                 .createNativeQuery(
             "SELECT item.idx as order_item_idx, prod.name as product_name, item.quantity, item.requirement, item.parent_item_idx, item.unit_amount " +
                     "FROM item_for_order_tbl item, product_tbl prod " +

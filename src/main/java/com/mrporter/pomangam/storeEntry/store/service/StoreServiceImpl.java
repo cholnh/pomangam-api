@@ -162,7 +162,6 @@ public class StoreServiceImpl implements StoreService {
         if(pageRequest == null) {
             pageRequest = new PageRequest(0, 10);
         }
-
         return  storeRepository.findByType(delivery_site_idx, type, pageRequest);
     }
 }

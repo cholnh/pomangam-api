@@ -29,10 +29,6 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public ProductWithCostDto findByProductIdx(Integer product_idx) {
-        if(product_idx == null) {
-            return null;
-        }
-
         Query nativeQuery1 = em
                 .createNativeQuery("SELECT * FROM product_tbl WHERE idx = ?")
                 .setParameter(1, product_idx);
@@ -80,13 +76,6 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public List<ProductWithCostDto> findByStoreIdx(Integer store_idx, Integer type, String orderBy, PageRequest pageRequest) {
-        if(store_idx == null) {
-            return null;
-        }
-
-        int page = pageRequest == null ? 0 : pageRequest.getPage();
-        int size = pageRequest == null ? 100 : pageRequest.getSize();
-
         PromotionSumDto promotionSumDto = promotionRepository.getSumByStoreIdx(store_idx);
 
         int sum_prc = promotionSumDto.getSum_prc() == null ? 0 : promotionSumDto.getSum_prc();
@@ -122,8 +111,8 @@ public class ProductRepositoryImpl implements ProductRepository {
         List<ProductWithCostDto> productWithCostDtoList = nativeQuery
                 .unwrap( org.hibernate.query.NativeQuery.class )
                 .setResultTransformer( Transformers.aliasToBean( ProductWithCostDto.class ) )
-                .setFirstResult(page*size)
-                .setMaxResults(size)
+                .setFirstResult(pageRequest.getFirstIndex())
+                .setMaxResults(pageRequest.getSize())
                 .getResultList();
 
         //List<ProductWithCostDto> productWithCostDtoList = new JpaResultMapper().list(nativeQuery, ProductWithCostDto.class);

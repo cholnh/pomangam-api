@@ -20,11 +20,20 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductWithCostDto> findByStoreIdx(Integer store_idx, Integer type, String orderBy, PageRequest pageRequest) {
+        if(store_idx == null) {
+            return null;
+        }
+        if(pageRequest == null) {
+            pageRequest = new PageRequest(0, 10);
+        }
         return productRepository.findByStoreIdx(store_idx, type, orderBy, pageRequest);
     }
 
     @Override
     public ProductWithCostDto findByProductIdx(Integer product_idx) {
+        if(product_idx == null) {
+            return null;
+        }
         return productRepository.findByProductIdx(product_idx);
     }
 

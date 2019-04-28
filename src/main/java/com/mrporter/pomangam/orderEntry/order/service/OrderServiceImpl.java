@@ -86,6 +86,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderInfoDto> getCurrentOrderInfoByCustomerId(String customerId, PageRequest pageRequest) {
+        if(pageRequest == null) {
+            pageRequest = new PageRequest(0, 10);
+        }
         User user = userService.findById(customerId);
         List<OrderDto> todayList = orderRepository.getTodayOrderByCustomerIdx(user.getIdx(), pageRequest);
         return getOrderInfo(todayList);
@@ -93,12 +96,18 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderInfoDto> getCurrentOrderInfoByGuestIdx(Integer guestIdx, PageRequest pageRequest) {
+        if(pageRequest == null) {
+            pageRequest = new PageRequest(0, 10);
+        }
         List<OrderDto> todayList = orderRepository.getTodayOrderByGuestIdx(guestIdx, pageRequest);
         return getOrderInfo(todayList);
     }
 
     @Override
     public List<OrderInfoDto> getPastOrderInfoByCustomerId(String customerId, PageRequest pageRequest) {
+        if(pageRequest == null) {
+            pageRequest = new PageRequest(0, 10);
+        }
         User user = userService.findById(customerId);
         List<OrderDto> todayList = orderRepository.getPastOrderInfoByCustomerId(user.getIdx(), pageRequest);
         return getOrderInfo(todayList);
@@ -106,6 +115,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderInfoDto> getPastOrderInfoByGuestIdx(Integer guestIdx, PageRequest pageRequest) {
+        if(pageRequest == null) {
+            pageRequest = new PageRequest(0, 10);
+        }
         List<OrderDto> todayList = orderRepository.getPastOrderInfoByGuestIdx(guestIdx, pageRequest);
         return getOrderInfo(todayList);
     }

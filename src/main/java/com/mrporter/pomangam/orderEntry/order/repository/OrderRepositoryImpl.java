@@ -18,8 +18,6 @@ public class OrderRepositoryImpl implements OrderRepository {
     @PersistenceContext
     EntityManager em;
 
-    JpaResultMapper jpaResultMapper;
-
     @Override
     public int getSalesVolumeByArrivalDateAndTimeAndStoreIdx(String arrival_date, String arrival_time, Integer store_idx) {
         Query nativeQuery = em
@@ -85,10 +83,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public List<OrderDto> getTodayOrderByCustomerIdx(Integer customerIdx, PageRequest pageRequest) {
-        int page = pageRequest == null ? 0 : pageRequest.getPage();
-        int size = pageRequest == null ? 10 : pageRequest.getSize();
-
-        List<OrderDto> orderDtos = em
+        List orderDtos = em
                 .createNativeQuery("" +
                         "SELECT * " +
                         "FROM order_tbl " +
@@ -99,18 +94,15 @@ public class OrderRepositoryImpl implements OrderRepository {
                 .setParameter(1, customerIdx)
                 .unwrap( org.hibernate.query.NativeQuery.class )
                 .setResultTransformer( Transformers.aliasToBean( OrderDto.class ) )
-                .setFirstResult(page*size)
-                .setMaxResults(size)
+                .setFirstResult(pageRequest.getFirstIndex())
+                .setMaxResults(pageRequest.getSize())
                 .getResultList();
         return orderDtos;
     }
 
     @Override
     public List<OrderDto> getTodayOrderByGuestIdx(Integer guestIdx, PageRequest pageRequest) {
-        int page = pageRequest == null ? 0 : pageRequest.getPage();
-        int size = pageRequest == null ? 10 : pageRequest.getSize();
-
-        List<OrderDto> orderDtos = em
+        List orderDtos = em
                 .createNativeQuery("" +
                         "SELECT * " +
                         "FROM order_tbl " +
@@ -121,18 +113,15 @@ public class OrderRepositoryImpl implements OrderRepository {
                 .setParameter(1, guestIdx)
                 .unwrap( org.hibernate.query.NativeQuery.class )
                 .setResultTransformer( Transformers.aliasToBean( OrderDto.class ) )
-                .setFirstResult(page*size)
-                .setMaxResults(size)
+                .setFirstResult(pageRequest.getFirstIndex())
+                .setMaxResults(pageRequest.getSize())
                 .getResultList();
         return orderDtos;
     }
 
     @Override
     public List<OrderDto> getPastOrderInfoByCustomerId(Integer customerIdx, PageRequest pageRequest) {
-        int page = pageRequest == null ? 0 : pageRequest.getPage();
-        int size = pageRequest == null ? 10 : pageRequest.getSize();
-
-        List<OrderDto> orderDtos = em
+        List orderDtos = em
                 .createNativeQuery("" +
                         "SELECT * " +
                         "FROM order_tbl " +
@@ -143,18 +132,15 @@ public class OrderRepositoryImpl implements OrderRepository {
                 .setParameter(1, customerIdx)
                 .unwrap( org.hibernate.query.NativeQuery.class )
                 .setResultTransformer( Transformers.aliasToBean( OrderDto.class ) )
-                .setFirstResult(page*size)
-                .setMaxResults(size)
+                .setFirstResult(pageRequest.getFirstIndex())
+                .setMaxResults(pageRequest.getSize())
                 .getResultList();
         return orderDtos;
     }
 
     @Override
     public List<OrderDto> getPastOrderInfoByGuestIdx(Integer guestIdx, PageRequest pageRequest) {
-        int page = pageRequest == null ? 0 : pageRequest.getPage();
-        int size = pageRequest == null ? 10 : pageRequest.getSize();
-
-        List<OrderDto> orderDtos = em
+        List orderDtos = em
                 .createNativeQuery("" +
                         "SELECT * " +
                         "FROM order_tbl " +
@@ -165,8 +151,8 @@ public class OrderRepositoryImpl implements OrderRepository {
                 .setParameter(1, guestIdx)
                 .unwrap( org.hibernate.query.NativeQuery.class )
                 .setResultTransformer( Transformers.aliasToBean( OrderDto.class ) )
-                .setFirstResult(page*size)
-                .setMaxResults(size)
+                .setFirstResult(pageRequest.getFirstIndex())
+                .setMaxResults(pageRequest.getSize())
                 .getResultList();
         return orderDtos;
     }
