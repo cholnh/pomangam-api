@@ -17,7 +17,7 @@ public class OrderTimeRepositoryImpl implements OrderTimeRepository {
 
     @Override
     public List<InquiryResultDto> getInquiryResult(Integer delivery_site_idx, String arrival_time) {
-        String sql = "SELECT str.idx, str.name, str.location, str.main_phone_number, str.description, str.cnt_like, str.minimum_time, str.parallel_production, str.maximum_production, " +
+        String sql = "SELECT str.idx, str.name, str.location, str.main_phone_number, str.description, str.cnt_like, str.cnt_comment, str.minimum_time, str.parallel_production, str.maximum_production, " +
                 "odr.order_deadline as order_deadline, odr.state_pause as state_pause, img.imgpath, str.sequence " +
                 "FROM ordertime_for_store_tbl odr, store_tbl str " +
                 "LEFT OUTER JOIN imgpath_for_store_tbl img " +

@@ -25,6 +25,8 @@ public class InquiryResultDto implements Serializable {
 
     private Integer cnt_like;
 
+    private Integer cnt_comment;
+
     private Time minimum_time;
 
     private Short parallel_production;
@@ -53,6 +55,7 @@ public class InquiryResultDto implements Serializable {
                             String main_phone_number,
                             String description,
                             Integer cnt_like,
+                            Integer cnt_comment,
                             Time minimum_time,
                             Short parallel_production,
                             Integer maximum_production,
@@ -67,6 +70,7 @@ public class InquiryResultDto implements Serializable {
         this.main_phone_number = main_phone_number;
         this.description = description;
         this.cnt_like = cnt_like;
+        this.cnt_comment = cnt_comment;
         this.minimum_time = minimum_time;
         this.parallel_production = parallel_production;
         this.maximum_production = maximum_production;

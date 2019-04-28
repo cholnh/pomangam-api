@@ -158,10 +158,10 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<StoreSummaryDto> findByType(Integer delivery_site_idx, Integer type, PageRequest pageRequest) {
+    public List<StoreSummaryDto> findByType(Integer delivery_site_idx, Integer type, String orderBy, PageRequest pageRequest) {
         if(pageRequest == null) {
             pageRequest = new PageRequest(0, 10);
         }
-        return  storeRepository.findByType(delivery_site_idx, type, pageRequest);
+        return  storeRepository.findByType(delivery_site_idx, type, orderBy, pageRequest);
     }
 }

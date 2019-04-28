@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.storeEntry.store.repository;
 
+import com.mrporter.pomangam.common.util.sqlInjection.SqlInjection;
 import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import com.mrporter.pomangam.storeEntry.store.domain.StoreDto;
 import com.mrporter.pomangam.storeEntry.store.domain.StoreSummaryDto;
@@ -18,6 +19,8 @@ import java.util.List;
 public class StoreRepositoryImpl implements StoreRepository {
     @PersistenceContext
     EntityManager em;
+
+    SqlInjection sqlInjection;
 
     @Override
     public List<StoreDto> findByQuery(String query, Integer delivery_site_idx) {
@@ -42,11 +45,8 @@ public class StoreRepositoryImpl implements StoreRepository {
         return storeDtoList;
     }
 
-    public List<StoreSummaryDto> findByType(Integer delivery_site_idx, Integer type, PageRequest pageRequest) {
-
-        // Todo : comment 개수 포함해야함!!
-        // cnt_like 처럼 cnt_comment 추가 여부 결정
-
+    @Override
+    public List<StoreSummaryDto> findByType(Integer delivery_site_idx, Integer type, String orderBy, PageRequest pageRequest) {
         List storeDtoList = em
                 .createNativeQuery(
                         "SELECT  " +
@@ -60,7 +60,7 @@ public class StoreRepositoryImpl implements StoreRepository {
                                 "        AND sc.state_active = 1 " +
                                 "        AND sc.state_pause = 0 " +
                                 "        AND s.type = :type " +
-                                "       ORDER BY s.sequence DESC"
+                                (orderBy != null && !sqlInjection.isSQLInjection(orderBy) ? "ORDER BY " + orderBy :"ORDER BY s.sequence DESC ")
                 )
                 .setParameter("didx", delivery_site_idx)
                 .setParameter("type", type)

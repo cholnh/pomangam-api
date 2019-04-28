@@ -12,7 +12,7 @@ import java.util.List;
 public interface StoreService {
     List<Store> getStoresByIdxes(List<Integer> idxes);
 
-    List<InquiryResultDto> getInquiryResult(String arrival_date, Integer detail_for_delivery_site_idx) ;
+    List<InquiryResultDto> getInquiryResult(String arrival_date, Integer detail_for_delivery_site_idx);
     List<InquiryResultDto> getInquiryResult(LocalDateTime arrival_date, Integer detail_for_delivery_site_idx, ZoneId zoneId);
-    List<StoreSummaryDto> findByType(Integer delivery_site_idx, Integer type, PageRequest pageRequest);
+    List<StoreSummaryDto> findByType(Integer delivery_site_idx, Integer type, String orderBy, PageRequest pageRequest);
 }

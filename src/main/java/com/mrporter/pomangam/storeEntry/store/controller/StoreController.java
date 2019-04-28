@@ -33,10 +33,11 @@ public class StoreController {
     }
 
     @GetMapping("/search/findByType")
-    public ResponseEntity findByType(@RequestParam(name = "delivery_site_idx") Integer delivery_site_idx,
-                                     @RequestParam(name = "type") Integer type,
+    public ResponseEntity findByType(@RequestParam("delivery_site_idx") Integer delivery_site_idx,
+                                     @RequestParam("type") Integer type,
+                                     @RequestParam(value = "orderBy", required = false) String orderBy,
                                      PageRequest pageRequest) {
-        List<StoreSummaryDto> dto = storeService.findByType(delivery_site_idx, type, pageRequest);
+        List<StoreSummaryDto> dto = storeService.findByType(delivery_site_idx, type, orderBy, pageRequest);
         if(dto == null) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         } else {

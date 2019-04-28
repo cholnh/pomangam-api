@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface StoreRepository {
     List<StoreDto> findByQuery(String query, Integer delivery_site_idx);
-    List<StoreSummaryDto> findByType(Integer delivery_site_idx, Integer type, PageRequest pageRequest);
+    List<StoreSummaryDto> findByType(Integer delivery_site_idx, Integer type, String orderBy, PageRequest pageRequest);
 }
