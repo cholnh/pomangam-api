@@ -1,7 +1,9 @@
 package com.mrporter.pomangam.storeEntry.store.service;
 
+import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import com.mrporter.pomangam.storeEntry.store.domain.InquiryResultDto;
 import com.mrporter.pomangam.storeEntry.store.domain.Store;
+import com.mrporter.pomangam.storeEntry.store.domain.StoreSummaryDto;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -12,4 +14,5 @@ public interface StoreService {
 
     List<InquiryResultDto> getInquiryResult(String arrival_date, Integer detail_for_delivery_site_idx) ;
     List<InquiryResultDto> getInquiryResult(LocalDateTime arrival_date, Integer detail_for_delivery_site_idx, ZoneId zoneId);
+    List<StoreSummaryDto> findByType(Integer delivery_site_idx, Integer type, PageRequest pageRequest);
 }

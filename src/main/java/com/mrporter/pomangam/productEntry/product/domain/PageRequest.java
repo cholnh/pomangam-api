@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class PageRequest {
-    Integer page;
-    Integer size;
+    int page;
+    int size;
 
     public PageRequest() {
         this.page = 0;
@@ -18,5 +18,9 @@ public class PageRequest {
         size = size > 50 ? 50 : size;
         this.page = page;
         this.size = size;
+    }
+
+    public int getFirstIndex() {
+        return page * size;
     }
 }

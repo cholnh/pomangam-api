@@ -6,11 +6,14 @@ import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.repository.Deta
 import com.mrporter.pomangam.orderEntry.order.repository.OrderRepositoryImpl;
 import com.mrporter.pomangam.orderEntry.orderTime.repository.OrderTimeJpaRepository;
 import com.mrporter.pomangam.orderEntry.orderTime.repository.OrderTimeRepositoryImpl;
+import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import com.mrporter.pomangam.storeEntry.scheduleForStore.domain.ScheduleForStore;
 import com.mrporter.pomangam.storeEntry.scheduleForStore.repository.ScheduleForStoreJpaRepository;
 import com.mrporter.pomangam.storeEntry.store.domain.InquiryResultDto;
 import com.mrporter.pomangam.storeEntry.store.domain.Store;
+import com.mrporter.pomangam.storeEntry.store.domain.StoreSummaryDto;
 import com.mrporter.pomangam.storeEntry.store.repository.StoreJpaRepository;
+import com.mrporter.pomangam.storeEntry.store.repository.StoreRepositoryImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +31,7 @@ import java.util.List;
 public class StoreServiceImpl implements StoreService {
 
     StoreJpaRepository storeJpaRepository;
+    StoreRepositoryImpl storeRepository;
     OrderTimeRepositoryImpl orderTimeRepository;
     OrderTimeJpaRepository orderTimeJpaRepository;
     OrderRepositoryImpl orderRepositoryImpl;
@@ -151,5 +155,14 @@ public class StoreServiceImpl implements StoreService {
             }
         }
         return result;
+    }
+
+    @Override
+    public List<StoreSummaryDto> findByType(Integer delivery_site_idx, Integer type, PageRequest pageRequest) {
+        if(pageRequest == null) {
+            pageRequest = new PageRequest(0, 10);
+        }
+
+        return  storeRepository.findByType(delivery_site_idx, type, pageRequest);
     }
 }
