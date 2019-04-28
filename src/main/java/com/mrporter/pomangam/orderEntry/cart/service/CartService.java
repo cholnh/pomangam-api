@@ -27,4 +27,7 @@ public interface CartService {
     CartViewDto getCartDtoByGuestIdx(Integer guestIdx);
 
     int getTotalAmount(Integer cartIdx);
+
+    Boolean deleteByGuestIdx(Integer guestIdx);
+    Boolean deleteByCustomerIdx(Integer customerIdx);
 }

@@ -1,7 +1,6 @@
 package com.mrporter.pomangam.orderEntry.orderTime.controller;
 
 import com.mrporter.pomangam.orderEntry.orderTime.domain.OrderTime;
-import com.mrporter.pomangam.orderEntry.orderTime.domain.OrderTimeDto;
 import com.mrporter.pomangam.orderEntry.orderTime.service.OrderTimeServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,8 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RequestMapping("/orderTimes")
 @RestController
@@ -33,12 +30,18 @@ public class OrderTimeController {
     }
 
     @GetMapping("/search/getOrderTimesByDeliverySiteIdx")
-    public List<OrderTimeDto> getOrderTimesByDeliverySiteIdx(@RequestParam("deliverySiteIdx") Integer delivery_site_idx) {
-        return orderTimeService.getOrderTimesByDeliverySiteIdx(delivery_site_idx);
+    public ResponseEntity getOrderTimesByDeliverySiteIdx(@RequestParam("deliverySiteIdx") Integer delivery_site_idx) {
+        return new ResponseEntity(orderTimeService.getOrderTimesByDeliverySiteIdx(delivery_site_idx), HttpStatus.OK);
     }
 
     @GetMapping("/search/getOrderTimesNowByDeliverySiteIdx")
-    public List<OrderTimeDto> getOrderTimesByDeliverySiteIdxAndArrivalTime(@RequestParam("deliverySiteIdx") Integer delivery_site_idx) {
-        return orderTimeService.getOrderTimesByDeliverySiteIdxAndArrivalTime(delivery_site_idx);
+    public ResponseEntity getOrderTimesByDeliverySiteIdxAndArrivalTime(@RequestParam("deliverySiteIdx") Integer delivery_site_idx) {
+        return new ResponseEntity(orderTimeService.getOrderTimesByDeliverySiteIdxAndArrivalTime(delivery_site_idx), HttpStatus.OK);
+    }
+
+    @GetMapping("/search/getMinimumArrivalTime")
+    public ResponseEntity getMinimumArrivalTime(@RequestParam("storeIdx") Integer storeIdx,
+                                                @RequestParam("quantity") Integer quantity) {
+        return new ResponseEntity(orderTimeService.getMinimumArrivalTime(storeIdx, quantity), HttpStatus.OK);
     }
 }

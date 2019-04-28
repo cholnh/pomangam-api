@@ -1,11 +1,8 @@
 package com.mrporter.pomangam.productEntry.product.service;
 
-import com.mrporter.pomangam.productEntry.product.domain.DetailOrderDto;
-import com.mrporter.pomangam.productEntry.product.domain.ProductWithCostDto;
-import com.mrporter.pomangam.productEntry.product.domain.SearchProductDto;
+import com.mrporter.pomangam.productEntry.product.domain.*;
 import com.mrporter.pomangam.productEntry.product.repository.ProductRepositoryImpl;
 import com.mrporter.pomangam.storeEntry.store.repository.StoreRepositoryImpl;
-import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +53,20 @@ public class ProductServiceImpl implements ProductService {
         dto.setToppingMenuList(productRepository.findAdditionalByType(productIdx, 2));
         dto.setBeverageMenuList(productRepository.findAdditionalByType(productIdx, 3));
 
+        return dto;
+    }
+
+    @Override
+    public ProductViewDto findWithCategoryByStoreIdx(Integer store_idx, Integer type, String orderBy, PageRequest pageRequest) {
+        if(store_idx == null) {
+            return null;
+        }
+        if(pageRequest == null) {
+            pageRequest = new PageRequest(0, 10);
+        }
+        ProductViewDto dto = new ProductViewDto();
+        dto.setCategories(productRepository.findCategory(store_idx));
+        dto.setProducts(productRepository.findByStoreIdx(store_idx, type, orderBy, pageRequest));
         return dto;
     }
 }

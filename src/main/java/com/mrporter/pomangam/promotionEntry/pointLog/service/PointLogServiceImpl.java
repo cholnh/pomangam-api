@@ -1,9 +1,11 @@
 package com.mrporter.pomangam.promotionEntry.pointLog.service;
 
+import com.mrporter.pomangam.common.map.repository.CommonMapJpaRepository;
 import com.mrporter.pomangam.common.util.time.CustomTime;
 import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import com.mrporter.pomangam.promotionEntry.pointLog.domain.PointLog;
 import com.mrporter.pomangam.promotionEntry.pointLog.domain.PointLogDto;
+import com.mrporter.pomangam.promotionEntry.pointLog.domain.PointPctPrcDto;
 import com.mrporter.pomangam.promotionEntry.pointLog.domain.StatePointLog;
 import com.mrporter.pomangam.promotionEntry.pointLog.repository.PointLogRepositoryImpl;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,7 @@ public class PointLogServiceImpl implements PointLogService {
     EntityManager em;
 
     PointLogRepositoryImpl pointLogRepository;
+    CommonMapJpaRepository commonMapJpaRepository;
 
     public List<PointLogDto> findByCustomerIdx(Integer customerIdx, PageRequest pageRequest) {
         if(customerIdx == null) {
@@ -82,5 +85,18 @@ public class PointLogServiceImpl implements PointLogService {
         log.setRegister_date(CustomTime.curTimestampSql());
         log.setType(state.getCode());
         log.setSequence(sequence);
+    }
+
+    @Override
+    public PointPctPrcDto getPointPctPrc(Integer customerIdx) {
+        if(customerIdx == null) {
+            // return default value
+        } else {
+            // return custom value
+        }
+        int pct = Integer.parseInt(commonMapJpaRepository.findByKey("point-saving-pct-1")+"");
+        int prc = Integer.parseInt(commonMapJpaRepository.findByKey("point-saving-prc-1")+"");
+
+        return new PointPctPrcDto(pct, prc);
     }
 }

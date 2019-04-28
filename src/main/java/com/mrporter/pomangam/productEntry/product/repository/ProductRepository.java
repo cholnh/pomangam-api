@@ -1,9 +1,6 @@
 package com.mrporter.pomangam.productEntry.product.repository;
 
-import com.mrporter.pomangam.productEntry.product.domain.AdditionalDto;
-import com.mrporter.pomangam.productEntry.product.domain.ProductSummaryDto;
-import com.mrporter.pomangam.productEntry.product.domain.ProductWithCostDto;
-import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
+import com.mrporter.pomangam.productEntry.product.domain.*;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
@@ -16,4 +13,5 @@ public interface ProductRepository {
     ProductWithCostDto findByProductIdx(@Param("productIdx") Integer product_idx);
     List<ProductSummaryDto> findByQuery(String query, Integer delivery_site_idx);
     List<AdditionalDto> findAdditionalByType(Integer productIdx, Integer type);
+    List<CategoryDto> findCategory(Integer store_idx);
 }

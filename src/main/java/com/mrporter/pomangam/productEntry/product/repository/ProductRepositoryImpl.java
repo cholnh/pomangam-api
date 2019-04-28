@@ -1,13 +1,9 @@
 package com.mrporter.pomangam.productEntry.product.repository;
 
 import com.mrporter.pomangam.common.util.sqlInjection.SqlInjection;
-import com.mrporter.pomangam.productEntry.product.domain.AdditionalDto;
-import com.mrporter.pomangam.productEntry.product.domain.ProductDto;
-import com.mrporter.pomangam.productEntry.product.domain.ProductSummaryDto;
-import com.mrporter.pomangam.productEntry.product.domain.ProductWithCostDto;
+import com.mrporter.pomangam.productEntry.product.domain.*;
 import com.mrporter.pomangam.promotionEntry.promotion.domain.PromotionSumDto;
 import com.mrporter.pomangam.promotionEntry.promotion.repository.PromotionRepositoryImpl;
-import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import lombok.AllArgsConstructor;
 import org.hibernate.transform.Transformers;
 import org.qlrm.mapper.JpaResultMapper;
@@ -165,5 +161,14 @@ public class ProductRepositoryImpl implements ProductRepository {
         List<AdditionalDto> productDtoList = new JpaResultMapper().list(nativeQuery, AdditionalDto.class);
 
         return productDtoList;
+    }
+
+    @Override
+    public List<CategoryDto> findCategory(Integer store_idx) {
+        Query nativeQuery = em
+                .createNativeQuery("SELECT category_id as categoryId, category_name as categoryName FROM product_tbl WHERE store_idx = ? GROUP BY category_id")
+                .setParameter(1, store_idx);
+        List<CategoryDto> categories = new JpaResultMapper().list(nativeQuery, CategoryDto.class);
+        return categories;
     }
 }

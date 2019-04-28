@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.productEntry.product.controller;
 
+import com.mrporter.pomangam.productEntry.product.domain.ProductViewDto;
 import com.mrporter.pomangam.productEntry.product.domain.ProductWithCostDto;
 import com.mrporter.pomangam.productEntry.product.service.ProductServiceImpl;
 import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
@@ -52,6 +53,19 @@ public class ProductController {
     @GetMapping("/search/getDetailOrder")
     public ResponseEntity<?> getDetailOrder(@RequestParam("productIdx") Integer productIdx) {
         return new ResponseEntity(productService.getDetailOrder(productIdx), HttpStatus.OK);
+    }
+
+    @GetMapping("/search/findWithCategoryByStoreIdx")
+    public ResponseEntity<?> findWithCategoryByStoreIdx(@RequestParam("storeIdx") Integer store_idx,
+                                            @RequestParam(value = "type", required = false) Integer type,
+                                            @RequestParam(value = "orderBy", required = false) String orderBy,
+                                            PageRequest pageRequest) {
+        ProductViewDto productViewDto =  productService.findWithCategoryByStoreIdx(store_idx, type, orderBy, pageRequest);
+        if(productViewDto == null) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity(productViewDto, HttpStatus.OK);
+        }
     }
 
 }

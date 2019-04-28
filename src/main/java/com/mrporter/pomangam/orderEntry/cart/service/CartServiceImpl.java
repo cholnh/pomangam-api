@@ -11,6 +11,7 @@ import com.mrporter.pomangam.orderEntry.cartItem.domain.CartItemViewDto;
 import com.mrporter.pomangam.orderEntry.cartItem.repository.CartItemJpaRepository;
 import com.mrporter.pomangam.orderEntry.order.domain.OrderTimeSalesVolumeDto;
 import com.mrporter.pomangam.orderEntry.order.repository.OrderRepositoryImpl;
+import com.mrporter.pomangam.orderEntry.orderTime.service.OrderTimeServiceImpl;
 import com.mrporter.pomangam.productEntry.product.domain.ProductWithCostDto;
 import com.mrporter.pomangam.productEntry.product.repository.ProductRepositoryImpl;
 import com.mrporter.pomangam.storeEntry.store.domain.Store;
@@ -35,6 +36,7 @@ public class CartServiceImpl implements CartService {
     CartRepositoryImpl cartRepository;
     CartItemJpaRepository cartItemJpaRepository;
     OrderRepositoryImpl orderRepository;
+    OrderTimeServiceImpl orderTimeService;
     StoreJpaRepository storeJpaRepository;
     ProductRepositoryImpl productRepository;
 
@@ -354,9 +356,18 @@ public class CartServiceImpl implements CartService {
             }
             dto.setCustomerIdx(customerIdx);
         }
+        LocalDateTime arrivalTime = cartItems.getArrivalDate();
+        if(arrivalTime == null) {
+            // 제휴음식점 부분에서 장바구니 추가한 경우
+            arrivalTime = orderTimeService.getMinimumArrivalTime( // 지금 시간에서 가장 가까운 주문시간대 반환
+                    cartItems.getMainItem().getStoreIdx(),
+                    cartItems.getMainItem().getQuantity());
+        }
 
+        if(arrivalTime.isAfter(dto.getArrivalDate())) {
+            dto.setArrivalDate(arrivalTime);
+        }
         dto.setDetailSiteIdx(cartItems.getDetailForDeliverySiteIdx());
-        dto.setArrivalDate(cartItems.getArrivalDate());
         Cart cart = cartJpaRepository.save(dto.toEntity());
 
         CartItemDto mainItem = cartItems.getMainItem();
@@ -377,5 +388,27 @@ public class CartServiceImpl implements CartService {
     @Override
     public int countCartByGuestIdx(Integer guestIdx) {
         return cartRepository.countCartByGuestIdx(guestIdx);
+    }
+
+    @Override
+    public Boolean deleteByCustomerIdx(Integer customerIdx) {
+        final Cart fetched = cartJpaRepository.getByCustomerIdx(customerIdx);
+        if (fetched == null) {
+            return false;
+        } else {
+            cartJpaRepository.delete(fetched);
+            return true;
+        }
+    }
+
+    @Override
+    public Boolean deleteByGuestIdx(Integer guestIdx) {
+        final Cart fetched = cartJpaRepository.getByGuestIdx(guestIdx);
+        if (fetched == null) {
+            return false;
+        } else {
+            cartJpaRepository.delete(fetched);
+            return true;
+        }
     }
 }

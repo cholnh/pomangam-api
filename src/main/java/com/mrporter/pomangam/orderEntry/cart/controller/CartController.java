@@ -57,6 +57,16 @@ public class CartController {
         return new ResponseEntity(cartService.saveCartItemInput(cartItem), HttpStatus.OK);
     }
 
+    @GetMapping("/deleteByCustomerIdx")
+    public ResponseEntity deleteByCustomerIdx(@RequestParam("customerIdx") Integer customerIdx) {
+        return new ResponseEntity<>(cartService.deleteByCustomerIdx(customerIdx), HttpStatus.OK);
+    }
+
+    @GetMapping("/deleteByGuestIdx")
+    public ResponseEntity deleteByGuestIdx(@RequestParam("guestIdx") Integer guestIdx) {
+        return new ResponseEntity<>(cartService.deleteByGuestIdx(guestIdx), HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable(name = "id") Integer cart_idx) {
         return new ResponseEntity<>(cartService.delete(cart_idx), HttpStatus.OK);
