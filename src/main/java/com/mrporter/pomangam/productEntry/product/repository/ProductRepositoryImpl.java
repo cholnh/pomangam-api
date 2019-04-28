@@ -171,4 +171,50 @@ public class ProductRepositoryImpl implements ProductRepository {
         List<CategoryDto> categories = new JpaResultMapper().list(nativeQuery, CategoryDto.class);
         return categories;
     }
+
+    @Override
+    public List<ProductWithCostDto> findByCategoryId(Integer store_idx, Integer categoryId, Integer type, String orderBy, PageRequest pageRequest) {
+        PromotionSumDto promotionSumDto = promotionRepository.getSumByStoreIdx(store_idx);
+
+        int sum_prc = promotionSumDto.getSum_prc() == null ? 0 : promotionSumDto.getSum_prc();
+        int sum_pct = promotionSumDto.getSum_pct() == null ? 0 : promotionSumDto.getSum_pct();
+
+        Query nativeQuery = em
+                .createNativeQuery(
+                        "SELECT  " +
+                                "    p.idx, p.store_idx, p.name, p.description, p.sub_description, p.category_id, p.category_name, p.state_active, p.type, p.cnt_like, p.register_date, p.modify_date, p.sequence, " +
+                                "    CAST(c.unit_cost + c.c_commission_prc + (c.unit_cost * c.c_commission_pct / 100) AS SIGNED INTEGER) AS prime_cost, " +
+                                //"    CAST((c.unit_cost + c.c_commission_prc + (c.unit_cost * c.c_commission_pct / 100)) " +
+                                //"       - " + sum_prc + " - (c.unit_cost * " + sum_pct + " / 100) " +
+                                "    CAST((c.unit_cost + c.c_commission_prc + (c.unit_cost * c.c_commission_pct / 100)) * " +
+                                "       (1 - " + sum_pct + " / 100) - " + sum_prc +
+                                "        AS SIGNED INTEGER) AS final_cost, img.imgpath  " +
+                                "FROM " +
+                                "    cost_tbl c, " +
+                                "    product_tbl p " +
+                                "LEFT OUTER JOIN imgpath_for_product_tbl img " +
+                                "ON img.product_idx = p.idx AND img.type = 0 " +
+                                "WHERE " +
+                                "    p.idx = c.product_idx " +
+                                "    AND store_idx = :storeIdx " +
+                                "    AND p.state_active = 1 " +
+                                "    AND p.category_id = :categoryId " +
+                                (type != null ? "AND p.type = :type ":"AND p.type IN (0, 1, 3) ") +   // 메인, 서브, 음료 (토핑 제외)
+                                (orderBy != null && !sqlInjection.isSQLInjection(orderBy) ? "ORDER BY " + orderBy :"ORDER BY sequence DESC "))
+                .setParameter("storeIdx", store_idx)
+                .setParameter("categoryId", categoryId);
+
+        if(type != null) {
+            nativeQuery.setParameter("type", type);
+        }
+
+        List<ProductWithCostDto> productWithCostDtoList = nativeQuery
+                .unwrap( org.hibernate.query.NativeQuery.class )
+                .setResultTransformer( Transformers.aliasToBean( ProductWithCostDto.class ) )
+                .setFirstResult(pageRequest.getFirstIndex())
+                .setMaxResults(pageRequest.getSize())
+                .getResultList();
+
+        return productWithCostDtoList;
+    }
 }

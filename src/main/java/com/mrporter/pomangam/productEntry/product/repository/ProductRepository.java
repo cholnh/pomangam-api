@@ -14,4 +14,5 @@ public interface ProductRepository {
     List<ProductSummaryDto> findByQuery(String query, Integer delivery_site_idx);
     List<AdditionalDto> findAdditionalByType(Integer productIdx, Integer type);
     List<CategoryDto> findCategory(Integer store_idx);
+    List<ProductWithCostDto> findByCategoryId(Integer store_idx, Integer categoryId, Integer type, String orderBy, PageRequest pageRequest);
 }

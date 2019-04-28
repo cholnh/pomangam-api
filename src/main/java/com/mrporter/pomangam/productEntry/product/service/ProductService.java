@@ -13,5 +13,5 @@ public interface ProductService {
     ProductWithCostDto findByProductIdx(@Param("productIdx") Integer product_idx);
     SearchProductDto findByQuery(String query, Integer delivery_site_idx);
     DetailOrderDto getDetailOrder(Integer productIdx);
-    ProductViewDto findWithCategoryByStoreIdx(Integer store_idx, Integer type, String orderBy, PageRequest pageRequest);
+    List<ProductWithCostDto> findByCategoryId(Integer store_idx, Integer categoryId, Integer type, String orderBy, PageRequest pageRequest);
 }

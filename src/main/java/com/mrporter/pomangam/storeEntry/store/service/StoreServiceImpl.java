@@ -7,11 +7,13 @@ import com.mrporter.pomangam.orderEntry.order.repository.OrderRepositoryImpl;
 import com.mrporter.pomangam.orderEntry.orderTime.repository.OrderTimeJpaRepository;
 import com.mrporter.pomangam.orderEntry.orderTime.repository.OrderTimeRepositoryImpl;
 import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
+import com.mrporter.pomangam.productEntry.product.repository.ProductRepositoryImpl;
 import com.mrporter.pomangam.storeEntry.scheduleForStore.domain.ScheduleForStore;
 import com.mrporter.pomangam.storeEntry.scheduleForStore.repository.ScheduleForStoreJpaRepository;
 import com.mrporter.pomangam.storeEntry.store.domain.InquiryResultDto;
 import com.mrporter.pomangam.storeEntry.store.domain.Store;
 import com.mrporter.pomangam.storeEntry.store.domain.StoreSummaryDto;
+import com.mrporter.pomangam.storeEntry.store.domain.StoreWithCategoryDto;
 import com.mrporter.pomangam.storeEntry.store.repository.StoreJpaRepository;
 import com.mrporter.pomangam.storeEntry.store.repository.StoreRepositoryImpl;
 import lombok.AllArgsConstructor;
@@ -37,6 +39,7 @@ public class StoreServiceImpl implements StoreService {
     OrderRepositoryImpl orderRepositoryImpl;
     DetailForDeliverySiteJpaRepository detailForDeliverySiteJpaRepository;
     ScheduleForStoreJpaRepository scheduleForStoreJpaRepository;
+    ProductRepositoryImpl productRepository;
 
     @Override
     public List<Store> getStoresByIdxes(List<Integer> idxes) {
@@ -163,5 +166,19 @@ public class StoreServiceImpl implements StoreService {
             pageRequest = new PageRequest(0, 10);
         }
         return  storeRepository.findByType(delivery_site_idx, type, orderBy, pageRequest);
+    }
+
+    @Override
+    public StoreWithCategoryDto findWithCategory(Integer storeIdx) {
+        Store store = storeJpaRepository.getOne(storeIdx);
+        StoreWithCategoryDto dto = StoreWithCategoryDto.builder()
+                .idx(storeIdx)
+                .name(store.getName())
+                .cnt_comment(store.getCnt_comment())
+                .cnt_like(store.getCnt_like())
+                .type(store.getType())
+                .categories(productRepository.findCategory(storeIdx))
+                .build();
+        return dto;
     }
 }

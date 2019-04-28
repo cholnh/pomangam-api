@@ -1,6 +1,6 @@
 package com.mrporter.pomangam.promotionEntry.pointLog.service;
 
-import com.mrporter.pomangam.common.map.repository.CommonMapJpaRepository;
+import com.mrporter.pomangam.common.map.service.CommonMapServiceImpl;
 import com.mrporter.pomangam.common.util.time.CustomTime;
 import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import com.mrporter.pomangam.promotionEntry.pointLog.domain.PointLog;
@@ -23,7 +23,7 @@ public class PointLogServiceImpl implements PointLogService {
     EntityManager em;
 
     PointLogRepositoryImpl pointLogRepository;
-    CommonMapJpaRepository commonMapJpaRepository;
+    CommonMapServiceImpl commonMapService;
 
     public List<PointLogDto> findByCustomerIdx(Integer customerIdx, PageRequest pageRequest) {
         if(customerIdx == null) {
@@ -94,8 +94,8 @@ public class PointLogServiceImpl implements PointLogService {
         } else {
             // return custom value
         }
-        int pct = Integer.parseInt(commonMapJpaRepository.findByKey("point-saving-pct-1")+"");
-        int prc = Integer.parseInt(commonMapJpaRepository.findByKey("point-saving-prc-1")+"");
+        int pct = Integer.parseInt(commonMapService.getValue("point-saving-pct-1").get(0).getValue());
+        int prc = Integer.parseInt(commonMapService.getValue("point-saving-prc-1").get(0).getValue());
 
         return new PointPctPrcDto(pct, prc);
     }

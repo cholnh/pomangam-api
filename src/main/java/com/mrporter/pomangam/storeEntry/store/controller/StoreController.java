@@ -3,6 +3,7 @@ package com.mrporter.pomangam.storeEntry.store.controller;
 import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import com.mrporter.pomangam.storeEntry.store.domain.InquiryResultDto;
 import com.mrporter.pomangam.storeEntry.store.domain.StoreSummaryDto;
+import com.mrporter.pomangam.storeEntry.store.domain.StoreWithCategoryDto;
 import com.mrporter.pomangam.storeEntry.store.service.StoreServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -45,4 +46,13 @@ public class StoreController {
         }
     }
 
+    @GetMapping("/search/findWithCategory")
+    public ResponseEntity findWithCategory(@RequestParam("storeIdx") Integer storeIdx) {
+        StoreWithCategoryDto dto = storeService.findWithCategory(storeIdx);
+        if(dto == null) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity(dto, HttpStatus.OK);
+        }
+    }
 }

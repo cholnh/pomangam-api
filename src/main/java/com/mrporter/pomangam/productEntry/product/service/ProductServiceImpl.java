@@ -57,16 +57,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductViewDto findWithCategoryByStoreIdx(Integer store_idx, Integer type, String orderBy, PageRequest pageRequest) {
-        if(store_idx == null) {
-            return null;
-        }
+    public List<ProductWithCostDto> findByCategoryId(Integer store_idx, Integer categoryId, Integer type, String orderBy, PageRequest pageRequest) {
         if(pageRequest == null) {
             pageRequest = new PageRequest(0, 10);
         }
-        ProductViewDto dto = new ProductViewDto();
-        dto.setCategories(productRepository.findCategory(store_idx));
-        dto.setProducts(productRepository.findByStoreIdx(store_idx, type, orderBy, pageRequest));
-        return dto;
+        List<ProductWithCostDto> products = productRepository.findByCategoryId(store_idx, categoryId, type, orderBy, pageRequest);
+        return products;
     }
 }
