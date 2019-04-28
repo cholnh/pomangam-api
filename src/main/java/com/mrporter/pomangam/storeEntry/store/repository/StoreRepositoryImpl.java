@@ -47,7 +47,7 @@ public class StoreRepositoryImpl implements StoreRepository {
         // Todo : comment 개수 포함해야함!!
         // cnt_like 처럼 cnt_comment 추가 여부 결정
 
-        List<StoreSummaryDto> storeDtoList = em
+        List storeDtoList = em
                 .createNativeQuery(
                         "SELECT  " +
                                 "    s.idx, s.name, s.description, s.cnt_like, s.cnt_comment, s.sequence, s.type " +
