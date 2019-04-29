@@ -2,10 +2,10 @@ package com.mrporter.pomangam.orderEntry.payment.controller;
 
 import com.mrporter.pomangam.orderEntry.order.domain.Order;
 import com.mrporter.pomangam.orderEntry.order.domain.StateOrder;
-import com.mrporter.pomangam.orderEntry.order.service.OrderServiceImpl;
+import com.mrporter.pomangam.orderEntry.order.service.OrderService;
 import com.mrporter.pomangam.orderEntry.payment.domain.PaymentInputDto;
 import com.mrporter.pomangam.orderEntry.payment.domain.PaymentResultDto;
-import com.mrporter.pomangam.orderEntry.payment.service.PaymentServiceImpl;
+import com.mrporter.pomangam.orderEntry.payment.service.PaymentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class PaymentController {
 
-    PaymentServiceImpl paymentService;
-    OrderServiceImpl orderService;
+    PaymentService paymentService;
+    OrderService orderService;
 
     @PostMapping("/prepare")
     public ResponseEntity<?> prepare(@RequestBody PaymentInputDto dto) {
@@ -26,7 +26,7 @@ public class PaymentController {
         if(order == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(order, HttpStatus.OK);
         }
     }
 
@@ -61,7 +61,7 @@ public class PaymentController {
         if(order == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(order, HttpStatus.OK);
         }
     }
 }

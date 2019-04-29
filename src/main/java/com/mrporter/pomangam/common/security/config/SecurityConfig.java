@@ -87,7 +87,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().userDetailsService(userDetailsService)
 
             .cors()
-                .and()
+                .disable()
 
             .csrf()
                 .disable();
@@ -120,7 +120,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .ignoring().antMatchers("/assets/**")
 
                 //.and().ignoring().antMatchers("/tests/**")
-                .and().ignoring().antMatchers("/payments/complete/**")
+                .and().ignoring().antMatchers("/payments/**")
 
                 .and().ignoring().antMatchers("/v2/api-docs",
                                                         "/configuration/ui",

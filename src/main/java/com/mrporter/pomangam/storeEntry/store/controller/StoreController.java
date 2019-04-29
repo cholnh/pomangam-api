@@ -4,7 +4,7 @@ import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import com.mrporter.pomangam.storeEntry.store.domain.InquiryResultDto;
 import com.mrporter.pomangam.storeEntry.store.domain.StoreSummaryDto;
 import com.mrporter.pomangam.storeEntry.store.domain.StoreWithCategoryDto;
-import com.mrporter.pomangam.storeEntry.store.service.StoreServiceImpl;
+import com.mrporter.pomangam.storeEntry.store.service.StoreService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 public class StoreController {
 
-    StoreServiceImpl storeService;
+    StoreService storeService;
 
     @GetMapping("/search/getInquiryResult")
     public ResponseEntity<?> getInquiryResult(@RequestParam("arrivalDate") String arrival_date,
