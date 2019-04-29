@@ -17,7 +17,7 @@ public class CommentStoreDto implements Serializable {
 
     private Integer customer_idx;
 
-    private Byte cnt_star;
+    private Float cnt_star;
 
     private Integer cnt_like;
 

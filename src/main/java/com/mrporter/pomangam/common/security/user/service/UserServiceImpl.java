@@ -43,6 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(User user) {
+        user.setNickname(user.getNickname() == null ? user.getId() : user.getNickname());
         user.setPw(passwordEncoder.encode(user.getPw()));
         user.setState_active(Byte.valueOf("1"));
         user.setRegister_date(CustomTime.curTimestampSql());

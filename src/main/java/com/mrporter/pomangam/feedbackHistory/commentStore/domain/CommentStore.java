@@ -23,7 +23,7 @@ public class CommentStore implements Serializable {
 
     private Integer customer_idx;
 
-    private Byte cnt_star;
+    private Float cnt_star;
 
     private Integer cnt_like;
 
@@ -38,7 +38,7 @@ public class CommentStore implements Serializable {
     private Byte state_anonymous;
 
     @Builder
-    public CommentStore(Integer store_idx, Integer customer_idx, Byte cnt_star, Integer cnt_like, String contents, Timestamp register_date, Timestamp modify_date, Byte state_active, Byte state_anonymous) {
+    public CommentStore(Integer store_idx, Integer customer_idx, Float cnt_star, Integer cnt_like, String contents, Timestamp register_date, Timestamp modify_date, Byte state_active, Byte state_anonymous) {
         this.store_idx = store_idx;
         this.customer_idx = customer_idx;
         this.cnt_star = cnt_star;

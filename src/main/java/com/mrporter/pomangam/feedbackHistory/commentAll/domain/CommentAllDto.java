@@ -21,8 +21,6 @@ public class CommentAllDto implements Serializable {
 
     private Timestamp modify_date;
 
-    private Byte cnt_star;
-
     private Integer cnt_like;
 
     private Integer cnt_unlike;

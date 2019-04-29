@@ -27,8 +27,6 @@ public class CommentAll implements Serializable {
 
     private Timestamp modify_date;
 
-    private Byte cnt_star;
-
     private Integer cnt_like;
 
     private Integer cnt_unlike;
@@ -44,12 +42,11 @@ public class CommentAll implements Serializable {
     private Byte state_anonymous;
 
     @Builder
-    public CommentAll(Integer store_idx, Integer customer_idx, Timestamp register_date, Timestamp modify_date, Byte cnt_star, Integer cnt_like, Integer cnt_unlike, Integer cnt_view, String title, String contents, Byte state_active, Byte state_anonymous) {
+    public CommentAll(Integer store_idx, Integer customer_idx, Timestamp register_date, Timestamp modify_date, Integer cnt_like, Integer cnt_unlike, Integer cnt_view, String title, String contents, Byte state_active, Byte state_anonymous) {
         this.store_idx = store_idx;
         this.customer_idx = customer_idx;
         this.register_date = register_date;
         this.modify_date = modify_date;
-        this.cnt_star = cnt_star;
         this.cnt_like = cnt_like;
         this.cnt_unlike = cnt_unlike;
         this.cnt_view = cnt_view;
