@@ -83,4 +83,10 @@ public class CartController {
                                  @RequestBody CartDto cartItem) {
         return new ResponseEntity<>(cartService.update(cart_idx, cartItem), HttpStatus.OK);
     }
+
+    @GetMapping("/copyGuest2Customer")
+    public ResponseEntity<?> copyGuest2Customer(@RequestParam("guestIdx") Integer guestIdx,
+                                                @RequestParam("customerIdx") Integer customerIdx) {
+        return new ResponseEntity(cartService.copyGuest2Customer(guestIdx, customerIdx), HttpStatus.OK);
+    }
 }

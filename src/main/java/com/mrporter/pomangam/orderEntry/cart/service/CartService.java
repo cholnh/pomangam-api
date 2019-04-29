@@ -30,4 +30,5 @@ public interface CartService {
 
     Boolean deleteByGuestIdx(Integer guestIdx);
     Boolean deleteByCustomerIdx(Integer customerIdx);
+    Cart copyGuest2Customer(Integer guestIdx, Integer customerIdx);
 }

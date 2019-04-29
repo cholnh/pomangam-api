@@ -415,4 +415,15 @@ public class CartServiceImpl implements CartService {
             return true;
         }
     }
+
+    @Override
+    public Cart copyGuest2Customer(Integer guestIdx, Integer customerIdx) {
+        Cart guestCart = cartJpaRepository.getByGuestIdx(guestIdx);
+        Cart customerCart = cartJpaRepository.getByCustomerIdx(customerIdx);
+        if(customerCart != null) {
+            cartJpaRepository.deleteById(customerCart.getIdx());
+        }
+        guestCart.setCustomerIdx(customerIdx);
+        return cartJpaRepository.save(guestCart);
+    }
 }
