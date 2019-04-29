@@ -31,37 +31,51 @@ public class PaymentController {
     }
 
     @GetMapping("/{id}/fail")
-    public ResponseEntity<?> fail(@PathVariable(name = "id") Integer order_idx) {
+    public ResponseEntity<?> fail(@PathVariable("id") Integer order_idx) {
         orderService.setState(order_idx, StateOrder.ORDER_FAIL);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/complete/mobile")
-    public ResponseEntity<?> completeMobileGet(@RequestParam(name = "imp_uid") String imp_uid,
-                                               @RequestParam(name = "merchant_uid") String merchant_uid) {
+    public ResponseEntity<?> completeMobileGetOne(@RequestParam("imp_uid") String imp_uid,
+                                                  @RequestParam(value = "merchant_uid", required = false) String merchant_uid) {
+        System.out.println(imp_uid + " " + merchant_uid);
+        Order order = paymentService.complete(imp_uid);
+        return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+
+/*
+    @GetMapping("/complete/mobile")
+    public ResponseEntity<?> completeMobileGet(@RequestParam("imp_uid") String imp_uid,
+                                               @RequestParam("merchant_uid") String merchant_uid) {
+        System.out.println(imp_uid + " " + merchant_uid);
         PaymentResultDto pdto = new PaymentResultDto(imp_uid, merchant_uid);
         return completePost(pdto);
     }
-
+*/
     @PostMapping("/complete/mobile")
-    public ResponseEntity<?> completeMobilePost(@RequestParam(name = "imp_uid") String imp_uid,
-                                      @RequestParam(name = "merchant_uid") String merchant_uid) {
+    public ResponseEntity<?> completeMobilePost(@RequestParam("imp_uid") String imp_uid,
+                                      @RequestParam("merchant_uid") String merchant_uid) {
+        System.out.println(imp_uid + " " + merchant_uid);
         PaymentResultDto pdto = new PaymentResultDto(imp_uid, merchant_uid);
         return completePost(pdto);
     }
 
     @GetMapping("/complete")
     public ResponseEntity<?> completeGet(@RequestBody PaymentResultDto pdto) {
+        System.out.println(pdto);
         return completePost(pdto);
     }
 
     @PostMapping("/complete")
     public ResponseEntity<?> completePost(@RequestBody PaymentResultDto pdto) {
-        Order order = paymentService.complete(pdto);
+        System.out.println(pdto);
+        Order order = null;//paymentService.complete(pdto);
         if(order == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>(order, HttpStatus.OK);
         }
     }
+
 }

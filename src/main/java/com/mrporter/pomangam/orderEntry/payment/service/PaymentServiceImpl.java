@@ -1,31 +1,31 @@
 package com.mrporter.pomangam.orderEntry.payment.service;
 
-import com.mrporter.pomangam.common.map.service.CommonMapServiceImpl;
-import com.mrporter.pomangam.common.security.user.service.UserServiceImpl;
+import com.mrporter.pomangam.common.map.service.CommonMapService;
+import com.mrporter.pomangam.common.security.user.service.UserService;
 import com.mrporter.pomangam.common.util.apiClient.ImpApi;
 import com.mrporter.pomangam.common.util.time.CustomTime;
 import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.repository.DetailForDeliverySiteJpaRepository;
 import com.mrporter.pomangam.orderEntry.cart.domain.Cart;
 import com.mrporter.pomangam.orderEntry.cart.repository.CartJpaRepository;
-import com.mrporter.pomangam.orderEntry.cart.service.CartServiceImpl;
+import com.mrporter.pomangam.orderEntry.cart.service.CartService;
 import com.mrporter.pomangam.orderEntry.cartItem.domain.CartItem;
 import com.mrporter.pomangam.orderEntry.cartItem.repository.CartItemJpaRepository;
 import com.mrporter.pomangam.orderEntry.order.domain.Order;
 import com.mrporter.pomangam.orderEntry.order.domain.StateOrder;
 import com.mrporter.pomangam.orderEntry.order.repository.OrderJpaRepository;
-import com.mrporter.pomangam.orderEntry.order.repository.OrderRepositoryImpl;
-import com.mrporter.pomangam.orderEntry.order.service.OrderServiceImpl;
+import com.mrporter.pomangam.orderEntry.order.repository.OrderRepository;
+import com.mrporter.pomangam.orderEntry.order.service.OrderService;
 import com.mrporter.pomangam.orderEntry.orderItem.domain.OrderItem;
 import com.mrporter.pomangam.orderEntry.orderItem.repository.OrderItemJpaRepository;
+import com.mrporter.pomangam.orderEntry.orderLog.domain.OrderLog;
 import com.mrporter.pomangam.orderEntry.orderLog.repository.OrderLogJpaRepository;
 import com.mrporter.pomangam.orderEntry.payment.domain.PaymentAnnotation;
 import com.mrporter.pomangam.orderEntry.payment.domain.PaymentInputDto;
-import com.mrporter.pomangam.orderEntry.payment.domain.PaymentResultDto;
-import com.mrporter.pomangam.productEntry.product.repository.ProductRepositoryImpl;
+import com.mrporter.pomangam.productEntry.product.repository.ProductRepository;
 import com.mrporter.pomangam.promotionEntry.coupon.domain.CouponDto;
-import com.mrporter.pomangam.promotionEntry.coupon.repository.CouponRepositoryImpl;
+import com.mrporter.pomangam.promotionEntry.coupon.repository.CouponRepository;
 import com.mrporter.pomangam.promotionEntry.pointLog.domain.StatePointLog;
-import com.mrporter.pomangam.promotionEntry.pointLog.service.PointLogServiceImpl;
+import com.mrporter.pomangam.promotionEntry.pointLog.service.PointLogService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -43,18 +43,18 @@ public class PaymentServiceImpl implements PaymentService {
 
     DetailForDeliverySiteJpaRepository detailForDeliverySiteJpaRepository;
     CartJpaRepository cartJpaRepository;
-    CartServiceImpl cartService;
+    CartService cartService;
     CartItemJpaRepository cartItemJpaRepository;
-    OrderRepositoryImpl orderRepository;
+    OrderRepository orderRepository;
     OrderJpaRepository orderJpaRepository;
     OrderItemJpaRepository orderItemJpaRepository;
-    OrderServiceImpl orderService;
-    UserServiceImpl userService;
-    CouponRepositoryImpl couponRepository;
+    OrderService orderService;
+    UserService userService;
+    CouponRepository couponRepository;
     OrderLogJpaRepository orderLogJpaRepository;
-    CommonMapServiceImpl commonMapService;
-    ProductRepositoryImpl productRepository;
-    PointLogServiceImpl pointLogService;
+    CommonMapService commonMapService;
+    ProductRepository productRepository;
+    PointLogService pointLogService;
 
     //@Transactional
     @Override
@@ -101,48 +101,30 @@ public class PaymentServiceImpl implements PaymentService {
             final_amount -= usingPoint;
 
             /* OrderLog */
-            Order order = orderJpaRepository.save(
-                    new Order(
-                            orderRepository.getBoxNo(deliverySiteIdx, arrivalDate, arrivalTime),
-                            customerIdx,
-                            guestIdx,
-                            null,
-                            deliverySiteIdx,
-                            cart.getDetailSiteIdx(),
-                            dto.getTypePayment(),
-                            StateOrder.ORDER_READY.getCode(),
-                            CustomTime.curTimestampSql(),
-                            Date.valueOf(arrivalDate),
-                            Time.valueOf(arrivalTime),
-                            dto.getUsingPoint(),
-                            usingCouponIdx,
-                            final_amount,
-                            merchant_uid,
-                            null,
-                            null
-                    ));
+            Order order = orderJpaRepository.save(Order.builder()
+                    .box_no(orderRepository.getBoxNo(deliverySiteIdx, arrivalDate, arrivalTime))
+                    .customer_idx(customerIdx)
+                    .guest_idx(guestIdx)
+                    .employee_idx(null)
+                    .delivery_site_idx(deliverySiteIdx)
+                    .detail_site_idx(cart.getDetailSiteIdx())
+                    .type_payment(dto.getTypePayment())
+                    .state_order(StateOrder.ORDER_READY.getCode())
+                    .register_date(CustomTime.curTimestampSql())
+                    .arrival_date_only(Date.valueOf(arrivalDate))
+                    .arrival_time_only(Time.valueOf(arrivalTime))
+                    .using_point(dto.getUsingPoint())
+                    .using_coupon_idx(usingCouponIdx)
+                    .final_amount(final_amount)
+                    .merchantUid(merchant_uid)
+                    .imp_uid(null)
+                    .saved_point(null)
+                    .build()
+            );
             orderIdx = order.getIdx();
 
-            /* logging
-            orderLogJpaRepository.save(
-                    new OrderLog(
-                    order.getBox_no(),
-                    order.getCustomer_idx(),
-                    order.getGuest_idx(),
-                    order.getEmployee_idx(),
-                    order.getDelivery_site_idx(),
-                    order.getDetail_site_idx(),
-                    order.getType_payment(),
-                    order.getState_order(),
-                    order.getRegister_date(),
-                    order.getArrival_date_only(),
-                    order.getArrival_time_only(),
-                    order.getUsing_point(),
-                    order.getUsing_coupon_idx(),
-                    order.getFinal_amount(),
-                    order.getMerchantUid()
-            ));
-            */
+            /* logging */
+            orderLogJpaRepository.save(new OrderLog(order));
 
             /* OrderItem */
             List<OrderItem> orderItems = new ArrayList<>();
@@ -181,15 +163,14 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Order complete(PaymentResultDto pdto) {
+    public Order complete(String imp_uid) {
         Integer orderIdx = null;
         String merchant_uid = "";
         try {
-            String imp_uid = pdto.getImp_uid();
-            merchant_uid = pdto.getMerchant_uid();
 
             /*  아임포트 API 결제정보를 조회 */
             PaymentAnnotation paymentInfo = ImpApi.getInfo(imp_uid);
+            merchant_uid = paymentInfo.getMerchant_uid();
             Order order = orderJpaRepository.getByMerchantUid(merchant_uid);
             orderIdx = order.getIdx();
 

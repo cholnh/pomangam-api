@@ -337,52 +337,56 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart saveCartItemInput(CartItemInputDto cartItems) {
+        try {
+            Integer customerIdx = cartItems.getCustomerIdx();
+            Integer guestIdx = cartItems.getGuestIdx();
 
-        Integer customerIdx = cartItems.getCustomerIdx();
-        Integer guestIdx = cartItems.getGuestIdx();
+            CartDto dto;
 
-        CartDto dto;
-
-        if(customerIdx == null) {
-            dto = cartRepository.getByGuestIdx(guestIdx);
-            if(dto == null) {
-                dto = new CartDto();
+            if(customerIdx == null) {
+                dto = cartRepository.getByGuestIdx(guestIdx);
+                if(dto == null) {
+                    dto = new CartDto();
+                }
+                dto.setGuestIdx(guestIdx);
+            } else {
+                dto = cartRepository.getByCustomerIdx(customerIdx);
+                if(dto == null) {
+                    dto = new CartDto();
+                }
+                dto.setCustomerIdx(customerIdx);
             }
-            dto.setGuestIdx(guestIdx);
-        } else {
-            dto = cartRepository.getByCustomerIdx(customerIdx);
-            if(dto == null) {
-                dto = new CartDto();
+            LocalDateTime arrivalTime = cartItems.getArrivalDate();
+            if(arrivalTime == null) {
+                // 제휴음식점 부분에서 장바구니 추가한 경우
+                arrivalTime = orderTimeService.getMinimumArrivalTime( // 지금 시간에서 가장 가까운 주문시간대 반환
+                        cartItems.getMainItem().getStoreIdx(),
+                        cartItems.getMainItem().getQuantity());
             }
-            dto.setCustomerIdx(customerIdx);
-        }
-        LocalDateTime arrivalTime = cartItems.getArrivalDate();
-        if(arrivalTime == null) {
-            // 제휴음식점 부분에서 장바구니 추가한 경우
-            arrivalTime = orderTimeService.getMinimumArrivalTime( // 지금 시간에서 가장 가까운 주문시간대 반환
-                    cartItems.getMainItem().getStoreIdx(),
-                    cartItems.getMainItem().getQuantity());
-        }
 
-        if(arrivalTime.isAfter(dto.getArrivalDate())) {
-            dto.setArrivalDate(arrivalTime);
-        }
-        dto.setDetailSiteIdx(cartItems.getDetailForDeliverySiteIdx());
-        Cart cart = cartJpaRepository.save(dto.toEntity());
-
-        CartItemDto mainItem = cartItems.getMainItem();
-        mainItem.setCartIdx(cart.getIdx());
-        Integer mainIdx = cartItemJpaRepository.save(mainItem.toEntity()).getIdx();
-
-        List<CartItemDto> subItems = mainItem.getSubItems();
-        if(subItems != null) {
-            for(CartItemDto c : subItems) {
-                c.setCartIdx(cart.getIdx());
-                c.setParentItemIdx(mainIdx);
-                cartItemJpaRepository.save(c.toEntity());
+            if(dto.getArrivalDate() == null || arrivalTime.isAfter(dto.getArrivalDate())) {
+                dto.setArrivalDate(arrivalTime);
             }
+            dto.setDetailSiteIdx(cartItems.getDetailForDeliverySiteIdx());
+            Cart cart = cartJpaRepository.save(dto.toEntity());
+
+            CartItemDto mainItem = cartItems.getMainItem();
+            mainItem.setCartIdx(cart.getIdx());
+            Integer mainIdx = cartItemJpaRepository.save(mainItem.toEntity()).getIdx();
+
+            List<CartItemDto> subItems = mainItem.getSubItems();
+            if(subItems != null) {
+                for(CartItemDto c : subItems) {
+                    c.setCartIdx(cart.getIdx());
+                    c.setParentItemIdx(mainIdx);
+                    cartItemJpaRepository.save(c.toEntity());
+                }
+            }
+            return cart;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        return cart;
     }
 
     @Override

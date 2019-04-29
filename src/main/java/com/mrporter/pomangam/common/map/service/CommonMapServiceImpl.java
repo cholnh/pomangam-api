@@ -13,6 +13,7 @@ public class CommonMapServiceImpl implements CommonMapService {
 
     CommonMapJpaRepository commonMapJpaRepository;
 
+    @Override
     public List<CommonMap> getValue(String key) {
         return commonMapJpaRepository.findByKey(key);
     }
