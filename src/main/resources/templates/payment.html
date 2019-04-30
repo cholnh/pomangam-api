@@ -5,7 +5,7 @@
     <title th:text="${title}"></title>
 </head>
 <body>
-
+    <input id="cartIdx" type="number" placeholder="cart_idx">
     <button type="button" onclick="run()">pay</button>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -42,13 +42,13 @@
 
     <script>
         var preparedData;
-
+        var url = "https://localhost:9530/api/v1";
         /**
          * PG 테스트 실행
          */
         function run() {
             /* 장바구니 인덱스 */
-            var cartIdx = 6;
+            var cartIdx = $('#cartIdx').val();
             /* 물품을 구매할 때 사용한 포인트 */
             var usingPoint = 0;
             /* 물품을 구매할 때 사용한 쿠폰의 코드 (사용 안 함 : null) */
@@ -70,7 +70,7 @@
         function prepare(cartIdx, usingPoint, usingCouponCode, typePayment, phone) {
             /* SERVER WORK */
             $.ajax({
-                url : 'https://localhost:9530/api/v1/payments/prepare',
+                url : url+'/payments/prepare',
                 type : 'post',
                 async : false,  // SYNC
                 contentType: "application/json",
@@ -162,7 +162,7 @@
          */
         function success(receiptId, orderId) {
             $.ajax({
-                url : 'https://localhost:9530/api/v1/payments/complete',
+                url : url+'/payments/complete',
                 type : 'post',
                 contentType: "application/json",
                 dataType : 'json',
@@ -182,7 +182,7 @@
          */
         function fail(status, message, orderId) {
             $.ajax({
-                url : 'https://localhost:9530/api/v1/payments/fail',
+                url : url+'/payments/fail',
                 type : 'post',
                 contentType: "application/json",
                 dataType : 'json',

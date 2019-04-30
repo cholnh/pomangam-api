@@ -55,7 +55,7 @@ public class PaymentController {
     @PostMapping("/fail")
     public ResponseEntity fail(@RequestBody FailInputDto dto) {
         paymentService.fail(dto);
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/feedback")
@@ -72,6 +72,10 @@ public class PaymentController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         System.out.println(dto);
+
+        // Todo 가상계좌 결과 입력받기
+        // 취소 결과 입력받기
+
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 }

@@ -298,6 +298,7 @@ public class PaymentServiceImpl implements PaymentService {
             return orderJpaRepository.save(order);
 
         } catch (Exception e) {
+            e.printStackTrace();
             if(orderIdx != null) {
                 orderService.setReceiptId(orderIdx, receiptId);
                 orderService.setState(orderIdx, StateOrder.ORDER_FAIL);
