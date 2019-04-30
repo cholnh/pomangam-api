@@ -7,6 +7,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource(exported = true)
 public interface OrderJpaRepository extends JpaRepository<Order, Integer> {
-    Order getByMerchantUid(@Param("merchantUid") String merchantUid);
+    Order getByReceiptId(@Param("receiptId") String receiptId);
+    Order getByOrderId(@Param("orderId") String orderId);
 }
 

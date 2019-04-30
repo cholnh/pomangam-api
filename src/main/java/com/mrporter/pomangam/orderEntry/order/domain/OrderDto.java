@@ -42,13 +42,15 @@ public class OrderDto implements Serializable {
 
     private Integer final_amount;
 
-    private String merchant_uid;
-
-    private String imp_uid;
-
     private Integer saved_point;
 
-    public OrderDto(Integer idx, Integer box_no, Integer customer_idx, Integer guest_idx, Integer employee_idx, Integer delivery_site_idx, Integer detail_site_idx, Byte type_payment, Byte state_order, Timestamp register_date, Date arrival_date_only, Time arrival_time_only, Integer using_point, Integer using_coupon_idx, Integer final_amount, String merchant_uid, String imp_uid, Integer saved_point) {
+    private String order_id;
+
+    private String receipt_id;
+
+    private String phone;
+
+    public OrderDto(Integer idx, Integer box_no, Integer customer_idx, Integer guest_idx, Integer employee_idx, Integer delivery_site_idx, Integer detail_site_idx, Byte type_payment, Byte state_order, Timestamp register_date, Date arrival_date_only, Time arrival_time_only, Integer using_point, Integer using_coupon_idx, Integer final_amount, Integer saved_point, String order_id, String receipt_id, String phone) {
         this.idx = idx;
         this.box_no = box_no;
         this.customer_idx = customer_idx;
@@ -64,8 +66,9 @@ public class OrderDto implements Serializable {
         this.using_point = using_point;
         this.using_coupon_idx = using_coupon_idx;
         this.final_amount = final_amount;
-        this.merchant_uid = merchant_uid;
-        this.imp_uid = imp_uid;
         this.saved_point = saved_point;
+        this.order_id = order_id;
+        this.receipt_id = receipt_id;
+        this.phone = phone;
     }
 }

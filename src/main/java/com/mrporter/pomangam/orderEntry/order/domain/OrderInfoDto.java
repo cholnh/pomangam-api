@@ -41,16 +41,18 @@ public class OrderInfoDto implements Serializable {
 
     private Integer final_amount;   // 최종 총 가격
 
-    private String merchant_uid;    // 구매자 식별 아이디
-
-    private String imp_uid; // 주문 인덱스
-
     private Integer saved_point;
+
+    private String order_id;
+
+    private String receipt_id;
+
+    private String phone;
 
     List<OrderInfoItemDto> orderItems;  // 주문 제품 목록
 
     @Builder
-    public OrderInfoDto(Integer order_idx, String box_no, String delivery_site_name, String detail_site_name, Timestamp register_date, String type_payment, String state_order, Date arrival_date_only, Time arrival_time_only, Integer using_point, String using_coupon_name, Integer using_coupon_amount, Integer final_amount, String merchant_uid, String imp_uid, Integer saved_point, List<OrderInfoItemDto> orderItems) {
+    public OrderInfoDto(Integer order_idx, String box_no, String delivery_site_name, String detail_site_name, Timestamp register_date, String type_payment, String state_order, Date arrival_date_only, Time arrival_time_only, Integer using_point, String using_coupon_name, Integer using_coupon_amount, Integer final_amount, Integer saved_point, String order_id, String receipt_id, String phone, List<OrderInfoItemDto> orderItems) {
         this.order_idx = order_idx;
         this.box_no = box_no;
         this.delivery_site_name = delivery_site_name;
@@ -64,9 +66,10 @@ public class OrderInfoDto implements Serializable {
         this.using_coupon_name = using_coupon_name;
         this.using_coupon_amount = using_coupon_amount;
         this.final_amount = final_amount;
-        this.merchant_uid = merchant_uid;
-        this.imp_uid = imp_uid;
         this.saved_point = saved_point;
+        this.order_id = order_id;
+        this.receipt_id = receipt_id;
+        this.phone = phone;
         this.orderItems = orderItems;
     }
 }

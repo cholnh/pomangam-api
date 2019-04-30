@@ -53,4 +53,6 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-thymeleaf' 
     compile 'org.webjars:jquery-ui:1.11.4'
 
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '+'
+    compile group: 'commons-io', name: 'commons-io', version: '+'
 }

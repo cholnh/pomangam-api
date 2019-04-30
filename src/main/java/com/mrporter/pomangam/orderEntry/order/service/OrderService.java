@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface OrderService {
     void setState(Integer order_idx, StateOrder stateOrder);
-    void setImpUid(Integer order_idx, String imp_uid);
+    void setState(String orderId, StateOrder stateOrder);
+    void setReceiptId(Integer order_idx, String receipt_id);
+    void deleteByOrderId(String orderId);
 
     List<OrderInfoDto> getCurrentOrderInfoByCustomerId(String customerId, PageRequest pageRequest);
     List<OrderInfoDto> getCurrentOrderInfoByGuestIdx(Integer guestIdx, PageRequest pageRequest);

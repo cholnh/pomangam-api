@@ -39,10 +39,23 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void setImpUid(Integer order_idx, String imp_uid) {
-        Order order = orderJpaRepository.getOne(order_idx);
-        order.setImp_uid(imp_uid);
+    public void setState(String orderId, StateOrder stateOrder) {
+        Order order = orderJpaRepository.getByOrderId(orderId);
+        order.setState_order(stateOrder.getCode());
         orderJpaRepository.save(order);
+    }
+
+    @Override
+    public void setReceiptId(Integer order_idx, String receipt_id) {
+        Order order = orderJpaRepository.getOne(order_idx);
+        order.setReceiptId(receipt_id);
+        orderJpaRepository.save(order);
+    }
+
+    @Override
+    public void deleteByOrderId(String orderId) {
+        Order order = orderJpaRepository.getByOrderId(orderId);
+        orderJpaRepository.delete(order);
     }
 
     private List<OrderInfoDto> getOrderInfo(List<OrderDto> list) {
@@ -74,9 +87,9 @@ public class OrderServiceImpl implements OrderService {
                     .using_coupon_name(cp == null ? null : cp.getName())
                     .using_coupon_amount(cpAmount)
                     .final_amount(amount)
-                    .merchant_uid(order.getMerchant_uid())
-                    .imp_uid(order.getImp_uid())
                     .saved_point(order.getSaved_point() == null ? 0 : order.getSaved_point())
+                    .receipt_id(order.getReceipt_id())
+                    .order_id(order.getOrder_id())
                     .orderItems(orderItemRepository.findOrderInfoItem(order.getIdx()))
                     .build();
             orderInfoDtoList.add(info);

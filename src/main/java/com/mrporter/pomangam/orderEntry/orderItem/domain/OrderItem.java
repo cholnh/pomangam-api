@@ -33,7 +33,8 @@ public class OrderItem implements Serializable {
     private Integer unit_amount;
 
     @Builder
-    public OrderItem(Integer order_idx, Integer store_idx, Integer product_idx, Integer quantity, String requirement, Integer parent_item_idx, Integer unit_amount) {
+    public OrderItem(Integer idx, Integer order_idx, Integer store_idx, Integer product_idx, Integer quantity, String requirement, Integer parent_item_idx, Integer unit_amount) {
+        this.idx = idx;
         this.order_idx = order_idx;
         this.store_idx = store_idx;
         this.product_idx = product_idx;

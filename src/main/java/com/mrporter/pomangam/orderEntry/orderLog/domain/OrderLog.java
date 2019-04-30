@@ -49,14 +49,17 @@ public class OrderLog implements Serializable {
 
     private Integer final_amount;
 
-    private String merchant_uid;
-
-    private String imp_uid;
-
     private Integer saved_point;
 
+    @Column(name = "order_id")
+    private String orderId;
+
+    private String receipt_id;
+
+    private String phone;
+
     @Builder
-    public OrderLog(Integer box_no, Integer customer_idx, Integer guest_idx, Integer employee_idx, Integer delivery_site_idx, Integer detail_site_idx, Byte type_payment, Byte state_order, Timestamp register_date, Date arrival_date_only, Time arrival_time_only, Integer using_point, Integer using_coupon_idx, Integer final_amount, String merchant_uid, String imp_uid, Integer saved_point) {
+    public OrderLog(Integer box_no, Integer customer_idx, Integer guest_idx, Integer employee_idx, Integer delivery_site_idx, Integer detail_site_idx, Byte type_payment, Byte state_order, Timestamp register_date, Date arrival_date_only, Time arrival_time_only, Integer using_point, Integer using_coupon_idx, Integer final_amount, Integer saved_point, String orderId, String receipt_id, String phone) {
         this.box_no = box_no;
         this.customer_idx = customer_idx;
         this.guest_idx = guest_idx;
@@ -71,9 +74,10 @@ public class OrderLog implements Serializable {
         this.using_point = using_point;
         this.using_coupon_idx = using_coupon_idx;
         this.final_amount = final_amount;
-        this.merchant_uid = merchant_uid;
-        this.imp_uid = imp_uid;
         this.saved_point = saved_point;
+        this.orderId = orderId;
+        this.receipt_id = receipt_id;
+        this.phone = phone;
     }
 
     public OrderLog(Order order) {
@@ -91,8 +95,9 @@ public class OrderLog implements Serializable {
         this.using_point = order.getUsing_point();
         this.using_coupon_idx = order.getUsing_coupon_idx();
         this.final_amount = order.getFinal_amount();
-        this.merchant_uid = order.getMerchantUid();
-        this.imp_uid = order.getImp_uid();
         this.saved_point = order.getSaved_point();
+        this.orderId = order.getOrderId();
+        this.receipt_id = order.getReceiptId();
+        this.phone = order.getPhone();
     }
 }
