@@ -20,7 +20,7 @@ public class EventRepositoryImpl implements EventRepository {
 
     public List<EventResponseDto> getInProgress(Integer delivery_site_idx) {
         Query nativeQuery = em.createNativeQuery(
-                "SELECT evn.idx, evn.begin_date, evn.end_date, evn.url, img.imgpath  " +
+                "SELECT evn.idx, evn.title, evn.begin_date, evn.end_date, evn.url, img.imgpath  " +
                         "FROM event_tbl evn LEFT OUTER JOIN imgpath_for_event_thumbnail_tbl img " +
                         "ON evn.idx = img.event_idx AND img.type = 0 " +
                         "WHERE evn.idx IN (SELECT event_idx FROM dsite_link_event_tbl WHERE delivery_site_idx = ?) " +
@@ -36,7 +36,7 @@ public class EventRepositoryImpl implements EventRepository {
     public List<EventResponseDto> getFinished(Integer delivery_site_idx, PageRequest pageRequest) {
         List events = em
                 .createNativeQuery("" +
-                        "SELECT evn.idx, evn.begin_date, evn.end_date, evn.url, img.imgpath  " +
+                        "SELECT evn.idx, evn.title, evn.begin_date, evn.end_date, evn.url, img.imgpath  " +
                         "FROM event_tbl evn LEFT OUTER JOIN imgpath_for_event_thumbnail_tbl img " +
                         "ON evn.idx = img.event_idx AND img.type = 0 " +
                         "WHERE evn.idx IN (SELECT event_idx FROM dsite_link_event_tbl WHERE delivery_site_idx = ?) " +

@@ -13,6 +13,8 @@ public class EventResponseDto implements Serializable {
 
     private Integer idx;
 
+    private String title;
+
     private Timestamp begin_date;
 
     private Timestamp end_date;
@@ -22,8 +24,9 @@ public class EventResponseDto implements Serializable {
     private String imgpath;
 
     @Builder
-    public EventResponseDto(Integer idx, Timestamp begin_date, Timestamp end_date, String url, String imgpath) {
+    public EventResponseDto(Integer idx, String title, Timestamp begin_date, Timestamp end_date, String url, String imgpath) {
         this.idx = idx;
+        this.title = title;
         this.begin_date = begin_date;
         this.end_date = end_date;
         this.url = url;
