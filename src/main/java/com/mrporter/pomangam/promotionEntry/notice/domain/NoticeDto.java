@@ -26,7 +26,9 @@ public class NoticeDto implements Serializable {
 
     private Byte state_active;
 
-    public NoticeDto(Integer idx, String title, String contents, Timestamp begin_date, Timestamp end_date, Timestamp register_date, Timestamp modify_date, Byte state_active) {
+    private String url;
+
+    public NoticeDto(Integer idx, String title, String contents, Timestamp begin_date, Timestamp end_date, Timestamp register_date, Timestamp modify_date, Byte state_active, String url) {
         this.idx = idx;
         this.title = title;
         this.contents = contents;
@@ -35,5 +37,6 @@ public class NoticeDto implements Serializable {
         this.register_date = register_date;
         this.modify_date = modify_date;
         this.state_active = state_active;
+        this.url = url;
     }
 }

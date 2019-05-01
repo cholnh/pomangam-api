@@ -1,6 +1,5 @@
 package com.mrporter.pomangam.promotionEntry.notice.domain;
 
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,8 +32,10 @@ public class Notice implements Serializable {
 
     private Byte state_active;
 
+    private String url;
+
     @Builder
-    public Notice(String title, String contents, Timestamp begin_date, Timestamp end_date, Timestamp register_date, Timestamp modify_date, Byte state_active) {
+    public Notice(String title, String contents, Timestamp begin_date, Timestamp end_date, Timestamp register_date, Timestamp modify_date, Byte state_active, String url) {
         this.title = title;
         this.contents = contents;
         this.begin_date = begin_date;
@@ -42,5 +43,6 @@ public class Notice implements Serializable {
         this.register_date = register_date;
         this.modify_date = modify_date;
         this.state_active = state_active;
+        this.url = url;
     }
 }

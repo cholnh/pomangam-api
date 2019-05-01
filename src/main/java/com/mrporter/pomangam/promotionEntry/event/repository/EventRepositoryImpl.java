@@ -35,7 +35,7 @@ public class EventRepositoryImpl implements EventRepository {
 
     public List<EventResponseDto> getFinished(Integer delivery_site_idx, PageRequest pageRequest) {
         List events = em
-                .createNativeQuery("" +
+                .createNativeQuery(
                         "SELECT evn.idx, evn.title, evn.begin_date, evn.end_date, evn.url, img.imgpath  " +
                         "FROM event_tbl evn LEFT OUTER JOIN imgpath_for_event_thumbnail_tbl img " +
                         "ON evn.idx = img.event_idx AND img.type = 0 " +
