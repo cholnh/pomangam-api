@@ -1,6 +1,6 @@
 package com.mrporter.pomangam.orderEntry.payment.bootpay.controller;
 
-import com.mrporter.pomangam.orderEntry.order.domain.Order;
+import com.mrporter.pomangam.orderEntry.order.domain.OrderInfoDto;
 import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.*;
 import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.request.Cancel;
 import com.mrporter.pomangam.orderEntry.payment.bootpay.service.PaymentService;
@@ -34,7 +34,7 @@ public class PaymentController {
 
     @PostMapping("/complete")
     public ResponseEntity<?> complete(@RequestBody CompleteInputDto dto) {
-        Order result = paymentService.complete(dto);
+        OrderInfoDto result = paymentService.complete(dto);
         if(result == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {

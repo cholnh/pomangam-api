@@ -37,9 +37,9 @@ public class CommentStoreRepositoryImpl implements CommentStoreRepository {
         List comments = em
                 .createNativeQuery(
                         "SELECT cmt.idx, cmt.store_idx, u.nickname AS customer_nickname , cmt.cnt_star, cmt.cnt_like, cmt.contents, cmt.register_date, cmt.state_anonymous " +
-                                "FROM comment_for_store_tbl cmt, user_tbl u " +
-                                "WHERE cmt.customer_idx = u.idx " +
-                                "AND cmt.store_idx = :storeIdx " +
+                                "FROM comment_for_store_tbl cmt LEFT OUTER JOIN user_tbl u " +
+                                "ON cmt.customer_idx = u.idx AND cmt.state_anonymous = 0 " +
+                                "WHERE cmt.store_idx = :storeIdx " +
                                 "AND cmt.state_active = 1 " +
                                 (orderBy != null && !sqlInjection.isSQLInjection(orderBy) ? "ORDER BY " + orderBy :"ORDER BY cmt.cnt_like DESC ")
                 )

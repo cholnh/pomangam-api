@@ -1,38 +1,43 @@
 package com.mrporter.pomangam.orderEntry.payment.bootpay.service;
 
 import com.google.gson.Gson;
-import com.mrporter.pomangam.common.map.service.CommonMapService;
+import com.mrporter.pomangam.common.map.service.CommonMapServiceImpl;
 import com.mrporter.pomangam.common.security.user.domain.User;
 import com.mrporter.pomangam.common.security.user.repository.UserJpaRepository;
-import com.mrporter.pomangam.common.security.user.service.UserService;
+import com.mrporter.pomangam.common.security.user.service.UserServiceImpl;
+import com.mrporter.pomangam.common.util.choseong.InitialConsonant;
 import com.mrporter.pomangam.common.util.time.CustomTime;
-import com.mrporter.pomangam.deliveryEntry.deliverySite.repository.DeliverySiteRepository;
+import com.mrporter.pomangam.deliveryEntry.deliverySite.repository.DeliverySiteRepositoryImpl;
+import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.domain.DetailForDeliverySiteDto;
 import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.repository.DetailForDeliverySiteJpaRepository;
+import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.repository.DetailForDeliverySiteRepositoryImpl;
 import com.mrporter.pomangam.orderEntry.cart.domain.Cart;
 import com.mrporter.pomangam.orderEntry.cart.repository.CartJpaRepository;
-import com.mrporter.pomangam.orderEntry.cart.service.CartService;
+import com.mrporter.pomangam.orderEntry.cart.service.CartServiceImpl;
 import com.mrporter.pomangam.orderEntry.cartItem.domain.CartItem;
 import com.mrporter.pomangam.orderEntry.cartItem.repository.CartItemJpaRepository;
 import com.mrporter.pomangam.orderEntry.order.domain.Order;
+import com.mrporter.pomangam.orderEntry.order.domain.OrderInfoDto;
 import com.mrporter.pomangam.orderEntry.order.domain.StateOrder;
+import com.mrporter.pomangam.orderEntry.order.domain.StatePayment;
 import com.mrporter.pomangam.orderEntry.order.repository.OrderJpaRepository;
-import com.mrporter.pomangam.orderEntry.order.repository.OrderRepository;
-import com.mrporter.pomangam.orderEntry.order.service.OrderService;
+import com.mrporter.pomangam.orderEntry.order.repository.OrderRepositoryImpl;
+import com.mrporter.pomangam.orderEntry.order.service.OrderServiceImpl;
 import com.mrporter.pomangam.orderEntry.orderItem.domain.OrderInfoItemDto;
 import com.mrporter.pomangam.orderEntry.orderItem.domain.OrderItem;
 import com.mrporter.pomangam.orderEntry.orderItem.repository.OrderItemJpaRepository;
 import com.mrporter.pomangam.orderEntry.orderLog.domain.OrderLog;
 import com.mrporter.pomangam.orderEntry.orderLog.repository.OrderLogJpaRepository;
-import com.mrporter.pomangam.orderEntry.orderLog.service.OrderLogService;
+import com.mrporter.pomangam.orderEntry.orderLog.service.OrderLogServiceImpl;
 import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.*;
 import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.request.Cancel;
 import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.request.SubscribeBilling;
 import com.mrporter.pomangam.productEntry.product.domain.ProductWithCostDto;
-import com.mrporter.pomangam.productEntry.product.repository.ProductRepository;
+import com.mrporter.pomangam.productEntry.product.repository.ProductRepositoryImpl;
 import com.mrporter.pomangam.promotionEntry.coupon.domain.CouponDto;
-import com.mrporter.pomangam.promotionEntry.coupon.repository.CouponRepository;
+import com.mrporter.pomangam.promotionEntry.coupon.repository.CouponRepositoryImpl;
 import com.mrporter.pomangam.promotionEntry.pointLog.domain.StatePointLog;
-import com.mrporter.pomangam.promotionEntry.pointLog.service.PointLogService;
+import com.mrporter.pomangam.promotionEntry.pointLog.service.PointLogServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -55,21 +60,22 @@ public class PaymentServiceImpl implements PaymentService {
 
     DetailForDeliverySiteJpaRepository detailForDeliverySiteJpaRepository;
     CartJpaRepository cartJpaRepository;
-    CartService cartService;
+    CartServiceImpl cartService;
     CartItemJpaRepository cartItemJpaRepository;
-    OrderRepository orderRepository;
+    OrderRepositoryImpl orderRepository;
     OrderJpaRepository orderJpaRepository;
     OrderItemJpaRepository orderItemJpaRepository;
-    OrderService orderService;
-    UserService userService;
+    OrderServiceImpl orderService;
+    UserServiceImpl userService;
     UserJpaRepository userJpaRepository;
-    CouponRepository couponRepository;
-    OrderLogService orderLogService;
+    CouponRepositoryImpl couponRepository;
+    OrderLogServiceImpl orderLogService;
     OrderLogJpaRepository orderLogJpaRepository;
-    ProductRepository productRepository;
-    DeliverySiteRepository deliverySiteRepository;
-    PointLogService pointLogService;
-    CommonMapService commonMapService;
+    ProductRepositoryImpl productRepository;
+    DeliverySiteRepositoryImpl deliverySiteRepository;
+    PointLogServiceImpl pointLogService;
+    CommonMapServiceImpl commonMapService;
+    DetailForDeliverySiteRepositoryImpl detailForDeliverySiteRepository;
 
     public static String getPrivate_key() {
         return PRIVATE_KEY;
@@ -220,7 +226,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Order complete(CompleteInputDto dto) {
+    public OrderInfoDto complete(CompleteInputDto dto) {
         String receiptId = dto.getReceiptId();
         String orderId = dto.getOrderId();
         Integer orderIdx = null;
@@ -295,7 +301,29 @@ public class PaymentServiceImpl implements PaymentService {
             orderLog.setReceipt_id(receiptId);
 
             orderLogJpaRepository.save(orderLog);
-            return orderJpaRepository.save(order);
+            orderJpaRepository.save(order);
+
+            DetailForDeliverySiteDto detailForDeliverySiteDto = detailForDeliverySiteRepository.getByIdx(order.getDetail_site_idx());
+            OrderInfoDto info = OrderInfoDto.builder()
+                    .order_idx(order.getIdx())
+                    .box_no(InitialConsonant.getInitial(detailForDeliverySiteDto.getAbbreviation())+"-"+order.getBox_no())
+                    .delivery_site_name(deliverySiteRepository.getByDeliverySiteIdx(order.getDelivery_site_idx()).getName())
+                    .detail_site_name(detailForDeliverySiteDto.getName())
+                    .register_date(order.getRegister_date())
+                    .type_payment(StatePayment.toString(order.getType_payment()))
+                    .state_order(StateOrder.toString(order.getState_order()))
+                    .arrival_date_only(order.getArrival_date_only())
+                    .arrival_time_only(order.getArrival_time_only())
+                    .using_point(order.getUsing_point() == null ? 0 : order.getUsing_point())
+                    .using_coupon_name(coupon == null ? null : coupon.getName())
+                    .using_coupon_amount(coupon == null ? 0 : coupon.getDiscount_prc())
+                    .final_amount(order.getFinal_amount())
+                    .saved_point(order.getSaved_point() == null ? 0 : order.getSaved_point())
+                    .receipt_id(order.getReceiptId())
+                    .order_id(order.getOrderId())
+                    //.orderItems(orderItemRepository.findOrderInfoItem(order.getIdx()))
+                    .build();
+            return info;
 
         } catch (Exception e) {
             e.printStackTrace();

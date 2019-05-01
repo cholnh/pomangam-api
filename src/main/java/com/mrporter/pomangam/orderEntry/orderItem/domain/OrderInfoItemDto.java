@@ -13,6 +13,8 @@ import java.io.Serializable;
 @Data
 public class OrderInfoItemDto implements Serializable {
 
+    private Integer order_item_idx;
+
     private Integer product_idx;
 
     private String product_name;
