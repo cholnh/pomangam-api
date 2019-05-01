@@ -1,0 +1,63 @@
+# POMANGAM API APPLICATION PROPERTY
+
+server:
+  port: 9530
+
+  servlet:
+    context-path: /api/v1
+    session:
+      tracking-modes: cookie
+
+  ssl:
+    key-store: C:/ssl/keystore
+    key-store-password: eun*zzi92!
+    key-password: eun*zzi92!
+    key-alias: alias
+---
+spring:
+  jpa:
+    show-sql: true
+    generate-ddl: false
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      hibernate:
+        show_sql: true
+
+  datasource:
+    hikari:
+      jdbc-url: jdbc:mysql://localhost:3306/db_pmg?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useSSL=false&validationQuery=select 1&serverTimezone=Asia/Seoul
+      username: nakzzi
+      password: skrwl486
+      #driver-class-name: mysql.jdbc.Driver
+      # maximum-pool-size: 2
+
+  security:
+    basic:
+      enabled: true
+
+  data:
+    rest:
+      base-path: /jpa
+      detection-strategy: default
+
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 215MB
+
+  banner:
+    location: banner.txt
+---
+file:
+  upload-dir: ./uploads
+  #upload-dir: file:///C:/assets/
+---
+static:
+  resource:
+    location: file:///C:/assets/
+---
+logging:
+  file: log/slf4j.log
