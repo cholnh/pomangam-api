@@ -16,13 +16,13 @@ server:
 ---
 spring:
   jpa:
-    show-sql: true
+    show-sql: false
     generate-ddl: false
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     properties:
       hibernate:
-        show_sql: true
+        show_sql: false
 
   datasource:
     hikari:

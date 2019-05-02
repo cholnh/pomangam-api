@@ -4,7 +4,7 @@ import com.mrporter.pomangam.advertiseEntry.advertiseForMain.repository.Advertis
 import com.mrporter.pomangam.advertiseEntry.advertiseForPopup.repository.AdvertiseForPopupRepositoryImpl;
 import com.mrporter.pomangam.advertiseEntry.imageForCommentAllMain.repository.ImageForCommentAllMainRepositoryImpl;
 import com.mrporter.pomangam.advertiseEntry.subAdvertiseForMain.repository.SubAdvertiseForMainRepositoryImpl;
-import com.mrporter.pomangam.deliveryEntry.deliverySite.repository.DeliverySiteRepository;
+import com.mrporter.pomangam.deliveryEntry.deliverySite.repository.DeliverySiteRepositoryImpl;
 import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.repository.DetailForDeliverySiteRepositoryImpl;
 import com.mrporter.pomangam.orderEntry.orderTime.domain.OrderTimeDto;
 import com.mrporter.pomangam.orderEntry.orderTime.repository.OrderTimeRepositoryImpl;
@@ -27,7 +27,7 @@ public class MainViewServiceImpl implements MainViewService {
 
     AdvertiseForPopupRepositoryImpl advertiseForPopupRepository;
     AdvertiseForMainRepositoryImpl advertiseForMainRepository;
-    DeliverySiteRepository deliverySiteRepository;
+    DeliverySiteRepositoryImpl deliverySiteRepository;
     DetailForDeliverySiteRepositoryImpl detailForDeliverySiteRepository;
     OrderTimeRepositoryImpl orderTimeRepository;
     ImageForCommentAllMainRepositoryImpl cmtAdvertiseForMainRepository;

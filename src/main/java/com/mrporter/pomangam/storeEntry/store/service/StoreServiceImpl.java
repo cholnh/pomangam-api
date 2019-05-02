@@ -3,12 +3,12 @@ package com.mrporter.pomangam.storeEntry.store.service;
 import com.mrporter.pomangam.common.util.time.CustomTime;
 import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.domain.DetailForDeliverySite;
 import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.repository.DetailForDeliverySiteJpaRepository;
-import com.mrporter.pomangam.feedbackHistory.commentStore.repository.CommentStoreRepository;
-import com.mrporter.pomangam.orderEntry.order.repository.OrderRepository;
+import com.mrporter.pomangam.feedbackHistory.commentStore.repository.CommentStoreRepositoryImpl;
+import com.mrporter.pomangam.orderEntry.order.repository.OrderRepositoryImpl;
 import com.mrporter.pomangam.orderEntry.orderTime.repository.OrderTimeJpaRepository;
-import com.mrporter.pomangam.orderEntry.orderTime.repository.OrderTimeRepository;
+import com.mrporter.pomangam.orderEntry.orderTime.repository.OrderTimeRepositoryImpl;
 import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
-import com.mrporter.pomangam.productEntry.product.repository.ProductRepository;
+import com.mrporter.pomangam.productEntry.product.repository.ProductRepositoryImpl;
 import com.mrporter.pomangam.storeEntry.scheduleForStore.domain.ScheduleForStore;
 import com.mrporter.pomangam.storeEntry.scheduleForStore.repository.ScheduleForStoreJpaRepository;
 import com.mrporter.pomangam.storeEntry.store.domain.InquiryResultDto;
@@ -16,7 +16,7 @@ import com.mrporter.pomangam.storeEntry.store.domain.Store;
 import com.mrporter.pomangam.storeEntry.store.domain.StoreSummaryDto;
 import com.mrporter.pomangam.storeEntry.store.domain.StoreWithCategoryDto;
 import com.mrporter.pomangam.storeEntry.store.repository.StoreJpaRepository;
-import com.mrporter.pomangam.storeEntry.store.repository.StoreRepository;
+import com.mrporter.pomangam.storeEntry.store.repository.StoreRepositoryImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,14 +34,14 @@ import java.util.List;
 public class StoreServiceImpl implements StoreService {
 
     StoreJpaRepository storeJpaRepository;
-    StoreRepository storeRepository;
-    OrderTimeRepository orderTimeRepository;
+    StoreRepositoryImpl storeRepository;
+    OrderTimeRepositoryImpl orderTimeRepository;
     OrderTimeJpaRepository orderTimeJpaRepository;
-    OrderRepository orderRepositoryImpl;
+    OrderRepositoryImpl orderRepositoryImpl;
     DetailForDeliverySiteJpaRepository detailForDeliverySiteJpaRepository;
     ScheduleForStoreJpaRepository scheduleForStoreJpaRepository;
-    ProductRepository productRepository;
-    CommentStoreRepository commentStoreRepository;
+    ProductRepositoryImpl productRepository;
+    CommentStoreRepositoryImpl commentStoreRepository;
 
     @Override
     public List<Store> getStoresByIdxes(List<Integer> idxes) {

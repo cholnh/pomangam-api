@@ -9,40 +9,19 @@ import com.mrporter.pomangam.promotionEntry.pointLog.domain.PointPctPrcDto;
 import com.mrporter.pomangam.promotionEntry.pointLog.domain.StatePointLog;
 import com.mrporter.pomangam.promotionEntry.pointLog.repository.PointLogRepositoryImpl;
 import lombok.AllArgsConstructor;
-import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class PointLogServiceImpl implements PointLogService {
-    @PersistenceContext
-    EntityManager em;
 
     PointLogRepositoryImpl pointLogRepository;
     CommonMapServiceImpl commonMapService;
 
     public List<PointLogDto> findByCustomerIdx(Integer customerIdx, PageRequest pageRequest) {
-        if(customerIdx == null) {
-            return null;
-        }
-
-        int page = pageRequest == null ? 0 : pageRequest.getPage();
-        int size = pageRequest == null ? 10 : pageRequest.getSize();
-
-        List<PointLogDto> pointLogDtoList = em
-                .createNativeQuery("SELECT * FROM log_for_point_tbl WHERE customer_idx = ? ORDER BY sequence DESC")
-                .setParameter(1, customerIdx)
-                .unwrap( org.hibernate.query.NativeQuery.class )
-                .setResultTransformer( Transformers.aliasToBean( PointLogDto.class ) )
-                .setFirstResult(page*size)
-                .setMaxResults(size)
-                .getResultList();
-
-        return pointLogDtoList;
+        return pointLogRepository.findByCustomerIdx(customerIdx, pageRequest);
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.mrporter.pomangam.feedbackHistory.commentStore.controller;
 
 import com.mrporter.pomangam.feedbackHistory.commentStore.domain.CommentStoreInputDto;
 import com.mrporter.pomangam.feedbackHistory.commentStore.domain.CommentStoreViewDto;
-import com.mrporter.pomangam.feedbackHistory.commentStore.service.CommentStoreService;
+import com.mrporter.pomangam.feedbackHistory.commentStore.service.CommentStoreServiceImpl;
 import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CommentStoreController {
 
-    CommentStoreService commentStoreService;
+    CommentStoreServiceImpl commentStoreService;
 
     @GetMapping("/search/findByStoreIdx")
     public ResponseEntity findByStoreIdx(@RequestParam("storeIdx") Integer storeIdx,

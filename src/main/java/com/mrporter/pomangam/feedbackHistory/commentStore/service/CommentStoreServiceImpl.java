@@ -5,7 +5,7 @@ import com.mrporter.pomangam.feedbackHistory.commentStore.domain.CommentStore;
 import com.mrporter.pomangam.feedbackHistory.commentStore.domain.CommentStoreInputDto;
 import com.mrporter.pomangam.feedbackHistory.commentStore.domain.CommentStoreViewDto;
 import com.mrporter.pomangam.feedbackHistory.commentStore.repository.CommentStoreJpaRepository;
-import com.mrporter.pomangam.feedbackHistory.commentStore.repository.CommentStoreRepository;
+import com.mrporter.pomangam.feedbackHistory.commentStore.repository.CommentStoreRepositoryImpl;
 import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.List;
 public class CommentStoreServiceImpl implements CommentStoreService {
 
     CommentStoreJpaRepository commentStoreJpaRepository;
-    CommentStoreRepository commentStoreRepository;
+    CommentStoreRepositoryImpl commentStoreRepository;
 
     @Override
     public List<CommentStoreViewDto> findByStoreIdx(Integer storeIdx, String orderBy, PageRequest pageRequest) {

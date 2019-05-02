@@ -14,6 +14,6 @@ public class IndexController {
 
     @GetMapping
     public ResponseEntity<?> index() {
-        return new ResponseEntity<String>("this is home", HttpStatus.OK);
+        return new ResponseEntity<>("this is home", HttpStatus.OK);
     }
 }
