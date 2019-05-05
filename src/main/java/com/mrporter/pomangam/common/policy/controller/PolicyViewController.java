@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.common.policy;
+package com.mrporter.pomangam.common.policy.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
