@@ -3,6 +3,7 @@ package com.mrporter.pomangam.storeEntry.store.repository;
 import com.mrporter.pomangam.common.util.sqlInjection.SqlInjection;
 import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import com.mrporter.pomangam.storeEntry.store.domain.StoreDto;
+import com.mrporter.pomangam.storeEntry.store.domain.StoreInfoDto;
 import com.mrporter.pomangam.storeEntry.store.domain.StoreSummaryDto;
 import lombok.AllArgsConstructor;
 import org.hibernate.transform.Transformers;
@@ -73,5 +74,31 @@ public class StoreRepositoryImpl implements StoreRepository {
                 .getResultList();
 
         return storeDtoList;
+    }
+
+    @Override
+    public StoreInfoDto getInfo(Integer storeIdx) {
+        Query nativeQuery = em.createNativeQuery("SELECT * FROM store_info_tbl WHERE store_idx = ?")
+                .setParameter(1, storeIdx);
+        List<StoreInfoDto> storeInfoDtos = new JpaResultMapper().list(nativeQuery, StoreInfoDto.class);
+        if(storeInfoDtos.isEmpty()) {
+            return null;
+        } else {
+            return storeInfoDtos.get(0);
+        }
+    }
+
+    @Override
+    public void plusCommentCount(Integer storeIdx) {
+        em.createNativeQuery("UPDATE store_tbl SET cnt_comment=cnt_comment+1 WHERE idx=:storeIdx")
+                .setParameter("storeIdx", storeIdx)
+                .executeUpdate();
+    }
+
+    @Override
+    public void minusCommentCount(Integer storeIdx) {
+        em.createNativeQuery("UPDATE store_tbl SET cnt_comment=cnt_comment-1 WHERE idx=:storeIdx AND cnt_comment>0")
+                .setParameter("storeIdx", storeIdx)
+                .executeUpdate();
     }
 }

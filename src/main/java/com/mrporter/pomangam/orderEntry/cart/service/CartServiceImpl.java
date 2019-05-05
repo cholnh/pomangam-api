@@ -1,6 +1,7 @@
 package com.mrporter.pomangam.orderEntry.cart.service;
 
 import com.mrporter.pomangam.common.util.time.CustomTime;
+import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.repository.DetailForDeliverySiteRepositoryImpl;
 import com.mrporter.pomangam.orderEntry.cart.domain.*;
 import com.mrporter.pomangam.orderEntry.cart.repository.CartJpaRepository;
 import com.mrporter.pomangam.orderEntry.cart.repository.CartRepositoryImpl;
@@ -39,6 +40,7 @@ public class CartServiceImpl implements CartService {
     OrderTimeServiceImpl orderTimeService;
     StoreJpaRepository storeJpaRepository;
     ProductRepositoryImpl productRepository;
+    DetailForDeliverySiteRepositoryImpl detailForDeliverySiteRepository;
 
     @Override
     public Cart update(Integer cart_idx, CartDto dto) {

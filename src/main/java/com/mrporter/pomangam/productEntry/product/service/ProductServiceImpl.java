@@ -1,6 +1,12 @@
 package com.mrporter.pomangam.productEntry.product.service;
 
-import com.mrporter.pomangam.productEntry.product.domain.*;
+import com.mrporter.pomangam.common.security.user.domain.User;
+import com.mrporter.pomangam.common.security.user.service.UserService;
+import com.mrporter.pomangam.feedbackHistory.likeForProduct.repository.LikeForProductRepositoryImpl;
+import com.mrporter.pomangam.productEntry.product.domain.DetailOrderDto;
+import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
+import com.mrporter.pomangam.productEntry.product.domain.ProductWithCostDto;
+import com.mrporter.pomangam.productEntry.product.domain.SearchProductDto;
 import com.mrporter.pomangam.productEntry.product.repository.ProductRepositoryImpl;
 import com.mrporter.pomangam.storeEntry.store.repository.StoreRepositoryImpl;
 import lombok.AllArgsConstructor;
@@ -14,6 +20,8 @@ public class ProductServiceImpl implements ProductService {
 
     ProductRepositoryImpl productRepository;
     StoreRepositoryImpl storeRepository;
+    LikeForProductRepositoryImpl likeForProductRepository;
+    UserService userService;
 
     @Override
     public List<ProductWithCostDto> findByStoreIdx(Integer store_idx, Integer type, String orderBy, PageRequest pageRequest) {
@@ -27,11 +35,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductWithCostDto findByProductIdx(Integer product_idx) {
+    public ProductWithCostDto findByProductIdx(Integer product_idx, String customerId) {
         if(product_idx == null) {
             return null;
         }
-        return productRepository.findByProductIdx(product_idx);
+        User user = userService.findById(customerId);
+        ProductWithCostDto dto = productRepository.findByProductIdx(product_idx);
+        if(user != null) {
+            dto.setLikeType(likeForProductRepository.getType(product_idx, user.getIdx()));
+        }
+        return dto;
     }
 
     @Override
@@ -63,5 +76,21 @@ public class ProductServiceImpl implements ProductService {
         }
         List<ProductWithCostDto> products = productRepository.findByCategoryId(store_idx, categoryId, type, orderBy, pageRequest);
         return products;
+    }
+
+    @Override
+    public void like(Integer productIdx, String customerId) {
+        final User user = userService.findById(customerId);
+        if(user != null) {
+            likeForProductRepository.like(productIdx, user.getIdx());
+        }
+    }
+
+    @Override
+    public void unlike(Integer productIdx, String customerId) {
+        final User user = userService.findById(customerId);
+        if(user != null) {
+            likeForProductRepository.unlike(productIdx, user.getIdx());
+        }
     }
 }

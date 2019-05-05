@@ -27,8 +27,10 @@ public class CommentStoreViewDto implements Serializable {
 
     private Byte state_anonymous;
 
+    private Byte likeType;
+
     @Builder
-    public CommentStoreViewDto(Integer idx, Integer store_idx, String customer_nickname, Float cnt_star, Integer cnt_like, String contents, Timestamp register_date, Byte state_anonymous) {
+    public CommentStoreViewDto(Integer idx, Integer store_idx, String customer_nickname, Float cnt_star, Integer cnt_like, String contents, Timestamp register_date, Byte state_anonymous, Byte likeType) {
         this.idx = idx;
         this.store_idx = store_idx;
         this.customer_nickname = customer_nickname;
@@ -37,5 +39,6 @@ public class CommentStoreViewDto implements Serializable {
         this.contents = contents;
         this.register_date = register_date;
         this.state_anonymous = state_anonymous;
+        this.likeType = likeType;
     }
 }

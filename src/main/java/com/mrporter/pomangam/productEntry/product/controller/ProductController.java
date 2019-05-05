@@ -6,11 +6,9 @@ import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RequestMapping("/products")
@@ -40,8 +38,9 @@ public class ProductController {
     }
 
     @GetMapping("/search/findByProductIdx")
-    public ResponseEntity<?> findByProductIdx(@RequestParam("productIdx") Integer product_idx) {
-        ProductWithCostDto dto = productService.findByProductIdx(product_idx);
+    public ResponseEntity<?> findByProductIdx(@RequestParam("productIdx") Integer product_idx,
+                                              Principal principal) {
+        ProductWithCostDto dto = productService.findByProductIdx(product_idx, principal.getName());
         if(dto == null) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         } else {
@@ -58,5 +57,19 @@ public class ProductController {
     @GetMapping("/search/getDetailOrder")
     public ResponseEntity<?> getDetailOrder(@RequestParam("productIdx") Integer productIdx) {
         return new ResponseEntity(productService.getDetailOrder(productIdx), HttpStatus.OK);
+    }
+
+    @GetMapping("/{productIdx}/like")
+    public ResponseEntity like(@PathVariable(name = "productIdx") Integer productIdx,
+                               Principal principal) {
+        productService.like(productIdx, principal.getName());
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/{productIdx}/unlike")
+    public ResponseEntity unlike(@PathVariable(name = "productIdx") Integer productIdx,
+                               Principal principal) {
+        productService.unlike(productIdx, principal.getName());
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

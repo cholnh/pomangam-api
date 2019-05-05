@@ -13,6 +13,10 @@ server:
     key-store-password: eun*zzi92!
     key-password: eun*zzi92!
     key-alias: alias
+
+  compression:
+    enabled: true
+    min-response-size: 2048
 ---
 spring:
   jpa:
@@ -50,6 +54,12 @@ spring:
 
   banner:
     location: banner.txt
+
+  resources:
+    chain:
+      cache: true
+      enabled: true
+  cache-period: 3600
 ---
 file:
   upload-dir: ./uploads

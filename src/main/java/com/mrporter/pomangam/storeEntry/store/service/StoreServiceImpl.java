@@ -1,9 +1,12 @@
 package com.mrporter.pomangam.storeEntry.store.service;
 
+import com.mrporter.pomangam.common.security.user.domain.User;
+import com.mrporter.pomangam.common.security.user.service.UserService;
 import com.mrporter.pomangam.common.util.time.CustomTime;
 import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.domain.DetailForDeliverySite;
 import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.repository.DetailForDeliverySiteJpaRepository;
 import com.mrporter.pomangam.feedbackHistory.commentStore.repository.CommentStoreRepositoryImpl;
+import com.mrporter.pomangam.feedbackHistory.likeForStore.repository.LikeForStoreRepositoryImpl;
 import com.mrporter.pomangam.orderEntry.order.repository.OrderRepositoryImpl;
 import com.mrporter.pomangam.orderEntry.orderTime.repository.OrderTimeJpaRepository;
 import com.mrporter.pomangam.orderEntry.orderTime.repository.OrderTimeRepositoryImpl;
@@ -11,10 +14,7 @@ import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import com.mrporter.pomangam.productEntry.product.repository.ProductRepositoryImpl;
 import com.mrporter.pomangam.storeEntry.scheduleForStore.domain.ScheduleForStore;
 import com.mrporter.pomangam.storeEntry.scheduleForStore.repository.ScheduleForStoreJpaRepository;
-import com.mrporter.pomangam.storeEntry.store.domain.InquiryResultDto;
-import com.mrporter.pomangam.storeEntry.store.domain.Store;
-import com.mrporter.pomangam.storeEntry.store.domain.StoreSummaryDto;
-import com.mrporter.pomangam.storeEntry.store.domain.StoreWithCategoryDto;
+import com.mrporter.pomangam.storeEntry.store.domain.*;
 import com.mrporter.pomangam.storeEntry.store.repository.StoreJpaRepository;
 import com.mrporter.pomangam.storeEntry.store.repository.StoreRepositoryImpl;
 import lombok.AllArgsConstructor;
@@ -42,6 +42,8 @@ public class StoreServiceImpl implements StoreService {
     ScheduleForStoreJpaRepository scheduleForStoreJpaRepository;
     ProductRepositoryImpl productRepository;
     CommentStoreRepositoryImpl commentStoreRepository;
+    UserService userService;
+    LikeForStoreRepositoryImpl likeForStoreRepository;
 
     @Override
     public List<Store> getStoresByIdxes(List<Integer> idxes) {
@@ -171,8 +173,9 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreWithCategoryDto findWithCategory(Integer storeIdx) {
+    public StoreWithCategoryDto findWithCategory(Integer storeIdx, String customerId) {
         Store store = storeJpaRepository.getOne(storeIdx);
+        User user = userService.findById(customerId);
         StoreWithCategoryDto dto = StoreWithCategoryDto.builder()
                 .idx(storeIdx)
                 .name(store.getName())
@@ -182,6 +185,30 @@ public class StoreServiceImpl implements StoreService {
                 .type(store.getType())
                 .categories(productRepository.findCategory(storeIdx))
                 .build();
+        if(user != null) {
+            dto.setLikeType(likeForStoreRepository.getType(storeIdx, user.getIdx()));
+        }
         return dto;
+    }
+
+    @Override
+    public void like(Integer storeIdx, String customerId) {
+        final User user = userService.findById(customerId);
+        if(user != null) {
+            likeForStoreRepository.like(storeIdx, user.getIdx());
+        }
+    }
+
+    @Override
+    public void unlike(Integer storeIdx, String customerId) {
+        final User user = userService.findById(customerId);
+        if(user != null) {
+            likeForStoreRepository.unlike(storeIdx, user.getIdx());
+        }
+    }
+
+    @Override
+    public StoreInfoDto getInfo(Integer storeIdx) {
+        return storeRepository.getInfo(storeIdx);
     }
 }

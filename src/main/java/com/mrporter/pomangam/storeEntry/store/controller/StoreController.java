@@ -8,11 +8,9 @@ import com.mrporter.pomangam.storeEntry.store.service.StoreServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RequestMapping("/stores")
@@ -47,12 +45,32 @@ public class StoreController {
     }
 
     @GetMapping("/search/findWithCategory")
-    public ResponseEntity findWithCategory(@RequestParam("storeIdx") Integer storeIdx) {
-        StoreWithCategoryDto dto = storeService.findWithCategory(storeIdx);
+    public ResponseEntity findWithCategory(@RequestParam("storeIdx") Integer storeIdx,
+                                           Principal principal) {
+        StoreWithCategoryDto dto = storeService.findWithCategory(storeIdx, principal.getName());
         if(dto == null) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity(dto, HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/{storeIdx}/like")
+    public ResponseEntity like(@PathVariable(name = "storeIdx") Integer storeIdx,
+                               Principal principal) {
+        storeService.like(storeIdx, principal.getName());
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/{storeIdx}/unlike")
+    public ResponseEntity unlike(@PathVariable(name = "storeIdx") Integer storeIdx,
+                                 Principal principal) {
+        storeService.unlike(storeIdx, principal.getName());
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/{storeIdx}/info")
+    public ResponseEntity getInfo(@PathVariable(name = "storeIdx") Integer storeIdx) {
+        return new ResponseEntity(storeService.getInfo(storeIdx), HttpStatus.OK);
     }
 }

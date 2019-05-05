@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.feedbackHistory.likeForCommentStore.domain;
+package com.mrporter.pomangam.feedbackHistory.likeForStore.domain;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -11,15 +11,15 @@ import javax.persistence.IdClass;
 import javax.persistence.Table;
 import java.io.Serializable;
 
-@Table(name = "like_for_comment_store_tbl")
+@Table(name = "like_for_store_tbl")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 @Entity
-@IdClass(LikeForCommentStoreKey.class)
-public class LikeForCommentStore implements Serializable {
+@IdClass(LikeForStoreKey.class)
+public class LikeForStore implements Serializable {
 
     @Id
-    private Integer comment_store_idx;
+    private Integer store_idx;
 
     @Id
     private Integer customer_idx;
@@ -27,8 +27,8 @@ public class LikeForCommentStore implements Serializable {
     private Byte type;
 
     @Builder
-    public LikeForCommentStore(Integer comment_store_idx, Integer customer_idx, Byte type) {
-        this.comment_store_idx = comment_store_idx;
+    public LikeForStore(Integer store_idx, Integer customer_idx, Byte type) {
+        this.store_idx = store_idx;
         this.customer_idx = customer_idx;
         this.type = type;
     }

@@ -6,6 +6,7 @@ import com.mrporter.pomangam.common.util.choseong.InitialConsonant;
 import com.mrporter.pomangam.deliveryEntry.deliverySite.repository.DeliverySiteRepositoryImpl;
 import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.domain.DetailForDeliverySiteDto;
 import com.mrporter.pomangam.deliveryEntry.detailForDeliverySite.repository.DetailForDeliverySiteRepositoryImpl;
+import com.mrporter.pomangam.feedbackHistory.likeForProduct.repository.LikeForProductRepositoryImpl;
 import com.mrporter.pomangam.orderEntry.order.domain.*;
 import com.mrporter.pomangam.orderEntry.order.repository.OrderJpaRepository;
 import com.mrporter.pomangam.orderEntry.order.repository.OrderRepositoryImpl;
@@ -30,6 +31,7 @@ public class OrderServiceImpl implements OrderService {
     DeliverySiteRepositoryImpl deliverySiteRepository;
     DetailForDeliverySiteRepositoryImpl detailForDeliverySiteRepository;
     CouponJpaRepository couponJpaRepository;
+    LikeForProductRepositoryImpl likeForProductRepository;
 
     @Override
     public void setState(Integer order_idx, StateOrder stateOrder) {

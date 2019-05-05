@@ -10,8 +10,11 @@ public interface ProductService {
                                             @Param("type") Integer type,
                                             @Param("orderBy") String orderBy,
                                             PageRequest pageRequest);
-    ProductWithCostDto findByProductIdx(@Param("productIdx") Integer product_idx);
+    ProductWithCostDto findByProductIdx(@Param("productIdx") Integer product_idx, String customerId);
     SearchProductDto findByQuery(String query, Integer delivery_site_idx);
     DetailOrderDto getDetailOrder(Integer productIdx);
     List<ProductWithCostDto> findByCategoryId(Integer store_idx, Integer categoryId, Integer type, String orderBy, PageRequest pageRequest);
+
+    void like(Integer productIdx, String customerId);
+    void unlike(Integer productIdx, String customerId);
 }

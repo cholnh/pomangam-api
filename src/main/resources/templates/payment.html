@@ -42,7 +42,7 @@
 
     <script>
         var preparedData;
-        var url = "https://www.pomangam.com:9530/api/v1";
+        var url = "https://localhost:9530/api/v1";
         /**
          * PG 테스트 실행
          */
@@ -91,7 +91,7 @@
          * PG 결제 모듈 실행 (테스트) - 카카오 페이
          */
         function pay() {
-            if(!preparedData.orderId || preparedData.orderId.length <= 0) {
+            if(!preparedData || preparedData.orderId.length <= 0) {
                 alert("결제실패 - 서버오류");
                 return;
             }
@@ -109,8 +109,8 @@
                 price: preparedData.final_amount, //실제 결제되는 가격
                 application_id: "5cc70f38396fa67747bd0683",
                 name: prodName, //결제창에서 보여질 이름
-                pg: 'kakao',
-                method: 'easy', //결제수단, 입력하지 않으면 결제수단 선택부터 화면이 시작합니다.
+                pg: 'kcp',
+                method: 'card', //결제수단, 입력하지 않으면 결제수단 선택부터 화면이 시작합니다.
                 show_agree_window: 0, // 부트페이 정보 동의 창 보이기 여부
                 // items: [
                 //     {
@@ -133,6 +133,8 @@
                 //params: {test : "test33"},
                 account_expire_at: new Date().format("yyyy-MM-dd"), // 가상계좌 입금기간 제한 ( yyyy-mm-dd 포멧으로 입력해주세요. 가상계좌만 적용됩니다. )
                 extra: {
+                    start_at: '2018-10-10', // 정기 결제 시작일 - 시작일을 지정하지 않으면 그 날 당일로부터 결제가 가능한 Billing key 지급
+                    end_at: '2021-10-10', // 정기결제 만료일 -  기간 없음 - 무제한
                     vbank_result: 1, // 가상계좌 사용시 사용, 가상계좌 결과창을 볼지(1), 말지(0), 미설정시 봄(1)
                     quota: '0,2,3' // 결제금액이 5만원 이상시 할부개월 허용범위를 설정할 수 있음, [0(일시불), 2개월, 3개월] 허용, 미설정시 12개월까지 허용
                 }
@@ -143,6 +145,8 @@
                 // 결제가 취소되면 수행됩니다.
                 fail(data.status, data.message, preparedData.orderId);
             }).ready(function (data) {
+                console.log("ready");
+                console.log(data);
             }).confirm(function (data) {
                 var enable = true; // 재고 수량 관리 로직 혹은 다른 처리
                 if (enable) {

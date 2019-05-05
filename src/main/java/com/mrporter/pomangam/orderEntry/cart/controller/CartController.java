@@ -43,18 +43,18 @@ public class CartController {
     @PreAuthorize("isAuthenticated() and !hasRole('ROLE_GUEST')")
     @GetMapping("/search/countCartByCustomerIdx")
     public ResponseEntity<?> countCartByCustomerIdx(@RequestParam("customerIdx") Integer customerIdx) {
-        return new ResponseEntity(cartService.countCartByCustomerIdx(customerIdx), HttpStatus.OK);
+        return new ResponseEntity<>(cartService.countCartByCustomerIdx(customerIdx), HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('ROLE_GUEST')")
     @GetMapping("/search/countCartByGuestIdx")
     public ResponseEntity<?> countCartByGuestIdx(@RequestParam("guestIdx") Integer guestIdx) {
-        return new ResponseEntity(cartService.countCartByGuestIdx(guestIdx), HttpStatus.OK);
+        return new ResponseEntity<>(cartService.countCartByGuestIdx(guestIdx), HttpStatus.OK);
     }
 
     @PostMapping()
     public ResponseEntity<?> post(@RequestBody CartItemInputDto cartItem) {
-        return new ResponseEntity(cartService.saveCartItemInput(cartItem), HttpStatus.OK);
+        return new ResponseEntity<>(cartService.saveCartItemInput(cartItem), HttpStatus.OK);
     }
 
     @GetMapping("/deleteByCustomerIdx")
@@ -87,6 +87,6 @@ public class CartController {
     @GetMapping("/copyGuest2Customer")
     public ResponseEntity<?> copyGuest2Customer(@RequestParam("guestIdx") Integer guestIdx,
                                                 @RequestParam("customerIdx") Integer customerIdx) {
-        return new ResponseEntity(cartService.copyGuest2Customer(guestIdx, customerIdx), HttpStatus.OK);
+        return new ResponseEntity<>(cartService.copyGuest2Customer(guestIdx, customerIdx), HttpStatus.OK);
     }
 }

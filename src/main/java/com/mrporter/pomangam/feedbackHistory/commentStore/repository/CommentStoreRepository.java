@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface CommentStoreRepository {
     double getAvgStar(Integer storeIdx);
-    List<CommentStoreViewDto> findByStoreIdx(Integer storeIdx, String orderBy, PageRequest pageRequest);
+    List<CommentStoreViewDto> findByStoreIdx(Integer storeIdx, String orderBy, Integer customerIdx, PageRequest pageRequest);
 }

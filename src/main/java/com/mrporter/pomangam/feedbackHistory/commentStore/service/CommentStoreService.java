@@ -8,6 +8,10 @@ import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import java.util.List;
 
 public interface CommentStoreService {
-    List<CommentStoreViewDto> findByStoreIdx(Integer storeIdx, String orderBy, PageRequest pageRequest);
+    List<CommentStoreViewDto> findByStoreIdx(Integer storeIdx, String orderBy, String customerId, PageRequest pageRequest);
     CommentStore saveCommentStoreInput(CommentStoreInputDto dto);
+    void delete(Integer commentStoreIdx);
+
+    void like(Integer commentStoreIdx, String customerId);
+    void unlike(Integer commentStoreIdx, String customerId);
 }

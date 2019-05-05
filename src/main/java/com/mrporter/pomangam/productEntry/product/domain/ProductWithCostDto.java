@@ -43,6 +43,8 @@ public class ProductWithCostDto implements Serializable {
 
     private String imgpath;
 
+    private Byte likeType;
+
     public ProductWithCostDto(Integer idx, Integer store_idx, String name, String description, String sub_description, Integer category_id, String category_name, Byte state_active, Byte type, Integer cnt_like, Timestamp register_date, Timestamp modify_date, Integer sequence, BigInteger prime_cost, BigInteger final_cost, String imgpath) {
         this.idx = idx;
         this.store_idx = store_idx;
