@@ -4,6 +4,7 @@ import com.mrporter.pomangam.common.security.oauth2ClientDetail.domain.Oauth2Cli
 import com.mrporter.pomangam.common.security.oauth2ClientDetail.repository.Oauth2ClientDetailJpaRepository;
 import com.mrporter.pomangam.common.security.user.domain.User;
 import com.mrporter.pomangam.common.security.user.repository.UserJpaRepository;
+import com.mrporter.pomangam.common.util.formatter.PhoneNumberFormatter;
 import com.mrporter.pomangam.common.util.time.CustomTime;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -47,6 +48,7 @@ public class UserServiceImpl implements UserService {
         user.setPw(passwordEncoder.encode(user.getPw()));
         user.setState_active(Byte.valueOf("1"));
         user.setRegister_date(CustomTime.curTimestampSql());
+        user.setPhoneNumber(PhoneNumberFormatter.format(user.getPhoneNumber()));
         user.setPoint(user.getPoint() == null ? 0 : user.getPoint());
         user.setAuthorities("ROLE_USER");
 

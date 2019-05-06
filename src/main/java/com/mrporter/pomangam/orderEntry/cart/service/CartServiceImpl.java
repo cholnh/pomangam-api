@@ -422,10 +422,16 @@ public class CartServiceImpl implements CartService {
     public Cart copyGuest2Customer(Integer guestIdx, Integer customerIdx) {
         Cart guestCart = cartJpaRepository.getByGuestIdx(guestIdx);
         Cart customerCart = cartJpaRepository.getByCustomerIdx(customerIdx);
-        if(customerCart != null) {
-            cartJpaRepository.deleteById(customerCart.getIdx());
+        if(guestCart != null) {
+            guestCart.setCustomerIdx(customerIdx);
+            Cart cart = cartJpaRepository.save(guestCart);
+            if(customerCart != null) {
+                cartJpaRepository.deleteById(customerCart.getIdx());
+            }
+            return cart;
+        } else {
+            return cartJpaRepository.getByCustomerIdx(customerIdx);
         }
-        guestCart.setCustomerIdx(customerIdx);
-        return cartJpaRepository.save(guestCart);
+
     }
 }

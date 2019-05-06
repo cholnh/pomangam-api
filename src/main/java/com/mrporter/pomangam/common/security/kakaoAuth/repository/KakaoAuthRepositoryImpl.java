@@ -49,8 +49,8 @@ public class KakaoAuthRepositoryImpl implements KakaoAuthRepository {
     @Override
     public boolean checkAuthCode(String phone_number, String auth_code) {
         Query query = em
-                            .createNativeQuery("SELECT * FROM kakao_authcode_tbl where phone_number = ? AND TIMESTAMPDIFF(minute, register_date, now()) < 3 ORDER BY register_date DESC")
-                            .setParameter(1, phone_number);
+                .createNativeQuery("SELECT * FROM kakao_authcode_tbl where phone_number = ? AND TIMESTAMPDIFF(minute, register_date, now()) < 3 ORDER BY register_date DESC")
+                .setParameter(1, phone_number);
 
         List<KakaoAuthDto> dto = new JpaResultMapper().list(query, KakaoAuthDto.class);
         if(dto == null || dto.isEmpty()) {
