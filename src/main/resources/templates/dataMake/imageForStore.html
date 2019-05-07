@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.css">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h2>Image For Stores</h2>
+
+    <form id="form">
+        <input type="text" id="store_idx" placeholder="store_idx"><br>
+        <input type="text" id="imgpath" placeholder="imgpath"><br>
+        <input type="text" id="type" placeholder="type"><br>
+        <button type="button" id="submit">생성</button>
+        <button type="reset" id="reset">초기화</button>
+    </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.js"></script>
+    <script src="../../js/custom.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var token = [[${session.token}]];
+        /*]]>*/
+    </script>
+    <script>
+        $('#submit').click(function () {
+            if(token) {
+                exec();
+            } else {
+                alert('token is null');
+            }
+        });
+        function exec() {
+            const data = {
+                "store_idx" : $('#store_idx').val(),
+                "imgpath" : $('#imgpath').val(),
+                "type" : $('#type').val()
+            };
+            postJpa('imageForStores', token, data, function(e) {
+                alert('생성완료');
+                $('#reset').click();
+            });
+        }
+    </script>
+</body>
+</html>

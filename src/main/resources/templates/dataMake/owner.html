@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.css">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h2>Owner Of Stores</h2>
+
+    <form id="form">
+        <input type="text" id="idx" placeholder="idx"><br>
+        <input type="text" id="store_idx" placeholder="store_idx"><br>
+        <input type="text" id="id" placeholder="id"><br>
+        <input type="text" id="pw" placeholder="pw"><br>
+        <input type="text" id="name" placeholder="name"><br>
+        <input type="text" id="gender" placeholder="gender"><br>
+        <input type="text" id="year_of_birth" placeholder="year_of_birth"><br>
+        <input type="text" id="month_of_birth" placeholder="month_of_birth"><br>
+        <input type="text" id="days_of_birth" placeholder="days_of_birth"><br>
+        <input type="text" id="phone_number" placeholder="phone_number"><br>
+        <input type="text" id="email" placeholder="email"><br>
+        <input type="text" id="state_active" placeholder="state_active"><br>
+        <input type="text" id="hire_date" placeholder="hire_date"><br>
+        <input type="text" id="type_role" placeholder="type_role"><br>
+        <button type="button" id="submit">생성</button>
+        <button type="reset" id="reset">초기화</button>
+    </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.js"></script>
+    <script src="../../js/custom.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var token = [[${session.token}]];
+        /*]]>*/
+    </script>
+    <script>
+        $('#submit').click(function () {
+            if(token) {
+                exec();
+            } else {
+                alert('token is null');
+            }
+        });
+        function exec() {
+            const data = {
+                "idx" : $('#idx').val(),
+                "store_idx" : $('#store_idx').val(),
+                "id" : $('#id').val(),
+                "pw" : $('#pw').val(),
+                "name" : $('#name').val(),
+                "gender" : $('#gender').val(),
+                "year_of_birth" : $('#year_of_birth').val(),
+                "month_of_birth" : $('#month_of_birth').val(),
+                "days_of_birth" : $('#days_of_birth').val(),
+                "phone_number" : $('#phone_number').val(),
+                "email" : $('#email').val(),
+                "state_active" : $('#state_active').val(),
+                "hire_date" : $('#hire_date').val(),
+                "type_role" : $('#type_role').val()
+            };
+            postJpa('ownerOfStores', token, data, function(e) {
+                alert('생성완료');
+                $('#reset').click();
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <div th:if="${session.token}">
+            토큰 :
+            <span th:text="${session.token}"></span>
+        </div>
+        <div th:unless="${session.token}">
+            토큰 인증 필요
+        </div><br>
+
+        <button onclick="href('login')">1. 로그인</button><br><br>
+        <button onclick="href('store')">2-1. 업체</button><br>
+        <button onclick="href('orderTime')">2-2. 업체 배달시간</button><br>
+        <button onclick="href('scheduleForStore')">2-2. 업체 운영시간</button><br>
+        <button onclick="href('imageForStore')">2-3. 업체 이미지</button><br>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        function href(url) {
+            var root = location.href;
+            if(root.endsWith('/')) {
+                root = root.substring(0, root.length-1);
+            }
+            location.href = root + '/' + url;
+        }
+    </script>
+</body>
+</html>

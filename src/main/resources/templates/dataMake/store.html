@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.css">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h2>stores</h2>
+
+    <form id="form">
+        <input type="text" id="name" placeholder="name"><br>
+        <input type="text" id="location" placeholder="location"><br>
+        <input type="text" id="main_phone_number" placeholder="main_phone_number"><br>
+        <input type="text" id="description" placeholder="description"><br>
+        <input type="text" id="cnt_like" placeholder="cnt_like"><br>
+        <input type="text" id="cnt_comment" placeholder="cnt_comment"><br>
+        <input type="text" id="minimum_time" placeholder="minimum_time"><br>
+        <input type="text" id="parallel_production" placeholder="parallel_production"><br>
+        <input type="text" id="maximum_production" placeholder="maximum_production"><br>
+        <input type="text" id="sequence" placeholder="sequence"><br>
+        <input type="text" id="type" placeholder="type"><br>
+        <button type="button" id="submit">생성</button>
+        <button type="reset" id="reset">초기화</button>
+    </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.js"></script>
+    <script src="../../js/custom.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var token = [[${session.token}]];
+        /*]]>*/
+    </script>
+    <script>
+        $('#submit').click(function () {
+            if(token) {
+                exec();
+            } else {
+                alert('token is null');
+            }
+        });
+        function exec() {
+            const data = {
+                "name" : $('#name').val(),
+                "location" : $('#location').val(),
+                "main_phone_number" : $('#main_phone_number').val(),
+                "description" : $('#description').val(),
+                "cnt_like" : $('#cnt_like').val(),
+                "cnt_comment" : $('#cnt_comment').val(),
+                "minimum_time" : $('#minimum_time').val(),
+                "parallel_production" : $('#parallel_production').val(),
+                "maximum_production" : $('#maximum_production').val(),
+                "sequence" : $('#sequence').val(),
+                "type" : $('#type').val()
+            };
+            postJpa('stores', token, data, function(e) {
+                alert('생성완료');
+                $('#reset').click();
+            });
+        }
+    </script>
+</body>
+</html>

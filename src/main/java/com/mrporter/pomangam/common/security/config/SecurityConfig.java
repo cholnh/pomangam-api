@@ -118,6 +118,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //.ignoring().antMatchers("/**");
 
                 .ignoring().antMatchers("/assets/**")
+                .and().ignoring().antMatchers("/js/**")
 
                 .and().ignoring().antMatchers("/tests/**")
                 .and().ignoring().antMatchers("/payments/**")

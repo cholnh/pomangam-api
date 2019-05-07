@@ -27,9 +27,31 @@ public class FileController {
     @Autowired
     private FileStorageServiceImpl fileStorageService;
 
-    @PostMapping("/uploadFile")
+
+    //@PostMapping("/uploadFile")
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
         String fileName = fileStorageService.storeFile(file);
+
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/downloadFile/")
+                .path(fileName)
+                .toUriString();
+
+        return new UploadFileResponse(fileName, fileDownloadUri,
+                file.getContentType(), file.getSize());
+    }
+
+
+    /**
+     * @param file  업로드 할 파일
+     * @param path  저장경로 (ex. image/ -> C:\assets\image\)
+     * @param fileName  파일이름 (ex. 123.png -> C:\assets\image\123.png 업로드)
+     */
+    @PostMapping("/uploadFile")
+    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file,
+                                         @RequestParam("path") String path,
+                                         @RequestParam("fileName") String fileName) {
+        fileStorageService.storeFile(file, path, fileName);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/downloadFile/")
@@ -48,8 +70,12 @@ public class FileController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/downloadFile/{fileName:.+}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
+    /**
+     * @param fileName  다운받을 파일 경로 (ex. image/123.png -> c:/assets/image/123.png 다운로드)
+     */
+    //@GetMapping("/downloadFile/{fileName:.+}")
+    @GetMapping("/downloadFile")
+    public ResponseEntity<Resource> downloadFile(@RequestParam("fileName") String fileName, HttpServletRequest request) {
         // Load file as Resource
         Resource resource = fileStorageService.loadFileAsResource(fileName);
 

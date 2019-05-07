@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <input type="text" id="id" placeholder="id" /><br>
+    <input type="password" id="pw" onkeypress="return runScript(event)" placeholder="pw"/><br>
+    <button id="submit">로그인</button>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $('#id').focus();
+        $('#submit').click(function () {
+            login();
+        });
+        function runScript(e) {
+            if (e.keyCode == 13) {
+                login();
+                return false;
+            }
+        }
+        function login() {
+            var id = $('#id').val();
+            var pw = $('#pw').val();
+
+            $.ajax({
+                url : location.origin + '/api/v1/oauth/token?grant_type=password&username='+id+'&password='+pw,
+                type : 'post',
+                beforeSend : function(xhr){
+                    xhr.setRequestHeader("Authorization", "Basic bG9naW46eTdGTFtNc1o+M15wKE02eg==");
+                    xhr.setRequestHeader("Content-Type", "application/json");
+                    xhr.setRequestHeader("Accept", "application/json");
+                },
+                dataType : 'json',
+                error : function (e) {
+                },
+                statusCode : {
+                    200 : function (response) {
+                        location.href = './token/'+response.access_token;
+                    },
+                    400 : function (response) {
+                        console.log(response);
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

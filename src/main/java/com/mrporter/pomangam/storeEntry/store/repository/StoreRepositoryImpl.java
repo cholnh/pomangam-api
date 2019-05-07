@@ -63,7 +63,7 @@ public class StoreRepositoryImpl implements StoreRepository {
                                 "        AND sc.state_active = 1 " +
                                 "        AND sc.state_pause = 0 " +
                                 "        AND s.type = :type " +
-                                (orderBy != null && !sqlInjection.isSQLInjection(orderBy) ? "ORDER BY " + orderBy :"ORDER BY s.sequence DESC ")
+                                (orderBy != null && !sqlInjection.isSQLInjection(orderBy) ? "ORDER BY " + orderBy :"ORDER BY s.sequence ")
                 )
                 .setParameter("didx", delivery_site_idx)
                 .setParameter("type", type)

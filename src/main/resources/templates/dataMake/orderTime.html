@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.css">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h2>orderTimes</h2>
+
+    <form id="formBasic">
+        <input type="text" id="delivery_site_idx" placeholder="delivery_site_idx"><br>
+        <input type="text" id="store_idx" placeholder="store_idx"><br>
+        <input type="text" id="pause_description" placeholder="pause_description"><br>
+    </form>
+
+    <form id="form">
+        <input type="text" id="order_deadline" placeholder="order_deadline(11:40:00)"><br>
+        <input type="text" id="arrival_time" placeholder="arrival_time(12:00:00)"><br>
+        <input type="text" id="sequence" placeholder="sequence"><br>
+        <button type="button" id="submit">생성</button>
+        <button type="reset" id="reset">초기화</button>
+    </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.js"></script>
+    <script src="../../js/custom.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var token = [[${session.token}]];
+        /*]]>*/
+    </script>
+    <script>
+        $('#submit').click(function () {
+            if(token) {
+                exec();
+            } else {
+                alert('token is null');
+            }
+        });
+        function exec() {
+            const data = {
+                "delivery_site_idx" : $('#delivery_site_idx').val(),
+                "store_idx" : $('#store_idx').val(),
+                "order_deadline" : $('#order_deadline').val(),
+                "arrival_time" : $('#arrival_time').val(),
+                "sequence" : $('#sequence').val(),
+                "pause_description" : $('#pause_description').val()
+            };
+            postJpa('orderTimes', token, data, function(e) {
+                alert('생성완료');
+                $('#reset').click();
+            });
+        }
+    </script>
+</body>
+</html>

@@ -45,6 +45,7 @@ spring:
       base-path: /jpa
       detection-strategy: default
 
+
   servlet:
     multipart:
       enabled: true
@@ -62,8 +63,8 @@ spring:
   cache-period: 3600
 ---
 file:
-  upload-dir: ./uploads
-  #upload-dir: file:///C:/assets/
+  #upload-dir: ./uploads
+  upload-dir: C:/assets
 ---
 static:
   resource:

@@ -20,8 +20,6 @@ public class Cost implements Serializable {
 
     private Integer product_idx;
 
-    private Integer promotion_idx;
-
     private Integer unit_cost;
 
     private Integer s_commission_prc;
@@ -33,9 +31,8 @@ public class Cost implements Serializable {
     private Short c_commission_pct;
 
     @Builder
-    public Cost(Integer product_idx, Integer promotion_idx, Integer unit_cost, Integer s_commission_prc, Short s_commission_pct, Integer c_commission_prc, Short c_commission_pct) {
+    public Cost(Integer product_idx, Integer unit_cost, Integer s_commission_prc, Short s_commission_pct, Integer c_commission_prc, Short c_commission_pct) {
         this.product_idx = product_idx;
-        this.promotion_idx = promotion_idx;
         this.unit_cost = unit_cost;
         this.s_commission_prc = s_commission_prc;
         this.s_commission_pct = s_commission_pct;

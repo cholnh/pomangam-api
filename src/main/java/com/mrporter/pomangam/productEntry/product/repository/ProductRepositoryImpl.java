@@ -97,7 +97,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                         "    AND store_idx = :storeIdx " +
                         "    AND p.state_active = 1 " +
                         (type != null ? "AND p.type = :type ":"AND p.type IN (0, 1, 3) ") +   // 메인, 서브, 음료 (토핑 제외)
-                        (orderBy != null && !sqlInjection.isSQLInjection(orderBy) ? "ORDER BY " + orderBy :"ORDER BY sequence DESC "))
+                        (orderBy != null && !sqlInjection.isSQLInjection(orderBy) ? "ORDER BY " + orderBy :"ORDER BY sequence "))
                 .setParameter("storeIdx", store_idx);
 
         if(type != null) {
@@ -200,7 +200,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                                 "    AND p.state_active = 1 " +
                                 "    AND p.category_id = :categoryId " +
                                 (type != null ? "AND p.type = :type ":"AND p.type IN (0, 1, 3) ") +   // 메인, 서브, 음료 (토핑 제외)
-                                (orderBy != null && !sqlInjection.isSQLInjection(orderBy) ? "ORDER BY " + orderBy :"ORDER BY sequence DESC "))
+                                (orderBy != null && !sqlInjection.isSQLInjection(orderBy) ? "ORDER BY " + orderBy :"ORDER BY sequence "))
                 .setParameter("storeIdx", store_idx)
                 .setParameter("categoryId", categoryId);
 

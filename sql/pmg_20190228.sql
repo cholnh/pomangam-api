@@ -156,7 +156,7 @@ CREATE TABLE `cmt_advertise_for_main_tbl` (
 
 LOCK TABLES `cmt_advertise_for_main_tbl` WRITE;
 /*!40000 ALTER TABLE `cmt_advertise_for_main_tbl` DISABLE KEYS */;
-INSERT INTO `cmt_advertise_for_main_tbl` VALUES (1,'/view/main/image/1.png',1,1,1),(2,'/view/main/image/2.png',2,1,2),(3,'/view/main/image/3.png',2,1,3);
+INSERT INTO `cmt_advertise_for_main_tbl` VALUES (1,'/view/main/imageForStore/1.png',1,1,1),(2,'/view/main/imageForStore/2.png',2,1,2),(3,'/view/main/imageForStore/3.png',2,1,3);
 /*!40000 ALTER TABLE `cmt_advertise_for_main_tbl` ENABLE KEYS */;
 UNLOCK TABLES;
 
