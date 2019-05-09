@@ -19,6 +19,8 @@ public class CommentAll implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idx;
 
+    private Integer delivery_site_idx;
+
     private Integer store_idx;
 
     private Integer customer_idx;
@@ -42,7 +44,8 @@ public class CommentAll implements Serializable {
     private Byte state_anonymous;
 
     @Builder
-    public CommentAll(Integer store_idx, Integer customer_idx, Timestamp register_date, Timestamp modify_date, Integer cnt_like, Integer cnt_unlike, Integer cnt_view, String title, String contents, Byte state_active, Byte state_anonymous) {
+    public CommentAll(Integer delivery_site_idx, Integer store_idx, Integer customer_idx, Timestamp register_date, Timestamp modify_date, Integer cnt_like, Integer cnt_unlike, Integer cnt_view, String title, String contents, Byte state_active, Byte state_anonymous) {
+        this.delivery_site_idx = delivery_site_idx;
         this.store_idx = store_idx;
         this.customer_idx = customer_idx;
         this.register_date = register_date;

@@ -1,6 +1,7 @@
 package com.mrporter.pomangam.feedbackHistory.commentAll.controller;
 
 import com.mrporter.pomangam.feedbackHistory.commentAll.service.CommentAllServiceImpl;
+import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +17,11 @@ public class CommentAllController {
 
     CommentAllServiceImpl commentAllService;
 
-    @GetMapping("/search/getBlahBlah")
-    public ResponseEntity<?> getBlahBlah(@RequestParam("blah") String blah) {
-        return new ResponseEntity(blah, HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<?> getBy(@RequestParam(value = "deliverySiteIdx", required = false) Integer deliverySiteIdx,
+                                   @RequestParam(value = "storeIdx", required = false) Integer storeIdx,
+                                   @RequestParam(value = "orderBy", required = false) String orderBy,
+                                   PageRequest pageRequest) {
+        return new ResponseEntity(commentAllService.getBy(deliverySiteIdx, storeIdx, orderBy, pageRequest), HttpStatus.OK);
     }
 }
