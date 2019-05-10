@@ -36,9 +36,9 @@ public class CommentStoreRepositoryImpl implements CommentStoreRepository {
     public List<CommentStoreViewDto> findByStoreIdx(Integer storeIdx, String orderBy, Integer customerIdx, PageRequest pageRequest) {
         List comments = em
                 .createNativeQuery(
-                        "SELECT cmt.idx, cmt.store_idx, u.nickname AS customer_nickname , cmt.cnt_star, cmt.cnt_like, cmt.contents, cmt.register_date, cmt.state_anonymous, lk.type as likeType " +
+                        "SELECT cmt.idx, cmt.store_idx, u.nickname AS customer_nickname, u.id AS customer_id, cmt.cnt_star, cmt.cnt_like, cmt.contents, cmt.register_date, cmt.state_anonymous, lk.type as likeType " +
                                 "FROM comment_for_store_tbl cmt LEFT OUTER JOIN user_tbl u " +
-                                "ON cmt.customer_idx = u.idx AND cmt.state_anonymous = 0 " +
+                                "ON cmt.customer_idx = u.idx AND (cmt.state_anonymous = 0 or u.idx = :customerIdx) " +
                                 "LEFT OUTER JOIN like_for_comment_store_tbl lk " +
                                 "ON cmt.idx = lk.comment_store_idx AND lk.customer_idx = :customerIdx " +
                                 "WHERE cmt.store_idx = :storeIdx " +
