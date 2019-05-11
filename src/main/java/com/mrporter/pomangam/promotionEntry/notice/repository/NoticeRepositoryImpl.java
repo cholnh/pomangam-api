@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.List;
 
 @Repository
@@ -18,14 +19,19 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 
     @Override
     public List<NoticeResponseDto> getAll(Integer delivery_site_idx, PageRequest pageRequest) {
-        List notices = em
+         Query nativeQuery = em
                 .createNativeQuery(
                         "SELECT n.idx, n.title, n.begin_date, n.end_date, n.url " +
                         "FROM notice_tbl n " +
-                        "WHERE n.idx IN (SELECT notice_idx FROM dsite_link_notice_tbl WHERE delivery_site_idx = ?) " +
+                        "WHERE n.idx IN (SELECT notice_idx FROM dsite_link_notice_tbl " + (delivery_site_idx != null ? "WHERE delivery_site_idx = ? " : "") + " ) " +
                         "AND n.begin_date <= NOW() AND (n.end_date IS NULL OR n.end_date > NOW()) " +
-                        "AND n.state_active = 1 ")
-                .setParameter(1, delivery_site_idx)
+                        "AND n.state_active = 1 ");
+
+        if(delivery_site_idx != null) {
+            nativeQuery.setParameter(1, delivery_site_idx);
+        }
+
+        List notices = nativeQuery
                 .unwrap( org.hibernate.query.NativeQuery.class )
                 .setResultTransformer( Transformers.aliasToBean( NoticeResponseDto.class ) )
                 .setFirstResult(pageRequest.getFirstIndex())

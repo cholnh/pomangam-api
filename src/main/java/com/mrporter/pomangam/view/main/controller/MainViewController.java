@@ -1,6 +1,5 @@
 package com.mrporter.pomangam.view.main.controller;
 
-import com.mrporter.pomangam.common.annotation.LogExecutionTime;
 import com.mrporter.pomangam.view.main.service.MainViewServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,17 +17,17 @@ public class MainViewController {
     MainViewServiceImpl mainService;
 
     @GetMapping
-    public ResponseEntity<?> getAll(@RequestParam("deliverySiteIdx") Integer delivery_site_idx) {
+    public ResponseEntity<?> getAll(@RequestParam(value = "deliverySiteIdx", required = false) Integer delivery_site_idx) {
         return new ResponseEntity<>(mainService.getMainDto(delivery_site_idx), HttpStatus.OK);
     }
 
     @GetMapping("/first")
-    public ResponseEntity<?> getFirst(@RequestParam("deliverySiteIdx") Integer delivery_site_idx) {
+    public ResponseEntity<?> getFirst(@RequestParam(value = "deliverySiteIdx", required = false) Integer delivery_site_idx) {
         return new ResponseEntity<>(mainService.getMainFirstDto(delivery_site_idx), HttpStatus.OK);
     }
 
     @GetMapping("/second")
-    public ResponseEntity<?> getSecond(@RequestParam("deliverySiteIdx") Integer delivery_site_idx) {
+    public ResponseEntity<?> getSecond(@RequestParam(value = "deliverySiteIdx", required = false) Integer delivery_site_idx) {
         return new ResponseEntity<>(mainService.getMainSecondDto(delivery_site_idx), HttpStatus.OK);
     }
 }

@@ -18,7 +18,7 @@ public class NoticeController {
     NoticeServiceImpl noticeService;
 
     @GetMapping
-    public ResponseEntity getAll(@RequestParam("deliverySiteIdx") Integer delivery_site_idx,
+    public ResponseEntity getAll(@RequestParam(value = "deliverySiteIdx", required = false) Integer delivery_site_idx,
                                         PageRequest pageRequest) {
         return new ResponseEntity(noticeService.getAll(delivery_site_idx, pageRequest), HttpStatus.OK);
     }

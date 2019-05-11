@@ -18,12 +18,12 @@ public class EventController {
     EventServiceImpl eventService;
 
     @GetMapping("/getInProgress")
-    public ResponseEntity getInProgress(@RequestParam("deliverySiteIdx") Integer delivery_site_idx) {
+    public ResponseEntity getInProgress(@RequestParam(value = "deliverySiteIdx", required = false) Integer delivery_site_idx) {
         return new ResponseEntity(eventService.getInProgress(delivery_site_idx), HttpStatus.OK);
     }
 
     @GetMapping("/getFinished")
-    public ResponseEntity getFinished(@RequestParam("deliverySiteIdx") Integer delivery_site_idx,
+    public ResponseEntity getFinished(@RequestParam(value = "deliverySiteIdx", required = false) Integer delivery_site_idx,
                                       PageRequest pageRequest) {
         return new ResponseEntity(eventService.getFinished(delivery_site_idx, pageRequest), HttpStatus.OK);
     }
