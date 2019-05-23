@@ -1,6 +1,6 @@
 package com.mrporter.pomangam.feedbackHistory.commentAll.domain;
 
-import com.mrporter.pomangam.feedbackHistory.replyForCommentAll.domain.ReplyForCommentAllDto;
+import com.mrporter.pomangam.feedbackHistory.imageForCommentAll.domain.ImageForCommentAll;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,11 +13,11 @@ import java.util.List;
 public class CommentAllDetailViewDto implements Serializable {
 
     CommentAllDetailDto commentAllDetail;
-    List<ReplyForCommentAllDto> replies;
+    List<ImageForCommentAll> imageForCommentAlls;
 
     @Builder
-    public CommentAllDetailViewDto(CommentAllDetailDto commentAllDetail, List<ReplyForCommentAllDto> replies) {
+    public CommentAllDetailViewDto(CommentAllDetailDto commentAllDetail, List<ImageForCommentAll> imageForCommentAlls) {
         this.commentAllDetail = commentAllDetail;
-        this.replies = replies;
+        this.imageForCommentAlls = imageForCommentAlls;
     }
 }

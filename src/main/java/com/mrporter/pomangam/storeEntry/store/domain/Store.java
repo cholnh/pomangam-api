@@ -47,7 +47,8 @@ public class Store implements Serializable {
     private Byte type;
 
     @Builder
-    public Store(String name, String location, String main_phone_number, String description, Integer cnt_like, Integer cnt_comment, Time minimum_time, Short parallel_production, Integer maximum_production, Timestamp register_date, Timestamp modify_date, Integer sequence, Byte type) {
+    public Store(Integer idx, String name, String location, String main_phone_number, String description, Integer cnt_like, Integer cnt_comment, Time minimum_time, Short parallel_production, Integer maximum_production, Timestamp register_date, Timestamp modify_date, Integer sequence, Byte type) {
+        this.idx = idx;
         this.name = name;
         this.location = location;
         this.main_phone_number = main_phone_number;

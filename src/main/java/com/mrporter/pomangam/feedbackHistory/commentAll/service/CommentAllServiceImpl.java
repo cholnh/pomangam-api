@@ -2,9 +2,14 @@ package com.mrporter.pomangam.feedbackHistory.commentAll.service;
 
 import com.mrporter.pomangam.common.security.user.domain.User;
 import com.mrporter.pomangam.common.security.user.service.UserService;
-import com.mrporter.pomangam.feedbackHistory.commentAll.domain.CommentAllDetailDto;
+import com.mrporter.pomangam.common.util.time.CustomTime;
+import com.mrporter.pomangam.feedbackHistory.commentAll.domain.CommentAll;
+import com.mrporter.pomangam.feedbackHistory.commentAll.domain.CommentAllDetailViewDto;
+import com.mrporter.pomangam.feedbackHistory.commentAll.domain.CommentAllInputDto;
 import com.mrporter.pomangam.feedbackHistory.commentAll.domain.CommentAllViewDto;
+import com.mrporter.pomangam.feedbackHistory.commentAll.repository.CommentAllJpaRepository;
 import com.mrporter.pomangam.feedbackHistory.commentAll.repository.CommentAllRepositoryImpl;
+import com.mrporter.pomangam.feedbackHistory.imageForCommentAll.repository.ImageForCommentAllJpaRepository;
 import com.mrporter.pomangam.feedbackHistory.replyForCommentAll.repository.ReplyForCommentAllRepositoryImpl;
 import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import lombok.AllArgsConstructor;
@@ -16,7 +21,9 @@ public class CommentAllServiceImpl implements CommentAllService {
 
     UserService userService;
     CommentAllRepositoryImpl commentAllRepository;
+    CommentAllJpaRepository commentAllJpaRepository;
     ReplyForCommentAllRepositoryImpl replyForCommentAllRepository;
+    ImageForCommentAllJpaRepository imageForCommentAllJpaRepository;
 
     @Override
     public CommentAllViewDto getBy(Integer deliverySiteIdx, Integer storeIdx, String orderBy, PageRequest pageRequest) {
@@ -31,13 +38,33 @@ public class CommentAllServiceImpl implements CommentAllService {
     }
 
     @Override
-    public CommentAllDetailDto getDetail(Integer commentIdx, String customerId) {
+    public CommentAllDetailViewDto getDetail(Integer commentIdx, String customerId) {
+        CommentAllDetailViewDto dto = new CommentAllDetailViewDto();
         User user = userService.findById(customerId);
         if(user == null) {
-            return commentAllRepository.getDetail(commentIdx, null);
+            dto.setCommentAllDetail(commentAllRepository.getDetail(commentIdx, null));
         } else {
-            return commentAllRepository.getDetail(commentIdx, user.getIdx());
+            dto.setCommentAllDetail(commentAllRepository.getDetail(commentIdx, user.getIdx()));
         }
+        dto.setImageForCommentAlls(imageForCommentAllJpaRepository.findByCommentAllIdx(commentIdx));
+        return dto;
+    }
 
+    @Override
+    public CommentAll saveCommentAllInput(CommentAllInputDto dto) {
+        CommentAll comment = CommentAll.builder()
+                .delivery_site_idx(dto.getDeliverySiteIdx())
+                .store_idx(dto.getStoreIdx())
+                .customer_idx(dto.getCustomerIdx())
+                .register_date(CustomTime.curTimestampSql())
+                .cnt_like(0)
+                .cnt_unlike(0)
+                .cnt_view(0)
+                .title(dto.getTitle())
+                .contents(dto.getContents())
+                .state_active(Byte.valueOf("1"))
+                .state_anonymous(dto.getIsAnonymous()?Byte.valueOf("1"):Byte.valueOf("0"))
+                .build();
+        return commentAllJpaRepository.save(comment);
     }
 }

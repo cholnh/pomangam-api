@@ -211,4 +211,13 @@ public class StoreServiceImpl implements StoreService {
     public StoreInfoDto getInfo(Integer storeIdx) {
         return storeRepository.getInfo(storeIdx);
     }
+
+    @Override
+    public List<Store> getStores(Integer deliverySiteIdx) {
+        if(deliverySiteIdx == null) {
+            return storeJpaRepository.findAll();
+        } else {
+            return storeRepository.findByDeliverySiteIdx(deliverySiteIdx);
+        }
+    }
 }

@@ -2,6 +2,7 @@ package com.mrporter.pomangam.storeEntry.store.controller;
 
 import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import com.mrporter.pomangam.storeEntry.store.domain.InquiryResultDto;
+import com.mrporter.pomangam.storeEntry.store.domain.Store;
 import com.mrporter.pomangam.storeEntry.store.domain.StoreSummaryDto;
 import com.mrporter.pomangam.storeEntry.store.domain.StoreWithCategoryDto;
 import com.mrporter.pomangam.storeEntry.store.service.StoreServiceImpl;
@@ -19,6 +20,12 @@ import java.util.List;
 public class StoreController {
 
     StoreServiceImpl storeService;
+
+    @GetMapping
+    public ResponseEntity<?> getAll(@RequestParam(value = "deliverySiteIdx", required = false) Integer delivery_site_idx) {
+        List<Store> stores = storeService.getStores(delivery_site_idx);
+        return new ResponseEntity(stores, HttpStatus.OK);
+    }
 
     @GetMapping("/search/getInquiryResult")
     public ResponseEntity<?> getInquiryResult(@RequestParam("arrivalDate") String arrival_date,

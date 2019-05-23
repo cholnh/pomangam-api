@@ -19,4 +19,5 @@ public interface StoreService {
     void unlike(Integer storeIdx, String customerId);
 
     StoreInfoDto getInfo(Integer storeIdx);
+    List<Store> getStores(Integer deliverySiteIdx);
 }

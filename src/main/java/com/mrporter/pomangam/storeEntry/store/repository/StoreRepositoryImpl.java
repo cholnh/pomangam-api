@@ -2,6 +2,7 @@ package com.mrporter.pomangam.storeEntry.store.repository;
 
 import com.mrporter.pomangam.common.util.sqlInjection.SqlInjection;
 import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
+import com.mrporter.pomangam.storeEntry.store.domain.Store;
 import com.mrporter.pomangam.storeEntry.store.domain.StoreDto;
 import com.mrporter.pomangam.storeEntry.store.domain.StoreInfoDto;
 import com.mrporter.pomangam.storeEntry.store.domain.StoreSummaryDto;
@@ -100,5 +101,23 @@ public class StoreRepositoryImpl implements StoreRepository {
         em.createNativeQuery("UPDATE store_tbl SET cnt_comment=cnt_comment-1 WHERE idx=:storeIdx AND cnt_comment>0")
                 .setParameter("storeIdx", storeIdx)
                 .executeUpdate();
+    }
+
+    public List<Store> findByDeliverySiteIdx(Integer deliverySiteIdx) {
+        Query nativeQuery = em
+                .createNativeQuery(
+                        "SELECT  " +
+                                "    s.* " +
+                                "FROM " +
+                                "    store_tbl s, " +
+                                "    schedule_for_store_tbl sc " +
+                                "WHERE " +
+                                "   s.idx IN (SELECT store_idx FROM ordertime_for_store_tbl WHERE delivery_site_idx = :didx group by store_idx) " +
+                                "        AND s.idx = sc.store_idx " +
+                                "        AND sc.state_active = 1 "
+                )
+                .setParameter("didx", deliverySiteIdx);
+        List<Store> stores = new JpaResultMapper().list(nativeQuery, Store.class);
+        return stores;
     }
 }

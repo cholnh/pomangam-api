@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.feedbackHistory.commentAll.controller;
 
+import com.mrporter.pomangam.feedbackHistory.commentAll.domain.CommentAllInputDto;
 import com.mrporter.pomangam.feedbackHistory.commentAll.service.CommentAllServiceImpl;
 import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import lombok.AllArgsConstructor;
@@ -28,5 +29,10 @@ public class CommentAllController {
     public ResponseEntity<?> getDetail(@PathVariable(value = "commentIdx") Integer commentIdx,
                                        Principal principal) {
         return new ResponseEntity(commentAllService.getDetail(commentIdx, principal.getName()), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity post(@RequestBody CommentAllInputDto dto) {
+        return new ResponseEntity(commentAllService.saveCommentAllInput(dto), HttpStatus.OK);
     }
 }

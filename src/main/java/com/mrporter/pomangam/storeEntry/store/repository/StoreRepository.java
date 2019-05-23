@@ -1,6 +1,7 @@
 package com.mrporter.pomangam.storeEntry.store.repository;
 
 import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
+import com.mrporter.pomangam.storeEntry.store.domain.Store;
 import com.mrporter.pomangam.storeEntry.store.domain.StoreDto;
 import com.mrporter.pomangam.storeEntry.store.domain.StoreInfoDto;
 import com.mrporter.pomangam.storeEntry.store.domain.StoreSummaryDto;
@@ -13,4 +14,5 @@ public interface StoreRepository {
     StoreInfoDto getInfo(Integer storeIdx);
     void plusCommentCount(Integer storeIdx);
     void minusCommentCount(Integer storeIdx);
+    List<Store> findByDeliverySiteIdx(Integer deliverySiteIdx);
 }

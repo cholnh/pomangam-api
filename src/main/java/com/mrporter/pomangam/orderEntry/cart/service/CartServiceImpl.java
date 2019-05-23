@@ -221,7 +221,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public List<CartTimeMapDto> getCartWithArrivalTime(Integer cart_Idx, ZoneId zoneId) {
         List<CartTimeMapDto> result = new ArrayList<>();
-        //Map<Integer, LocalDateTime> map = new HashMap<>();
+        //Map<Integer, LocalDateTime> mapObserver = new HashMap<>();
 
         CartDto cart = cartRepository.getByIdx(cart_Idx);
         List<CartInStoreQuantityDto> dtoList = cartRepository.findCartInStoreQuantityByIdx(cart_Idx);
@@ -318,7 +318,7 @@ public class CartServiceImpl implements CartService {
                             cartTimeMapDto.setRemaining_capacity(rc-quantity);
                             result.add(cartTimeMapDto);
 
-                            //map.put(store_idx, arrival_time);
+                            //mapObserver.put(store_idx, arrival_time);
                             break;
                         }
                     }
