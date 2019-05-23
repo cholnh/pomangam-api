@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.feedbackHistory.replyForCommentAll.controller;
 
+import com.mrporter.pomangam.feedbackHistory.replyForCommentAll.domain.ReplyForCommentAllInputDto;
 import com.mrporter.pomangam.feedbackHistory.replyForCommentAll.service.ReplyForCommentAllServiceImpl;
 import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import lombok.AllArgsConstructor;
@@ -21,5 +22,24 @@ public class ReplyForCommentAllController {
                                    Principal principal,
                                    PageRequest pageRequest) {
         return new ResponseEntity(replyForCommentAllService.getBy(commentIdx, principal.getName(), pageRequest), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity post(@RequestBody ReplyForCommentAllInputDto dto) {
+        return new ResponseEntity(replyForCommentAllService.saveReplyForCommentAllInput(dto), HttpStatus.OK);
+    }
+
+    @GetMapping("/{replyIdx}/like")
+    public ResponseEntity like(@PathVariable(name = "replyIdx") Integer replyIdx,
+                               Principal principal) {
+        replyForCommentAllService.like(replyIdx, principal.getName());
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/{replyIdx}/unlike")
+    public ResponseEntity unlike(@PathVariable(name = "replyIdx") Integer replyIdx,
+                                 Principal principal) {
+        replyForCommentAllService.unlike(replyIdx, principal.getName());
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

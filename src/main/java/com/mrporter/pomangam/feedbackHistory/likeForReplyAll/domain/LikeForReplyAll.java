@@ -12,17 +12,17 @@ import java.io.Serializable;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 @Entity
+@IdClass(LikeForReplyAllKey.class)
 public class LikeForReplyAll implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idx;
-
     private Integer reply_all_idx;
 
+    @Id
     private Integer customer_idx;
 
     private Byte type;
+
 
     @Builder
     public LikeForReplyAll(Integer reply_all_idx, Integer customer_idx, Byte type) {

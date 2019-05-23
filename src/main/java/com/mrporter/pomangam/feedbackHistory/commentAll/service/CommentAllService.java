@@ -10,4 +10,7 @@ public interface CommentAllService {
     CommentAllViewDto getBy(Integer deliverySiteIdx, Integer storeIdx, String orderBy, PageRequest pageRequest);
     CommentAllDetailViewDto getDetail(Integer commentIdx, String customerId);
     CommentAll saveCommentAllInput(CommentAllInputDto dto);
+
+    void like(Integer commentAllIdx, String customerId);
+    void unlike(Integer commentAllIdx, String customerId);
 }

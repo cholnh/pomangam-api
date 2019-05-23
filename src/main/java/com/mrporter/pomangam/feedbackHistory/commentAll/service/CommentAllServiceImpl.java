@@ -10,6 +10,7 @@ import com.mrporter.pomangam.feedbackHistory.commentAll.domain.CommentAllViewDto
 import com.mrporter.pomangam.feedbackHistory.commentAll.repository.CommentAllJpaRepository;
 import com.mrporter.pomangam.feedbackHistory.commentAll.repository.CommentAllRepositoryImpl;
 import com.mrporter.pomangam.feedbackHistory.imageForCommentAll.repository.ImageForCommentAllJpaRepository;
+import com.mrporter.pomangam.feedbackHistory.likeForCommentAll.repository.LikeForCommentAllRepositoryImpl;
 import com.mrporter.pomangam.feedbackHistory.replyForCommentAll.repository.ReplyForCommentAllRepositoryImpl;
 import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class CommentAllServiceImpl implements CommentAllService {
     CommentAllJpaRepository commentAllJpaRepository;
     ReplyForCommentAllRepositoryImpl replyForCommentAllRepository;
     ImageForCommentAllJpaRepository imageForCommentAllJpaRepository;
+    LikeForCommentAllRepositoryImpl likeForCommentAllRepository;
 
     @Override
     public CommentAllViewDto getBy(Integer deliverySiteIdx, Integer storeIdx, String orderBy, PageRequest pageRequest) {
@@ -66,5 +68,21 @@ public class CommentAllServiceImpl implements CommentAllService {
                 .state_anonymous(dto.getIsAnonymous()?Byte.valueOf("1"):Byte.valueOf("0"))
                 .build();
         return commentAllJpaRepository.save(comment);
+    }
+
+    @Override
+    public void like(Integer commentAllIdx, String customerId) {
+        final User user = userService.findById(customerId);
+        if(user != null) {
+            likeForCommentAllRepository.like(commentAllIdx, user.getIdx());
+        }
+    }
+
+    @Override
+    public void unlike(Integer commentAllIdx, String customerId) {
+        final User user = userService.findById(customerId);
+        if(user != null) {
+            likeForCommentAllRepository.unlike(commentAllIdx, user.getIdx());
+        }
     }
 }

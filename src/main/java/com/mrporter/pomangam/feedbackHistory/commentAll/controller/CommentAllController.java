@@ -35,4 +35,18 @@ public class CommentAllController {
     public ResponseEntity post(@RequestBody CommentAllInputDto dto) {
         return new ResponseEntity(commentAllService.saveCommentAllInput(dto), HttpStatus.OK);
     }
+
+    @GetMapping("/{commentAllIdx}/like")
+    public ResponseEntity like(@PathVariable(name = "commentAllIdx") Integer commentAllIdx,
+                               Principal principal) {
+        commentAllService.like(commentAllIdx, principal.getName());
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/{commentAllIdx}/unlike")
+    public ResponseEntity unlike(@PathVariable(name = "commentAllIdx") Integer commentAllIdx,
+                                 Principal principal) {
+        commentAllService.unlike(commentAllIdx, principal.getName());
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }
