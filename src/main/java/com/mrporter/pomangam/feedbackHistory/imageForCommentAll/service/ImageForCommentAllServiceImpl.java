@@ -19,7 +19,7 @@ public class ImageForCommentAllServiceImpl implements ImageForCommentAllService 
         for(int i=0; i<files.length; i++) {
             MultipartFile file = files[i];
             ImageForCommentAll imageForCommentAll = ImageForCommentAll.builder()
-                    .comment_all_idx(commentAllIdx)
+                    .commentAllIdx(commentAllIdx)
                     .type(i==0?Byte.valueOf("0"):Byte.valueOf("1"))
                     .build();
             ImageForCommentAll saved = imageForCommentAllJpaRepository.save(imageForCommentAll);
