@@ -3,7 +3,7 @@ package com.mrporter.pomangam.feedbackHistory.replyForCommentAll.service;
 import com.mrporter.pomangam.common.security.user.domain.User;
 import com.mrporter.pomangam.common.security.user.service.UserService;
 import com.mrporter.pomangam.common.util.time.CustomTime;
-import com.mrporter.pomangam.feedbackHistory.likeForReplyAll.repository.LikeForReplyAllRepository;
+import com.mrporter.pomangam.feedbackHistory.likeForReplyAll.repository.LikeForReplyAllRepositoryImpl;
 import com.mrporter.pomangam.feedbackHistory.replyForCommentAll.domain.ReplyForCommentAll;
 import com.mrporter.pomangam.feedbackHistory.replyForCommentAll.domain.ReplyForCommentAllDto;
 import com.mrporter.pomangam.feedbackHistory.replyForCommentAll.domain.ReplyForCommentAllInputDto;
@@ -22,7 +22,7 @@ public class ReplyForCommentAllServiceImpl implements ReplyForCommentAllService 
     UserService userService;
     ReplyForCommentAllRepositoryImpl replyForCommentAllRepository;
     ReplyForCommentAllJpaRepository replyForCommentAllJpaRepository;
-    LikeForReplyAllRepository likeForReplyAllRepository;
+    LikeForReplyAllRepositoryImpl likeForReplyAllRepository;
 
     @Override
     public List<ReplyForCommentAllDto> getBy(Integer commentIdx, String customerId, PageRequest pageRequest) {
@@ -32,7 +32,6 @@ public class ReplyForCommentAllServiceImpl implements ReplyForCommentAllService 
         } else {
             return replyForCommentAllRepository.getBy(commentIdx, user.getIdx(), pageRequest);
         }
-
     }
 
     @Override
@@ -62,6 +61,43 @@ public class ReplyForCommentAllServiceImpl implements ReplyForCommentAllService 
         final User user = userService.findById(customerId);
         if(user != null) {
             likeForReplyAllRepository.unlike(replyIdx, user.getIdx());
+        }
+    }
+
+    @Override
+    public ReplyForCommentAll patch(Integer replyIdx, ReplyForCommentAllInputDto dto) {
+        final ReplyForCommentAll fetched = replyForCommentAllJpaRepository.getOne(replyIdx);
+        if (fetched == null) {
+            return null;
+        }
+
+        if (dto.getCommentAllIdx() != null) {
+            fetched.setComment_all_idx(dto.getCommentAllIdx());
+        }
+        if (dto.getCustomer_idx() != null) {
+            fetched.setCustomer_idx(dto.getCustomer_idx());
+        }
+        if (dto.getIsAnonymous() != null) {
+            fetched.setState_anonymous(dto.getIsAnonymous()?Byte.valueOf("1"):Byte.valueOf("0"));
+        }
+        if (dto.getOwner_idx() != null) {
+            fetched.setOwner_idx(dto.getOwner_idx());
+        }
+        if (dto.getContents() != null) {
+            fetched.setContents(dto.getContents());
+        }
+        fetched.setModify_date(CustomTime.curTimestampSql());
+        return replyForCommentAllJpaRepository.save(fetched);
+    }
+
+    @Override
+    public Boolean delete(Integer replyIdx) {
+        final ReplyForCommentAll fetched = replyForCommentAllJpaRepository.getOne(replyIdx);
+        if (fetched == null) {
+            return false;
+        } else {
+            replyForCommentAllJpaRepository.delete(fetched);
+            return true;
         }
     }
 }

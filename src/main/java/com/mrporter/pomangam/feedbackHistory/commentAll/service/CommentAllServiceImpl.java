@@ -85,4 +85,44 @@ public class CommentAllServiceImpl implements CommentAllService {
             likeForCommentAllRepository.unlike(commentAllIdx, user.getIdx());
         }
     }
+
+    @Override
+    public CommentAll patch(Integer commentIdx, CommentAllInputDto dto) {
+        final CommentAll fetched = commentAllJpaRepository.getOne(commentIdx);
+        if (fetched == null) {
+            return null;
+        }
+
+        if (dto.getDeliverySiteIdx() != null) {
+            fetched.setDelivery_site_idx(dto.getDeliverySiteIdx());
+        }
+        if (dto.getStoreIdx() != null) {
+            fetched.setStore_idx(dto.getStoreIdx());
+        }
+        if (dto.getTitle() != null) {
+            fetched.setTitle(dto.getTitle());
+        }
+        if (dto.getIsAnonymous() != null) {
+            fetched.setState_anonymous(dto.getIsAnonymous()?Byte.valueOf("1"):Byte.valueOf("0"));
+        }
+        if (dto.getCustomerIdx() != null) {
+            fetched.setCustomer_idx(dto.getCustomerIdx());
+        }
+        if (dto.getContents() != null) {
+            fetched.setContents(dto.getContents());
+        }
+        fetched.setModify_date(CustomTime.curTimestampSql());
+        return commentAllJpaRepository.save(fetched);
+    }
+
+    @Override
+    public Boolean delete(Integer commentIdx) {
+        final CommentAll fetched = commentAllJpaRepository.getOne(commentIdx);
+        if (fetched == null) {
+            return false;
+        } else {
+            commentAllJpaRepository.delete(fetched);
+            return true;
+        }
+    }
 }

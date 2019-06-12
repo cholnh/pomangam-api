@@ -41,13 +41,22 @@ public class LikeForReplyAllRepositoryImpl implements LikeForReplyAllRepository 
     }
 
     private void updateLike(Integer replyIdx, Integer customerIdx, Integer type) {
-        Optional<LikeForReplyAll> optional = likeForReplyAllJpaRepository.findById(new LikeForReplyAllKey(replyIdx, customerIdx));
+        LikeForReplyAllKey key = new LikeForReplyAllKey(replyIdx, customerIdx);
+        Optional<LikeForReplyAll> optional = likeForReplyAllJpaRepository.findById(key);
         LikeForReplyAll entity;
         if(optional.isPresent()) {
             entity = optional.get();
-            if(entity.getType().intValue() != type.intValue()) {
+            if(entity.getType() == null) {
                 entity.setType(type.byteValue());
-                updateReplyAllLike(replyIdx, type);
+                updateReplyAllLike(replyIdx, type, true);
+            } else {
+                if(entity.getType().intValue() != type.intValue()) {
+                    entity.setType(type.byteValue());
+                    updateReplyAllLike(replyIdx, type, false);
+                } else {
+                    entity.setType(null);
+                    cancelReplyAllLike(replyIdx, type);
+                }
             }
         } else {
             entity = LikeForReplyAll.builder()
@@ -55,20 +64,49 @@ public class LikeForReplyAllRepositoryImpl implements LikeForReplyAllRepository 
                     .reply_all_idx(replyIdx)
                     .type(type.byteValue())
                     .build();
-            updateReplyAllLike(replyIdx, type);
+            updateReplyAllLike(replyIdx, type, true);
         }
         likeForReplyAllJpaRepository.save(entity);
     }
 
-    private void updateReplyAllLike(Integer replyIdx, Integer type) {
-        String sql;
+    private void cancelReplyAllLike(Integer replyIdx, Integer type) {
+        String sql1;
         if (type.intValue() == 0) {
-            sql = "UPDATE like_for_reply_all_tbl SET cnt_like=cnt_like+1 WHERE idx=:replyIdx AND cnt_like>=0";
+            sql1 = "UPDATE reply_for_comment_all_tbl SET cnt_like=cnt_like-1 WHERE idx=:replyIdx AND cnt_like>0";
         } else {
-            sql = "UPDATE like_for_reply_all_tbl SET cnt_like=cnt_like-1 WHERE idx=:replyIdx AND cnt_like>0";
+            sql1 = "UPDATE reply_for_comment_all_tbl SET cnt_unlike=cnt_unlike-1 WHERE idx=:replyIdx AND cnt_unlike>0";
         }
-        em.createNativeQuery(sql)
+        em.createNativeQuery(sql1)
                 .setParameter("replyIdx", replyIdx)
                 .executeUpdate();
+    }
+
+    private void updateReplyAllLike(Integer replyIdx, Integer type, boolean isFirst) {
+        String sql1, sql2;
+
+        if(isFirst) {
+            if (type.intValue() == 0) {
+                sql1 = "UPDATE reply_for_comment_all_tbl SET cnt_like=cnt_like+1 WHERE idx=:replyIdx AND cnt_like>=0";
+            } else {
+                sql1 = "UPDATE reply_for_comment_all_tbl SET cnt_unlike=cnt_unlike+1 WHERE idx=:replyIdx AND cnt_unlike>=0";
+            }
+            em.createNativeQuery(sql1)
+                    .setParameter("replyIdx", replyIdx)
+                    .executeUpdate();
+        } else {
+            if (type.intValue() == 0) {
+                sql1 = "UPDATE reply_for_comment_all_tbl SET cnt_like=cnt_like+1 WHERE idx=:replyIdx AND cnt_like>=0";
+                sql2 = "UPDATE reply_for_comment_all_tbl SET cnt_unlike=cnt_unlike-1 WHERE idx=:replyIdx AND cnt_unlike>0";
+            } else {
+                sql1 = "UPDATE reply_for_comment_all_tbl SET cnt_unlike=cnt_unlike+1 WHERE idx=:replyIdx AND cnt_unlike>=0";
+                sql2 = "UPDATE reply_for_comment_all_tbl SET cnt_like=cnt_like-1 WHERE idx=:replyIdx AND cnt_like>0";
+            }
+            em.createNativeQuery(sql1)
+                    .setParameter("replyIdx", replyIdx)
+                    .executeUpdate();
+            em.createNativeQuery(sql2)
+                    .setParameter("replyIdx", replyIdx)
+                    .executeUpdate();
+        }
     }
 }

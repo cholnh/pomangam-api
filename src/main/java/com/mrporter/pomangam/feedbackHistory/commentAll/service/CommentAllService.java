@@ -11,6 +11,9 @@ public interface CommentAllService {
     CommentAllDetailViewDto getDetail(Integer commentIdx, String customerId);
     CommentAll saveCommentAllInput(CommentAllInputDto dto);
 
+    CommentAll patch(Integer commentIdx, CommentAllInputDto dto);
+    Boolean delete(Integer commentIdx);
+
     void like(Integer commentAllIdx, String customerId);
     void unlike(Integer commentAllIdx, String customerId);
 }

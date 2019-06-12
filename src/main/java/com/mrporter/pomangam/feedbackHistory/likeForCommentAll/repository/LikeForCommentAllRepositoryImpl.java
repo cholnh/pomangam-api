@@ -41,13 +41,22 @@ public class LikeForCommentAllRepositoryImpl implements LikeForCommentAllReposit
     }
 
     private void updateLike(Integer commentAllIdx, Integer customerIdx, Integer type) {
-        Optional<LikeForCommentAll> optional = likeForCommentAllJpaRepository.findById(new LikeForCommentAllKey(commentAllIdx, customerIdx));
+        LikeForCommentAllKey key = new LikeForCommentAllKey(commentAllIdx, customerIdx);
+        Optional<LikeForCommentAll> optional = likeForCommentAllJpaRepository.findById(key);
         LikeForCommentAll entity;
         if(optional.isPresent()) {
             entity = optional.get();
-            if(entity.getType().intValue() != type.intValue()) {
+            if(entity.getType() == null) {
                 entity.setType(type.byteValue());
-                updateCommentAllLike(commentAllIdx, type);
+                updateCommentAllLike(commentAllIdx, type, true);
+            } else {
+                if(entity.getType().intValue() != type.intValue()) {
+                    entity.setType(type.byteValue());
+                    updateCommentAllLike(commentAllIdx, type, false);
+                } else {
+                    entity.setType(null);
+                    cancelCommentAllLike(commentAllIdx, type);
+                }
             }
         } else {
             entity = LikeForCommentAll.builder()
@@ -55,20 +64,49 @@ public class LikeForCommentAllRepositoryImpl implements LikeForCommentAllReposit
                     .comment_all_idx(commentAllIdx)
                     .type(type.byteValue())
                     .build();
-            updateCommentAllLike(commentAllIdx, type);
+            updateCommentAllLike(commentAllIdx, type, true);
         }
         likeForCommentAllJpaRepository.save(entity);
     }
 
-    private void updateCommentAllLike(Integer commentAllIdx, Integer type) {
-        String sql;
+    private void cancelCommentAllLike(Integer commentAllIdx, Integer type) {
+        String sql1;
         if (type.intValue() == 0) {
-            sql = "UPDATE comment_for_all_tbl SET cnt_like=cnt_like+1 WHERE idx=:commentAllIdx AND cnt_like>=0";
+            sql1 = "UPDATE comment_for_all_tbl SET cnt_like=cnt_like-1 WHERE idx=:commentAllIdx AND cnt_like>0";
         } else {
-            sql = "UPDATE comment_for_all_tbl SET cnt_like=cnt_like-1 WHERE idx=:commentAllIdx AND cnt_like>0";
+            sql1 = "UPDATE comment_for_all_tbl SET cnt_unlike=cnt_unlike-1 WHERE idx=:commentAllIdx AND cnt_unlike>0";
         }
-        em.createNativeQuery(sql)
+        em.createNativeQuery(sql1)
                 .setParameter("commentAllIdx", commentAllIdx)
                 .executeUpdate();
+    }
+
+    private void updateCommentAllLike(Integer commentAllIdx, Integer type, boolean isFirst) {
+        String sql1, sql2;
+
+        if (isFirst) {
+            if (type.intValue() == 0) {
+                sql1 = "UPDATE comment_for_all_tbl SET cnt_like=cnt_like+1 WHERE idx=:commentAllIdx AND cnt_like>=0";
+            } else {
+                sql1 = "UPDATE comment_for_all_tbl SET cnt_unlike=cnt_unlike+1 WHERE idx=:commentAllIdx AND cnt_unlike>=0";
+            }
+            em.createNativeQuery(sql1)
+                    .setParameter("commentAllIdx", commentAllIdx)
+                    .executeUpdate();
+        } else {
+            if (type.intValue() == 0) {
+                sql1 = "UPDATE comment_for_all_tbl SET cnt_like=cnt_like+1 WHERE idx=:commentAllIdx AND cnt_like>=0";
+                sql2 = "UPDATE comment_for_all_tbl SET cnt_unlike=cnt_unlike-1 WHERE idx=:commentAllIdx AND cnt_unlike>0";
+            } else {
+                sql1 = "UPDATE comment_for_all_tbl SET cnt_unlike=cnt_unlike+1 WHERE idx=:commentAllIdx AND cnt_unlike>=0";
+                sql2 = "UPDATE comment_for_all_tbl SET cnt_like=cnt_like-1 WHERE idx=:commentAllIdx AND cnt_like>0";
+            }
+            em.createNativeQuery(sql1)
+                    .setParameter("commentAllIdx", commentAllIdx)
+                    .executeUpdate();
+            em.createNativeQuery(sql2)
+                    .setParameter("commentAllIdx", commentAllIdx)
+                    .executeUpdate();
+        }
     }
 }

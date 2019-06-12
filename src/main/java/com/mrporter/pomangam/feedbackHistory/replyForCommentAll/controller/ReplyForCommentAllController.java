@@ -29,6 +29,17 @@ public class ReplyForCommentAllController {
         return new ResponseEntity(replyForCommentAllService.saveReplyForCommentAllInput(dto), HttpStatus.OK);
     }
 
+    @PatchMapping("/{replyIdx}")
+    public ResponseEntity<?> patch(@PathVariable(name = "replyIdx") Integer replyIdx,
+                                   @RequestBody ReplyForCommentAllInputDto dto) {
+        return new ResponseEntity(replyForCommentAllService.patch(replyIdx, dto), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{replyIdx}")
+    public ResponseEntity delete(@PathVariable(name = "replyIdx") Integer replyIdx) {
+        return new ResponseEntity(replyForCommentAllService.delete(replyIdx), HttpStatus.OK);
+    }
+
     @GetMapping("/{replyIdx}/like")
     public ResponseEntity like(@PathVariable(name = "replyIdx") Integer replyIdx,
                                Principal principal) {
