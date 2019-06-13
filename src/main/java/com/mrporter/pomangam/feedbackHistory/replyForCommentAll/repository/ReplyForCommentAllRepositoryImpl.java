@@ -23,7 +23,7 @@ public class ReplyForCommentAllRepositoryImpl implements ReplyForCommentAllRepos
     public List<ReplyForCommentAllDto> getBy(Integer commentIdx, Integer customerIdx, PageRequest pageRequest) {
         List replies = em
                 .createNativeQuery(
-                        "SELECT re.idx as replyIdx, u.nickname, u.id as customer_id, re.state_anonymous, re.owner_idx, re.register_date, re.contents, lk.type as likeType  " +
+                        "SELECT re.idx as replyIdx, u.nickname, u.id as customer_id, re.state_anonymous, re.owner_idx, re.register_date, re.contents, lk.type as likeType, re.cnt_like, re.cnt_unlike  " +
                                 "FROM reply_for_comment_all_tbl re " +
                                 "LEFT OUTER JOIN user_tbl u " +
                                 "ON re.customer_idx = u.idx AND (re.state_anonymous = 0 or u.idx = :customerIdx) " +

@@ -8,6 +8,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+
 @Service
 @AllArgsConstructor
 public class ImageForCommentAllServiceImpl implements ImageForCommentAllService {
@@ -15,6 +17,7 @@ public class ImageForCommentAllServiceImpl implements ImageForCommentAllService 
     FileStorageServiceImpl fileStorageService;
     ImageForCommentAllJpaRepository imageForCommentAllJpaRepository;
 
+    @Override
     public void saveImages(Integer commentAllIdx, MultipartFile[] files) {
         for(int i=0; i<files.length; i++) {
             MultipartFile file = files[i];
@@ -31,6 +34,16 @@ public class ImageForCommentAllServiceImpl implements ImageForCommentAllService 
             saved.setImgpath(path+name);
             fileStorageService.storeFile(file, disk+path, name);
             imageForCommentAllJpaRepository.save(saved);
+        }
+    }
+
+    @Override
+    public void deleteImage(String fileName) {
+        String disk = "C:";
+        String path = disk+"/assets/image/comment/post/"+fileName;
+        File file = new File(path);
+        if(file.exists()) {
+            file.delete();
         }
     }
 }

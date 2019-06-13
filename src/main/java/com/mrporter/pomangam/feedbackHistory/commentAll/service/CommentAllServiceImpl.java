@@ -9,12 +9,16 @@ import com.mrporter.pomangam.feedbackHistory.commentAll.domain.CommentAllInputDt
 import com.mrporter.pomangam.feedbackHistory.commentAll.domain.CommentAllViewDto;
 import com.mrporter.pomangam.feedbackHistory.commentAll.repository.CommentAllJpaRepository;
 import com.mrporter.pomangam.feedbackHistory.commentAll.repository.CommentAllRepositoryImpl;
+import com.mrporter.pomangam.feedbackHistory.imageForCommentAll.domain.ImageForCommentAll;
 import com.mrporter.pomangam.feedbackHistory.imageForCommentAll.repository.ImageForCommentAllJpaRepository;
+import com.mrporter.pomangam.feedbackHistory.imageForCommentAll.service.ImageForCommentAllServiceImpl;
 import com.mrporter.pomangam.feedbackHistory.likeForCommentAll.repository.LikeForCommentAllRepositoryImpl;
 import com.mrporter.pomangam.feedbackHistory.replyForCommentAll.repository.ReplyForCommentAllRepositoryImpl;
 import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -26,6 +30,7 @@ public class CommentAllServiceImpl implements CommentAllService {
     ReplyForCommentAllRepositoryImpl replyForCommentAllRepository;
     ImageForCommentAllJpaRepository imageForCommentAllJpaRepository;
     LikeForCommentAllRepositoryImpl likeForCommentAllRepository;
+    ImageForCommentAllServiceImpl imageForCommentAllService;
 
     @Override
     public CommentAllViewDto getBy(Integer deliverySiteIdx, Integer storeIdx, String orderBy, PageRequest pageRequest) {
@@ -48,6 +53,7 @@ public class CommentAllServiceImpl implements CommentAllService {
         } else {
             dto.setCommentAllDetail(commentAllRepository.getDetail(commentIdx, user.getIdx()));
         }
+        commentAllRepository.addViewCount(commentIdx);
         dto.setImageForCommentAlls(imageForCommentAllJpaRepository.findByCommentAllIdx(commentIdx));
         return dto;
     }
@@ -121,6 +127,12 @@ public class CommentAllServiceImpl implements CommentAllService {
         if (fetched == null) {
             return false;
         } else {
+            List<ImageForCommentAll> imageForCommentAlls = imageForCommentAllJpaRepository.findByCommentAllIdx(commentIdx);
+            for(ImageForCommentAll image : imageForCommentAlls) {
+                String path = image.getImgpath();
+                String fileName = path.substring(path.lastIndexOf("/")+1);
+                imageForCommentAllService.deleteImage(fileName);
+            }
             commentAllJpaRepository.delete(fetched);
             return true;
         }

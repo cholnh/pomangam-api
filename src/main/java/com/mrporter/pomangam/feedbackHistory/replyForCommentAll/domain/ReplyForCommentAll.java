@@ -35,8 +35,12 @@ public class ReplyForCommentAll implements Serializable {
 
     private Byte state_anonymous;
 
+    private Integer cnt_like;
+
+    private Integer cnt_unlike;
+
     @Builder
-    public ReplyForCommentAll(Integer comment_all_idx, Integer customer_idx, Integer owner_idx, Timestamp register_date, Timestamp modify_date, String contents, Byte state_active, Byte state_anonymous) {
+    public ReplyForCommentAll(Integer comment_all_idx, Integer customer_idx, Integer owner_idx, Timestamp register_date, Timestamp modify_date, String contents, Byte state_active, Byte state_anonymous, Integer cnt_like, Integer cnt_unlike) {
         this.comment_all_idx = comment_all_idx;
         this.customer_idx = customer_idx;
         this.owner_idx = owner_idx;
@@ -45,5 +49,7 @@ public class ReplyForCommentAll implements Serializable {
         this.contents = contents;
         this.state_active = state_active;
         this.state_anonymous = state_anonymous;
+        this.cnt_like = cnt_like;
+        this.cnt_unlike = cnt_unlike;
     }
 }

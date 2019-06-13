@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.hibernate.transform.Transformers;
 import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -97,5 +98,15 @@ public class CommentAllRepositoryImpl implements CommentAllRepository {
         } else {
             return commentAllDetailDtos.get(0);
         }
+    }
+
+    @Transactional
+    @Override
+    public void addViewCount(Integer commentIdx) {
+        Query nativeQuery = em
+                .createNativeQuery(
+                        "UPDATE comment_for_all_tbl SET cnt_view = cnt_view + 1 WHERE idx = :commentIdx")
+                .setParameter("commentIdx", commentIdx);
+        nativeQuery.executeUpdate();
     }
 }

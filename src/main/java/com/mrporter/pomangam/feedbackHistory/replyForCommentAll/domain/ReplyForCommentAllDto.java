@@ -27,8 +27,12 @@ public class ReplyForCommentAllDto implements Serializable {
 
     private Byte likeType;
 
+    private Integer cnt_like;
+
+    private Integer cnt_unlike;
+
     @Builder
-    public ReplyForCommentAllDto(Integer replyIdx, String nickname, String customer_id, Byte state_anonymous, Integer owner_idx, Timestamp register_date, String contents, Byte likeType) {
+    public ReplyForCommentAllDto(Integer replyIdx, String nickname, String customer_id, Byte state_anonymous, Integer owner_idx, Timestamp register_date, String contents, Byte likeType, Integer cnt_like, Integer cnt_unlike) {
         this.replyIdx = replyIdx;
         this.nickname = nickname;
         this.customer_id = customer_id;
@@ -37,5 +41,7 @@ public class ReplyForCommentAllDto implements Serializable {
         this.register_date = register_date;
         this.contents = contents;
         this.likeType = likeType;
+        this.cnt_like = cnt_like;
+        this.cnt_unlike = cnt_unlike;
     }
 }

@@ -44,6 +44,8 @@ public class ReplyForCommentAllServiceImpl implements ReplyForCommentAllService 
                 .contents(dto.getContents())
                 .state_active(Byte.valueOf("1"))
                 .state_anonymous(dto.getIsAnonymous()?Byte.valueOf("1"):Byte.valueOf("0"))
+                .cnt_like(0)
+                .cnt_unlike(0)
                 .build();
         return replyForCommentAllJpaRepository.save(comment);
     }

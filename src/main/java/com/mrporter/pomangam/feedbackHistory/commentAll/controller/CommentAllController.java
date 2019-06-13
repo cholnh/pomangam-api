@@ -47,6 +47,8 @@ public class CommentAllController {
         return new ResponseEntity(commentAllService.delete(commentIdx), HttpStatus.OK);
     }
 
+
+
     @GetMapping("/{commentAllIdx}/like")
     public ResponseEntity like(@PathVariable(name = "commentAllIdx") Integer commentAllIdx,
                                Principal principal) {

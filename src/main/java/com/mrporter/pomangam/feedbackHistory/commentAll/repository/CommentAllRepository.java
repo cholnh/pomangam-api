@@ -12,4 +12,5 @@ public interface CommentAllRepository {
     List<CommentAllDto> getBy(Integer deliverySiteIdx, Integer storeIdx, String orderBy, PageRequest pageRequest);
     List<StoreCategoryDto> getStoreCategory(Integer deliverySiteIdx);
     CommentAllDetailDto getDetail(Integer commentIdx, Integer customerId);
+    void addViewCount(Integer commentIdx);
 }
