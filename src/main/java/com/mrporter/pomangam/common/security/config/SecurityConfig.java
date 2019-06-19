@@ -123,6 +123,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().ignoring().antMatchers("/tests/**")
                 .and().ignoring().antMatchers("/payments/**")
                 .and().ignoring().antMatchers("/policies/**")
+                .and().ignoring().antMatchers("/fcm/**")
 
                 .and().ignoring().antMatchers("/v2/api-docs",
                                                         "/configuration/ui",

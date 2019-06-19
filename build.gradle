@@ -55,4 +55,6 @@ dependencies {
 
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '+'
     compile group: 'commons-io', name: 'commons-io', version: '+'
+
+    compile group: 'org.json', name: 'json', version: '+'
 }

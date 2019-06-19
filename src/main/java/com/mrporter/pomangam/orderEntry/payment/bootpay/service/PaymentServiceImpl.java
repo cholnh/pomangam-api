@@ -49,6 +49,7 @@ import java.sql.Time;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @AllArgsConstructor
@@ -96,11 +97,14 @@ public class PaymentServiceImpl implements PaymentService {
             String usingCouponCode = dto.getUsingCouponCode();
             orderId = "ORDER_" + cartIdx + "_" + System.currentTimeMillis();
 
-            Cart cart = cartJpaRepository.getOne(cartIdx);
-            if(cart == null) {
+            //Cart cart = cartJpaRepository.getOne();
+            Optional<Cart> optional = cartJpaRepository.findById(cartIdx);
+
+            if(!optional.isPresent()) {
                 log.error("[INVALID CART IDX] - orderId : '{}'", orderId);
                 return null;
             }
+            Cart cart = optional.get();
             Integer customerIdx = cart.getCustomerIdx();
             Integer guestIdx = cart.getGuestIdx();
             Integer deliverySiteIdx = detailForDeliverySiteJpaRepository.getOne(cart.getDetailSiteIdx()).getDeliverySiteIdx();

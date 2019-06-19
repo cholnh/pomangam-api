@@ -5,10 +5,7 @@ import com.mrporter.pomangam.promotionEntry.event.service.EventServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/events")
 @RestController
@@ -16,6 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class EventController {
 
     EventServiceImpl eventService;
+
+    @GetMapping("/{eventIdx}")
+    public ResponseEntity get(@PathVariable(value = "eventIdx") Integer eventIdx) {
+        return new ResponseEntity(eventService.get(eventIdx), HttpStatus.OK);
+    }
 
     @GetMapping("/getInProgress")
     public ResponseEntity getInProgress(@RequestParam(value = "deliverySiteIdx", required = false) Integer delivery_site_idx) {

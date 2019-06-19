@@ -3,7 +3,6 @@ package com.mrporter.pomangam.orderEntry.payment.bootpay.controller;
 import com.mrporter.pomangam.orderEntry.order.domain.OrderInfoDto;
 import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.*;
 import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.request.Cancel;
-import com.mrporter.pomangam.orderEntry.payment.bootpay.service.PaymentService;
 import com.mrporter.pomangam.orderEntry.payment.bootpay.service.PaymentServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 public class PaymentController {
     private static final String BOOTPAY_ROUTER_GATEWAY_IP = "223.130.82.4";
 
-    PaymentService paymentService;
+    PaymentServiceImpl paymentService;
 
     @PostMapping("/prepare")
     public ResponseEntity<?> prepare(@RequestBody PaymentInputDto dto) {
@@ -72,6 +71,8 @@ public class PaymentController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         System.out.println(dto);
+
+
 
         // Todo 가상계좌 결과 입력받기
         // 취소 결과 입력받기

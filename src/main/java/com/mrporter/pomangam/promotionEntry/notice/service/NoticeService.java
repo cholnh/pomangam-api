@@ -6,5 +6,6 @@ import com.mrporter.pomangam.productEntry.product.domain.PageRequest;
 import java.util.List;
 
 public interface NoticeService {
+    NoticeResponseDto get(Integer noticeIdx);
     List<NoticeResponseDto> getAll(Integer delivery_site_idx, PageRequest pageRequest);
 }
