@@ -356,6 +356,7 @@ public class PaymentServiceImpl implements PaymentService {
     public void fail(FailInputDto dto) {
         String orderId = dto.getOrderId();
         log.error("[" + dto.getMessage() + "] - orderId : '{}'", orderId);
+        //log.info("fail dto : " + dto);
         switch (dto.getStatus()) {
             case -100 :
                 // 사용자에 의한 취소

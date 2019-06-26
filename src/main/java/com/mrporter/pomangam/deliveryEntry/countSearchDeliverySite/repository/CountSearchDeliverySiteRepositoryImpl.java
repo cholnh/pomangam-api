@@ -22,5 +22,4 @@ public class CountSearchDeliverySiteRepositoryImpl implements CountSearchDeliver
         nativeQuery.setParameter("didx", deliverySiteIdx);
         nativeQuery.executeUpdate();
     }
-
 }
