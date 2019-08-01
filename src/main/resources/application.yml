@@ -72,3 +72,23 @@ static:
 ---
 logging:
   file: log/slf4j.log
+---
+management:
+  health:
+    diskspace:
+      enabled: false
+    status:
+      order: DOWN, MAINTENANCE, UNKOWN, UP
+      http-mapping:
+        DOWN: 503
+        MAINTENANCE: 503
+        UNKNOWN: 520
+        UP: 200
+  endpoints:
+    web:
+      exposure:
+        exclude: env, beans
+        #include: "*"
+      base-path: /application
+      path-mapping:
+        health : healthCheck
