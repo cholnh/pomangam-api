@@ -35,4 +35,8 @@ public class DeliverySiteServiceImpl implements DeliverySiteService {
         return deliverySiteRepository.findByRegionCategoryIdx(regionCategoryIdx);
     }
 
+    @Override
+    public List<DeliverySiteDto> getAll() {
+        return deliverySiteRepository.findAll();
+    }
 }

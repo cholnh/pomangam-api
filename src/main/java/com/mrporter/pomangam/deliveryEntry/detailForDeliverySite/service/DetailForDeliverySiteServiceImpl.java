@@ -14,12 +14,7 @@ public class DetailForDeliverySiteServiceImpl implements DetailForDeliverySiteSe
     DetailForDeliverySiteRepositoryImpl detailForDeliverySiteRepository;
 
     @Override
-    public List<DetailForDeliverySiteDto> getDetailSitesByDeliverySiteIdxOrderBySequence(Integer delivery_site_idx) {
-        return detailForDeliverySiteRepository.getDetailSitesByDeliverySiteIdxOrderBySequence(delivery_site_idx);
-    }
-
-    @Override
     public List<DetailForDeliverySiteDto> findByDeliverySiteIdxOrderBySequence(Integer delivery_site_idx) {
-        return detailForDeliverySiteRepository.findByDeliverySiteIdxOrderBySequence(delivery_site_idx);
+        return detailForDeliverySiteRepository.getByDeliverySiteIdxOrderBySequence(delivery_site_idx);
     }
 }

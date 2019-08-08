@@ -10,4 +10,5 @@ public interface DeliverySiteService {
     DeliverySiteDto getByDeliverySiteIdx(@Param("deliverySiteIdx") Integer deliverySiteIdx);
     List<DeliverySiteWithCountDto> findByQuery(@Param("query") String query);
     List<DeliverySiteDto> findByRegionCategoryIdx(@Param("regionCategoryIdx") Integer regionCategoryIdx);
+    List<DeliverySiteDto> getAll();
 }

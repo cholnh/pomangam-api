@@ -17,23 +17,9 @@ public class DetailForDeliverySiteRepositoryImpl implements DetailForDeliverySit
     EntityManager em;
 
     @Override
-    public List<DetailForDeliverySiteDto> getDetailSitesByDeliverySiteIdxOrderBySequence(Integer delivery_site_idx) {
+    public List<DetailForDeliverySiteDto> getByDeliverySiteIdxOrderBySequence(Integer delivery_site_idx) {
         String sql = "SELECT * " +
                 "FROM detail_for_delivery_site_tbl " +
-                "WHERE delivery_site_idx = ? " +
-                "ORDER BY sequence";
-        Query nativeQuery = em.createNativeQuery(sql);
-        nativeQuery.setParameter(1, delivery_site_idx);
-
-        List<DetailForDeliverySiteDto> dList = new JpaResultMapper().list(nativeQuery, DetailForDeliverySiteDto.class);
-
-        return dList;
-    }
-
-    @Override
-    public List<DetailForDeliverySiteDto> findByDeliverySiteIdxOrderBySequence(Integer delivery_site_idx) {
-        String sql = "SELECT d.* " +
-                "FROM detail_for_delivery_site_tbl d " +
                 "WHERE delivery_site_idx = ? " +
                 "ORDER BY sequence";
         Query nativeQuery = em.createNativeQuery(sql);
