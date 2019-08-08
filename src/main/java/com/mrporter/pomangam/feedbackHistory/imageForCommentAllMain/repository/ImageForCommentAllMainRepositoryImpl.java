@@ -1,6 +1,6 @@
-package com.mrporter.pomangam.advertiseEntry.imageForCommentAllMain.repository;
+package com.mrporter.pomangam.feedbackHistory.imageForCommentAllMain.repository;
 
-import com.mrporter.pomangam.advertiseEntry.imageForCommentAllMain.domain.ImageForCommentAllMainWithCommentAllDto;
+import com.mrporter.pomangam.feedbackHistory.imageForCommentAllMain.domain.ImageForCommentAllMainWithCommentAllDto;
 import lombok.AllArgsConstructor;
 import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.stereotype.Repository;

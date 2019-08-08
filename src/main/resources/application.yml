@@ -9,7 +9,7 @@ server:
       tracking-modes: cookie
 
   ssl:
-    key-store: C:/ssl/keystore
+    key-store: /Users/nakzzi/Downloads/keystore
     key-store-password: eun*zzi92!
     key-password: eun*zzi92!
     key-alias: alias

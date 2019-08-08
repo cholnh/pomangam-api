@@ -1,6 +1,6 @@
 package com.mrporter.pomangam.view.main.domain;
 
-import com.mrporter.pomangam.advertiseEntry.imageForCommentAllMain.domain.ImageForCommentAllMainWithCommentAllDto;
+import com.mrporter.pomangam.feedbackHistory.imageForCommentAllMain.domain.ImageForCommentAllMainWithCommentAllDto;
 import com.mrporter.pomangam.advertiseEntry.subAdvertiseForMain.domain.SubAdvertiseForMainDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;

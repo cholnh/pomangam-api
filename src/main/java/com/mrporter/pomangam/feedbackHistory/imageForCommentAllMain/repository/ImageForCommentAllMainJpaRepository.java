@@ -1,6 +1,6 @@
-package com.mrporter.pomangam.advertiseEntry.imageForCommentAllMain.repository;
+package com.mrporter.pomangam.feedbackHistory.imageForCommentAllMain.repository;
 
-import com.mrporter.pomangam.advertiseEntry.imageForCommentAllMain.domain.ImageForCommentAllMain;
+import com.mrporter.pomangam.feedbackHistory.imageForCommentAllMain.domain.ImageForCommentAllMain;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 

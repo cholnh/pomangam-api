@@ -1,6 +1,6 @@
-package com.mrporter.pomangam.advertiseEntry.imageForCommentAllMain.controller;
+package com.mrporter.pomangam.feedbackHistory.imageForCommentAllMain.controller;
 
-import com.mrporter.pomangam.advertiseEntry.imageForCommentAllMain.service.ImageForCommentAllMainServiceImpl;
+import com.mrporter.pomangam.feedbackHistory.imageForCommentAllMain.service.ImageForCommentAllMainServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/cmtAdvertiseForMains")
+@RequestMapping("/images/cmtAdvertiseForMain")
 @AllArgsConstructor
 public class ImageForCommentAllMainController {
 
     ImageForCommentAllMainServiceImpl cmtAdvertiseForMainService;
 
-    @GetMapping("/search/getValue")
-    public ResponseEntity<?> getValue(@RequestParam("key") String key) {
-        return new ResponseEntity<>(key, HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<?> getImages(@RequestParam(value = "deliverySiteIdx", required = true) Integer deliverySiteIdx) {
+        return new ResponseEntity<>(cmtAdvertiseForMainService.getImageForCommentAllMainByDeliverySiteIdx(deliverySiteIdx), HttpStatus.OK);
     }
 
 }
