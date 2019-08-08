@@ -30,4 +30,10 @@ public class MainViewController {
     public ResponseEntity<?> getSecond(@RequestParam(value = "deliverySiteIdx", required = false) Integer delivery_site_idx) {
         return new ResponseEntity<>(mainService.getMainSecondDto(delivery_site_idx), HttpStatus.OK);
     }
+
+    @GetMapping("/time")
+    public ResponseEntity<?> getMainTime(@RequestParam(value = "deliverySiteIdx", required = false) Integer delivery_site_idx) {
+        return new ResponseEntity<>(mainService.getMainDtoNoCache(delivery_site_idx), HttpStatus.OK);
+    }
+
 }

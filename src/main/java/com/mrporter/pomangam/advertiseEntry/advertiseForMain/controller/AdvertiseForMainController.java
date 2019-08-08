@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/advertiseForMains")
+@RequestMapping("/advertises/main")
 @AllArgsConstructor
 public class AdvertiseForMainController {
 
     AdvertiseForMainServiceImpl advertiseForMainService;
 
-    @GetMapping("/search/getValue")
-    public ResponseEntity<?> getValue(@RequestParam("key") String key) {
-        return new ResponseEntity<>(key, HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<?> getAdvertise(@RequestParam(value = "deliverySiteIdx", required = true) Integer delivery_site_idx) {
+        return new ResponseEntity<>(advertiseForMainService.getAdvertiseMainsByDeliverySiteIdx(delivery_site_idx), HttpStatus.OK);
     }
 
 }

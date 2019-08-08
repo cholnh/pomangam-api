@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.advertiseEntry.imageForCommentAllMain.domain;
+package com.mrporter.pomangam.feedbackHistory.imageForCommentAllMain.domain;
 
 import lombok.AccessLevel;
 import lombok.Builder;

@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/advertiseForPopups")
+@RequestMapping("/advertises/popup")
 @AllArgsConstructor
 public class AdvertiseForPopupController {
 
     AdvertiseForPopupServiceImpl advertiseForPopupService;
 
-    @GetMapping("/search/getValue")
-    public ResponseEntity<?> getValue(@RequestParam("key") String key) {
-        return new ResponseEntity<>(key, HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<?> getAdvertise(@RequestParam(value = "deliverySiteIdx", required = true) Integer delivery_site_idx) {
+        return new ResponseEntity<>(advertiseForPopupService.getAdvertisePopupsByDeliverySiteIdx(delivery_site_idx), HttpStatus.OK);
     }
 
 }
