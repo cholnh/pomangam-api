@@ -3,6 +3,10 @@ package com.mrporter.pomangam.orderEntry.payment.bootpay.controller;
 import com.mrporter.pomangam.orderEntry.order.domain.OrderInfoDto;
 import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.*;
 import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.request.Cancel;
+import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.subscribe.RequestInputDto;
+import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.subscribe.RequestOutputDto;
+import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.subscribe.SubscribeInputDto;
+import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.subscribe.SubscribeOutputDto;
 import com.mrporter.pomangam.orderEntry.payment.bootpay.service.PaymentServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,6 +64,7 @@ public class PaymentController {
     @PostMapping("/feedback")
     public ResponseEntity<?> feedback(@RequestBody FeedbackDto dto,
                                       HttpServletRequest request) {
+        log.info("feedback in");
         String ip = request.getHeader("X-FORWARDED-FOR");
         ip = ip == null ? request.getRemoteAddr() : ip;
         if(ip == null || !ip.equals(BOOTPAY_ROUTER_GATEWAY_IP)) {
@@ -70,13 +75,30 @@ public class PaymentController {
             log.warn("PRIVATE_KEY IS INVALID");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        System.out.println(dto);
-
-
+        log.info(dto.toString());
 
         // Todo 가상계좌 결과 입력받기
         // 취소 결과 입력받기
 
         return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
+
+
+    @PostMapping("/paylink")
+    public ResponseEntity payLink(@RequestBody PaymentLinkInputDto dto) {
+        String link = paymentService.goPayLink(dto);
+        return new ResponseEntity<>(link, HttpStatus.OK);
+    }
+
+    @PostMapping("/subscribe")
+    public ResponseEntity subscribe(@RequestBody RequestInputDto dto) {
+        RequestOutputDto outputDto = paymentService.goRequestBilling(dto);
+        return new ResponseEntity<>(outputDto, HttpStatus.OK);
+    }
+
+    @PostMapping("/billing")
+    public ResponseEntity billing(@RequestBody SubscribeInputDto dto) {
+        SubscribeOutputDto outputDto = paymentService.goSubscribeBilling(dto);
+        return new ResponseEntity<>(outputDto, HttpStatus.OK);
     }
 }

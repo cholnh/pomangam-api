@@ -1,15 +1,17 @@
 package com.mrporter.pomangam.productEntry.product.domain;
 
 import lombok.Data;
+import org.springframework.data.domain.Sort;
 
 @Data
 public class PageRequest {
     int page;
     int size;
+    Sort.Direction sort;
+    String by;
 
     public PageRequest() {
-        this.page = 0;
-        this.size = 10;
+        size = 0;
     }
 
     public PageRequest(int page, int size) {
@@ -20,7 +22,23 @@ public class PageRequest {
         this.size = size;
     }
 
+    public PageRequest(int page, int size, Sort.Direction sort, String by) {
+        this(page, size);
+        this.sort = sort;
+        this.by = by;
+    }
+
     public int getFirstIndex() {
         return page * size;
+    }
+
+    public org.springframework.data.domain.PageRequest of() {
+        if(size == 0) {
+            return null;
+        } else if(sort == null || by == null) {
+            return org.springframework.data.domain.PageRequest.of(page, size);
+        } else {
+            return org.springframework.data.domain.PageRequest.of(page, size, sort, by);
+        }
     }
 }
