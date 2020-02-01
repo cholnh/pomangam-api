@@ -31,7 +31,10 @@ import com.mrporter.pomangam.orderEntry.orderLog.repository.OrderLogJpaRepositor
 import com.mrporter.pomangam.orderEntry.orderLog.service.OrderLogServiceImpl;
 import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.*;
 import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.request.Cancel;
-import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.request.SubscribeBilling;
+import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.subscribe.RequestInputDto;
+import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.subscribe.RequestOutputDto;
+import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.subscribe.SubscribeInputDto;
+import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.subscribe.SubscribeOutputDto;
 import com.mrporter.pomangam.productEntry.product.domain.ProductWithCostDto;
 import com.mrporter.pomangam.productEntry.product.repository.ProductRepositoryImpl;
 import com.mrporter.pomangam.promotionEntry.coupon.domain.CouponDto;
@@ -39,6 +42,7 @@ import com.mrporter.pomangam.promotionEntry.coupon.repository.CouponRepositoryIm
 import com.mrporter.pomangam.promotionEntry.pointLog.domain.StatePointLog;
 import com.mrporter.pomangam.promotionEntry.pointLog.service.PointLogServiceImpl;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -418,20 +422,70 @@ public class PaymentServiceImpl implements PaymentService {
         }
     }
 
-    public static void goSubscribeBilling() {
-        SubscribeBilling subscribeBilling = new SubscribeBilling();
-        subscribeBilling.billing_key = "5b025b33e13f33310ce560fb";
-        subscribeBilling.item_name = "정기결제 테스트 아이템";
-        subscribeBilling.price = 3000;
-        subscribeBilling.order_id = "" + (System.currentTimeMillis() / 1000);
-
+    @Override
+    public String goPayLink(PaymentLinkInputDto paymentLinkInputDto) {
         try {
-            HttpResponse res = api.subscribe_billing(subscribeBilling);
+            paymentLinkInputDto.setApplication_id(APPLICATION_ID);
+            goGetToken();
+            HttpResponse res = api.pay_link(paymentLinkInputDto);
             String str = IOUtils.toString(res.getEntity().getContent(), "UTF-8");
-            System.out.println(str);
-            System.out.println(new Gson().toJson(subscribeBilling));
+            PaymentLinkOutputDto output = new Gson().fromJson(str, PaymentLinkOutputDto.class);
+            if(output.getStatus() == 401) {
+                // TOKEN INVALID OR EXPIRED
+                api.getAccessToken();
+                res = api.pay_link(paymentLinkInputDto);
+                str = IOUtils.toString(res.getEntity().getContent(), "UTF-8");
+                output = new Gson().fromJson(str, PaymentLinkOutputDto.class);
+            }
+            return output.getData();
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public RequestOutputDto goRequestBilling(RequestInputDto requestInputDto) {
+        try {
+            requestInputDto.setPg("nicepay");
+            goGetToken();
+            HttpResponse res = api.request_billing(requestInputDto);
+            String str = IOUtils.toString(res.getEntity().getContent(), "UTF-8");
+            RequestOutputDto output = new Gson().fromJson(str, RequestOutputDto.class);
+            if(output.getStatus() == 401) {
+                // TOKEN INVALID OR EXPIRED
+                api.getAccessToken();
+                res = api.request_billing(requestInputDto);
+                str = IOUtils.toString(res.getEntity().getContent(), "UTF-8");
+                output = new Gson().fromJson(str, RequestOutputDto.class);
+            }
+
+            // Todo : (빌링키 - orderId) db 내 저장
+
+            return output;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public SubscribeOutputDto goSubscribeBilling(SubscribeInputDto subscribeInputDto) {
+        try {
+            HttpResponse res = api.subscribe_billing(subscribeInputDto);
+            String str = IOUtils.toString(res.getEntity().getContent(), "UTF-8");
+            SubscribeOutputDto output = new Gson().fromJson(str, SubscribeOutputDto.class);
+            if(output.getStatus() == 401) {
+                // TOKEN INVALID OR EXPIRED
+                api.getAccessToken();
+                res = api.subscribe_billing(subscribeInputDto);
+                str = IOUtils.toString(res.getEntity().getContent(), "UTF-8");
+                output = new Gson().fromJson(str, SubscribeOutputDto.class);
+            }
+            return output;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

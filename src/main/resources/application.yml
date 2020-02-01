@@ -86,6 +86,12 @@ management:
         UP: 200
   endpoints:
     web:
+      #cors:
+      #  allowed-origins: "http://localhost:8084"
+      #  allowed-headers: "Content-Type, Accept, X-Requested-With, remember-me, Authorization"
+      #  allowed-methods: "GET, POST, PATCH, PUT, DELETE, OPTIONS"
+      #  allow-credentials: true
+      #  exposed-headers: "Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
       exposure:
         exclude: env, beans
         #include: "*"

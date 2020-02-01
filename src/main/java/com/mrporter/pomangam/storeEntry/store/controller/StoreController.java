@@ -38,6 +38,11 @@ public class StoreController {
         }
     }
 
+    @GetMapping("/search/test")
+    public ResponseEntity<?> test(PageRequest pageRequest) {
+        return new ResponseEntity(storeService.test(pageRequest), HttpStatus.OK);
+    }
+
     @GetMapping("/search/findByType")
     public ResponseEntity findByType(@RequestParam("deliverySiteIdx") Integer delivery_site_idx,
                                      @RequestParam("type") Integer type,

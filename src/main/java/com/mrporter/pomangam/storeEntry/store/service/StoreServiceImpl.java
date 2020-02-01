@@ -18,6 +18,7 @@ import com.mrporter.pomangam.storeEntry.store.domain.*;
 import com.mrporter.pomangam.storeEntry.store.repository.StoreJpaRepository;
 import com.mrporter.pomangam.storeEntry.store.repository.StoreRepositoryImpl;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -45,6 +46,13 @@ public class StoreServiceImpl implements StoreService {
     UserService userService;
     LikeForStoreRepositoryImpl likeForStoreRepository;
 
+    public Page<Store> test(PageRequest pageRequest) {
+        if(pageRequest.of() == null) {
+            pageRequest = new PageRequest(0, 10);
+        }
+        return storeJpaRepository.findAll(pageRequest.of());
+    }
+
     @Override
     public List<Store> getStoresByIdxes(List<Integer> idxes) {
         return storeJpaRepository.findAllById(idxes);
@@ -59,6 +67,7 @@ public class StoreServiceImpl implements StoreService {
         try {
             ldt = LocalDateTime.parse(arrival_date, formatter);
         } catch (DateTimeParseException dpe) {
+            dpe.printStackTrace();
             return null;
         }
         return getInquiryResult(ldt, detail_for_delivery_site_idx, ZoneId.of("Asia/Seoul"));

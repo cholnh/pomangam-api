@@ -1,10 +1,12 @@
 package com.mrporter.pomangam.orderEntry.payment.bootpay.service;
 
 import com.google.gson.Gson;
+import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.PaymentLinkInputDto;
 import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.request.Cancel;
-import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.request.SubscribeBilling;
 import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.request.Token;
 import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.response.ResToken;
+import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.subscribe.RequestInputDto;
+import com.mrporter.pomangam.orderEntry.payment.bootpay.domain.subscribe.SubscribeInputDto;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -27,7 +29,9 @@ public class BootpayApi {
     private final String URL_ACCESS_TOKEN = BASE_URL + "request/token.json";
     private final String URL_VERIFY = BASE_URL + "receipt";
     private final String URL_CANCEL = BASE_URL + "cancel.json";
+    private final String URL_REQUEST_BILLING = BASE_URL + "request/card_rebill.json";
     private final String URL_SUBSCRIBE_BILLING = BASE_URL + "subscribe/billing.json";
+    private final String URL_PAYMENT_LINK = BASE_URL + "request/payment";
 
     private String token;
     private String application_id;
@@ -110,11 +114,29 @@ public class BootpayApi {
         return client.execute(post);
     }
 
-    public HttpResponse subscribe_billing(SubscribeBilling subscribeBilling) throws Exception {
+    public HttpResponse request_billing(RequestInputDto requestInputDto) throws Exception {
         if(this.token == null || this.token.isEmpty()) throw new Exception("token 값이 비어있습니다.");
 
         HttpClient client = HttpClientBuilder.create().build();
-        HttpPost post = getPost(URL_SUBSCRIBE_BILLING, new StringEntity(new Gson().toJson(subscribeBilling), "UTF-8"));
+        HttpPost post = getPost(URL_REQUEST_BILLING, new StringEntity(new Gson().toJson(requestInputDto), "UTF-8"));
+        post.setHeader("Authorization", this.token);
+        return client.execute(post);
+    }
+
+    public HttpResponse subscribe_billing(SubscribeInputDto subscribeInputDto) throws Exception {
+        if(this.token == null || this.token.isEmpty()) throw new Exception("token 값이 비어있습니다.");
+
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpPost post = getPost(URL_SUBSCRIBE_BILLING, new StringEntity(new Gson().toJson(subscribeInputDto), "UTF-8"));
+        post.setHeader("Authorization", this.token);
+        return client.execute(post);
+    }
+
+    public HttpResponse pay_link(PaymentLinkInputDto paymentLinkInputDto) throws Exception {
+        if(this.token == null || this.token.isEmpty()) throw new Exception("token 값이 비어있습니다.");
+
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpPost post = getPost(URL_PAYMENT_LINK, new StringEntity(new Gson().toJson(paymentLinkInputDto), "UTF-8"));
         post.setHeader("Authorization", this.token);
         return client.execute(post);
     }

@@ -1,6 +1,7 @@
 package com.mrporter.pomangam;
 
 import com.mrporter.pomangam.common.file.config.FileStorageProperties;
+import com.mrporter.pomangam.test.todo.repository.RepositoryHelper;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.dbutils.QueryRunner;
@@ -19,6 +20,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -67,6 +69,12 @@ public class PomangamApplication implements CommandLineRunner {
         return DataSourceBuilder.create()
                 .type(HikariDataSource.class)
                 .build();
+    }
+
+    @Bean
+    @Primary
+    public RepositoryHelper provideRepositoryHelper(EntityManager em) {
+        return new RepositoryHelper(em);
     }
 }
 
