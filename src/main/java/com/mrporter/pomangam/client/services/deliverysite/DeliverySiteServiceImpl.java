@@ -19,7 +19,7 @@ public class DeliverySiteServiceImpl implements DeliverySiteService {
         return DeliverySiteDto.fromEntities(deliverySites);
     }
 
-    public DeliverySiteDto getByIdx(Integer didx) {
+    public DeliverySiteDto getByIdx(Long didx) {
         DeliverySite entity = deliverySiteRepository.findById(didx).get();
         return DeliverySiteDto.fromEntity(entity);
     }

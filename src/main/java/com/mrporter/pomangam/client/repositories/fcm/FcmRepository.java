@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface FcmRepository {
     List<FcmToken> getTokens();
-    List<FcmToken> getTokensByDeliverySiteIdx(Integer deliverySiteIdx);
+    List<FcmToken> getTokensByDeliverySiteIdx(Long deliverySiteIdx);
 }

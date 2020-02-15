@@ -1,40 +1,34 @@
 package com.mrporter.pomangam.client.domains.deliverysite.region;
 
+import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import com.mrporter.pomangam.client.domains.deliverysite.DeliverySite;
 import lombok.*;
-import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
 import java.util.List;
 
-@Table(name = "region_tbl")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Data
 @Entity
-@ToString(exclude = "deliverySites")
-@DynamicInsert
+@Table(name = "region_tbl")
 @DynamicUpdate
-public class Region implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idx;
+@Data
+@EqualsAndHashCode(callSuper=false)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(exclude = "deliverySites")
+public class Region extends EntityAuditing {
 
     /**
      * 지역명
      */
-    @NotBlank
-    private String title;
+    @Column(name = "name", unique = true, nullable = false)
+    private String name;
 
     @OneToMany(mappedBy = "region", fetch = FetchType.LAZY)
     private List<DeliverySite> deliverySites;
 
     @Builder
-    public Region(@NotBlank String title, List<DeliverySite> deliverySites) {
-        this.title = title;
+    public Region(String name, List<DeliverySite> deliverySites) {
+        this.name = name;
         if(deliverySites != null) {
             this.deliverySites = deliverySites;
         }

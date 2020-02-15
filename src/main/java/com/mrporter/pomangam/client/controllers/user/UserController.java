@@ -25,6 +25,7 @@ public class UserController {
     public UserDto searchInfo(
             @PathVariable(value = "phn") String phoneNumber,
             Principal principal) {
+
         return UserDto.fromEntity(removePassword(userService.findByPhoneNumber(phoneNumber)));
     }
 
@@ -66,5 +67,11 @@ public class UserController {
             user.setPassword(null);
         }
         return user;
+    }
+
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_STAFF') or hasRole('ROLE_ADMIN'))")
+    @GetMapping
+    public ResponseEntity<?> findRecentlyRegistered(@RequestParam(value = "limit", required = true) Integer limit) {
+        return new ResponseEntity(userService.findRecentlyRegistered(limit), HttpStatus.OK);
     }
 }

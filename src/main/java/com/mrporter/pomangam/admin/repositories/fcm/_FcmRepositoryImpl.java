@@ -25,7 +25,7 @@ public class _FcmRepositoryImpl implements _FcmRepository {
     }
 
     @Override
-    public List<FcmToken> getTokensByDeliverySiteIdx(Integer deliverySiteIdx) {
+    public List<FcmToken> getTokensByDeliverySiteIdx(Long deliverySiteIdx) {
         Query nativeQuery = em
                 .createNativeQuery("SELECT * FROM fcm_token_tbl WHERE delivery_site_idx = :deliverySiteIdx AND state = 1")
                 .setParameter("deliverySiteIdx", deliverySiteIdx);

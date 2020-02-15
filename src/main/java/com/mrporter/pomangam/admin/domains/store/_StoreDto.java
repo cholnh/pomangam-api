@@ -1,7 +1,5 @@
 package com.mrporter.pomangam.admin.domains.store;
 
-import com.mrporter.pomangam.admin.domains.deliverysite._DeliverySiteDto;
-import com.mrporter.pomangam.client.domains.deliverysite.DeliverySite;
 import com.mrporter.pomangam.client.domains.deliverysite.DeliverySiteDto;
 import com.mrporter.pomangam.client.domains.store.Store;
 import lombok.Data;
@@ -15,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class _StoreDto implements Serializable {
 
-    private Integer idx;
+    private Long idx;
 
     private DeliverySiteDto deliverySite;
 
@@ -31,7 +29,7 @@ public class _StoreDto implements Serializable {
 
     private Integer cntComment;
 
-    public _StoreDto(Integer idx, DeliverySiteDto deliverySite, String title, String storeCategory, String description, Float avgStar, Integer cntLike, Integer cntComment) {
+    public _StoreDto(Long idx, DeliverySiteDto deliverySite, String title, String storeCategory, String description, Float avgStar, Integer cntLike, Integer cntComment) {
         this.idx = idx;
         this.deliverySite = deliverySite;
         this.title = title;
@@ -46,7 +44,7 @@ public class _StoreDto implements Serializable {
         return new _StoreDto(
                 entity.getIdx(),
                 DeliverySiteDto.fromEntity(entity.getDeliverySite()),
-                entity.getTitle(),
+                entity.getName(),
                 entity.getStoreCategory().getCategoryTitle(),
                 entity.getDescription(),
                 entity.getAvgStar(),

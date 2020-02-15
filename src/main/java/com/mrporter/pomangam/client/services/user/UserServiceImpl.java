@@ -3,6 +3,7 @@ package com.mrporter.pomangam.client.services.user;
 import com.mrporter.pomangam._bases.utils.formatter.PhoneNumberFormatter;
 import com.mrporter.pomangam._bases.utils.reflection.ReflectionUtils;
 import com.mrporter.pomangam.client.domains.user.User;
+import com.mrporter.pomangam.client.domains.user.UserDto;
 import com.mrporter.pomangam.client.repositories._bases.RandomNicknameJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,10 @@ public class UserServiceImpl implements UserService {
     UserJpaRepository userRepository;
     RandomNicknameJpaRepository randomNicknameRepository;
 
+    public List<UserDto> findRecentlyRegistered(int limit) {
+        return UserDto.fromEntities(userRepository.findRecentlyRegistered(limit));
+    }
+
     @Override
     public User findByPhoneNumber(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber);
@@ -37,7 +42,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll(pageable).getContent();
     }
 
-    public String randomNickname() {
+    private String randomNickname() {
         String nick, first, second;
         int count = 0;
         do {
@@ -70,7 +75,7 @@ public class UserServiceImpl implements UserService {
     public Boolean isExistByPhone(String phoneNumber) {
         if(phoneNumber != null) {
             final User existingUser = userRepository.findByPhoneNumber(phoneNumber);
-            return existingUser == null ? false : true;
+            return existingUser != null;
         } else {
             return false;
         }
@@ -130,12 +135,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int getPointByIdx(Integer idx) {
+    public int getPointByIdx(Long idx) {
         return userRepository.getOne(idx).getPoint();
     }
 
     @Override
-    public int plusPointByIdx(Integer idx, Integer point) {
+    public int plusPointByIdx(Long idx, Integer point) {
         User user = userRepository.getOne(idx);
         int p = user.getPoint() + point;
         user.setPoint(p);
@@ -144,7 +149,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int minusPointByIdx(Integer idx, Integer point) {
+    public int minusPointByIdx(Long idx, Integer point) {
         User user = userRepository.getOne(idx);
         int p = user.getPoint() - point;
         user.setPoint(p);

@@ -8,6 +8,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import java.util.List;
 
 @RepositoryRestResource(exported = false)
-public interface DeliveryDetailJpaRepository extends JpaRepository<DeliveryDetailSite, Integer> {
-    List<DeliveryDetailSite> findByDeliverySite_Idx(@Param("idx") Integer didx);
+public interface DeliveryDetailJpaRepository extends JpaRepository<DeliveryDetailSite, Long> {
+    List<DeliveryDetailSite> findByDeliverySite_Idx(@Param("idx") Long didx);
 }

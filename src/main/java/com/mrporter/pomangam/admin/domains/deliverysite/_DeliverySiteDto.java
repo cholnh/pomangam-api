@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Data
 public class _DeliverySiteDto implements Serializable {
 
-    private Integer idx;
+    private Long idx;
 
     private String title;
 
@@ -21,7 +21,7 @@ public class _DeliverySiteDto implements Serializable {
 
     private String campus;
 
-    public _DeliverySiteDto(Integer idx, String title, String location, String regionCategory, String campus) {
+    public _DeliverySiteDto(Long idx, String title, String location, String regionCategory, String campus) {
         this.idx = idx;
         this.title = title;
         this.location = location;

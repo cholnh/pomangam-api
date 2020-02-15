@@ -4,7 +4,7 @@ import com.mrporter.pomangam.client.domains._bases.RandomNickname;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface RandomNicknameJpaRepository extends JpaRepository<RandomNickname, Integer> {
+public interface RandomNicknameJpaRepository extends JpaRepository<RandomNickname, Long> {
     @Query(value = "SELECT u.first FROM random_nickname_tbl u ORDER BY RAND() LIMIT 1", nativeQuery = true)
     String findFirstByRandom();
 

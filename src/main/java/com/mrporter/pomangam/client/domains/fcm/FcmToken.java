@@ -1,43 +1,52 @@
 package com.mrporter.pomangam.client.domains.fcm;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.mrporter.pomangam._bases.annotation.BooleanToYNConverter;
+import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
+import com.mrporter.pomangam.client.domains.user.User;
+import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.sql.Timestamp;
 
-@Table(name = "fcm_token_tbl")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Data
 @Entity
-public class FcmToken implements Serializable {
+@Table(name = "fcm_token_tbl")
+@DynamicUpdate
+@Data
+@EqualsAndHashCode(callSuper=false)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(exclude = {"user"})
+public class FcmToken extends EntityAuditing {
 
-    @Id
+    /**
+     * Fcm Token 값
+     */
+    @Column(name = "token", nullable = true)
     private String token;
 
-    private Integer delivery_site_idx;
-
-    private Integer guest_idx;
-
-    private String customer_id;
-
-    private String owner_id;
-
-    private Byte state;
-
-    private Timestamp register_date;
+    /**
+     * User
+     * 연관관계 주인
+     */
+    @JoinColumn(name = "id_user")
+    @OneToOne(optional = true, fetch = FetchType.LAZY)
+    private User user;
 
     @Builder
-    public FcmToken(String token, Integer delivery_site_idx, Integer guest_idx, String customer_id, String owner_id, Byte state, Timestamp register_date) {
+    public FcmToken(String token, User user) {
         this.token = token;
-        this.delivery_site_idx = delivery_site_idx;
-        this.guest_idx = guest_idx;
-        this.customer_id = customer_id;
-        this.owner_id = owner_id;
-        this.state = state;
-        this.register_date = register_date;
+        if(user != null) {
+            this.user = user;
+        }
     }
+
+    /**
+     * 연관관계 편의 메서드
+     * 순수객체까지 양방향 관계를 고려해야 함
+     * User 쪽에도 편의 메서드 생성해야 함
+     */
+    public void applyUser(final User user) {
+        this.user = user;
+        user.applyFcmToken(this);
+    }
+
 }

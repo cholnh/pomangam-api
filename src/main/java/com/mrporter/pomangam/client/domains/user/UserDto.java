@@ -7,7 +7,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.modelmapper.ModelMapper;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,29 +16,17 @@ import java.util.List;
 @NoArgsConstructor
 public class UserDto implements Serializable {
 
-    private Integer idx;
-
+    private Long idx;
+    private LocalDateTime registerDate;
+    private LocalDateTime modifyDate;
     private DeliveryDetailSiteDto deliveryDetailSite;
-
     private String phoneNumber;
-
     @JsonIgnore
     private String password;
-
     private String name;
-
     private String nickname;
-
     private Sex sex;
-
-    private Date birth;
-
-    private Boolean isActive;
-
-    private LocalDateTime registerDate;
-
-    private LocalDateTime modifyDate;
-
+    private LocalDate birth;
     private Integer point;
 
     public User toEntity() {

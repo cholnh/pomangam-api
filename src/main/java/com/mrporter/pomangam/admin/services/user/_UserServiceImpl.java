@@ -94,12 +94,12 @@ public class _UserServiceImpl implements _UserService {
     }
 
     @Override
-    public int getPointByIdx(Integer idx) {
+    public int getPointByIdx(Long idx) {
         return userJpaRepository.getOne(idx).getPoint();
     }
 
     @Override
-    public int plusPointByIdx(Integer idx, Integer point) {
+    public int plusPointByIdx(Long idx, Integer point) {
         User user = userJpaRepository.getOne(idx);
         int p = user.getPoint() + point;
         user.setPoint(p);
@@ -108,7 +108,7 @@ public class _UserServiceImpl implements _UserService {
     }
 
     @Override
-    public int minusPointByIdx(Integer idx, Integer point) {
+    public int minusPointByIdx(Long idx, Integer point) {
         User user = userJpaRepository.getOne(idx);
         int p = user.getPoint() - point;
         user.setPoint(p);

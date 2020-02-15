@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource(exported = false)
-public interface EmployeeJpaRepository extends JpaRepository<Employee, Integer> {
+public interface EmployeeJpaRepository extends JpaRepository<Employee, Long> {
     Employee findById(@Param("id") String id);
     void deleteById(@Param("id") String id);
 }

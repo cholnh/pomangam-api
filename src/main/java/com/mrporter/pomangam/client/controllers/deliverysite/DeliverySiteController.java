@@ -1,6 +1,5 @@
 package com.mrporter.pomangam.client.controllers.deliverysite;
 
-import com.mrporter.pomangam.client.services.deliverysite.DeliverySiteService;
 import com.mrporter.pomangam.client.services.deliverysite.DeliverySiteServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +24,7 @@ public class DeliverySiteController {
     }
 
     @GetMapping("/{idx}")
-    public ResponseEntity<?> getByIdx(@PathVariable(value = "idx", required = true) Integer idx
+    public ResponseEntity<?> getByIdx(@PathVariable(value = "idx", required = true) Long idx
     ) {
         return new ResponseEntity(deliverySiteService.getByIdx(idx), HttpStatus.OK);
     }

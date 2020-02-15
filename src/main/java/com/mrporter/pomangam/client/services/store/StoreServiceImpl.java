@@ -22,7 +22,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    public StoreDto getByIdx(Integer sidx) {
+    public StoreDto getByIdx(Long sidx) {
         Store entity = storeJpaRepository.findById(sidx).get();
         return StoreDto.fromEntity(entity);
     }
@@ -31,7 +31,7 @@ public class StoreServiceImpl implements StoreService {
         return storeJpaRepository.count();
     }
 
-    public List<StoreSummaryDto> getSummaries(Integer didx) {
+    public List<StoreSummaryDto> getSummaries(Long didx) {
         List<Store> stores = storeJpaRepository.findByDeliverySite_Idx(didx);
         List<StoreSummaryDto> dto = StoreSummaryDto.fromEntities(stores);
         return dto;

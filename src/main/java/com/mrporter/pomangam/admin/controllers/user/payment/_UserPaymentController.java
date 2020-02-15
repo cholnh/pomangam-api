@@ -14,29 +14,29 @@ import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')")
 @RestController
-@RequestMapping("/admin/users/{id}/payments")
+@RequestMapping("/admin/users/{phoneNumber}/payments")
 @AllArgsConstructor
 public class _UserPaymentController {
 
     @GetMapping
-    public ResponseEntity<?> get(
-            @PathVariable(value = "id", required = true) String id,
+    public ResponseEntity<?> getByPhoneNumber(
+            @PathVariable(value = "phoneNumber", required = true) String phoneNumber,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/{idx}")
-    public ResponseEntity<?> getByIdx(
-            @PathVariable(value = "id", required = true) String id,
-            @PathVariable(value = "idx", required = true) Integer idx
+    public ResponseEntity<?> getByPhoneNumberAndIdx(
+            @PathVariable(value = "phoneNumber", required = true) String phoneNumber,
+            @PathVariable(value = "idx", required = true) Long idx
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/search/count")
     public ResponseEntity<?> searchCount(
-            @PathVariable(value = "id", required = true) String id
+            @PathVariable(value = "phoneNumber", required = true) String phoneNumber
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }

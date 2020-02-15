@@ -23,9 +23,9 @@ public interface UserService {
 
     Boolean deleteUser(String phoneNumber);
 
-    int getPointByIdx(Integer idx);
+    int getPointByIdx(Long idx);
 
-    int plusPointByIdx(Integer idx, Integer point);
+    int plusPointByIdx(Long idx, Integer point);
 
-    int minusPointByIdx(Integer idx, Integer point);
+    int minusPointByIdx(Long idx, Integer point);
 }

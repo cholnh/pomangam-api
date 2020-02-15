@@ -9,5 +9,5 @@ public interface FcmService {
     FcmToken patch(FcmToken token);
 
     String sendToAll(Map<String, Object> paramInfo);
-    String sendToDeliverySiteIdx(Map<String, Object> paramInfo, Integer deliverySiteIdx);
+    String sendToDeliverySiteIdx(Map<String, Object> paramInfo, Long deliverySiteIdx);
 }

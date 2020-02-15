@@ -1,46 +1,42 @@
 package com.mrporter.pomangam.client.domains.deliverysite;
 
+import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSite;
 import com.mrporter.pomangam.client.domains.deliverysite.region.Region;
 import com.mrporter.pomangam.client.domains.store.Store;
-import com.mrporter.pomangam.client.domains.user.User;
 import lombok.*;
-import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
 import java.util.List;
 
-@Table(name = "delivery_site_tbl")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Data
 @Entity
-@ToString(exclude = {"region", "stores", "detailSites"})
+@Table(name = "delivery_site_tbl")
 @DynamicUpdate
-public class DeliverySite implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idx;
+@Data
+@EqualsAndHashCode(callSuper=false)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(exclude = {"region", "stores", "detailSites"})
+public class DeliverySite extends EntityAuditing {
 
     /**
      * 배달지명
      * 배달이 도착하는 기관의 이름
      */
-    @NotBlank
-    private String title;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     /**
      * 배달지 주소
      */
+    @Column(name = "location", nullable = false)
     private String location;
 
     /**
      * 캠퍼스 이름
      * 대학교 캠퍼스 등 기관의 하위 카테고리
      */
+    @Column(name = "campus", nullable = true)
     private String campus;
 
     /**
@@ -57,9 +53,14 @@ public class DeliverySite implements Serializable {
     @OneToMany(mappedBy = "deliverySite", fetch = FetchType.LAZY)
     private List<DeliveryDetailSite> detailSites;
 
+    @PrePersist
+    private void prePersist() {
+        this.campus = this.campus == null ? "본캠" : this.campus;
+    }
+
     @Builder
-    public DeliverySite(@NotBlank String title, String location, String campus, Region region, List<Store> stores, List<DeliveryDetailSite> detailSites) {
-        this.title = title;
+    public DeliverySite(String name, String location, String campus, Region region, List<Store> stores, List<DeliveryDetailSite> detailSites) {
+        this.name = name;
         this.location = location;
         this.campus = campus;
         this.region = region;
