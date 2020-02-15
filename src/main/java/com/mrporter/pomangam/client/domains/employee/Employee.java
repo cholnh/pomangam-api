@@ -1,95 +1,84 @@
 package com.mrporter.pomangam.client.domains.employee;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.mrporter.pomangam._bases.annotation.BooleanToYNConverter;
+import com.mrporter.pomangam._bases.utils.validation.annotation.Phone;
+import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
+import com.mrporter.pomangam.client.domains.user.Sex;
+import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.sql.Timestamp;
+import javax.validation.constraints.Email;
+import java.time.LocalDate;
 
-@Table(name = "employee_tbl")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Data
 @Entity
-public class Employee implements Serializable {
+@Table(name = "employee_tbl")
+@DynamicUpdate
+@Data
+@EqualsAndHashCode(callSuper=false)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
+public class Employee extends EntityAuditing {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idx;
-
-    @Column(name = "customer_idx")
+    @Column(name = "customer_idx", nullable = true)
     private Integer jobIdx;
 
-    @Column(name = "detail_site_idx")
+    @Column(name = "detail_site_idx", nullable = true)
     private Integer departmentIdx;
 
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private String id;
 
-    @Column(name = "pw")
-    private String pw;
+    @Column(name = "password", nullable = false)
+    private String password;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "gender")
-    private Byte gender;
+    @Column(name = "sex", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Sex sex;
 
-    @Column(name = "year_of_birth")
-    private Short yearOfBirth;
+    @Column(name = "birth", nullable = false)
+    private LocalDate birth;
 
-    @Column(name = "month_of_birth")
-    private Byte monthOfBirth;
-
-    @Column(name = "days_of_birth")
-    private Byte daysOfBirth;
-
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", unique = true, nullable = false)
+    @Phone
     private String phoneNumber;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = true)
+    @Email
     private String email;
 
-    @Column(name = "state_active")
-    private Byte stateActive;
+    @Column(name = "is_active", nullable = true)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isActive;
 
-    @Column(name = "hire_date")
-    private Timestamp hireDate;
+    @Column(name = "hire_date", nullable = false)
+    private LocalDate hireDate;
 
-    @Column(name = "register_date")
-    private Timestamp registerDate;
-
-    @Column(name = "modify_date")
-    private Timestamp modifyDate;
-
-    @Column(name = "salary")
+    @Column(name = "salary", nullable = false)
     private Integer salary;
 
-    @Column(name = "commission_prc")
+    @Column(name = "commission_prc", nullable = false)
     private Integer commissionPrc;
 
-    @Column(name = "commission_pct")
+    @Column(name = "commission_pct", nullable = false)
     private Short commissionPct;
 
     @Builder
-    public Employee(Integer jobIdx, Integer departmentIdx, String id, String pw, String name, Byte gender, Short yearOfBirth, Byte monthOfBirth, Byte daysOfBirth, String phoneNumber, String email, Byte stateActive, Timestamp hireDate, Timestamp registerDate, Timestamp modifyDate, Integer salary, Integer commissionPrc, Short commissionPct) {
+    public Employee(Integer jobIdx, Integer departmentIdx, String id, String password, String name, Sex sex, LocalDate birth, String phoneNumber, @Email String email, Boolean isActive, LocalDate hireDate, Integer salary, Integer commissionPrc, Short commissionPct) {
         this.jobIdx = jobIdx;
         this.departmentIdx = departmentIdx;
         this.id = id;
-        this.pw = pw;
+        this.password = password;
         this.name = name;
-        this.gender = gender;
-        this.yearOfBirth = yearOfBirth;
-        this.monthOfBirth = monthOfBirth;
-        this.daysOfBirth = daysOfBirth;
+        this.sex = sex;
+        this.birth = birth;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.stateActive = stateActive;
+        this.isActive = isActive;
         this.hireDate = hireDate;
-        this.registerDate = registerDate;
-        this.modifyDate = modifyDate;
         this.salary = salary;
         this.commissionPrc = commissionPrc;
         this.commissionPct = commissionPct;

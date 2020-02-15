@@ -1,33 +1,25 @@
 package com.mrporter.pomangam.client.domains.store;
 
+import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import com.mrporter.pomangam.client.domains.deliverysite.DeliverySite;
 import com.mrporter.pomangam.client.domains.store.category.StoreCategory;
 import lombok.*;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
 
-@Table(name = "store_tbl")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Data
-@ToString(exclude = {"storeCategory", "deliverySite"})
 @Entity
+@Table(name = "store_tbl")
 @DynamicUpdate
-public class Store implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idx;
+@Data
+@EqualsAndHashCode(callSuper=false)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(exclude = {"storeCategory", "deliverySite"})
+public class Store extends EntityAuditing {
 
     /**
      * 배달지
      */
-    @JsonIgnore
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "idx_delivery_site")
     private DeliverySite deliverySite;
@@ -35,13 +27,12 @@ public class Store implements Serializable {
     /**
      * 업체명
      */
-    private String title;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     /**
-     * 업체 분류 명
-     * optional : 해당 객체 nullable true/false
+     * 업체 분류
      */
-    @JsonIgnore
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "idx_store_category")
     private StoreCategory storeCategory;
@@ -49,38 +40,45 @@ public class Store implements Serializable {
     /**
      * 설명
      */
+    @Column(name = "description", nullable = true)
     private String description;
 
     /**
      * 부가 설명
      */
+    @Column(name = "sub_description", nullable = true)
     private String subDescription;
 
     /**
      * 평균 리뷰 평점
      */
-    @ColumnDefault("0")
-    @Column(name = "avg_star")
+    @Column(name = "avg_star", nullable = true)
     private Float avgStar;
 
     /**
      * 총 좋아요 개수
      */
-    @ColumnDefault("0")
-    @Column(name = "cnt_like")
+    @Column(name = "cnt_like", nullable = true)
     private Integer cntLike;
 
     /**
      * 총 리뷰 개수
      */
-    @ColumnDefault("0")
-    @Column(name = "cnt_comment")
+    @Column(name = "cnt_comment", nullable = true)
     private Integer cntComment;
 
+    @PrePersist
+    private void prePersist() {
+        // always 0 when its insert
+        this.avgStar = 0f;
+        this.cntLike = 0;
+        this.cntComment = 0;
+    }
+
     @Builder
-    public Store(DeliverySite deliverySite, String title, StoreCategory storeCategory, String description, String subDescription, Float avgStar, Integer cntLike, Integer cntComment) {
+    public Store(DeliverySite deliverySite, String name, StoreCategory storeCategory, String description, String subDescription, Float avgStar, Integer cntLike, Integer cntComment) {
         this.deliverySite = deliverySite;
-        this.title = title;
+        this.name = name;
         this.storeCategory = storeCategory;
         this.description = description;
         this.subDescription = subDescription;

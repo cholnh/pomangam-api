@@ -12,31 +12,20 @@ import java.util.List;
 @NoArgsConstructor
 public class StoreSummaryDto implements Serializable {
 
-    private Integer idx;
-
+    private Long idx;
     private String title;
-
     private String description;
-
     private String subDescription;
-
     private Float avgStar;
-
     private Integer cntLike;
-
     private Integer cntComment;
 
     // 추가 사항
     private List<String> storeImagePaths;
-
     private String brandImagePath;
-
     private Integer promotionType;
-
     private Integer promotionValue; // promotionType: 0 -> 할인안함 / 1 -> 할인가(단위: 원) / 2 -> 할인률(단위: %)
-
     private Integer couponType;
-
     private Integer couponValue;
 
     public static StoreSummaryDto fromEntity(Store entity) {

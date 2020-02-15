@@ -1,25 +1,26 @@
 package com.mrporter.pomangam.client.domains.policy;
 
+import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
-@Table(name = "policy_tbl")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
 @Entity
+@Table(name = "policy_tbl")
+@DynamicUpdate
+@Data
+@EqualsAndHashCode(callSuper=false)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class Policy implements Serializable {
+public class Policy extends EntityAuditing {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idx;
-
-    @Column(name = "policy_name")
+    @Column(name = "policy_name", nullable = false)
     private String policyName;
 
-    @Column(name = "policy_contents")
+    @Column(name = "policy_contents", nullable = false)
     private String policyContents;
 
     @Builder

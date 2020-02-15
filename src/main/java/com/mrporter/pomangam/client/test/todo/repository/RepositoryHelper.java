@@ -1,6 +1,6 @@
 package com.mrporter.pomangam.client.test.todo.repository;
 
-import com.mrporter.pomangam.client.domains._bases.PageRequest;
+import com.mrporter.pomangam.client.test.todo.domain.PageRequest;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

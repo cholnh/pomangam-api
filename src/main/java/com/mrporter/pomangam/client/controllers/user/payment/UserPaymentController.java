@@ -12,29 +12,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/users/{id}/payments")
+@RequestMapping("/users/{phoneNumber}/payments")
 @AllArgsConstructor
 public class UserPaymentController {
 
     @GetMapping
-    public ResponseEntity<?> get(
-            @PathVariable(value = "id", required = true) String id,
+    public ResponseEntity<?> getByPhoneNumber(
+            @PathVariable(value = "phoneNumber", required = true) String phoneNumber,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/{idx}")
-    public ResponseEntity<?> getByIdx(
-            @PathVariable(value = "id", required = true) String id,
-            @PathVariable(value = "idx", required = true) Integer idx
+    public ResponseEntity<?> getByPhoneNumberAndIdx(
+            @PathVariable(value = "phoneNumber", required = true) String phoneNumber,
+            @PathVariable(value = "idx", required = true) Long idx
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/search/count")
     public ResponseEntity<?> searchCount(
-            @PathVariable(value = "id", required = true) String id
+            @PathVariable(value = "phoneNumber", required = true) String phoneNumber
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }

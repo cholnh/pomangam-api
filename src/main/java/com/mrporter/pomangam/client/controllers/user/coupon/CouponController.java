@@ -11,30 +11,30 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/users/{id}/coupons")
+@RequestMapping("/users/{phoneNumber}/coupons")
 @RestController
 @AllArgsConstructor
 public class CouponController {
 
     @GetMapping
-    public ResponseEntity<?> getByUser(
-            @PathVariable(value = "id", required = true) String id,
+    public ResponseEntity<?> getByPhoneNumber(
+            @PathVariable(value = "phoneNumber", required = true) String phoneNumber,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/{idx}")
-    public ResponseEntity<?> getByUserAndIdx(
-            @PathVariable(value = "id", required = true) String id,
-            @PathVariable(value = "idx", required = true) Integer idx
+    public ResponseEntity<?> getByPhoneNumberAndIdx(
+            @PathVariable(value = "phoneNumber", required = true) String phoneNumber,
+            @PathVariable(value = "idx", required = true) Long idx
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/search/count")
     public ResponseEntity<?> searchCountByUser(
-            @PathVariable(value = "id", required = true) String id
+            @PathVariable(value = "phoneNumber", required = true) String phoneNumber
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }

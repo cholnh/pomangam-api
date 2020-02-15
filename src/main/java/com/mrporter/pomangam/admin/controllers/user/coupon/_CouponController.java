@@ -27,7 +27,7 @@ public class _CouponController {
 
     @GetMapping("/{idx}")
     public ResponseEntity<?> getByIdx(
-            @PathVariable(value = "idx", required = true) Integer idx
+            @PathVariable(value = "idx", required = true) Long idx
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }

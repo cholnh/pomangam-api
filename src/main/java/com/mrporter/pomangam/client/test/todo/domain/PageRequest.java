@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.client.domains._bases;
+package com.mrporter.pomangam.client.test.todo.domain;
 
 import lombok.Data;
 import org.springframework.data.domain.Sort;

@@ -25,15 +25,15 @@ public class _DetailDeliverySiteController {
 
     @GetMapping("/{idx}")
     public ResponseEntity<?> getByIdx(
-            @PathVariable(value = "didx", required = true) Integer didx,
-            @PathVariable(value = "idx", required = true) Integer idx
+            @PathVariable(value = "didx", required = true) Long didx,
+            @PathVariable(value = "idx", required = true) Long idx
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/search/count")
     public ResponseEntity<?> searchCount(
-            @PathVariable(value = "didx", required = true) Integer didx
+            @PathVariable(value = "didx", required = true) Long didx
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }

@@ -18,7 +18,9 @@ public class FcmController {
     FcmServiceImpl fcmService;
 
     @PostMapping(value = "/send/ToAll", produces = {"application/json"})
-    public ResponseEntity<?> sendToAll(@RequestBody Map<String, Object> paramInfo) throws JSONException {
+    public ResponseEntity<?> sendToAll(
+        @RequestBody Map<String, Object> paramInfo
+    ) throws JSONException {
 
         String firebaseResponse = fcmService.sendToAll(paramInfo);
         if(firebaseResponse == null) {
@@ -29,8 +31,10 @@ public class FcmController {
     }
 
     @PostMapping(value = "/send/ToDeliverySiteIdx", produces = {"application/json"})
-    public ResponseEntity<?> sendToDeliverySiteIdx(@RequestBody Map<String, Object> paramInfo,
-                                                   @RequestParam(value = "deliverySiteIdx") Integer deliverySiteIdx) throws JSONException {
+    public ResponseEntity<?> sendToDeliverySiteIdx(
+        @RequestBody Map<String, Object> paramInfo,
+        @RequestParam(value = "deliverySiteIdx") Long deliverySiteIdx
+    ) throws JSONException {
 
         String firebaseResponse = fcmService.sendToDeliverySiteIdx(paramInfo, deliverySiteIdx);
         if(firebaseResponse == null) {

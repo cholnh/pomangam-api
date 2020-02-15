@@ -7,6 +7,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import java.util.List;
 
 @RepositoryRestResource(exported = false)
-public interface StoreJpaRepository extends JpaRepository<Store, Integer> {
-    List<Store> findByDeliverySite_Idx(Integer idx);
+public interface StoreJpaRepository extends JpaRepository<Store, Long> {
+    List<Store> findByDeliverySite_Idx(Long idx);
 }

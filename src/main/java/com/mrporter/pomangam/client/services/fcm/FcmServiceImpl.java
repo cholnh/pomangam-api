@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,31 +30,25 @@ public class FcmServiceImpl implements FcmService {
     @Override
     public FcmToken post(FcmToken token) {
         assert token != null && token.getToken() != null && !token.getToken().isEmpty();
-        token.setRegister_date(CustomTime.curTimestampSql());
+        token.setRegisterDate(LocalDateTime.now());
         return fcmJpaRepository.save(token);
     }
 
     @Override
     public FcmToken patch(FcmToken token) {
         assert token != null && token.getToken() != null && !token.getToken().isEmpty();
-        Optional<FcmToken> optional = fcmJpaRepository.findById(token.getToken());
+        Optional<FcmToken> optional = fcmJpaRepository.findById(token.getIdx());
         if(optional.isPresent()) {
             final FcmToken fetched = optional.get();
 
-            if (token.getCustomer_id() != null) {
-                fetched.setCustomer_id(token.getCustomer_id());
+            if (token.getToken() != null) {
+                fetched.setToken(token.getToken());
             }
-            if (token.getDelivery_site_idx() != null) {
-                fetched.setDelivery_site_idx(token.getDelivery_site_idx());
+            if (token.getUser() != null) {
+                fetched.setUser(token.getUser());
             }
-            if (token.getGuest_idx() != null) {
-                fetched.setGuest_idx(token.getGuest_idx());
-            }
-            if(token.getOwner_id() != null) {
-                fetched.setOwner_id(token.getOwner_id());
-            }
-            if (token.getState() != null) {
-                fetched.setState(token.getState());
+            if (token.getIsActive() != null) {
+                fetched.setIsActive(token.getIsActive());
             }
             return fcmJpaRepository.save(fetched);
         } else {
@@ -68,7 +63,7 @@ public class FcmServiceImpl implements FcmService {
     }
 
     @Override
-    public String sendToDeliverySiteIdx(Map<String, Object> paramInfo, Integer deliverySiteIdx) {
+    public String sendToDeliverySiteIdx(Map<String, Object> paramInfo, Long deliverySiteIdx) {
         List<FcmToken> tokens = fcmRepository.getTokensByDeliverySiteIdx(deliverySiteIdx);
         return send(paramInfo, tokens);
     }

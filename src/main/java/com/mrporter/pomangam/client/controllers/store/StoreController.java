@@ -18,7 +18,7 @@ public class StoreController {
 
     @GetMapping
     public ResponseEntity<?> get(
-            @PathVariable(value = "didx", required = true) Integer didx,
+            @PathVariable(value = "didx", required = true) Long didx,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
     ) {
         return new ResponseEntity(storeService.get(pageable), HttpStatus.OK);
@@ -26,22 +26,22 @@ public class StoreController {
 
     @GetMapping("/{idx}")
     public ResponseEntity<?> getByIdx(
-            @PathVariable(value = "didx", required = true) Integer didx,
-            @PathVariable(value = "idx", required = true) Integer idx
+            @PathVariable(value = "didx", required = true) Long didx,
+            @PathVariable(value = "idx", required = true) Long idx
     ) {
         return new ResponseEntity(storeService.getByIdx(idx), HttpStatus.OK);
     }
 
     @GetMapping("/search/count")
     public ResponseEntity<?> searchCount(
-            @PathVariable(value = "didx", required = true) Integer didx
+            @PathVariable(value = "didx", required = true) Long didx
     ) {
         return new ResponseEntity(storeService.count(), HttpStatus.OK);
     }
 
     @GetMapping("/search/summaries")
     public ResponseEntity<?> searchSummary(
-            @PathVariable(value = "didx", required = true) Integer didx
+            @PathVariable(value = "didx", required = true) Long didx
     ) {
         return new ResponseEntity(storeService.getSummaries(didx), HttpStatus.OK);
     }

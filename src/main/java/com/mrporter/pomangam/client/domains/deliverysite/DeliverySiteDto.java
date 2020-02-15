@@ -1,34 +1,31 @@
 package com.mrporter.pomangam.client.domains.deliverysite;
 
 import com.mrporter.pomangam.client.domains.deliverysite.region.Region;
-import com.mrporter.pomangam.client.domains.deliverysite.region.RegionDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
 public class DeliverySiteDto implements Serializable {
 
-    private Integer idx;
-
-    private String title;
-
+    private Long idx;
+    private LocalDateTime registerDate;
+    private LocalDateTime modifyDate;
+    private String name;
     private String location;
-
     private String campus;
-
-    //private RegionDto region;
-    private Integer idxRegion;
+    private Long idxRegion;
 
     public DeliverySite toEntity() {
         DeliverySite entity = new ModelMapper().map(this, DeliverySite.class);
         Region region = Region.builder().build();
-        region.setIdx(entity.getRegion().getIdx());
+        region.setIdx(idxRegion);
         entity.setRegion(region);
         return entity;
     }

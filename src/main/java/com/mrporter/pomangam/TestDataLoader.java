@@ -23,6 +23,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Component
@@ -53,18 +54,18 @@ public class TestDataLoader implements ApplicationRunner {
 
     void run() {
         Region region = Region.builder()
-                .title("경기")
+                .name("경기")
                 .build();
         regionJpaRepository.save(region);
 
         DeliverySite deliverySite = DeliverySite.builder()
-                .title("한국항공대")
+                .name("한국항공대")
                 .region(region)
                 .campus("본캠")
                 .location("경기도 고양시 한국항공대학로 123")
                 .build();
         DeliverySite deliverySite2 = DeliverySite.builder()
-                .title("성균관대")
+                .name("성균관대")
                 .region(region)
                 .campus("본캠")
                 .location("경기도 화성시 성균관로 123")
@@ -73,7 +74,7 @@ public class TestDataLoader implements ApplicationRunner {
         deliverySiteJpaRepository.save(deliverySite2);
 
         DeliveryDetailSite detail1 = DeliveryDetailSite.builder()
-                .title("학생회관 뒤")
+                .name("학생회관 뒤")
                 .location("학생회관 뒤 족구장 있는 곳")
                 .abbreviation("ㅎ")
                 .sequence(1)
@@ -83,7 +84,7 @@ public class TestDataLoader implements ApplicationRunner {
                 .additionalTime(LocalTime.of(0,0,0))
                 .build();
         DeliveryDetailSite detail2 = DeliveryDetailSite.builder()
-                .title("기숙사 식당")
+                .name("기숙사 식당")
                 .location("기숙사 내부 식당")
                 .abbreviation("ㄱ")
                 .sequence(2)
@@ -93,7 +94,7 @@ public class TestDataLoader implements ApplicationRunner {
                 .additionalTime(LocalTime.of(0,5,0))
                 .build();
         DeliveryDetailSite detail3 = DeliveryDetailSite.builder()
-                .title("별관")
+                .name("별관")
                 .location("별관 식당")
                 .abbreviation("ㄱ")
                 .sequence(1)
@@ -103,7 +104,7 @@ public class TestDataLoader implements ApplicationRunner {
                 .additionalTime(LocalTime.of(0,0,0))
                 .build();
         DeliveryDetailSite detail4 = DeliveryDetailSite.builder()
-                .title("미디어관")
+                .name("미디어관")
                 .location("미디어 플레이스")
                 .abbreviation("ㄴ")
                 .sequence(2)
@@ -124,8 +125,7 @@ public class TestDataLoader implements ApplicationRunner {
                 .name("최낙형")
                 .nickname("낙지")
                 .sex(Sex.MALE)
-                .birth(Date.valueOf("1993-01-10"))
-                .isActive(true)
+                .birth(LocalDate.parse("1993-01-10"))
                 .build();
         User user2 = User.builder()
                 .deliveryDetailSite(detail1)
@@ -133,14 +133,16 @@ public class TestDataLoader implements ApplicationRunner {
                 .password("1234")
                 .name("김영희")
                 .sex(Sex.FEMALE)
-                .birth(Date.valueOf("1993-01-11"))
-                .isActive(true)
+                .birth(LocalDate.parse("1993-01-11"))
+                .isActive(false)
                 .build();
         User user3 = User.builder()
                 .deliveryDetailSite(detail1)
                 .phoneNumber("010-0000-0000")
                 .password("1234")
                 .name("디폴트")
+                .sex(Sex.MALE)
+                .birth(LocalDate.parse("1998-01-26"))
                 .build();
         userService.saveUser(user1);
         userService.saveUser(user2);
@@ -148,12 +150,14 @@ public class TestDataLoader implements ApplicationRunner {
 
         // user input
         DeliveryDetailSiteDto ddsite = new DeliveryDetailSiteDto();
-        ddsite.setIdx(1);
+        ddsite.setIdx(1L);
         UserDto userDto = new UserDto();
         userDto.setPhoneNumber("01012345678");
         userDto.setPassword("1234");
         userDto.setName("테스트22");
         userDto.setNickname("테스트짱짱");
+        userDto.setSex(Sex.FEMALE);
+        userDto.setBirth(LocalDate.parse("1999-09-01"));
         userDto.setDeliveryDetailSite(ddsite);
 
         // save
@@ -174,7 +178,7 @@ public class TestDataLoader implements ApplicationRunner {
         storeCategoryJpaRepository.save(category3);
 
         Store store1 = Store.builder()
-                .title("맘스터치")
+                .name("맘스터치")
                 .deliverySite(deliverySite)
                 .description("엄마의 손맛, 수제햄버거 전문점 맘스터치ㅋ")
                 .avgStar(3.7f)
@@ -183,7 +187,7 @@ public class TestDataLoader implements ApplicationRunner {
                 .storeCategory(category2)
                 .build();
         Store store2 = Store.builder()
-                .title("한솥도시락")
+                .name("한솥도시락")
                 .deliverySite(deliverySite)
                 .description("싼맛! 싼마이 도시락! 한솥도시락ㅋㅋ")
                 .avgStar(4.2f)
@@ -193,7 +197,7 @@ public class TestDataLoader implements ApplicationRunner {
                 .build();
 
         Store store3 = Store.builder()
-                .title("맘스터치 성균관점")
+                .name("맘스터치 성균관점")
                 .deliverySite(deliverySite2)
                 .description("엄마의 손맛, 수제햄버거 전문점 맘스터치ㅋ")
                 .avgStar(3.7f)
@@ -202,7 +206,7 @@ public class TestDataLoader implements ApplicationRunner {
                 .storeCategory(category2)
                 .build();
         Store store4 = Store.builder()
-                .title("한솥도시락 성균관점")
+                .name("한솥도시락 성균관점")
                 .deliverySite(deliverySite2)
                 .description("싼맛! 싼마이 도시락! 한솥도시락ㅋㅋ")
                 .avgStar(4.2f)

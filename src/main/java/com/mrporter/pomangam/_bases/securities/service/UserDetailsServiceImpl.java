@@ -17,17 +17,13 @@ import org.springframework.stereotype.Service;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    public UserDetailsServiceImpl(@Lazy UserServiceImpl userService,
-                                  @Lazy EmployeeJpaRepository employeeJpaRepository,
-                                  @Lazy PasswordEncoder passwordEncoder) {
+    public UserDetailsServiceImpl(
+        @Lazy UserServiceImpl userService
+    ) {
         this.userService = userService;
-        this.employeeJpaRepository = employeeJpaRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     private UserServiceImpl userService;
-    private EmployeeJpaRepository employeeJpaRepository;
-    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {

@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource(exported = false)
-public interface _StoreJpaRepository extends JpaRepository<Store, Integer> {
+public interface _StoreJpaRepository extends JpaRepository<Store, Long> {
 
 }

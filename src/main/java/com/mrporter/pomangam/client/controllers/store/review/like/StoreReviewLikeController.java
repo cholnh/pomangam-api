@@ -18,9 +18,9 @@ public class StoreReviewLikeController {
 
     @GetMapping
     public ResponseEntity<?> get(
-            @PathVariable(value = "didx", required = true) Integer didx,
-            @PathVariable(value = "sidx", required = true) Integer sidx,
-            @PathVariable(value = "ridx", required = true) Integer ridx,
+            @PathVariable(value = "didx", required = true) Long didx,
+            @PathVariable(value = "sidx", required = true) Long sidx,
+            @PathVariable(value = "ridx", required = true) Long ridx,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
     ) {
         return new ResponseEntity(HttpStatus.OK);
@@ -28,19 +28,19 @@ public class StoreReviewLikeController {
 
     @GetMapping("/{idx}")
     public ResponseEntity<?> getByIdx(
-            @PathVariable(value = "didx", required = true) Integer didx,
-            @PathVariable(value = "sidx", required = true) Integer sidx,
-            @PathVariable(value = "ridx", required = true) Integer ridx,
-            @PathVariable(value = "idx", required = true) Integer idx
+            @PathVariable(value = "didx", required = true) Long didx,
+            @PathVariable(value = "sidx", required = true) Long sidx,
+            @PathVariable(value = "ridx", required = true) Long ridx,
+            @PathVariable(value = "idx", required = true) Long idx
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/search/count")
     public ResponseEntity<?> searchCount(
-            @PathVariable(value = "didx", required = true) Integer didx,
-            @PathVariable(value = "sidx", required = true) Integer sidx,
-            @PathVariable(value = "ridx", required = true) Integer ridx
+            @PathVariable(value = "didx", required = true) Long didx,
+            @PathVariable(value = "sidx", required = true) Long sidx,
+            @PathVariable(value = "ridx", required = true) Long ridx
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }

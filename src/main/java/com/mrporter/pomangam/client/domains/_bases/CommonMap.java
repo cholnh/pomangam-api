@@ -1,25 +1,23 @@
 package com.mrporter.pomangam.client.domains._bases;
 
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
-@Table(name = "common_map_tbl")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
 @Entity
+@Table(name = "common_map_tbl")
+@DynamicUpdate
+@Data
+@EqualsAndHashCode(callSuper=false)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class CommonMap implements Serializable {
+public class CommonMap extends EntityAuditing {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idx;
-
-    @Column(name = "\"key\"")
+    @Column(name = "key", nullable = false)
     private String key;
 
-    @Column(name = "\"value\"")
+    @Column(name = "value", nullable = false)
     private String value;
 
     @Builder

@@ -1,6 +1,6 @@
 package com.mrporter.pomangam.client.test.todo.repository;
 
-import com.mrporter.pomangam.client.domains._bases.PageRequest;
+import com.mrporter.pomangam.client.test.todo.domain.PageRequest;
 import com.mrporter.pomangam.client.test.todo.domain.Todo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;

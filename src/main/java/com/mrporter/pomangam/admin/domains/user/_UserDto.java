@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class _UserDto implements Serializable {
 
-    private Integer idx;
+    private Long idx;
 
     private DeliverySiteDto deliverySiteDto;
 

@@ -23,7 +23,7 @@ public class _DeliverySiteController {
     }
 
     @GetMapping("/{idx}")
-    public ResponseEntity<?> getByIdx(@PathVariable(value = "idx", required = true) Integer idx
+    public ResponseEntity<?> getByIdx(@PathVariable(value = "idx", required = true) Long idx
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }
