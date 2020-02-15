@@ -21,6 +21,16 @@ public class StoreServiceImpl implements StoreService {
         return StoreDto.fromEntities(stores);
     }
 
+
+    public StoreDto getByIdx(Integer sidx) {
+        Store entity = storeJpaRepository.findById(sidx).get();
+        return StoreDto.fromEntity(entity);
+    }
+
+    public long count() {
+        return storeJpaRepository.count();
+    }
+
     public List<StoreSummaryDto> getSummaries(Integer didx) {
         List<Store> stores = storeJpaRepository.findByDeliverySite_Idx(didx);
         List<StoreSummaryDto> dto = StoreSummaryDto.fromEntities(stores);

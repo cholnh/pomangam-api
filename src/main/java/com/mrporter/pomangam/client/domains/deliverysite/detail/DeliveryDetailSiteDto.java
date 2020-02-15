@@ -1,15 +1,12 @@
 package com.mrporter.pomangam.client.domains.deliverysite.detail;
 
 import com.mrporter.pomangam.client.domains.deliverysite.DeliverySite;
-import com.mrporter.pomangam.client.domains.deliverysite.DeliverySiteDto;
-import com.mrporter.pomangam.client.domains.user.User;
-import lombok.AccessLevel;
+import com.mrporter.pomangam.client.domains.deliverysite.region.Region;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 
 import java.io.Serializable;
-import java.sql.Time;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +17,8 @@ public class DeliveryDetailSiteDto implements Serializable {
 
     private Integer idx;
 
-    private DeliverySiteDto deliverySite;
+    //private DeliverySiteDto deliverySite;
+    private Integer idxDeliverySite;
 
     private String title;
 
@@ -37,13 +35,17 @@ public class DeliveryDetailSiteDto implements Serializable {
     private String abbreviation;
 
     public DeliveryDetailSite toEntity() {
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(this, DeliveryDetailSite.class);
+        DeliveryDetailSite entity = new ModelMapper().map(this, DeliveryDetailSite.class);
+        DeliverySite deliverySite = DeliverySite.builder().build();
+        deliverySite.setIdx(entity.getDeliverySite().getIdx());
+        entity.setDeliverySite(deliverySite);
+        return entity;
     }
 
     public static DeliveryDetailSiteDto fromEntity(DeliveryDetailSite entity) {
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(entity, DeliveryDetailSiteDto.class);
+        DeliveryDetailSiteDto dto = new ModelMapper().map(entity, DeliveryDetailSiteDto.class);
+        dto.setIdxDeliverySite(entity.getDeliverySite().getIdx());
+        return dto;
     }
 
     public static List<DeliveryDetailSiteDto> fromEntities(List<DeliveryDetailSite> entities) {
