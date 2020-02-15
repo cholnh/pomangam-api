@@ -76,11 +76,11 @@ public class DeliveryDetailSite implements Serializable {
     @NotBlank
     private String abbreviation;
 
-    @OneToMany(mappedBy = "deliveryDetailSite", fetch = FetchType.LAZY)
-    private List<User> users = new ArrayList<>();
+//    @OneToMany(mappedBy = "deliveryDetailSite", fetch = FetchType.LAZY)
+//    private List<User> users = new ArrayList<>();
 
     @Builder
-    public DeliveryDetailSite(DeliverySite deliverySite, @NotBlank String title, @NotBlank String location, Integer sequence, LocalTime additionalTime, Double latitude, Double longitude, @NotBlank String abbreviation, List<User> users) {
+    public DeliveryDetailSite(DeliverySite deliverySite, @NotBlank String title, @NotBlank String location, Integer sequence, LocalTime additionalTime, Double latitude, Double longitude, @NotBlank String abbreviation) {
         this.deliverySite = deliverySite;
         this.title = title;
         this.location = location;
@@ -89,8 +89,5 @@ public class DeliveryDetailSite implements Serializable {
         this.latitude = latitude;
         this.longitude = longitude;
         this.abbreviation = abbreviation;
-        if(users != null) {
-            this.users = users;
-        }
     }
 }

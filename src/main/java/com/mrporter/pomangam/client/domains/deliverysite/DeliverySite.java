@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 @Entity
-@ToString(exclude = {"region", "stores", "detailSites", "users"})
+@ToString(exclude = {"region", "stores", "detailSites"})
 @DynamicUpdate
 public class DeliverySite implements Serializable {
 

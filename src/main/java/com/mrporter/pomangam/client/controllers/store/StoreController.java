@@ -29,14 +29,14 @@ public class StoreController {
             @PathVariable(value = "didx", required = true) Integer didx,
             @PathVariable(value = "idx", required = true) Integer idx
     ) {
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(storeService.getByIdx(idx), HttpStatus.OK);
     }
 
     @GetMapping("/search/count")
     public ResponseEntity<?> searchCount(
             @PathVariable(value = "didx", required = true) Integer didx
     ) {
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(storeService.count(), HttpStatus.OK);
     }
 
     @GetMapping("/search/summaries")

@@ -4,7 +4,6 @@ import com.mrporter.pomangam._bases.annotation.BooleanToYNConverter;
 import com.mrporter.pomangam._bases.utils.validation.annotation.Phone;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSite;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -30,6 +29,7 @@ public class User implements Serializable {
 
     /**
      * 상세 배달지
+     * 연관관계 주인
      */
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "idx_delivery_detail_site")
