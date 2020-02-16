@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.client.domains._bases;
+package com.mrporter.pomangam.client.domains.map;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -4,8 +4,21 @@ import com.mrporter.pomangam.client.domains.deliverysite.DeliverySite;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSite;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSiteDto;
 import com.mrporter.pomangam.client.domains.deliverysite.region.Region;
+import com.mrporter.pomangam.client.domains.product.Product;
+import com.mrporter.pomangam.client.domains.product.category.ProductCategory;
+import com.mrporter.pomangam.client.domains.product.cost.Cost;
+import com.mrporter.pomangam.client.domains.product.image.ProductImage;
+import com.mrporter.pomangam.client.domains.product.image.ProductImageType;
+import com.mrporter.pomangam.client.domains.product.sub.ProductSub;
+import com.mrporter.pomangam.client.domains.product.sub.ProductSubMapper;
+import com.mrporter.pomangam.client.domains.product.sub.ProductSubType;
+import com.mrporter.pomangam.client.domains.product.sub.category.ProductSubCategory;
+import com.mrporter.pomangam.client.domains.product.sub.image.ProductSubImage;
+import com.mrporter.pomangam.client.domains.product.sub.image.ProductSubImageType;
 import com.mrporter.pomangam.client.domains.store.Store;
 import com.mrporter.pomangam.client.domains.store.category.StoreCategory;
+import com.mrporter.pomangam.client.domains.store.image.StoreImage;
+import com.mrporter.pomangam.client.domains.store.image.StoreImageType;
 import com.mrporter.pomangam.client.domains.user.Sex;
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.domains.user.UserDto;
@@ -13,6 +26,11 @@ import com.mrporter.pomangam.client.repositories._bases.RandomNicknameJpaReposit
 import com.mrporter.pomangam.client.repositories.deliverysite.DeliverySiteJpaRepository;
 import com.mrporter.pomangam.client.repositories.deliverysite.detail.DeliveryDetailJpaRepository;
 import com.mrporter.pomangam.client.repositories.deliverysite.region.RegionJpaRepository;
+import com.mrporter.pomangam.client.repositories.product.ProductJpaRepository;
+import com.mrporter.pomangam.client.repositories.product.category.ProductCategoryJpaRepository;
+import com.mrporter.pomangam.client.repositories.product.sub.ProductSubJpaRepository;
+import com.mrporter.pomangam.client.repositories.product.sub.ProductSubMapperJpaRepository;
+import com.mrporter.pomangam.client.repositories.product.sub.category.ProductSubCategoryJpaRepository;
 import com.mrporter.pomangam.client.repositories.store.StoreJpaRepository;
 import com.mrporter.pomangam.client.repositories.store.category.StoreCategoryJpaRepository;
 import com.mrporter.pomangam.client.services.user.UserServiceImpl;
@@ -21,8 +39,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -36,8 +54,12 @@ public class TestDataLoader implements ApplicationRunner {
     DeliveryDetailJpaRepository detailJpaRepository;
     @Autowired RegionJpaRepository regionJpaRepository;
     @Autowired RandomNicknameJpaRepository randomNicknameJpaRepository;
-
+    @Autowired ProductJpaRepository productJpaRepository;
     @Autowired UserServiceImpl userService;
+    @Autowired ProductCategoryJpaRepository productCategoryJpaRepository;
+    @Autowired ProductSubCategoryJpaRepository productSubCategoryJpaRepository;
+    @Autowired ProductSubJpaRepository productSubJpaRepository;
+    @Autowired ProductSubMapperJpaRepository productSubMapperJpaRepository;
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddl;
@@ -52,6 +74,7 @@ public class TestDataLoader implements ApplicationRunner {
     //////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////
 
+    @Transactional
     void run() {
         Region region = Region.builder()
                 .name("경기")
@@ -179,26 +202,28 @@ public class TestDataLoader implements ApplicationRunner {
 
         Store store1 = Store.builder()
                 .name("맘스터치")
-                .deliverySite(deliverySite)
+                .idxDeliverySite(deliverySite.getIdx())
                 .description("엄마의 손맛, 수제햄버거 전문점 맘스터치ㅋ")
                 .avgStar(3.7f)
                 .cntLike(178)
                 .cntComment(54)
                 .storeCategory(category2)
+                .sequence(1)
                 .build();
         Store store2 = Store.builder()
                 .name("한솥도시락")
-                .deliverySite(deliverySite)
+                .idxDeliverySite(deliverySite.getIdx())
                 .description("싼맛! 싼마이 도시락! 한솥도시락ㅋㅋ")
                 .avgStar(4.2f)
                 .cntLike(132)
                 .cntComment(79)
                 .storeCategory(category1)
+                .sequence(2)
                 .build();
 
         Store store3 = Store.builder()
                 .name("맘스터치 성균관점")
-                .deliverySite(deliverySite2)
+                .idxDeliverySite(deliverySite2.getIdx())
                 .description("엄마의 손맛, 수제햄버거 전문점 맘스터치ㅋ")
                 .avgStar(3.7f)
                 .cntLike(178)
@@ -207,17 +232,398 @@ public class TestDataLoader implements ApplicationRunner {
                 .build();
         Store store4 = Store.builder()
                 .name("한솥도시락 성균관점")
-                .deliverySite(deliverySite2)
+                .idxDeliverySite(deliverySite2.getIdx())
                 .description("싼맛! 싼마이 도시락! 한솥도시락ㅋㅋ")
                 .avgStar(4.2f)
                 .cntLike(132)
                 .cntComment(79)
                 .storeCategory(category1)
                 .build();
+
+        StoreImage storeBrandImage1 = StoreImage.builder()
+                .imagePath("/assets/images/stores/1/brand.png")
+                .imageType(StoreImageType.BRAND)
+                .build();
+        StoreImage storeBrandImage2 = StoreImage.builder()
+                .imagePath("/assets/images/stores/2/brand.png")
+                .imageType(StoreImageType.BRAND)
+                .build();
+        StoreImage storeBrandImage3 = StoreImage.builder()
+                .imagePath("/assets/images/stores/3/brand.png")
+                .imageType(StoreImageType.BRAND)
+                .build();
+        StoreImage storeBrandImage4 = StoreImage.builder()
+                .imagePath("/assets/images/stores/4/brand.png")
+                .imageType(StoreImageType.BRAND)
+                .build();
+
+        StoreImage storeImage1 = StoreImage.builder()
+                .imagePath("/assets/images/stores/1/1.jpg")
+                .imageType(StoreImageType.MAIN)
+                .sequence(1)
+                .build();
+        StoreImage storeImage2_1 = StoreImage.builder()
+                .imagePath("/assets/images/stores/2/1.jpg")
+                .imageType(StoreImageType.MAIN)
+                .sequence(1)
+                .build();
+        StoreImage storeImage2_2 = StoreImage.builder()
+                .imagePath("/assets/images/stores/2/2.jpg")
+                .imageType(StoreImageType.SUB)
+                .sequence(2)
+                .build();
+        StoreImage storeImage2_3 = StoreImage.builder()
+                .imagePath("/assets/images/stores/2/3.jpg")
+                .imageType(StoreImageType.SUB)
+                .sequence(3)
+                .build();
+        StoreImage storeImage3 = StoreImage.builder()
+                .imagePath("/assets/images/stores/3/1.jpg")
+                .imageType(StoreImageType.MAIN)
+                .sequence(1)
+                .build();
+        StoreImage storeImage4_1 = StoreImage.builder()
+                .imagePath("/assets/images/stores/4/1.jpg")
+                .imageType(StoreImageType.MAIN)
+                .sequence(1)
+                .build();
+        StoreImage storeImage4_2 = StoreImage.builder()
+                .imagePath("/assets/images/stores/4/2.jpg")
+                .imageType(StoreImageType.SUB)
+                .sequence(2)
+                .build();
+        StoreImage storeImage4_3 = StoreImage.builder()
+                .imagePath("/assets/images/stores/4/3.jpg")
+                .imageType(StoreImageType.SUB)
+                .sequence(3)
+                .build();
+
+        store1.addImage(storeBrandImage1);
+        store2.addImage(storeBrandImage2);
+        store3.addImage(storeBrandImage3);
+        store4.addImage(storeBrandImage4);
+
+        store1.addImage(storeImage1);
+        store2.addImage(storeImage2_1);
+        store2.addImage(storeImage2_2);
+        store2.addImage(storeImage2_3);
+        store3.addImage(storeImage3);
+        store4.addImage(storeImage4_1);
+        store4.addImage(storeImage4_2);
+        store4.addImage(storeImage4_3);
+
         storeJpaRepository.save(store1);
         storeJpaRepository.save(store2);
         storeJpaRepository.save(store3);
         storeJpaRepository.save(store4);
+
+
+
+
+        ProductCategory productCategory1 = ProductCategory.builder()
+                .categoryTitle("세트")
+                .build();
+        ProductCategory productCategory2 = ProductCategory.builder()
+                .categoryTitle("단품")
+                .build();
+        productCategoryJpaRepository.save(productCategory1);
+        productCategoryJpaRepository.save(productCategory2);
+
+        Product product1 = Product.builder()
+                .name("싸이버거세트ㅋ")
+                .idxStore(1L)
+                .description("손을 넣어만든 수제버거 세트")
+                .subDescription("한번 맛보면 잊어버리는 맛! 세트")
+                .productCategory(productCategory1)
+                .sequence(1)
+                .cost(Cost.builder()
+                        .unitCost(6000)
+                        .priceClientFee(1000)
+                        .priceStoreFee(500)
+                        .percentClientFee(0)
+                        .percentStoreFee(0)
+                        .build())
+                .build();
+        Product product2 = Product.builder()
+                .name("싸이버거")
+                .idxStore(1L)
+                .description("손을 넣어만든 수제버거 단품")
+                .subDescription("한번 맛보면 잊어버리는 맛! 단품")
+                .productCategory(productCategory2)
+                .sequence(2)
+                .cost(Cost.builder()
+                        .unitCost(4000)
+                        .priceClientFee(1000)
+                        .priceStoreFee(500)
+                        .percentClientFee(0)
+                        .percentStoreFee(0)
+                        .build())
+                .build();
+        Product product3 = Product.builder()
+                .name("후라이드치킨세트")
+                .idxStore(1L)
+                .description("후라이까지말라이~")
+                .subDescription("세트다이거")
+                .productCategory(productCategory2)
+                .sequence(3)
+                .cost(Cost.builder()
+                        .unitCost(8000)
+                        .priceClientFee(1000)
+                        .priceStoreFee(500)
+                        .percentClientFee(0)
+                        .percentStoreFee(0)
+                        .build())
+                .build();
+        Product product4 = Product.builder()
+                .name("후라이드치킨")
+                .idxStore(1L)
+                .description("후라이까지말라우")
+                .subDescription("단품이다이거")
+                .productCategory(productCategory2)
+                .sequence(4)
+                .cost(Cost.builder()
+                        .unitCost(6500)
+                        .priceClientFee(1000)
+                        .priceStoreFee(500)
+                        .build())
+                .build();
+
+        // /assets/images/products/{idx-product}/{idx-product-image}.jpg
+        ProductImage productImage1_1 = ProductImage.builder()
+                .imagePath("/assets/images/products/1/1.jpg")
+                .imageType(ProductImageType.MAIN)
+                .sequence(1)
+                .build();
+        ProductImage productImage1_2 = ProductImage.builder()
+                .imagePath("/assets/images/products/1/2.jpg")
+                .imageType(ProductImageType.SUB)
+                .sequence(2)
+                .build();
+        ProductImage productImage1_3 = ProductImage.builder()
+                .imagePath("/assets/images/products/1/3.jpg")
+                .imageType(ProductImageType.SUB)
+                .sequence(3)
+                .build();
+        ProductImage productImage2 = ProductImage.builder()
+                .imagePath("/assets/images/products/2/1.jpg")
+                .imageType(ProductImageType.MAIN)
+                .sequence(1)
+                .build();
+        ProductImage productImage3 = ProductImage.builder()
+                .imagePath("/assets/images/products/3/1.jpg")
+                .imageType(ProductImageType.MAIN)
+                .sequence(1)
+                .build();
+        ProductImage productImage4 = ProductImage.builder()
+                .imagePath("/assets/images/products/4/1.jpg")
+                .imageType(ProductImageType.MAIN)
+                .sequence(1)
+                .build();
+
+        product1.addImage(productImage1_1);
+        product1.addImage(productImage1_2);
+        product1.addImage(productImage1_3);
+        product2.addImage(productImage2);
+        product3.addImage(productImage3);
+        product4.addImage(productImage4);
+
+        productJpaRepository.save(product1);
+        productJpaRepository.save(product2);
+        productJpaRepository.save(product3);
+        productJpaRepository.save(product4);
+
+
+
+
+
+        ProductSubCategory productSubCategory1 = ProductSubCategory.builder()
+                .categoryTitle("맛 필수 선택")
+                .build();
+        ProductSubCategory productSubCategory2 = ProductSubCategory.builder()
+                .categoryTitle("서브메뉴")
+                .build();
+        ProductSubCategory productSubCategory3 = ProductSubCategory.builder()
+                .categoryTitle("음료")
+                .build();
+        productSubCategoryJpaRepository.save(productSubCategory1);
+        productSubCategoryJpaRepository.save(productSubCategory2);
+        productSubCategoryJpaRepository.save(productSubCategory3);
+
+        ProductSub productSub1 = ProductSub.builder()
+                .idxStore(1L)
+                .productSubCategory(productSubCategory1)
+                .productSubType(ProductSubType.RADIO)
+                .name("착한맛")
+                .sequence(1)
+                .cost(Cost.builder()
+                        .unitCost(0)
+                        .build())
+                .build();
+        ProductSub productSub2 = ProductSub.builder()
+                .idxStore(1L)
+                .productSubCategory(productSubCategory1)
+                .productSubType(ProductSubType.RADIO)
+                .name("보통맛")
+                .sequence(2)
+                .cost(Cost.builder()
+                        .unitCost(0)
+                        .build())
+                .build();
+        ProductSub productSub3 = ProductSub.builder()
+                .idxStore(1L)
+                .productSubCategory(productSubCategory1)
+                .productSubType(ProductSubType.RADIO)
+                .name("매운맛")
+                .sequence(3)
+                .cost(Cost.builder()
+                        .unitCost(0)
+                        .build())
+                .build();
+        ProductSub productSub4 = ProductSub.builder()
+                .idxStore(1L)
+                .productSubCategory(productSubCategory2)
+                .productSubType(ProductSubType.NUMBER)
+                .numberMinimum(0)
+                .numberMaximum(10)
+                .name("케이준양념감자")
+                .description("쫀딕쫀딕 케이준감자에 양념 뭍힌것이여~")
+                .subDescription("쪼끔 맵땅깨~")
+                .sequence(1)
+                .cost(Cost.builder()
+                        .unitCost(1600)
+                        .build())
+                .build();
+        ProductSub productSub5 = ProductSub.builder()
+                .idxStore(1L)
+                .productSubCategory(productSubCategory2)
+                .productSubType(ProductSubType.CHECKBOX)
+                .name("사이즈업")
+                .sequence(2)
+                .cost(Cost.builder()
+                        .unitCost(1000)
+                        .build())
+                .build();
+        ProductSub productSub6 = ProductSub.builder()
+                .idxStore(1L)
+                .productSubCategory(productSubCategory3)
+                .productSubType(ProductSubType.NUMBER)
+                .numberMinimum(0)
+                .name("콜라")
+                .description("코카콜라여")
+                .subDescription("500L")
+                .sequence(1)
+                .cost(Cost.builder()
+                        .unitCost(1000)
+                        .build())
+                .build();
+        ProductSub productSub7 = ProductSub.builder()
+                .idxStore(1L)
+                .productSubCategory(productSubCategory3)
+                .productSubType(ProductSubType.NUMBER)
+                .numberMinimum(0)
+                .name("사이다")
+                .description("사이다는 칠성이지ㅋ")
+                .subDescription("500L")
+                .sequence(2)
+                .cost(Cost.builder()
+                        .unitCost(1000)
+                        .build())
+                .build();
+
+        // /assets/images/subs/{idx-product-sub}/{idx-product-sub-image}.jpg
+        ProductSubImage productSubImage1_1 = ProductSubImage.builder()
+                .imagePath("/assets/images/subs/4/1.jpg")
+                .imageType(ProductSubImageType.MAIN)
+                .sequence(1)
+                .build();
+        ProductSubImage productSubImage1_2 = ProductSubImage.builder()
+                .imagePath("/assets/images/subs/4/2.jpg")
+                .imageType(ProductSubImageType.SUB)
+                .sequence(2)
+                .build();
+        ProductSubImage productSubImage1_3 = ProductSubImage.builder()
+                .imagePath("/assets/images/subs/4/3.jpg")
+                .imageType(ProductSubImageType.SUB)
+                .sequence(3)
+                .build();
+        ProductSubImage productSubImage2 = ProductSubImage.builder()
+                .imagePath("/assets/images/subs/6/1.jpg")
+                .imageType(ProductSubImageType.MAIN)
+                .sequence(1)
+                .build();
+        ProductSubImage productSubImage3 = ProductSubImage.builder()
+                .imagePath("/assets/images/subs/7/1.jpg")
+                .imageType(ProductSubImageType.MAIN)
+                .sequence(1)
+                .build();
+
+        productSub4.addImage(productSubImage1_1);
+        productSub4.addImage(productSubImage1_2);
+        productSub4.addImage(productSubImage1_3);
+        productSub6.addImage(productSubImage2);
+        productSub7.addImage(productSubImage3);
+
+        productSubJpaRepository.save(productSub1);
+        productSubJpaRepository.save(productSub2);
+        productSubJpaRepository.save(productSub3);
+        productSubJpaRepository.save(productSub4);
+        productSubJpaRepository.save(productSub5);
+        productSubJpaRepository.save(productSub6);
+        productSubJpaRepository.save(productSub7);
+
+
+        ProductSubMapper mapper1 = ProductSubMapper.builder()
+                .product(product1)
+                .productSub(productSub1)
+                .build();
+        ProductSubMapper mapper2 = ProductSubMapper.builder()
+                .product(product1)
+                .productSub(productSub2)
+                .build();
+        ProductSubMapper mapper3 = ProductSubMapper.builder()
+                .product(product1)
+                .productSub(productSub3)
+                .build();
+        ProductSubMapper mapper4 = ProductSubMapper.builder()
+                .product(product1)
+                .productSub(productSub4)
+                .build();
+        ProductSubMapper mapper5 = ProductSubMapper.builder()
+                .product(product1)
+                .productSub(productSub5)
+                .build();
+        ProductSubMapper mapper6 = ProductSubMapper.builder()
+                .product(product1)
+                .productSub(productSub6)
+                .build();
+        ProductSubMapper mapper7 = ProductSubMapper.builder()
+                .product(product1)
+                .productSub(productSub7)
+                .build();
+
+        ProductSubMapper mapper8 = ProductSubMapper.builder()
+                .product(product2)
+                .productSub(productSub1)
+                .build();
+        ProductSubMapper mapper9 = ProductSubMapper.builder()
+                .product(product2)
+                .productSub(productSub2)
+                .build();
+        ProductSubMapper mapper10 = ProductSubMapper.builder()
+                .product(product2)
+                .productSub(productSub3)
+                .build();
+
+        productSubMapperJpaRepository.save(mapper1);
+        productSubMapperJpaRepository.save(mapper2);
+        productSubMapperJpaRepository.save(mapper3);
+        productSubMapperJpaRepository.save(mapper4);
+        productSubMapperJpaRepository.save(mapper5);
+        productSubMapperJpaRepository.save(mapper6);
+        productSubMapperJpaRepository.save(mapper7);
+        productSubMapperJpaRepository.save(mapper8);
+        productSubMapperJpaRepository.save(mapper9);
+        productSubMapperJpaRepository.save(mapper10);
 
 //        String[] ff = {"배부른", "용감한", "갸냘픈", "가엾은", "굵은", "던지는", "마법사", "방금온", "브론즈", "마스터", "실버", "골드", "플레티넘", "완고한", "다이아", "감각적인", "가벼운", "잘생긴", "어여쁜"};
 //        String[] ss = {"얼굴", "사마귀", "북극곰", "콜라", "아이폰", "향수", "꼬부기", "파이리", "롱스톤", "티모", "가렌", "마스터이", "언랭", "페이커", "포만이", "비타민", "발바닥", "손바닥", "지갑"};

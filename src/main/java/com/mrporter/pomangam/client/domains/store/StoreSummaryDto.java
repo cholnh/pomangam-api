@@ -1,5 +1,7 @@
 package com.mrporter.pomangam.client.domains.store;
 
+import com.mrporter.pomangam.client.domains.store.image.StoreImage;
+import com.mrporter.pomangam.client.domains.store.image.StoreImageType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -13,31 +15,43 @@ import java.util.List;
 public class StoreSummaryDto implements Serializable {
 
     private Long idx;
-    private String title;
+    private String name;
     private String description;
     private String subDescription;
     private Float avgStar;
     private Integer cntLike;
     private Integer cntComment;
+    private Integer sequence;
 
     // 추가 사항
-    private List<String> storeImagePaths;
     private String brandImagePath;
+    private String storeImageMainPath;
+    private List<String> storeImageSubPaths = new ArrayList<>();
     private Integer promotionType;
     private Integer promotionValue; // promotionType: 0 -> 할인안함 / 1 -> 할인가(단위: 원) / 2 -> 할인률(단위: %)
     private Integer couponType;
     private Integer couponValue;
 
     public static StoreSummaryDto fromEntity(Store entity) {
-        ModelMapper modelMapper = new ModelMapper();
-        StoreSummaryDto dto = modelMapper.map(entity, StoreSummaryDto.class);
+        StoreSummaryDto dto = new ModelMapper().map(entity, StoreSummaryDto.class);
 
-        List<String> imagePaths = new ArrayList<>();
-        imagePaths.add("/assets/image/store/1.jpg");
-        imagePaths.add("/assets/image/store/2.jpg");
-        imagePaths.add("/assets/image/store/3.jpg");
-        dto.setStoreImagePaths(imagePaths);
-        dto.setBrandImagePath("/assets/image/store/1.png");
+        List<StoreImage> storeImages = entity.getImages();
+        if(storeImages != null && !storeImages.isEmpty()) {
+            for(StoreImage storeImage : storeImages) {
+                switch (storeImage.getImageType()) {
+                    case MAIN:
+                        dto.setStoreImageMainPath(storeImage.getImagePath());
+                        break;
+                    case SUB:
+                        dto.getStoreImageSubPaths().add(storeImage.getImagePath());
+                        break;
+                    case BRAND:
+                        dto.setBrandImagePath(storeImage.getImagePath());
+                        break;
+                }
+            }
+        }
+
         dto.setPromotionType(0);
         dto.setPromotionValue(0);
         dto.setCouponType(0);

@@ -1,5 +1,6 @@
-package com.mrporter.pomangam.client.domains._bases;
+package com.mrporter.pomangam.client.domains.user.random_nickname;
 
+import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 

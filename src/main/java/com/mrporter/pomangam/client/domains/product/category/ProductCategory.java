@@ -25,6 +25,7 @@ public class ProductCategory extends EntityAuditing {
     private String categoryTitle;
 
     @OneToMany(mappedBy = "productCategory", fetch = FetchType.LAZY)
+    @OrderBy("sequence ASC")
     private List<Product> products;
 
     @Builder

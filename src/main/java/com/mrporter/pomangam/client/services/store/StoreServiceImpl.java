@@ -16,14 +16,14 @@ public class StoreServiceImpl implements StoreService {
 
     StoreJpaRepository storeJpaRepository;
 
-    public List<StoreDto> get(Pageable pageable) {
-        List<Store> stores = storeJpaRepository.findAll(pageable).getContent();
+    public List<StoreDto> getByIdxDeliverySite(Long didx, Pageable pageable) {
+        List<Store> stores = storeJpaRepository.findByIdxDeliverySiteOrderBySequenceAsc(didx, pageable).getContent();
         return StoreDto.fromEntities(stores);
     }
 
 
-    public StoreDto getByIdx(Long sidx) {
-        Store entity = storeJpaRepository.findById(sidx).get();
+    public StoreDto getByIdx(Long idx) {
+        Store entity = storeJpaRepository.findById(idx).get();
         return StoreDto.fromEntity(entity);
     }
 
@@ -31,8 +31,8 @@ public class StoreServiceImpl implements StoreService {
         return storeJpaRepository.count();
     }
 
-    public List<StoreSummaryDto> getSummaries(Long didx) {
-        List<Store> stores = storeJpaRepository.findByDeliverySite_Idx(didx);
+    public List<StoreSummaryDto> getSummaries(Long didx, Pageable pageable) {
+        List<Store> stores = storeJpaRepository.findByIdxDeliverySiteOrderBySequenceAsc(didx, pageable).getContent();
         List<StoreSummaryDto> dto = StoreSummaryDto.fromEntities(stores);
         return dto;
     }

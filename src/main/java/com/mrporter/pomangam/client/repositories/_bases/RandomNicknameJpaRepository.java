@@ -1,6 +1,6 @@
 package com.mrporter.pomangam.client.repositories._bases;
 
-import com.mrporter.pomangam.client.domains._bases.RandomNickname;
+import com.mrporter.pomangam.client.domains.user.random_nickname.RandomNickname;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

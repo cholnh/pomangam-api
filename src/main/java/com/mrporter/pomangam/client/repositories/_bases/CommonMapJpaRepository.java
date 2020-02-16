@@ -1,6 +1,6 @@
 package com.mrporter.pomangam.client.repositories._bases;
 
-import com.mrporter.pomangam.client.domains._bases.CommonMap;
+import com.mrporter.pomangam.client.domains.map.CommonMap;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

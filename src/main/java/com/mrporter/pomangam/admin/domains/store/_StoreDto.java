@@ -15,7 +15,7 @@ public class _StoreDto implements Serializable {
 
     private Long idx;
 
-    private DeliverySiteDto deliverySite;
+    private Long idxDeliverySite;
 
     private String title;
 
@@ -29,9 +29,9 @@ public class _StoreDto implements Serializable {
 
     private Integer cntComment;
 
-    public _StoreDto(Long idx, DeliverySiteDto deliverySite, String title, String storeCategory, String description, Float avgStar, Integer cntLike, Integer cntComment) {
+    public _StoreDto(Long idx, Long idxDeliverySite, String title, String storeCategory, String description, Float avgStar, Integer cntLike, Integer cntComment) {
         this.idx = idx;
-        this.deliverySite = deliverySite;
+        this.idxDeliverySite = idxDeliverySite;
         this.title = title;
         this.storeCategory = storeCategory;
         this.description = description;
@@ -43,7 +43,7 @@ public class _StoreDto implements Serializable {
     public static _StoreDto fromEntity(Store entity) {
         return new _StoreDto(
                 entity.getIdx(),
-                DeliverySiteDto.fromEntity(entity.getDeliverySite()),
+                entity.getIdxDeliverySite(),
                 entity.getName(),
                 entity.getStoreCategory().getCategoryTitle(),
                 entity.getDescription(),

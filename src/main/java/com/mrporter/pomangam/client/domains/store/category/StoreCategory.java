@@ -12,6 +12,7 @@ import java.util.List;
 @Table(name = "store_category_tbl")
 @DynamicUpdate
 @Data
+@EqualsAndHashCode(callSuper=false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(exclude = "stores")
 public class StoreCategory extends EntityAuditing {
@@ -24,6 +25,7 @@ public class StoreCategory extends EntityAuditing {
     private String categoryTitle;
 
     @OneToMany(mappedBy = "storeCategory", fetch = FetchType.LAZY)
+    @OrderBy("sequence ASC")
     private List<Store> stores;
 
     @Builder
