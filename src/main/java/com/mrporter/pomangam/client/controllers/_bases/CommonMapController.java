@@ -1,6 +1,6 @@
 package com.mrporter.pomangam.client.controllers._bases;
 
-import com.mrporter.pomangam.client.domains._bases.CommonMap;
+import com.mrporter.pomangam.client.domains.map.CommonMap;
 import com.mrporter.pomangam.client.services._bases.CommonMapServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

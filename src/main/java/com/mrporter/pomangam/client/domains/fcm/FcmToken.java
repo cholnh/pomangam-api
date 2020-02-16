@@ -1,6 +1,5 @@
 package com.mrporter.pomangam.client.domains.fcm;
 
-import com.mrporter.pomangam._bases.annotation.BooleanToYNConverter;
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import com.mrporter.pomangam.client.domains.user.User;
 import lombok.*;

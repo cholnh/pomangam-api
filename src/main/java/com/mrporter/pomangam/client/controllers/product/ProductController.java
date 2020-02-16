@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.client.controllers.product;
 
+import com.mrporter.pomangam.client.services.product.ProductServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,13 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class ProductController {
 
+    ProductServiceImpl productService;
+
     @GetMapping
-    public ResponseEntity<?> get(
+    public ResponseEntity<?> getByIdxStore(
             @PathVariable(value = "didx", required = true) Long didx,
             @PathVariable(value = "sidx", required = true) Long sidx,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
     ) {
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(productService.getByIdxStore(sidx, pageable), HttpStatus.OK);
     }
 
     @GetMapping("/{idx}")
@@ -31,7 +34,7 @@ public class ProductController {
             @PathVariable(value = "sidx", required = true) Long sidx,
             @PathVariable(value = "idx", required = true) Long idx
     ) {
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(productService.getByIdx(idx), HttpStatus.OK);
     }
 
     @GetMapping("/search/count")
@@ -39,6 +42,6 @@ public class ProductController {
             @PathVariable(value = "didx", required = true) Long didx,
             @PathVariable(value = "sidx", required = true) Long sidx
     ) {
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(productService.count(), HttpStatus.OK);
     }
 }

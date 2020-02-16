@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.client.domains.store;
 
+import com.mrporter.pomangam.client.domains.store.image.StoreImage;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -16,12 +17,20 @@ public class StoreDto implements Serializable {
     private Long idx;
     private LocalDateTime registerDate;
     private LocalDateTime modifyDate;
+    private Long idxDeliverySite;
+    private String storeCategory;
     private String name;
     private String description;
     private String subDescription;
     private Float avgStar;
     private Integer cntLike;
     private Integer cntComment;
+    private Integer sequence;
+
+    // images
+    private String brandImagePath;
+    private String storeImageMainPath;
+    private List<String> storeImageSubPaths = new ArrayList<>();
 
     public Store toEntity() {
         Store entity = new ModelMapper().map(this, Store.class);
@@ -31,6 +40,25 @@ public class StoreDto implements Serializable {
     public static StoreDto fromEntity(Store entity) {
         if(entity == null) return null;
         StoreDto dto = new ModelMapper().map(entity, StoreDto.class);
+        List<StoreImage> storeImages = entity.getImages();
+        if(storeImages != null && !storeImages.isEmpty()) {
+            for(StoreImage storeImage : storeImages) {
+                switch (storeImage.getImageType()) {
+                    case MAIN:
+                        dto.setStoreImageMainPath(storeImage.getImagePath());
+                        break;
+                    case SUB:
+                        dto.getStoreImageSubPaths().add(storeImage.getImagePath());
+                        break;
+                    case BRAND:
+                        dto.setBrandImagePath(storeImage.getImagePath());
+                        break;
+                }
+            }
+        }
+
+        dto.setStoreCategory(entity.getStoreCategory().getCategoryTitle());
+
         return dto;
     }
 

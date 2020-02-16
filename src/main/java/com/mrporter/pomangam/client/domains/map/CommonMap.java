@@ -1,5 +1,6 @@
-package com.mrporter.pomangam.client.domains._bases;
+package com.mrporter.pomangam.client.domains.map;
 
+import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -14,10 +15,10 @@ import javax.persistence.*;
 @ToString
 public class CommonMap extends EntityAuditing {
 
-    @Column(name = "key", nullable = false)
+    @Column(name = "common_key", nullable = false)
     private String key;
 
-    @Column(name = "value", nullable = false)
+    @Column(name = "common_value", nullable = false)
     private String value;
 
     @Builder

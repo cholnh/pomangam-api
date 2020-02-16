@@ -48,9 +48,6 @@ public class DeliverySite extends EntityAuditing {
     private Region region;
 
     @OneToMany(mappedBy = "deliverySite", fetch = FetchType.LAZY)
-    private List<Store> stores;
-
-    @OneToMany(mappedBy = "deliverySite", fetch = FetchType.LAZY)
     private List<DeliveryDetailSite> detailSites;
 
     @PrePersist
@@ -59,14 +56,11 @@ public class DeliverySite extends EntityAuditing {
     }
 
     @Builder
-    public DeliverySite(String name, String location, String campus, Region region, List<Store> stores, List<DeliveryDetailSite> detailSites) {
+    public DeliverySite(String name, String location, String campus, Region region, List<DeliveryDetailSite> detailSites) {
         this.name = name;
         this.location = location;
         this.campus = campus;
         this.region = region;
-        if(stores != null) {
-            this.stores = stores;
-        }
         if(detailSites != null) {
             this.detailSites = detailSites;
         }

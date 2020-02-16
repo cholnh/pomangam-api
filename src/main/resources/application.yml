@@ -59,7 +59,7 @@ spring:
       max-request-size: 215MB
 
   banner:
-    location: banner.txt
+    location: banner_v2.txt
 
   resources:
     chain:
