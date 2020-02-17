@@ -35,7 +35,7 @@ public class _FcmController {
     @PostMapping(value = "/send/dsite", produces = {"application/json"})
     public ResponseEntity<?> sendToDeliverySiteIdx(
         @RequestBody Map<String, Object> paramInfo,
-        @RequestParam(value = "didx") Long deliverySiteIdx
+        @RequestParam(value = "dIdx") Long deliverySiteIdx
     ) throws JSONException {
 
         String firebaseResponse = fcmService.sendToDeliverySiteIdx(paramInfo, deliverySiteIdx);

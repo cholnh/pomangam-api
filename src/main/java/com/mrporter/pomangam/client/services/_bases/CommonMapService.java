@@ -5,5 +5,5 @@ import com.mrporter.pomangam.client.domains.map.CommonMap;
 import java.util.List;
 
 public interface CommonMapService {
-    List<CommonMap> getValue(String key);
+    List<CommonMap> findAllByKey(String key);
 }

@@ -13,16 +13,19 @@ import java.util.List;
 public class DeliveryDetailSiteServiceImpl implements DeliveryDetailSiteService {
     DeliveryDetailJpaRepository deliveryDetailRepository;
 
-    public List<DeliveryDetailSiteDto> getByIdxDeliverySite(Long didx) {
-        List<DeliveryDetailSite> deliveryDetailSites = deliveryDetailRepository.findByDeliverySite_Idx(didx);
+    @Override
+    public List<DeliveryDetailSiteDto> findByIdxDeliverySite(Long dIdx) {
+        List<DeliveryDetailSite> deliveryDetailSites = deliveryDetailRepository.findByDeliverySite_Idx(dIdx);
         return DeliveryDetailSiteDto.fromEntities(deliveryDetailSites);
     }
 
-    public DeliveryDetailSiteDto getByIdx(Long idx) {
+    @Override
+    public DeliveryDetailSiteDto findByIdx(Long idx) {
         DeliveryDetailSite entity = deliveryDetailRepository.findById(idx).get();
         return DeliveryDetailSiteDto.fromEntity(entity);
     }
 
+    @Override
     public long count() {
         return deliveryDetailRepository.count();
     }

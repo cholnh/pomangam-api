@@ -31,7 +31,7 @@ public class PolicyViewController {
 
     @GetMapping("/info")
     public RedirectView getInfoView() {
-        String companyNumber = commonMapService.getValue("company-number").get(0).getValue();
+        String companyNumber = commonMapService.findAllByKey("company-number").get(0).getValue();
         return new RedirectView("http://www.ftc.go.kr/bizCommPop.do?wrkr_no=" + companyNumber);
     }
 }

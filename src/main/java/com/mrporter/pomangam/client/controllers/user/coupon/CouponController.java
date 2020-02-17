@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CouponController {
 
     @GetMapping
-    public ResponseEntity<?> getByPhoneNumber(
+    public ResponseEntity<?> findByPhoneNumber(
             @PathVariable(value = "phoneNumber", required = true) String phoneNumber,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
     ) {
@@ -25,7 +25,7 @@ public class CouponController {
     }
 
     @GetMapping("/{idx}")
-    public ResponseEntity<?> getByPhoneNumberAndIdx(
+    public ResponseEntity<?> findByPhoneNumberAndIdx(
             @PathVariable(value = "phoneNumber", required = true) String phoneNumber,
             @PathVariable(value = "idx", required = true) Long idx
     ) {
@@ -33,7 +33,7 @@ public class CouponController {
     }
 
     @GetMapping("/search/count")
-    public ResponseEntity<?> searchCountByUser(
+    public ResponseEntity<?> countByUser(
             @PathVariable(value = "phoneNumber", required = true) String phoneNumber
     ) {
         return new ResponseEntity(HttpStatus.OK);

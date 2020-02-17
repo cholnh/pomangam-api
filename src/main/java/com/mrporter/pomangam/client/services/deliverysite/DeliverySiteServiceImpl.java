@@ -14,16 +14,19 @@ import java.util.List;
 public class DeliverySiteServiceImpl implements DeliverySiteService {
     DeliverySiteJpaRepository deliverySiteRepository;
 
-    public List<DeliverySiteDto> get(Pageable pageable) {
+    @Override
+    public List<DeliverySiteDto> findAll(Pageable pageable) {
         List<DeliverySite> deliverySites = deliverySiteRepository.findAll(pageable).getContent();
         return DeliverySiteDto.fromEntities(deliverySites);
     }
 
-    public DeliverySiteDto getByIdx(Long didx) {
-        DeliverySite entity = deliverySiteRepository.findById(didx).get();
+    @Override
+    public DeliverySiteDto findByIdx(Long dIdx) {
+        DeliverySite entity = deliverySiteRepository.findById(dIdx).get();
         return DeliverySiteDto.fromEntity(entity);
     }
 
+    @Override
     public long count() {
         return deliverySiteRepository.count();
     }

@@ -18,7 +18,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(exclude = {"productCategory", "images", "products"})
+@ToString(exclude = {"productCategory", "images", "subs"})
 public class Product extends EntityAuditing {
 
     /**
@@ -36,20 +36,23 @@ public class Product extends EntityAuditing {
 
     /**
      * 제품명
+     * 글자수: utf8 기준 / 영문 20자 / 한글 20자
      */
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false,  length = 20)
     private String name;
 
     /**
      * 제품 설명
+     * TEXT: 65535 Byte (64KB) / utf8 기준(3바이트 문자)으로 21844 글자 저장가능
      */
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
     /**
      * 제품 부가 설명
+     * 글자수: utf8 기준 / 영문 255자 / 한글 255자
      */
-    @Column(name = "sub_description", nullable = false)
+    @Column(name = "sub_description", nullable = false, length = 255)
     private String subDescription;
 
     /**
@@ -62,13 +65,13 @@ public class Product extends EntityAuditing {
     /**
      * 총 좋아요 개수
      */
-    @Column(name = "cnt_like", nullable = true)
+    @Column(name = "cnt_like", nullable = false, columnDefinition = "INT default 0")
     private Integer cntLike;
 
     /**
      * 순서
      */
-    @Column(name = "sequence", nullable = false)
+    @Column(name = "sequence", nullable = false, columnDefinition = "INT default 0")
     private Integer sequence;
 
     /**
@@ -112,5 +115,20 @@ public class Product extends EntityAuditing {
             this.images = new ArrayList<>();
         }
         this.images.add(productImage);
+    }
+    public void addCntLike() {
+        if(this.cntLike == null) {
+            this.cntLike = 0;
+        }
+        this.cntLike++;
+    }
+    public void subCntLike() {
+        if(this.cntLike == null) {
+            this.cntLike = 0;
+        }
+        this.cntLike--;
+        if(this.cntLike < 0) {
+            this.cntLike = 0;
+        }
     }
 }

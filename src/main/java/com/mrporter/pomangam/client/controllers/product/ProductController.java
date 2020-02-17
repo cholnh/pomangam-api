@@ -13,34 +13,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/dsites/{didx}/stores/{sidx}/products")
+@RequestMapping("/dsites/{dIdx}/stores/{sIdx}/products")
 @AllArgsConstructor
 public class ProductController {
 
     ProductServiceImpl productService;
 
     @GetMapping
-    public ResponseEntity<?> getByIdxStore(
-            @PathVariable(value = "didx", required = true) Long didx,
-            @PathVariable(value = "sidx", required = true) Long sidx,
+    public ResponseEntity<?> findByIdxStore(
+            @PathVariable(value = "dIdx", required = true) Long dIdx,
+            @PathVariable(value = "sIdx", required = true) Long sIdx,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
     ) {
-        return new ResponseEntity(productService.getByIdxStore(sidx, pageable), HttpStatus.OK);
+        return new ResponseEntity(productService.findByIdxStore(sIdx, pageable), HttpStatus.OK);
     }
 
     @GetMapping("/{idx}")
-    public ResponseEntity<?> getByIdx(
-            @PathVariable(value = "didx", required = true) Long didx,
-            @PathVariable(value = "sidx", required = true) Long sidx,
+    public ResponseEntity<?> findByIdx(
+            @PathVariable(value = "dIdx", required = true) Long dIdx,
+            @PathVariable(value = "sIdx", required = true) Long sIdx,
             @PathVariable(value = "idx", required = true) Long idx
     ) {
-        return new ResponseEntity(productService.getByIdx(idx), HttpStatus.OK);
+        return new ResponseEntity(productService.findByIdx(idx), HttpStatus.OK);
     }
 
     @GetMapping("/search/count")
-    public ResponseEntity<?> searchCount(
-            @PathVariable(value = "didx", required = true) Long didx,
-            @PathVariable(value = "sidx", required = true) Long sidx
+    public ResponseEntity<?> count(
+            @PathVariable(value = "dIdx", required = true) Long dIdx,
+            @PathVariable(value = "sIdx", required = true) Long sIdx
     ) {
         return new ResponseEntity(productService.count(), HttpStatus.OK);
     }

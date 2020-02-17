@@ -10,40 +10,40 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/dsites/{didx}/stores")
+@RequestMapping("/dsites/{dIdx}/stores")
 @AllArgsConstructor
 public class StoreController {
 
     StoreServiceImpl storeService;
 
     @GetMapping
-    public ResponseEntity<?> getByIdxDeliverySite(
-            @PathVariable(value = "didx", required = true) Long didx,
+    public ResponseEntity<?> findByIdxDeliverySite(
+            @PathVariable(value = "dIdx", required = true) Long dIdx,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
     ) {
-        return new ResponseEntity(storeService.getByIdxDeliverySite(didx, pageable), HttpStatus.OK);
+        return new ResponseEntity(storeService.findByIdxDeliverySite(dIdx, pageable), HttpStatus.OK);
     }
 
     @GetMapping("/{idx}")
-    public ResponseEntity<?> getByIdx(
-            @PathVariable(value = "didx", required = true) Long didx,
+    public ResponseEntity<?> findByIdx(
+            @PathVariable(value = "dIdx", required = true) Long dIdx,
             @PathVariable(value = "idx", required = true) Long idx
     ) {
-        return new ResponseEntity(storeService.getByIdx(idx), HttpStatus.OK);
+        return new ResponseEntity(storeService.findByIdx(idx), HttpStatus.OK);
     }
 
     @GetMapping("/search/count")
-    public ResponseEntity<?> searchCount(
-            @PathVariable(value = "didx", required = true) Long didx
+    public ResponseEntity<?> count(
+            @PathVariable(value = "dIdx", required = true) Long dIdx
     ) {
         return new ResponseEntity(storeService.count(), HttpStatus.OK);
     }
 
     @GetMapping("/search/summaries")
-    public ResponseEntity<?> searchSummary(
-            @PathVariable(value = "didx", required = true) Long didx,
+    public ResponseEntity<?> searchSummaries(
+            @PathVariable(value = "dIdx", required = true) Long dIdx,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
     ) {
-        return new ResponseEntity(storeService.getSummaries(didx, pageable), HttpStatus.OK);
+        return new ResponseEntity(storeService.findSummaries(dIdx, pageable), HttpStatus.OK);
     }
 }

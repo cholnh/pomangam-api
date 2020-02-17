@@ -11,33 +11,33 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class OrderTimeController {
 
-    @GetMapping("/dsites/{didx}/ordertimes")
-    public ResponseEntity<?> getByIdxDeliverySite(
-            @PathVariable(value = "didx", required = true) Long didx
+    @GetMapping("/dsites/{dIdx}/ordertimes")
+    public ResponseEntity<?> findByIdxDeliverySite(
+            @PathVariable(value = "dIdx", required = true) Long dIdx
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping("/dsites/{didx}/ordertimes/{idx}")
-    public ResponseEntity<?> getByIdxAndIdxDeliverySite(
-            @PathVariable(value = "didx", required = true) Long didx,
+    @GetMapping("/dsites/{dIdx}/ordertimes/{idx}")
+    public ResponseEntity<?> findByIdxAndIdxDeliverySite(
+            @PathVariable(value = "dIdx", required = true) Long dIdx,
             @PathVariable(value = "idx", required = true) Long idx
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping("/dsites/{didx}/stores/{sidx}/ordertimes")
-    public ResponseEntity<?> getByIdxDeliverySiteAndIdxStore(
-            @PathVariable(value = "didx", required = true) Long didx,
-            @PathVariable(value = "sidx", required = true) Long sidx
+    @GetMapping("/dsites/{dIdx}/stores/{sIdx}/ordertimes")
+    public ResponseEntity<?> findByIdxDeliverySiteAndIdxStore(
+            @PathVariable(value = "dIdx", required = true) Long dIdx,
+            @PathVariable(value = "sIdx", required = true) Long sIdx
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping("/dsites/{didx}/stores/{sidx}/ordertimes/{idx}")
-    public ResponseEntity<?> getByIdxAndIdxDeliverySiteAndIdxStore(
-            @PathVariable(value = "didx", required = true) Long didx,
-            @PathVariable(value = "sidx", required = true) Long sidx,
+    @GetMapping("/dsites/{dIdx}/stores/{sIdx}/ordertimes/{idx}")
+    public ResponseEntity<?> findByIdxAndIdxDeliverySiteAndIdxStore(
+            @PathVariable(value = "dIdx", required = true) Long dIdx,
+            @PathVariable(value = "sIdx", required = true) Long sIdx,
             @PathVariable(value = "idx", required = true) Long idx
     ) {
         return new ResponseEntity(HttpStatus.OK);

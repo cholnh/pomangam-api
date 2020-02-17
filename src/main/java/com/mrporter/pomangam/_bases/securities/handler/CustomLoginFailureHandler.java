@@ -23,16 +23,19 @@ public class CustomLoginFailureHandler implements AuthenticationFailureHandler {
             AuthenticationException exception)
             throws IOException, ServletException {
 
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        Map<String, Object> data = new HashMap<>();
-        data.put(
-                "timestamp",
-                Calendar.getInstance().getTime());
-        data.put(
-                "exception",
-                exception.getMessage());
+        // Todo: USER.PASSWORD 에서 updateFailedCount(false) 실행 -> failedCount 증가
+        System.out.println("fail~~~");
 
-        response.getOutputStream()
-                .println(objectMapper.writeValueAsString(data));
+//        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+//        Map<String, Object> data = new HashMap<>();
+//        data.put(
+//                "timestamp",
+//                Calendar.getInstance().getTime());
+//        data.put(
+//                "exception",
+//                exception.getMessage());
+//
+//        response.getOutputStream()
+//                .println(objectMapper.writeValueAsString(data));
     }
 }

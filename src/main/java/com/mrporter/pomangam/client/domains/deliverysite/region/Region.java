@@ -19,8 +19,9 @@ public class Region extends EntityAuditing {
 
     /**
      * 지역명
+     * 글자수: utf8 기준 / 영문 20자 / 한글 20자
      */
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name", unique = true, nullable = false, length = 20)
     private String name;
 
     @OneToMany(mappedBy = "region", fetch = FetchType.LAZY)

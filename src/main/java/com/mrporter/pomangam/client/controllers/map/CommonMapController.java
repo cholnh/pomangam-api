@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.client.controllers._bases;
+package com.mrporter.pomangam.client.controllers.map;
 
 import com.mrporter.pomangam.client.domains.map.CommonMap;
 import com.mrporter.pomangam.client.services._bases.CommonMapServiceImpl;
@@ -17,8 +17,10 @@ public class CommonMapController {
     CommonMapServiceImpl commonMapService;
 
     @GetMapping("/{key}")
-    public ResponseEntity<?> getValue(@PathVariable(value = "key", required = true) String key) {
-        List<CommonMap> dto = commonMapService.getValue(key);
+    public ResponseEntity<?> findByKey(
+            @PathVariable(value = "key", required = true) String key
+    ) {
+        List<CommonMap> dto = commonMapService.findAllByKey(key);
         if(dto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {

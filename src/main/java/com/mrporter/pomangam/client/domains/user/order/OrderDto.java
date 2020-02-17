@@ -16,7 +16,6 @@ public class OrderDto implements Serializable {
     private Long idx;
     private LocalDateTime registerDate;
     private LocalDateTime modifyDate;
-    private String categoryTitle;
 
     public Order toEntity() {
         Order entity = new ModelMapper().map(this, Order.class);

@@ -2,14 +2,12 @@ package com.mrporter.pomangam._bases.securities.service;
 
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.services.user.UserServiceImpl;
-import com.mrporter.pomangam.client.repositories.employee.EmployeeJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 //@AllArgsConstructor

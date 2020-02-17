@@ -63,8 +63,8 @@ public class FcmServiceImpl implements FcmService {
     }
 
     @Override
-    public String sendToDeliverySiteIdx(Map<String, Object> paramInfo, Long deliverySiteIdx) {
-        List<FcmToken> tokens = fcmRepository.getTokensByDeliverySiteIdx(deliverySiteIdx);
+    public String sendToDeliverySiteIdx(Map<String, Object> paramInfo, Long dIdx) {
+        List<FcmToken> tokens = fcmRepository.getTokensByDeliverySiteIdx(dIdx);
         return send(paramInfo, tokens);
     }
 

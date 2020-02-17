@@ -1,44 +1,50 @@
 package com.mrporter.pomangam.client.controllers.store.like;
 
+import com.mrporter.pomangam.client.services.store.like.StoreLikeServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
-@RequestMapping("/dsites/{didx}/stores/{sidx}/likes")
+@RequestMapping("/dsites/{dIdx}/stores/{sIdx}/likes")
 @AllArgsConstructor
 public class StoreLikeController {
 
-    @GetMapping
-    public ResponseEntity<?> get(
-            @PathVariable(value = "didx", required = true) Long didx,
-            @PathVariable(value = "sidx", required = true) Long sidx,
-            @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
+    StoreLikeServiceImpl storeLikeService;
+
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_USER') or hasRole('ROLE_ADMIN'))")
+    @PatchMapping("/like")
+    public ResponseEntity<?> like(
+            @PathVariable(value = "dIdx", required = true) Long dIdx,
+            @PathVariable(value = "sIdx", required = true) Long sIdx,
+            Principal principal
     ) {
+        storeLikeService.like(principal.getName(), sIdx);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping("/{idx}")
-    public ResponseEntity<?> getByIdx(
-            @PathVariable(value = "didx", required = true) Long didx,
-            @PathVariable(value = "sidx", required = true) Long sidx,
-            @PathVariable(value = "idx", required = true) Long idx
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_USER') or hasRole('ROLE_ADMIN'))")
+    @PatchMapping("/unlike")
+    public ResponseEntity<?> unlike(
+            @PathVariable(value = "dIdx", required = true) Long dIdx,
+            @PathVariable(value = "sIdx", required = true) Long sIdx,
+            Principal principal
     ) {
+        storeLikeService.cancelLike(principal.getName(), sIdx);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping("/search/count")
-    public ResponseEntity<?> searchCount(
-            @PathVariable(value = "didx", required = true) Long didx,
-            @PathVariable(value = "sidx", required = true) Long sidx
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_USER') or hasRole('ROLE_ADMIN'))")
+    @PatchMapping("/toggle")
+    public ResponseEntity<Boolean> toggle(
+            @PathVariable(value = "dIdx", required = true) Long dIdx,
+            @PathVariable(value = "sIdx", required = true) Long sIdx,
+            Principal principal
     ) {
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(storeLikeService.toggle(principal.getName(), sIdx), HttpStatus.OK);
     }
 }

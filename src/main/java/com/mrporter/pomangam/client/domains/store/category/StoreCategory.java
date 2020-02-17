@@ -20,8 +20,9 @@ public class StoreCategory extends EntityAuditing {
     /**
      * 음식점 카테고리 타이틀
      * ex) 한식, 중식, 양식 등
+     * 글자수: utf8 기준 / 영문 20자 / 한글 20자
      */
-    @Column(name = "category_title", nullable = false)
+    @Column(name = "category_title", nullable = false, length = 20)
     private String categoryTitle;
 
     @OneToMany(mappedBy = "storeCategory", fetch = FetchType.LAZY)

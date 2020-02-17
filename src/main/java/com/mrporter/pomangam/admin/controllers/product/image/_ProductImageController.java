@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')")
 @RestController
-@RequestMapping("/admin/dsites/{didx}/stores/{sidx}/products/{pidx}/images")
+@RequestMapping("/admin/dsites/{dIdx}/stores/{sIdx}/products/{pIdx}/images")
 @AllArgsConstructor
 public class _ProductImageController {
 
     @GetMapping
     public ResponseEntity<?> get(
-            @PathVariable(value = "didx", required = true) Long didx,
-            @PathVariable(value = "sidx", required = true) Long sidx,
-            @PathVariable(value = "pidx", required = true) Long pidx,
+            @PathVariable(value = "dIdx", required = true) Long dIdx,
+            @PathVariable(value = "sIdx", required = true) Long sIdx,
+            @PathVariable(value = "pIdx", required = true) Long pIdx,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
     ) {
         return new ResponseEntity(HttpStatus.OK);
@@ -30,9 +30,9 @@ public class _ProductImageController {
 
     @GetMapping("/{idx}")
     public ResponseEntity<?> getByIdx(
-            @PathVariable(value = "didx", required = true) Long didx,
-            @PathVariable(value = "sidx", required = true) Long sidx,
-            @PathVariable(value = "pidx", required = true) Long pidx,
+            @PathVariable(value = "dIdx", required = true) Long dIdx,
+            @PathVariable(value = "sIdx", required = true) Long sIdx,
+            @PathVariable(value = "pIdx", required = true) Long pIdx,
             @PathVariable(value = "idx", required = true) Long idx
     ) {
         return new ResponseEntity(HttpStatus.OK);
@@ -40,9 +40,9 @@ public class _ProductImageController {
 
     @GetMapping("/search/count")
     public ResponseEntity<?> searchCount(
-            @PathVariable(value = "didx", required = true) Long didx,
-            @PathVariable(value = "sidx", required = true) Long sidx,
-            @PathVariable(value = "pidx", required = true) Long pidx
+            @PathVariable(value = "dIdx", required = true) Long dIdx,
+            @PathVariable(value = "sIdx", required = true) Long sIdx,
+            @PathVariable(value = "pIdx", required = true) Long pIdx
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }
