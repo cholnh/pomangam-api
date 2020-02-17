@@ -9,7 +9,9 @@ server:
       tracking-modes: cookie
 
   ssl:
-    key-store: /Users/nakzzi/Downloads/keystore
+    # 배포용 key path -> C:/ssl/keystore
+    # 개발용 key path -> /Users/nakzzi/Downloads/keystore
+    key-store: C:/ssl/keystore
     key-store-password: eun*zzi92!
     key-password: eun*zzi92!
     key-alias: alias
@@ -20,17 +22,21 @@ server:
 ---
 spring:
   jpa:
-    show-sql: false
-    generate-ddl: false
+    show-sql: true
+    generate-ddl: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     properties:
       hibernate:
-        show_sql: false
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
+    hibernate:
+      ddl-auto: create
 
   datasource:
     hikari:
-      jdbc-url: jdbc:mysql://localhost:3306/db_pmg?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useSSL=false&validationQuery=select 1&serverTimezone=Asia/Seoul
+      jdbc-url: jdbc:mysql://localhost:3306/db_pmg_v2?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useSSL=false&validationQuery=select 1&serverTimezone=Asia/Seoul
       username: nakzzi
       password: skrwl486
       #driver-class-name: mysql.jdbc.Driver
@@ -45,7 +51,6 @@ spring:
       base-path: /jpa
       detection-strategy: default
 
-
   servlet:
     multipart:
       enabled: true
@@ -54,7 +59,7 @@ spring:
       max-request-size: 215MB
 
   banner:
-    location: banner.txt
+    location: banner_v2.txt
 
   resources:
     chain:
@@ -72,13 +77,20 @@ static:
 ---
 logging:
   file: log/slf4j.log
+  level:
+    org:
+      hibernate:
+        SQL: debug
+        type:
+          descriptor:
+            sql: trace
 ---
 management:
   health:
     diskspace:
       enabled: false
     status:
-      order: DOWN, MAINTENANCE, UNKOWN, UP
+      order: DOWN, MAINTENANCE, UNKNOWN, UP
       http-mapping:
         DOWN: 503
         MAINTENANCE: 503
@@ -95,6 +107,3 @@ management:
       exposure:
         exclude: env, beans
         #include: "*"
-      base-path: /application
-      path-mapping:
-        health : healthCheck
