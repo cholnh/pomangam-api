@@ -2,8 +2,8 @@ package com.mrporter.pomangam.client.test.cache.repository;
 
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -13,31 +13,28 @@ import java.util.List;
 
 @Slf4j
 @Repository
+@AllArgsConstructor
 public class CacheTestServiceImpl implements CacheTestService {
 
-    @Autowired
     UserJpaRepository userJpaRepository;
 
     @Override
     public User findByIdNoCache(String id) {
         slowQuery(2000);
-        User user = userJpaRepository.findByPhoneNumber(id);
-        return user;
+        return userJpaRepository.findByPhoneNumber(id);
     }
 
     @Cacheable(value = "test2")
     public List<User> findAllCache() {
         slowQuery(2000);
-        List<User> users = userJpaRepository.findAll();
-        return users;
+        return userJpaRepository.findAll();
     }
 
     @Override
     @Cacheable(value = "test", key="#id")
     public User findByIdCache(String id) {
         slowQuery(2000);
-        User user = userJpaRepository.findByPhoneNumber(id);
-        return user;
+        return userJpaRepository.findByPhoneNumber(id);
     }
 
     @Override

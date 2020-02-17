@@ -3,8 +3,8 @@ package com.mrporter.pomangam.client.test.cache.controller;
 import com.mrporter.pomangam._bases.aspects.annotation.LogExecutionTime;
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.test.cache.repository.CacheTestServiceImpl;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,9 +12,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/tests/cache")
 @Slf4j
+@AllArgsConstructor
 public class CacheTestController {
 
-    @Autowired
     CacheTestServiceImpl cacheTestService;
 
     @LogExecutionTime
