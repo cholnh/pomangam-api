@@ -17,25 +17,25 @@ public class DeliverySiteController {
     DeliverySiteServiceImpl deliverySiteService;
 
     @GetMapping
-    public ResponseEntity<?> get(
+    public ResponseEntity<?> findAll(
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, page = 0, size = 10) Pageable pageable
     ) {
-        return new ResponseEntity(deliverySiteService.get(pageable), HttpStatus.OK);
+        return new ResponseEntity(deliverySiteService.findAll(pageable), HttpStatus.OK);
     }
 
     @GetMapping("/{idx}")
-    public ResponseEntity<?> getByIdx(@PathVariable(value = "idx", required = true) Long idx
+    public ResponseEntity<?> findByIdx(@PathVariable(value = "idx", required = true) Long idx
     ) {
-        return new ResponseEntity(deliverySiteService.getByIdx(idx), HttpStatus.OK);
+        return new ResponseEntity(deliverySiteService.findByIdx(idx), HttpStatus.OK);
     }
 
     @GetMapping("/search/count")
-    public ResponseEntity<?> searchCount() {
+    public ResponseEntity<?> count() {
         return new ResponseEntity(deliverySiteService.count(), HttpStatus.OK);
     }
 
     @GetMapping("/search/consonant")
-    public ResponseEntity<?> searchConsonant(@RequestParam(value = "query", required = true) String query
+    public ResponseEntity<?> findConsonant(@RequestParam(value = "query", required = true) String query
     ) {
         return new ResponseEntity("아직 개발 안함", HttpStatus.OK);   //  Todo: 초성검색 개발
     }

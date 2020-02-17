@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')")
 @RestController
-@RequestMapping("/admin/dsites/{didx}/stores/{sidx}/reviews")
+@RequestMapping("/admin/dsites/{dIdx}/stores/{sIdx}/reviews")
 @AllArgsConstructor
 public class _StoreReviewController {
 
     @GetMapping
     public ResponseEntity<?> get(
-            @PathVariable(value = "didx", required = true) Long didx,
-            @PathVariable(value = "sidx", required = true) Long sidx,
+            @PathVariable(value = "dIdx", required = true) Long dIdx,
+            @PathVariable(value = "sIdx", required = true) Long sIdx,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
     ) {
         return new ResponseEntity(HttpStatus.OK);
@@ -29,8 +29,8 @@ public class _StoreReviewController {
 
     @GetMapping("/{idx}")
     public ResponseEntity<?> getByIdx(
-            @PathVariable(value = "didx", required = true) Long didx,
-            @PathVariable(value = "sidx", required = true) Long sidx,
+            @PathVariable(value = "dIdx", required = true) Long dIdx,
+            @PathVariable(value = "sIdx", required = true) Long sIdx,
             @PathVariable(value = "idx", required = true) Long idx
     ) {
         return new ResponseEntity(HttpStatus.OK);
@@ -38,8 +38,8 @@ public class _StoreReviewController {
 
     @GetMapping("/search/count")
     public ResponseEntity<?> searchCount(
-            @PathVariable(value = "didx", required = true) Long didx,
-            @PathVariable(value = "sidx", required = true) Long sidx
+            @PathVariable(value = "dIdx", required = true) Long dIdx,
+            @PathVariable(value = "sIdx", required = true) Long sIdx
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }

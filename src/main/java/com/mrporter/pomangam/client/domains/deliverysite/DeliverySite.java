@@ -3,7 +3,6 @@ package com.mrporter.pomangam.client.domains.deliverysite;
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSite;
 import com.mrporter.pomangam.client.domains.deliverysite.region.Region;
-import com.mrporter.pomangam.client.domains.store.Store;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -16,27 +15,30 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(exclude = {"region", "stores", "detailSites"})
+@ToString(exclude = {"region", "detailSites"})
 public class DeliverySite extends EntityAuditing {
 
     /**
      * 배달지명
      * 배달이 도착하는 기관의 이름
+     * 글자수: utf8 기준 / 영문 20자 / 한글 20자
      */
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 20)
     private String name;
 
     /**
      * 배달지 주소
+     * 글자수: utf8 기준 / 영문 100자 / 한글 10자
      */
-    @Column(name = "location", nullable = false)
+    @Column(name = "location", nullable = false, length = 100)
     private String location;
 
     /**
      * 캠퍼스 이름
      * 대학교 캠퍼스 등 기관의 하위 카테고리
+     * 글자수: utf8 기준 / 영문 20자 / 한글 20자
      */
-    @Column(name = "campus", nullable = true)
+    @Column(name = "campus", nullable = true, length = 20)
     private String campus;
 
     /**

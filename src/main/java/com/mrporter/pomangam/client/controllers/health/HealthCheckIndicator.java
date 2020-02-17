@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.client.controllers._bases;
+package com.mrporter.pomangam.client.controllers.health;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.Health;
@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
 @RequestMapping("/health")
-public class HealthCheckIndicator implements HealthIndicator{
+public class HealthCheckIndicator implements HealthIndicator {
 
     @Autowired
     private AtomicReference<Health> health; // singleton

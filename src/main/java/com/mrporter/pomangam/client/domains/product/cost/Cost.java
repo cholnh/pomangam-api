@@ -17,31 +17,31 @@ public class Cost {
     /**
      * 제품 원가
      */
-    @Column(name = "unit_cost", nullable = false)
+    @Column(name = "unit_cost", nullable = false, columnDefinition = "INT default 0")
     private Integer unitCost;
 
     /**
      * 업체 판매 수수료 (가격)
      */
-    @Column(name = "price_store_fee", nullable = false)
+    @Column(name = "price_store_fee", nullable = false, columnDefinition = "INT default 0")
     private Integer priceStoreFee;
 
     /**
      * 업체 판매 수수료 (퍼센트)
      */
-    @Column(name = "percent_store_fee", nullable = false)
+    @Column(name = "percent_store_fee", nullable = false, columnDefinition = "INT default 0")
     private Integer percentStoreFee;
 
     /**
      * 고객 판매 수수료 (가격)
      */
-    @Column(name = "price_client_fee", nullable = false)
+    @Column(name = "price_client_fee", nullable = false, columnDefinition = "INT default 0")
     private Integer priceClientFee;
 
     /**
      * 고객 판매 수수료 (퍼센트)
      */
-    @Column(name = "percent_client_fee", nullable = false)
+    @Column(name = "percent_client_fee", nullable = false, columnDefinition = "INT default 0")
     private Integer percentClientFee;
 
     @PrePersist

@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.*;
 
 @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')")
 @RestController
-@RequestMapping(value = "/admin/dsites/{didx}/details")
+@RequestMapping(value = "/admin/dsites/{dIdx}/details")
 @AllArgsConstructor
 public class _DetailDeliverySiteController {
 
     @GetMapping
     public ResponseEntity<?> get(
-            @PathVariable(value = "didx", required = true) Integer didx,
+            @PathVariable(value = "dIdx", required = true) Integer dIdx,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, page = 0, size = 10) Pageable pageable
     ) {
         return new ResponseEntity(HttpStatus.OK);
@@ -25,7 +25,7 @@ public class _DetailDeliverySiteController {
 
     @GetMapping("/{idx}")
     public ResponseEntity<?> getByIdx(
-            @PathVariable(value = "didx", required = true) Long didx,
+            @PathVariable(value = "dIdx", required = true) Long dIdx,
             @PathVariable(value = "idx", required = true) Long idx
     ) {
         return new ResponseEntity(HttpStatus.OK);
@@ -33,7 +33,7 @@ public class _DetailDeliverySiteController {
 
     @GetMapping("/search/count")
     public ResponseEntity<?> searchCount(
-            @PathVariable(value = "didx", required = true) Long didx
+            @PathVariable(value = "dIdx", required = true) Long dIdx
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }

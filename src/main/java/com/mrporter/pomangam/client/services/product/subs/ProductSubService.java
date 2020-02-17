@@ -5,5 +5,7 @@ import com.mrporter.pomangam.client.domains.product.sub.ProductSubDto;
 import java.util.List;
 
 public interface ProductSubService {
-    List<ProductSubDto> getByIdxProduct(Long pidx);
+    List<ProductSubDto> findByIdxProduct(Long pIdx);
+    ProductSubDto findByIdx(Long idx);
+    long count();
 }

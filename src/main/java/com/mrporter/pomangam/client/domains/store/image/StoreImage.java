@@ -17,21 +17,23 @@ public class StoreImage extends EntityAuditing {
 
     /**
      * 이미지 경로
+     * 글자수: utf8 기준 / 영문 100자 / 한글 100자
      */
-    @Column(name="image_path", nullable = false)
+    @Column(name="image_path", nullable = false, length = 100)
     private String imagePath;
 
     /**
-     * 대표이미지(ProductSubImageType.MAIN), 일반이미지(ProductSubImageType.SUB)
+     * 대표이미지(StoreImageType.MAIN), 일반이미지(StoreImageType.SUB)
+     * 글자수: utf8 기준 / 영문 20자 / 한글 20자
      */
-    @Column(name="image_type", nullable = false)
+    @Column(name="image_type", nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     private StoreImageType imageType;
 
     /**
      * 순서
      */
-    @Column(name = "sequence", nullable = false)
+    @Column(name = "sequence", nullable = false, columnDefinition = "INT default 0")
     private Integer sequence;
 
     @PrePersist

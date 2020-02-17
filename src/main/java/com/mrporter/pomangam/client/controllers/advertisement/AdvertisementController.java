@@ -17,21 +17,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdvertisementController {
 
     @GetMapping
-    public ResponseEntity<?> get(
+    public ResponseEntity<?> findAll(
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/{idx}")
-    public ResponseEntity<?> getByIdx(
+    public ResponseEntity<?> findByIdx(
             @PathVariable(value = "idx", required = true) Long idx
     ) {
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/search/count")
-    public ResponseEntity<?> searchCount() {
+    public ResponseEntity<?> count() {
         return new ResponseEntity(HttpStatus.OK);
     }
 }

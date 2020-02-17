@@ -16,7 +16,7 @@ public interface ProductSubJpaRepository extends JpaRepository<ProductSub, Long>
 }
 
 interface ProductSubCustomRepository {
-    List<ProductSub> getByIdxProduct(Long pidx);
+    List<ProductSub> getByIdxProduct(Long pIdx);
 }
 
 @Transactional(readOnly = true)
@@ -27,13 +27,13 @@ class ProductSubCustomRepositoryImpl extends QuerydslRepositorySupport implement
     }
 
     @Override
-    public List<ProductSub> getByIdxProduct(Long pidx) {
+    public List<ProductSub> getByIdxProduct(Long pIdx) {
         try {
             final QProductSubMapper mapper = QProductSubMapper.productSubMapper;
             final QProductSub productSub = QProductSub.productSub;
             return from(productSub)
                     .join(mapper).on(productSub.idx.eq(mapper.productSub.idx))
-                    .where(mapper.product.idx.eq(pidx)) // .and(mapper.isActive.isTrue())
+                    .where(mapper.product.idx.eq(pIdx)) // .and(mapper.isActive.isTrue())
                     .fetch();
         }catch (Exception e) {
             e.printStackTrace();

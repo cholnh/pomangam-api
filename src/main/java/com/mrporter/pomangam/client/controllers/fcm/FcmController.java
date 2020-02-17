@@ -17,7 +17,7 @@ public class FcmController {
 
     FcmServiceImpl fcmService;
 
-    @PostMapping(value = "/send/ToAll", produces = {"application/json"})
+    @PostMapping(value = "/sends/dsites", produces = {"application/json"})
     public ResponseEntity<?> sendToAll(
         @RequestBody Map<String, Object> paramInfo
     ) throws JSONException {
@@ -30,13 +30,13 @@ public class FcmController {
         }
     }
 
-    @PostMapping(value = "/send/ToDeliverySiteIdx", produces = {"application/json"})
+    @PostMapping(value = "/sends/dsites/{dIdx}", produces = {"application/json"})
     public ResponseEntity<?> sendToDeliverySiteIdx(
         @RequestBody Map<String, Object> paramInfo,
-        @RequestParam(value = "deliverySiteIdx") Long deliverySiteIdx
+        @PathVariable(value = "dIdx", required = true) Long dIdx
     ) throws JSONException {
 
-        String firebaseResponse = fcmService.sendToDeliverySiteIdx(paramInfo, deliverySiteIdx);
+        String firebaseResponse = fcmService.sendToDeliverySiteIdx(paramInfo, dIdx);
         if(firebaseResponse == null) {
             return new ResponseEntity<>("Push Notification Error", HttpStatus.BAD_REQUEST);
         } else {

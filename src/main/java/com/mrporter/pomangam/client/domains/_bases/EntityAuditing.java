@@ -23,7 +23,7 @@ public abstract class EntityAuditing implements Serializable {
      * default: true(Y)
      * 대문자 필수
      */
-    @Column(name = "is_active", nullable = false)
+    @Column(name = "is_active", nullable = false, length = 1)
     @Convert(converter = BooleanToYNConverter.class)
     private Boolean isActive;
 

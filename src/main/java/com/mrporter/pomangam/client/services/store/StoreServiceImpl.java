@@ -16,23 +16,26 @@ public class StoreServiceImpl implements StoreService {
 
     StoreJpaRepository storeJpaRepository;
 
-    public List<StoreDto> getByIdxDeliverySite(Long didx, Pageable pageable) {
-        List<Store> stores = storeJpaRepository.findByIdxDeliverySiteOrderBySequenceAsc(didx, pageable).getContent();
+    @Override
+    public List<StoreDto> findByIdxDeliverySite(Long dIdx, Pageable pageable) {
+        List<Store> stores = storeJpaRepository.findByIdxDeliverySiteOrderBySequenceAsc(dIdx, pageable).getContent();
         return StoreDto.fromEntities(stores);
     }
 
-
-    public StoreDto getByIdx(Long idx) {
+    @Override
+    public StoreDto findByIdx(Long idx) {
         Store entity = storeJpaRepository.findById(idx).get();
         return StoreDto.fromEntity(entity);
     }
 
+    @Override
     public long count() {
         return storeJpaRepository.count();
     }
 
-    public List<StoreSummaryDto> getSummaries(Long didx, Pageable pageable) {
-        List<Store> stores = storeJpaRepository.findByIdxDeliverySiteOrderBySequenceAsc(didx, pageable).getContent();
+    @Override
+    public List<StoreSummaryDto> findSummaries(Long dIdx, Pageable pageable) {
+        List<Store> stores = storeJpaRepository.findByIdxDeliverySiteOrderBySequenceAsc(dIdx, pageable).getContent();
         List<StoreSummaryDto> dto = StoreSummaryDto.fromEntities(stores);
         return dto;
     }

@@ -15,10 +15,18 @@ import javax.persistence.*;
 @ToString
 public class CommonMap extends EntityAuditing {
 
-    @Column(name = "common_key", nullable = false)
+    /**
+     * Key
+     * 글자수: utf8 기준 / 영문 255자 / 한글 255자
+     */
+    @Column(name = "common_key", nullable = false, length = 255)
     private String key;
 
-    @Column(name = "common_value", nullable = false)
+    /**
+     * Value
+     * 글자수: utf8 기준 / 영문 255자 / 한글 255자
+     */
+    @Column(name = "common_value", nullable = false, length = 255)
     private String value;
 
     @Builder

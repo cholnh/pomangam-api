@@ -35,26 +35,29 @@ public class ProductSub extends EntityAuditing {
 
     /**
      * 서브 제품명
+     * 글자수: utf8 기준 / 영문 20자 / 한글 20자
      */
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false,  length = 20)
     private String name;
 
     /**
      * 서브 제품 설명
+     * TEXT: 65535 Byte (64KB) / utf8 기준(3바이트 문자)으로 21844 글자 저장가능
      */
-    @Column(name = "description", nullable = true)
+    @Column(name = "description", nullable = true, columnDefinition = "TEXT")
     private String description;
 
     /**
      * 서브 제품 부가설명
+     * 글자수: utf8 기준 / 영문 255자 / 한글 255자
      */
-    @Column(name = "sub_description", nullable = true)
+    @Column(name = "sub_description", nullable = true, length = 255)
     private String subDescription;
 
     /**
      * 순서
      */
-    @Column(name = "sequence", nullable = false)
+    @Column(name = "sequence", nullable = false, columnDefinition = "INT default 0")
     private Integer sequence;
 
     /**
@@ -72,8 +75,9 @@ public class ProductSub extends EntityAuditing {
      * 단일선택(필수선택강요): ProductSubType.RADIO
      * 수량기입: ProductSubType.NUMBER
      * 변경불가(선택된상태): ProductSubType.READONLY -> 기본으로 제공되는 서브제품을 가시적으로 표현할 때 사용.
+     * 글자수: utf8 기준 / 영문 20자 / 한글 20자
      */
-    @Column(name = "product_sub_type", nullable = false)
+    @Column(name = "product_sub_type", nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     private ProductSubType productSubType;
 

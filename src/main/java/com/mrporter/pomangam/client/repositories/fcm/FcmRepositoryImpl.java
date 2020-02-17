@@ -13,6 +13,9 @@ import java.util.List;
 @Repository
 @AllArgsConstructor
 public class FcmRepositoryImpl implements FcmRepository {
+
+    // Todo. 이거 전체 다 엎어버려
+
     @PersistenceContext
     EntityManager em;
 

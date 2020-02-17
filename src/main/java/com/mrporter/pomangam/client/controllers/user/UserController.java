@@ -24,36 +24,46 @@ public class UserController {
     @GetMapping("/{phn}")
     public UserDto searchInfo(
             @PathVariable(value = "phn") String phoneNumber,
-            Principal principal) {
-
+            Principal principal
+    ) {
         return UserDto.fromEntity(removePassword(userService.findByPhoneNumber(phoneNumber)));
     }
 
     @GetMapping("/search/exist/phone")
-    public ResponseEntity<?> isExistByPhone(@RequestParam(value = "phn", required = true) String phoneNumber) {
+    public ResponseEntity<?> isExistByPhone(
+            @RequestParam(value = "phn", required = true) String phoneNumber
+    ) {
         return new ResponseEntity(userService.isExistByPhone(phoneNumber), HttpStatus.OK);
     }
 
     @GetMapping("/search/exist/nickname")
-    public ResponseEntity<?> isExistByNickname(@RequestParam(value = "nickname", required = true) String nickname) {
+    public ResponseEntity<?> isExistByNickname(
+            @RequestParam(value = "nickname", required = true) String nickname
+    ) {
         return new ResponseEntity(userService.isExistByNickname(nickname), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<?> post(@RequestBody UserDto dto) {
+    public ResponseEntity<?> post(
+            @RequestBody UserDto dto
+    ) {
         return new ResponseEntity<>(UserDto.fromEntity(removePassword(userService.saveUser(dto.toEntity()))), HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN') or ( #phoneNumber == principal.username ))")
     @DeleteMapping("/{phn}")
-    public ResponseEntity delete(@PathVariable(value = "phn") String phoneNumber) {
+    public ResponseEntity delete(
+            @PathVariable(value = "phn") String phoneNumber
+    ) {
         return new ResponseEntity<>(userService.deleteUser(phoneNumber), HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN') or ( #phoneNumber == principal.username ))")
     @PatchMapping("/{phn}")
-    public ResponseEntity patch(@PathVariable(value = "phn") String phoneNumber,
-                                @RequestBody UserDto dto) {
+    public ResponseEntity patch(
+            @PathVariable(value = "phn") String phoneNumber,
+            @RequestBody UserDto dto
+    ) {
         try {
             return new ResponseEntity<>(UserDto.fromEntity(removePassword(userService.patchUser(phoneNumber, dto.toEntity()))), HttpStatus.OK);
         }catch (Exception e) {
@@ -71,7 +81,9 @@ public class UserController {
 
     @PreAuthorize("isAuthenticated() and (hasRole('ROLE_STAFF') or hasRole('ROLE_ADMIN'))")
     @GetMapping
-    public ResponseEntity<?> findRecentlyRegistered(@RequestParam(value = "limit", required = true) Integer limit) {
+    public ResponseEntity<?> findRecentlyRegistered(
+            @RequestParam(value = "limit", required = true) Integer limit
+    ) {
         return new ResponseEntity(userService.findRecentlyRegistered(limit), HttpStatus.OK);
     }
 }

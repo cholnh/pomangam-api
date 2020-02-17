@@ -15,17 +15,18 @@ public class ProductSubServiceImpl implements ProductSubService {
     ProductSubJpaRepository productSubJpaRepository;
 
     @Override
-    public List<ProductSubDto> getByIdxProduct(Long pidx) {
-        List<ProductSub> productSubs = productSubJpaRepository.getByIdxProduct(pidx);
+    public List<ProductSubDto> findByIdxProduct(Long pIdx) {
+        List<ProductSub> productSubs = productSubJpaRepository.getByIdxProduct(pIdx);
         return ProductSubDto.fromEntities(productSubs);
     }
 
-
-    public ProductSubDto getByIdx(Long idx) {
+    @Override
+    public ProductSubDto findByIdx(Long idx) {
         ProductSub entity = productSubJpaRepository.findById(idx).get();
         return ProductSubDto.fromEntity(entity);
     }
 
+    @Override
     public long count() {
         return productSubJpaRepository.count();
     }

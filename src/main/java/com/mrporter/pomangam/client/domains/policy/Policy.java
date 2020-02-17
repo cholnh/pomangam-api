@@ -17,10 +17,18 @@ import javax.persistence.Table;
 @ToString
 public class Policy extends EntityAuditing {
 
-    @Column(name = "policy_name", nullable = false)
+    /**
+     * 규정 이름
+     * 글자수: utf8 기준 / 영문 100자 / 한글 100자
+     */
+    @Column(name = "policy_name", nullable = false, length = 100)
     private String policyName;
 
-    @Column(name = "policy_contents", nullable = false)
+    /**
+     * 규정 내용
+     * TEXT: 65535 Byte (64KB) / utf8 기준(3바이트 문자)으로 21844 글자 저장가능
+     */
+    @Column(name = "policy_contents", nullable = false, columnDefinition = "TEXT")
     private String policyContents;
 
     @Builder

@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RepositoryRestResource(exported = false)
 public interface StoreJpaRepository extends JpaRepository<Store, Long>, StoreCustomRepository {
-    Page<Store> findByIdxDeliverySiteOrderBySequenceAsc(Long didx, Pageable pageable);
+    Page<Store> findByIdxDeliverySiteOrderBySequenceAsc(Long dIdx, Pageable pageable);
 
 }
 

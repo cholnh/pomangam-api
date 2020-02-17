@@ -15,9 +15,6 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @AllArgsConstructor
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
-    AuthenticationFailureHandler failureHandler;
-    AuthenticationSuccessHandler successHandler;
-
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         resources.resourceId("resource_id").stateless(false);

@@ -9,5 +9,5 @@ import java.util.List;
 
 @RepositoryRestResource(exported = false)
 public interface DeliveryDetailJpaRepository extends JpaRepository<DeliveryDetailSite, Long> {
-    List<DeliveryDetailSite> findByDeliverySite_Idx(@Param("idx") Long didx);
+    List<DeliveryDetailSite> findByDeliverySite_Idx(@Param("idx") Long dIdx);
 }

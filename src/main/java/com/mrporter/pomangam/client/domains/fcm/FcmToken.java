@@ -18,8 +18,9 @@ public class FcmToken extends EntityAuditing {
 
     /**
      * Fcm Token 값
+     * 글자수: utf8 기준 / 영문 255자 / 한글 255자
      */
-    @Column(name = "token", nullable = true)
+    @Column(name = "token", nullable = true, length = 255)
     private String token;
 
     /**

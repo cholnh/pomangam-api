@@ -28,8 +28,9 @@ public class Store extends EntityAuditing {
 
     /**
      * 업체명
+     * 글자수: utf8 기준 / 영문 20자 / 한글 20자
      */
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 20)
     private String name;
 
     /**
@@ -41,38 +42,40 @@ public class Store extends EntityAuditing {
 
     /**
      * 설명
+     * TEXT: 65535 Byte (64KB) / utf8 기준(3바이트 문자)으로 21844 글자 저장가능
      */
-    @Column(name = "description", nullable = true)
+    @Column(name = "description", nullable = true, columnDefinition = "TEXT")
     private String description;
 
     /**
      * 부가 설명
+     * 글자수: utf8 기준 / 영문 255자 / 한글 255자
      */
-    @Column(name = "sub_description", nullable = true)
+    @Column(name = "sub_description", nullable = true, length = 255)
     private String subDescription;
 
     /**
      * 평균 리뷰 평점
      */
-    @Column(name = "avg_star", nullable = true)
+    @Column(name = "avg_star", nullable = false, columnDefinition = "FLOAT default 0")
     private Float avgStar;
 
     /**
      * 총 좋아요 개수
      */
-    @Column(name = "cnt_like", nullable = true)
+    @Column(name = "cnt_like", nullable = false, columnDefinition = "INT default 0")
     private Integer cntLike;
 
     /**
      * 총 리뷰 개수
      */
-    @Column(name = "cnt_comment", nullable = true)
+    @Column(name = "cnt_comment", nullable = false, columnDefinition = "INT default 0")
     private Integer cntComment;
 
     /**
      * 순서
      */
-    @Column(name = "sequence", nullable = false)
+    @Column(name = "sequence", nullable = false, columnDefinition = "INT default 0")
     private Integer sequence;
 
     /**
@@ -113,4 +116,39 @@ public class Store extends EntityAuditing {
         }
         this.images.add(storeImage);
     }
+    public void addCntLike() {
+        if(this.cntLike == null) {
+            this.cntLike = 0;
+        }
+        this.cntLike++;
+    }
+    public void addCntComment(Float star) {
+        if(this.cntComment == null) {
+            this.cntComment = 0;
+        }
+        if(this.avgStar == null) {
+            this.avgStar = 0f;
+        }
+        this.avgStar = ((avgStar * cntComment) + star) / (++this.cntComment);
+    }
+    public void subCntLike() {
+        if(this.cntLike == null) {
+            this.cntLike = 0;
+        }
+        this.cntLike--;
+        if(this.cntLike < 0) {
+            this.cntLike = 0;
+        }
+    }
+    public void subCntComment(Float star) {
+        if(this.cntComment == null || this.cntComment <= 0) {
+            this.cntComment = 0;
+            this.avgStar = 0f;
+        } else if(this.avgStar == null || this.avgStar <= 0) {
+            this.avgStar = 0f;
+        } else {
+            this.avgStar = ((avgStar * cntComment) - star) / (--this.cntComment);
+        }
+    }
+
 }
