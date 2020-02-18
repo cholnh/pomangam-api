@@ -58,7 +58,7 @@ public class StoreReviewServiceImpl implements StoreReviewService {
         addAvgStar(dto.getIdxStore(), entity.getIdx());
 
         // 리뷰 이미지 저장
-        String imagePath = ImagePath.review(dto.getIdxDeliverySite(), dto.getIdxStore(), entity.getIdx());
+        String imagePath = ImagePath.reviews(dto.getIdxDeliverySite(), dto.getIdxStore(), entity.getIdx());
         List<StoreReviewImage> savedImages = saveImage(imagePath, images);
         entity.addImages(savedImages);
         return StoreReviewDto.fromEntity(storeReviewJpaRepository.save(entity));
@@ -76,7 +76,7 @@ public class StoreReviewServiceImpl implements StoreReviewService {
             boolean isImageUpdated = dto.getIsImageUpdated() != null && dto.getIsImageUpdated().booleanValue();
             if(isImageUpdated) {
                 // 기존 이미지 파일 삭제
-                String imagePath = ImagePath.review(dto.getIdxDeliverySite(), dto.getIdxStore(), dto.getIdx());
+                String imagePath = ImagePath.reviews(dto.getIdxDeliverySite(), dto.getIdxStore(), dto.getIdx());
                 fileStorageService.deleteFile(imagePath, true);
                 entity.clearImages();
 
@@ -100,7 +100,7 @@ public class StoreReviewServiceImpl implements StoreReviewService {
         storeReviewJpaRepository.deleteById(idx);
 
         // 리뷰 이미지 삭제
-        String imagePath = ImagePath.review(dIdx, sIdx, idx);
+        String imagePath = ImagePath.reviews(dIdx, sIdx, idx);
         fileStorageService.deleteFile(imagePath, true);
     }
 
