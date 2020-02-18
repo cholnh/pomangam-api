@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.client.repositories._bases;
+package com.mrporter.pomangam.client.repositories.user.random_nickname;
 
 import com.mrporter.pomangam.client.domains.user.random_nickname.RandomNickname;
 import org.springframework.data.jpa.repository.JpaRepository;

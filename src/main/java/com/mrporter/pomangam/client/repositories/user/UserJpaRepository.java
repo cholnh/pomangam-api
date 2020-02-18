@@ -19,6 +19,7 @@ public interface UserJpaRepository extends JpaRepository<User, Long>, UserCustom
 interface UserCustomRepository {
     List<User> findRecentlyRegistered(int limit);   // for example
     Long findIdxByPhoneNumber(String phoneNumber);
+    Long findIdxDeliverySiteByIdx(Long idx);
 }
 
 @Transactional(readOnly = true)
@@ -50,6 +51,23 @@ class UserCustomRepositoryImpl extends QuerydslRepositorySupport implements User
             List<Long> idxes = from(user)
                     .select(user.idx)
                     .where(user.phoneNumber.eq(phoneNumber))
+                    .fetch();
+            if(idxes != null && !idxes.isEmpty()) {
+                return idxes.get(0);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Long findIdxDeliverySiteByIdx(Long idx) {
+        try {
+            final QUser user = QUser.user;
+            List<Long> idxes = from(user)
+                    .select(user.deliveryDetailSite.idx)
+                    .where(user.idx.eq(idx))
                     .fetch();
             if(idxes != null && !idxes.isEmpty()) {
                 return idxes.get(0);

@@ -68,11 +68,13 @@ spring:
   cache-period: 3600
 ---
 file:
-  #upload-dir: ./uploads
+  # 프로젝트 안 upload-dir: ./uploads
+  # 맥 upload-dir: /Users/nakzzi/Downloads/assets
   upload-dir: C:/assets
 ---
 static:
   resource:
+    # 맥 location: /Users/nakzzi/Downloads/assets/ -> 확인필요.
     location: file:///C:/assets/
 ---
 logging:

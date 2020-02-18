@@ -1,7 +1,7 @@
-package com.mrporter.pomangam.client.services._bases;
+package com.mrporter.pomangam.client.services.policy;
 
 import com.mrporter.pomangam.client.domains.policy.Policy;
-import com.mrporter.pomangam.client.repositories._bases.PolicyJpaRepository;
+import com.mrporter.pomangam.client.repositories.policy.PolicyJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

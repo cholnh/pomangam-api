@@ -24,7 +24,7 @@ public class StoreReviewLike extends EntityAuditing {
     private Long idxUser;
 
     /**
-     * 업체 인덱스
+     * 업체 리뷰 인덱스
      */
     @Column(name="idx_store_review", nullable = false)
     private Long idxStoreReview;

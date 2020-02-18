@@ -38,15 +38,4 @@ public class FcmToken extends EntityAuditing {
             this.user = user;
         }
     }
-
-    /**
-     * 연관관계 편의 메서드
-     * 순수객체까지 양방향 관계를 고려해야 함
-     * User 쪽에도 편의 메서드 생성해야 함
-     */
-    public void applyUser(final User user) {
-        this.user = user;
-        user.applyFcmToken(this);
-    }
-
 }

@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.client.repositories._bases;
+package com.mrporter.pomangam.client.repositories.map;
 
 import com.mrporter.pomangam.client.domains.map.CommonMap;
 import org.springframework.data.jpa.repository.JpaRepository;

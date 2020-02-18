@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.client.services._bases;
+package com.mrporter.pomangam.client.services.map;
 
 import com.mrporter.pomangam.client.domains.map.CommonMap;
 

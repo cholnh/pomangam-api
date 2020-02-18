@@ -3,7 +3,6 @@ package com.mrporter.pomangam.client.domains.user;
 import com.mrporter.pomangam._bases.utils.validation.annotation.Phone;
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSite;
-import com.mrporter.pomangam.client.domains.fcm.FcmToken;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -17,7 +16,7 @@ import java.time.LocalDate;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(exclude = {"deliveryDetailSite", "fcmToken"})
+@ToString(exclude = {"deliveryDetailSite"})
 public class User extends EntityAuditing {
 
     /**
@@ -84,11 +83,10 @@ public class User extends EntityAuditing {
     private Integer point;
 
     /**
-     * Fcm token
-     * 읽기 전용
+     * Fcm token 인덱스
      */
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-    private FcmToken fcmToken;
+    @Column(name = "idx_fcm_token", nullable = false)
+    private Long idxFcmToken;
 
     @PrePersist
     private void prePersist() {
@@ -96,7 +94,7 @@ public class User extends EntityAuditing {
     }
 
     @Builder
-    public User(DeliveryDetailSite deliveryDetailSite, String phoneNumber, String password, String name, String nickname, Sex sex, LocalDate birth, @PositiveOrZero Integer point, FcmToken fcmToken, Boolean isActive) {
+    public User(Boolean isActive, DeliveryDetailSite deliveryDetailSite, String phoneNumber, String password, String name, String nickname, Sex sex, LocalDate birth, @PositiveOrZero Integer point, Long idxFcmToken) {
         super.setIsActive(isActive);
         this.deliveryDetailSite = deliveryDetailSite;
         this.phoneNumber = phoneNumber;
@@ -106,14 +104,6 @@ public class User extends EntityAuditing {
         this.sex = sex;
         this.birth = birth;
         this.point = point;
-        this.fcmToken = fcmToken;
-    }
-
-    /**
-     * 연관관계 편의 메서드
-     * 순수객체까지 양방향 관계를 고려해야 함
-     */
-    public void applyFcmToken(final FcmToken fcmToken) {
-        this.fcmToken = fcmToken;
+        this.idxFcmToken = idxFcmToken;
     }
 }

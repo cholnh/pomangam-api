@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.client.repositories._bases;
+package com.mrporter.pomangam.client.repositories.policy;
 
 import com.mrporter.pomangam.client.domains.policy.Policy;
 import org.springframework.data.jpa.repository.JpaRepository;

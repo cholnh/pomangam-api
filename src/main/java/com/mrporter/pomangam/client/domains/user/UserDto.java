@@ -28,6 +28,7 @@ public class UserDto implements Serializable {
     private Sex sex;
     private LocalDate birth;
     private Integer point;
+    private Long idxFcmToken;
 
     public User toEntity() {
         User entity = new ModelMapper().map(this, User.class);

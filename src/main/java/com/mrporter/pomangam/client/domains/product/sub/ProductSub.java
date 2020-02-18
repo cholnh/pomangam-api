@@ -84,7 +84,7 @@ public class ProductSub extends EntityAuditing {
     /**
      * 서브 제품 분류
      * ProductSubType.RADIO 선택 시,
-     * ProductSubCategory 가 같은 ProductSub 끼리 Grouping 하여 View 에 표현.
+     * ProductSubCategory 가 같은 ProductSub 끼리 Grouping 하여 CustomView 에 표현.
      */
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "idx_product_sub_category")

@@ -68,6 +68,12 @@ public class StoreReview extends EntityAuditing {
     private Integer cntLike;
 
     /**
+     * 총 댓글 개수
+     */
+    @Column(name = "cnt_reply", nullable = false, columnDefinition = "INT default 0")
+    private Integer cntReply;
+
+    /**
      * 이미지 정보
      * 단방향 매핑
      */
@@ -82,10 +88,11 @@ public class StoreReview extends EntityAuditing {
                 ? 5f
                 : star;
         this.cntLike = 0; // always 0 when its insert
+        this.cntReply = 0;
     }
 
     @Builder
-    public StoreReview(Long idxUser, Long idxStore, Boolean isAnonymous, String title, String contents, Float star, Integer cntLike, List<StoreReviewImage> images) {
+    public StoreReview(Long idxUser, Long idxStore, Boolean isAnonymous, String title, String contents, Float star, Integer cntLike, Integer cntReply, List<StoreReviewImage> images) {
         this.idxUser = idxUser;
         this.idxStore = idxStore;
         this.isAnonymous = isAnonymous;
@@ -93,9 +100,21 @@ public class StoreReview extends EntityAuditing {
         this.contents = contents;
         this.star = star;
         this.cntLike = cntLike;
+        this.cntReply = cntReply;
         this.images = images;
     }
 
+    public void clearImages() {
+        if(this.images != null) {
+            this.images.clear();
+        }
+    }
+    public void addImages(List<StoreReviewImage> storeReviewImages) {
+        if(this.images == null) {
+            this.images = new ArrayList<>();
+        }
+        this.images.addAll(storeReviewImages);
+    }
     public void addImage(StoreReviewImage storeReviewImage) {
         if(this.images == null) {
             this.images = new ArrayList<>();
@@ -108,6 +127,13 @@ public class StoreReview extends EntityAuditing {
         }
         this.cntLike++;
     }
+    public void addCntReply() {
+        if(this.cntReply == null) {
+            this.cntReply = 0;
+        }
+        this.cntReply++;
+    }
+
     public void subCntLike() {
         if(this.cntLike == null) {
             this.cntLike = 0;
@@ -116,6 +142,24 @@ public class StoreReview extends EntityAuditing {
         if(this.cntLike < 0) {
             this.cntLike = 0;
         }
+    }
+    public void subCntReply() {
+        if(this.cntReply == null) {
+            this.cntReply = 0;
+        }
+        this.cntReply--;
+        if(this.cntReply < 0) {
+            this.cntReply = 0;
+        }
+    }
+
+    public StoreReview update(StoreReview from) {
+        if(from.getIdxStore() != null) { this.setIdxStore(from.getIdxStore()); }
+        if(from.getIsAnonymous() != null) { this.setIsAnonymous(from.getIsAnonymous()); }
+        if(from.getTitle() != null) { this.setTitle(from.getTitle()); }
+        if(from.getContents() != null) { this.setContents(from.getContents()); }
+        if(from.getStar() != null) { this.setStar(from.getStar()); }
+        return this;
     }
 }
 

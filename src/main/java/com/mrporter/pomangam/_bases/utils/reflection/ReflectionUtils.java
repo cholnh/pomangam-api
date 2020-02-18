@@ -4,7 +4,7 @@ import javax.persistence.Id;
 import java.lang.reflect.Field;
 
 public class ReflectionUtils {
-    public static <T> void oldInstanceByNewInstance(T oldInstance, T newInstance) throws Exception{
+    public static <T> void oldInstanceByNewInstance(T oldInstance, T newInstance) throws Exception {
         Class<?> newInstanceClass = newInstance.getClass();
         Class<?> oldInstanceClass = oldInstance.getClass();
 

@@ -1,6 +1,6 @@
 package com.mrporter.pomangam.client.controllers.policy;
 
-import com.mrporter.pomangam.client.services._bases.CommonMapServiceImpl;
+import com.mrporter.pomangam.client.services.map.CommonMapServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

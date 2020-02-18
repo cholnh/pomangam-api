@@ -4,6 +4,7 @@ import com.mrporter.pomangam.client.domains.deliverysite.DeliverySite;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSite;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSiteDto;
 import com.mrporter.pomangam.client.domains.deliverysite.region.Region;
+import com.mrporter.pomangam.client.domains.fcm.FcmToken;
 import com.mrporter.pomangam.client.domains.product.Product;
 import com.mrporter.pomangam.client.domains.product.category.ProductCategory;
 import com.mrporter.pomangam.client.domains.product.cost.Cost;
@@ -22,10 +23,11 @@ import com.mrporter.pomangam.client.domains.store.image.StoreImageType;
 import com.mrporter.pomangam.client.domains.user.Sex;
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.domains.user.UserDto;
-import com.mrporter.pomangam.client.repositories._bases.RandomNicknameJpaRepository;
+import com.mrporter.pomangam.client.repositories.user.random_nickname.RandomNicknameJpaRepository;
 import com.mrporter.pomangam.client.repositories.deliverysite.DeliverySiteJpaRepository;
 import com.mrporter.pomangam.client.repositories.deliverysite.detail.DeliveryDetailJpaRepository;
 import com.mrporter.pomangam.client.repositories.deliverysite.region.RegionJpaRepository;
+import com.mrporter.pomangam.client.repositories.fcm.FcmTokenJpaRepository;
 import com.mrporter.pomangam.client.repositories.product.ProductJpaRepository;
 import com.mrporter.pomangam.client.repositories.product.category.ProductCategoryJpaRepository;
 import com.mrporter.pomangam.client.repositories.product.sub.ProductSubJpaRepository;
@@ -60,6 +62,7 @@ public class TestDataLoader implements ApplicationRunner {
     @Autowired ProductSubCategoryJpaRepository productSubCategoryJpaRepository;
     @Autowired ProductSubJpaRepository productSubJpaRepository;
     @Autowired ProductSubMapperJpaRepository productSubMapperJpaRepository;
+    @Autowired FcmTokenJpaRepository fcmTokenJpaRepository;
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddl;
@@ -141,6 +144,27 @@ public class TestDataLoader implements ApplicationRunner {
         detailJpaRepository.save(detail3);
         detailJpaRepository.save(detail4);
 
+
+
+
+        FcmToken fcmToken1 = FcmToken.builder()
+                .token("fcmToken1")
+                .build();
+        FcmToken fcmToken2 = FcmToken.builder()
+                .token("fcmToken2")
+                .build();
+        FcmToken fcmToken3 = FcmToken.builder()
+                .token("fcmToken3")
+                .build();
+        FcmToken fcmToken4 = FcmToken.builder()
+                .token("fcmToken4")
+                .build();
+
+        Long fIdx1 = fcmTokenJpaRepository.save(fcmToken1).getIdx();
+        Long fIdx2 = fcmTokenJpaRepository.save(fcmToken2).getIdx();
+        Long fIdx3 = fcmTokenJpaRepository.save(fcmToken3).getIdx();
+        Long fIdx4 = fcmTokenJpaRepository.save(fcmToken4).getIdx();
+
         User user1 = User.builder()
                 .deliveryDetailSite(detail1)
                 .phoneNumber("01064784899")
@@ -149,6 +173,7 @@ public class TestDataLoader implements ApplicationRunner {
                 .nickname("낙지")
                 .sex(Sex.MALE)
                 .birth(LocalDate.parse("1993-01-10"))
+                .idxFcmToken(fIdx1)
                 .build();
         User user2 = User.builder()
                 .deliveryDetailSite(detail1)
@@ -158,6 +183,7 @@ public class TestDataLoader implements ApplicationRunner {
                 .sex(Sex.FEMALE)
                 .birth(LocalDate.parse("1993-01-11"))
                 .isActive(false)
+                .idxFcmToken(fIdx2)
                 .build();
         User user3 = User.builder()
                 .deliveryDetailSite(detail1)
@@ -166,6 +192,7 @@ public class TestDataLoader implements ApplicationRunner {
                 .name("디폴트")
                 .sex(Sex.MALE)
                 .birth(LocalDate.parse("1998-01-26"))
+                .idxFcmToken(fIdx3)
                 .build();
         userService.saveUser(user1);
         userService.saveUser(user2);
@@ -182,6 +209,7 @@ public class TestDataLoader implements ApplicationRunner {
         userDto.setSex(Sex.FEMALE);
         userDto.setBirth(LocalDate.parse("1999-09-01"));
         userDto.setDeliveryDetailSite(ddsite);
+        userDto.setIdxFcmToken(fIdx4);
 
         // save
         User user = userService.saveUser(userDto.toEntity());
@@ -241,59 +269,59 @@ public class TestDataLoader implements ApplicationRunner {
                 .build();
 
         StoreImage storeBrandImage1 = StoreImage.builder()
-                .imagePath("/assets/images/stores/1/brand.png")
+                .imagePath("/assets/images/dsites/1/stores/1/brand.png")
                 .imageType(StoreImageType.BRAND)
                 .build();
         StoreImage storeBrandImage2 = StoreImage.builder()
-                .imagePath("/assets/images/stores/2/brand.png")
+                .imagePath("/assets/images/dsites/1/stores/2/brand.png")
                 .imageType(StoreImageType.BRAND)
                 .build();
         StoreImage storeBrandImage3 = StoreImage.builder()
-                .imagePath("/assets/images/stores/3/brand.png")
+                .imagePath("/assets/images/dsites/1/stores/3/brand.png")
                 .imageType(StoreImageType.BRAND)
                 .build();
         StoreImage storeBrandImage4 = StoreImage.builder()
-                .imagePath("/assets/images/stores/4/brand.png")
+                .imagePath("/assets/images/dsites/1/stores/4/brand.png")
                 .imageType(StoreImageType.BRAND)
                 .build();
 
         StoreImage storeImage1 = StoreImage.builder()
-                .imagePath("/assets/images/stores/1/1.jpg")
+                .imagePath("/assets/images/dsites/1/stores/1/1.jpg")
                 .imageType(StoreImageType.MAIN)
                 .sequence(1)
                 .build();
         StoreImage storeImage2_1 = StoreImage.builder()
-                .imagePath("/assets/images/stores/2/1.jpg")
+                .imagePath("/assets/images/dsites/1/stores/2/1.jpg")
                 .imageType(StoreImageType.MAIN)
                 .sequence(1)
                 .build();
         StoreImage storeImage2_2 = StoreImage.builder()
-                .imagePath("/assets/images/stores/2/2.jpg")
+                .imagePath("/assets/images/dsites/1/stores/2/2.jpg")
                 .imageType(StoreImageType.SUB)
                 .sequence(2)
                 .build();
         StoreImage storeImage2_3 = StoreImage.builder()
-                .imagePath("/assets/images/stores/2/3.jpg")
+                .imagePath("/assets/images/dsites/1/stores/2/3.jpg")
                 .imageType(StoreImageType.SUB)
                 .sequence(3)
                 .build();
         StoreImage storeImage3 = StoreImage.builder()
-                .imagePath("/assets/images/stores/3/1.jpg")
+                .imagePath("/assets/images/dsites/1/stores/3/1.jpg")
                 .imageType(StoreImageType.MAIN)
                 .sequence(1)
                 .build();
         StoreImage storeImage4_1 = StoreImage.builder()
-                .imagePath("/assets/images/stores/4/1.jpg")
+                .imagePath("/assets/images/dsites/1/stores/4/1.jpg")
                 .imageType(StoreImageType.MAIN)
                 .sequence(1)
                 .build();
         StoreImage storeImage4_2 = StoreImage.builder()
-                .imagePath("/assets/images/stores/4/2.jpg")
+                .imagePath("/assets/images/dsites/1/stores/4/2.jpg")
                 .imageType(StoreImageType.SUB)
                 .sequence(2)
                 .build();
         StoreImage storeImage4_3 = StoreImage.builder()
-                .imagePath("/assets/images/stores/4/3.jpg")
+                .imagePath("/assets/images/dsites/1/stores/4/3.jpg")
                 .imageType(StoreImageType.SUB)
                 .sequence(3)
                 .build();
@@ -390,32 +418,32 @@ public class TestDataLoader implements ApplicationRunner {
 
         // /assets/images/products/{idx-product}/{idx-product-image}.jpg
         ProductImage productImage1_1 = ProductImage.builder()
-                .imagePath("/assets/images/products/1/1.jpg")
+                .imagePath("/assets/images/dsites/1/stores/1/products/1/1.jpg")
                 .imageType(ProductImageType.MAIN)
                 .sequence(1)
                 .build();
         ProductImage productImage1_2 = ProductImage.builder()
-                .imagePath("/assets/images/products/1/2.jpg")
+                .imagePath("/assets/images/dsites/1/stores/1/products/1/2.jpg")
                 .imageType(ProductImageType.SUB)
                 .sequence(2)
                 .build();
         ProductImage productImage1_3 = ProductImage.builder()
-                .imagePath("/assets/images/products/1/3.jpg")
+                .imagePath("/assets/images/dsites/1/stores/1/products/1/3.jpg")
                 .imageType(ProductImageType.SUB)
                 .sequence(3)
                 .build();
         ProductImage productImage2 = ProductImage.builder()
-                .imagePath("/assets/images/products/2/1.jpg")
+                .imagePath("/assets/images/dsites/1/stores/1/products/2/1.jpg")
                 .imageType(ProductImageType.MAIN)
                 .sequence(1)
                 .build();
         ProductImage productImage3 = ProductImage.builder()
-                .imagePath("/assets/images/products/3/1.jpg")
+                .imagePath("/assets/images/dsites/1/stores/1/products/3/1.jpg")
                 .imageType(ProductImageType.MAIN)
                 .sequence(1)
                 .build();
         ProductImage productImage4 = ProductImage.builder()
-                .imagePath("/assets/images/products/4/1.jpg")
+                .imagePath("/assets/images/dsites/1/stores/1/products/4/1.jpg")
                 .imageType(ProductImageType.MAIN)
                 .sequence(1)
                 .build();
@@ -431,8 +459,6 @@ public class TestDataLoader implements ApplicationRunner {
         productJpaRepository.save(product2);
         productJpaRepository.save(product3);
         productJpaRepository.save(product4);
-
-
 
 
 
@@ -532,27 +558,27 @@ public class TestDataLoader implements ApplicationRunner {
 
         // /assets/images/subs/{idx-product-sub}/{idx-product-sub-image}.jpg
         ProductSubImage productSubImage1_1 = ProductSubImage.builder()
-                .imagePath("/assets/images/subs/4/1.jpg")
+                .imagePath("/assets/images/dsites/1/stores/1/subs/4/1.jpg")
                 .imageType(ProductSubImageType.MAIN)
                 .sequence(1)
                 .build();
         ProductSubImage productSubImage1_2 = ProductSubImage.builder()
-                .imagePath("/assets/images/subs/4/2.jpg")
+                .imagePath("/assets/images/dsites/1/stores/1/subs/4/2.jpg")
                 .imageType(ProductSubImageType.SUB)
                 .sequence(2)
                 .build();
         ProductSubImage productSubImage1_3 = ProductSubImage.builder()
-                .imagePath("/assets/images/subs/4/3.jpg")
+                .imagePath("/assets/images/dsites/1/stores/1/subs/4/3.jpg")
                 .imageType(ProductSubImageType.SUB)
                 .sequence(3)
                 .build();
         ProductSubImage productSubImage2 = ProductSubImage.builder()
-                .imagePath("/assets/images/subs/6/1.jpg")
+                .imagePath("/assets/images/dsites/1/stores/1/subs/6/1.jpg")
                 .imageType(ProductSubImageType.MAIN)
                 .sequence(1)
                 .build();
         ProductSubImage productSubImage3 = ProductSubImage.builder()
-                .imagePath("/assets/images/subs/7/1.jpg")
+                .imagePath("/assets/images/dsites/1/stores/1/subs/7/1.jpg")
                 .imageType(ProductSubImageType.MAIN)
                 .sequence(1)
                 .build();

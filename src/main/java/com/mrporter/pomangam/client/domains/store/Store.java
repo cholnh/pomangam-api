@@ -141,7 +141,7 @@ public class Store extends EntityAuditing {
         }
     }
     public void subCntComment(Float star) {
-        if(this.cntComment == null || this.cntComment <= 0) {
+        if(this.cntComment == null || this.cntComment <= 1) {
             this.cntComment = 0;
             this.avgStar = 0f;
         } else if(this.avgStar == null || this.avgStar <= 0) {

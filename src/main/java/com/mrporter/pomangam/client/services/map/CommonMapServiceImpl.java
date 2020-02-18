@@ -1,7 +1,7 @@
-package com.mrporter.pomangam.client.services._bases;
+package com.mrporter.pomangam.client.services.map;
 
 import com.mrporter.pomangam.client.domains.map.CommonMap;
-import com.mrporter.pomangam.client.repositories._bases.CommonMapJpaRepository;
+import com.mrporter.pomangam.client.repositories.map.CommonMapJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

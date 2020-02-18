@@ -1,6 +1,6 @@
 package com.mrporter.pomangam.client.controllers.policy;
 
-import com.mrporter.pomangam.client.services._bases.PolicyServiceImpl;
+import com.mrporter.pomangam.client.services.policy.PolicyServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

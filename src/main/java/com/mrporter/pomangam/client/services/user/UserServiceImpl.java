@@ -4,7 +4,7 @@ import com.mrporter.pomangam._bases.utils.formatter.PhoneNumberFormatter;
 import com.mrporter.pomangam._bases.utils.reflection.ReflectionUtils;
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.domains.user.UserDto;
-import com.mrporter.pomangam.client.repositories._bases.RandomNicknameJpaRepository;
+import com.mrporter.pomangam.client.repositories.user.random_nickname.RandomNicknameJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +31,12 @@ public class UserServiceImpl implements UserService {
     public User findByPhoneNumber(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber);
     }
+
+    @Override
+    public Long findIdxByPhoneNumber(String phoneNumber) {
+        return userRepository.findIdxByPhoneNumber(phoneNumber);
+    }
+
 
     @Override
     public List<User> findAll() {
@@ -113,7 +119,7 @@ public class UserServiceImpl implements UserService {
         try {
             int point = fetched.getPoint();
             ReflectionUtils.oldInstanceByNewInstance(fetched, user);
-            fetched.setModifyDate(LocalDateTime.now());
+            // fetched.setModifyDate(LocalDateTime.now());
             fetched.setPoint(point); // 포인트는 외부 patch 로직으로 인해 변경 불가능
             userRepository.save(fetched);
             return fetched;

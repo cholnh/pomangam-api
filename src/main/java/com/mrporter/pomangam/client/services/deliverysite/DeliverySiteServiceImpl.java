@@ -12,6 +12,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class DeliverySiteServiceImpl implements DeliverySiteService {
+
     DeliverySiteJpaRepository deliverySiteRepository;
 
     @Override

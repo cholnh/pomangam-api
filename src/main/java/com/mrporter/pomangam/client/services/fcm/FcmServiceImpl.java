@@ -1,9 +1,8 @@
 package com.mrporter.pomangam.client.services.fcm;
 
 import com.mrporter.pomangam.client.domains.fcm.FcmToken;
-import com.mrporter.pomangam.client.repositories.fcm.FcmJpaRepository;
 import com.mrporter.pomangam.client.repositories.fcm.FcmRepositoryImpl;
-import com.mrporter.pomangam._bases.utils.time.CustomTime;
+import com.mrporter.pomangam.client.repositories.fcm.FcmTokenJpaRepository;
 import lombok.AllArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,20 +23,20 @@ import java.util.concurrent.ExecutionException;
 public class FcmServiceImpl implements FcmService {
 
     FcmRepositoryImpl fcmRepository;
-    FcmJpaRepository fcmJpaRepository;
+    FcmTokenJpaRepository fcmTokenJpaRepository;
     AndroidPushNotificationsServiceImpl androidPushNotificationsService;
 
     @Override
     public FcmToken post(FcmToken token) {
         assert token != null && token.getToken() != null && !token.getToken().isEmpty();
         token.setRegisterDate(LocalDateTime.now());
-        return fcmJpaRepository.save(token);
+        return fcmTokenJpaRepository.save(token);
     }
 
     @Override
     public FcmToken patch(FcmToken token) {
         assert token != null && token.getToken() != null && !token.getToken().isEmpty();
-        Optional<FcmToken> optional = fcmJpaRepository.findById(token.getIdx());
+        Optional<FcmToken> optional = fcmTokenJpaRepository.findById(token.getIdx());
         if(optional.isPresent()) {
             final FcmToken fetched = optional.get();
 
@@ -50,7 +49,7 @@ public class FcmServiceImpl implements FcmService {
             if (token.getIsActive() != null) {
                 fetched.setIsActive(token.getIsActive());
             }
-            return fcmJpaRepository.save(fetched);
+            return fcmTokenJpaRepository.save(fetched);
         } else {
             return null;
         }

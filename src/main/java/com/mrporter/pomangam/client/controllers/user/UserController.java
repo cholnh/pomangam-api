@@ -45,7 +45,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<?> post(
-            @RequestBody UserDto dto
+            @RequestBody(required = true) UserDto dto
     ) {
         return new ResponseEntity<>(UserDto.fromEntity(removePassword(userService.saveUser(dto.toEntity()))), HttpStatus.OK);
     }
@@ -62,7 +62,7 @@ public class UserController {
     @PatchMapping("/{phn}")
     public ResponseEntity patch(
             @PathVariable(value = "phn") String phoneNumber,
-            @RequestBody UserDto dto
+            @RequestBody(required = true) UserDto dto
     ) {
         try {
             return new ResponseEntity<>(UserDto.fromEntity(removePassword(userService.patchUser(phoneNumber, dto.toEntity()))), HttpStatus.OK);

@@ -9,6 +9,8 @@ public interface UserService {
 
     User findByPhoneNumber(String phoneNumber);
 
+    Long findIdxByPhoneNumber(String phoneNumber);
+
     List<User> findAll();
 
     List<User> findAll(Pageable pageable);

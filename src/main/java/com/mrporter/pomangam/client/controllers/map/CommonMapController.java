@@ -1,7 +1,7 @@
 package com.mrporter.pomangam.client.controllers.map;
 
 import com.mrporter.pomangam.client.domains.map.CommonMap;
-import com.mrporter.pomangam.client.services._bases.CommonMapServiceImpl;
+import com.mrporter.pomangam.client.services.map.CommonMapServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -65,6 +66,17 @@ public class FileStorageServiceImpl implements FileStorageService  {
                 throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
             }
 
+            // Make path directory
+            File directoryPath = this.fileStorageLocation.resolve(path).toFile();
+            if (!directoryPath.exists()) {
+                try{
+                    directoryPath.mkdirs();
+                }
+                catch(Exception e){
+                    e.getStackTrace();
+                }
+            }
+
             // Copy file to the target location (Replacing existing file with the same name)
             Path targetLocation = this.fileStorageLocation.resolve(path+rename);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
@@ -87,6 +99,35 @@ public class FileStorageServiceImpl implements FileStorageService  {
             }
         } catch (MalformedURLException ex) {
             throw new MyFileNotFoundException("File not found " + fileName, ex);
+        }
+    }
+
+    /**
+     * 서버 asset 파일 삭제
+     *
+     * @param path 삭제할 파일 경로
+     * @param deepDelete true 시, 파일 내부 내용 전부 삭제.
+     */
+    @Override
+    public void deleteFile(String path, boolean deepDelete) {
+        File directoryPath = this.fileStorageLocation.resolve(path).toFile();
+        _delete(directoryPath, deepDelete);
+    }
+
+    private void _delete(File deleteFile, boolean deepDelete) {
+        if(deleteFile.exists()) {
+            if(deleteFile.isDirectory()) {
+                for(File file : deleteFile.listFiles()) {
+                    if(deepDelete && file.isDirectory()) {
+                        _delete(file, true);
+                    } else {
+                        file.delete();
+                    }
+                }
+                deleteFile.delete();
+            } else if(deleteFile.isFile()) {
+                deleteFile.delete();
+            }
         }
     }
 }
