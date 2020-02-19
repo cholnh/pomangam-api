@@ -24,7 +24,6 @@ public class ProductImage extends EntityAuditing {
 
     /**
      * 대표이미지(ProductSubImageType.MAIN), 일반이미지(ProductSubImageType.SUB)
-     * 글자수: utf8 기준 / 영문 20자 / 한글 20자
      */
     @Column(name="image_type", nullable = false, length = 20)
     @Enumerated(EnumType.STRING)

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RepositoryRestResource(exported = false)
 public interface FcmTokenJpaRepository extends JpaRepository<FcmToken, Long>, FcmTokenCustomRepository {
-    
+    FcmToken findByIdxAndIsActiveIsTrue(Long idx);
 }
 
 interface FcmTokenCustomRepository {

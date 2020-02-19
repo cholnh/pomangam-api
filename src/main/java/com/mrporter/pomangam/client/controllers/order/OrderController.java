@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.client.controllers.user.order;
+package com.mrporter.pomangam.client.controllers.order;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;

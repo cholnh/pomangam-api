@@ -23,5 +23,4 @@ class StoreReviewImageCustomRepositoryImpl extends QuerydslRepositorySupport imp
         super(StoreReviewImage.class);
     }
 
-
 }

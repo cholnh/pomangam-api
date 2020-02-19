@@ -4,6 +4,7 @@ import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import com.mrporter.pomangam.client.domains.product.category.ProductCategory;
 import com.mrporter.pomangam.client.domains.product.cost.Cost;
 import com.mrporter.pomangam.client.domains.product.image.ProductImage;
+import com.mrporter.pomangam.client.domains.product.info.ProductInfo;
 import com.mrporter.pomangam.client.domains.product.sub.ProductSubMapper;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
@@ -35,25 +36,10 @@ public class Product extends EntityAuditing {
     private Cost cost;
 
     /**
-     * 제품명
-     * 글자수: utf8 기준 / 영문 20자 / 한글 20자
+     * 제품 정보
      */
-    @Column(name = "name", nullable = false,  length = 20)
-    private String name;
-
-    /**
-     * 제품 설명
-     * TEXT: 65535 Byte (64KB) / utf8 기준(3바이트 문자)으로 21844 글자 저장가능
-     */
-    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
-    private String description;
-
-    /**
-     * 제품 부가 설명
-     * 글자수: utf8 기준 / 영문 255자 / 한글 255자
-     */
-    @Column(name = "sub_description", nullable = false, length = 255)
-    private String subDescription;
+    @Embedded
+    private ProductInfo productInfo;
 
     /**
      * 제품 분류
@@ -97,12 +83,10 @@ public class Product extends EntityAuditing {
     }
 
     @Builder
-    public Product(Long idxStore, Cost cost, String name, String description, String subDescription, ProductCategory productCategory, Integer cntLike, Integer sequence, List<ProductImage> images, List<ProductSubMapper> subs) {
+    public Product(Long idxStore, Cost cost, ProductInfo productInfo, ProductCategory productCategory, Integer cntLike, Integer sequence, List<ProductImage> images, List<ProductSubMapper> subs) {
         this.idxStore = idxStore;
         this.cost = cost;
-        this.name = name;
-        this.description = description;
-        this.subDescription = subDescription;
+        this.productInfo = productInfo;
         this.productCategory = productCategory;
         this.cntLike = cntLike;
         this.sequence = sequence;

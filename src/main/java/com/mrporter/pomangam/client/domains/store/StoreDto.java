@@ -1,6 +1,8 @@
 package com.mrporter.pomangam.client.domains.store;
 
 import com.mrporter.pomangam.client.domains.store.image.StoreImage;
+import com.mrporter.pomangam.client.domains.store.info.StoreInfo;
+import com.mrporter.pomangam.client.domains.store.schedule.StoreSchedule;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -19,9 +21,8 @@ public class StoreDto implements Serializable {
     private LocalDateTime modifyDate;
     private Long idxDeliverySite;
     private String storeCategory;
-    private String name;
-    private String description;
-    private String subDescription;
+    private StoreInfo storeInfo;
+    private StoreSchedule storeSchedule;
     private Float avgStar;
     private Integer cntLike;
     private Integer cntComment;
@@ -40,6 +41,8 @@ public class StoreDto implements Serializable {
     public static StoreDto fromEntity(Store entity) {
         if(entity == null) return null;
         StoreDto dto = new ModelMapper().map(entity, StoreDto.class);
+
+        // images
         List<StoreImage> storeImages = entity.getImages();
         if(storeImages != null && !storeImages.isEmpty()) {
             for(StoreImage storeImage : storeImages) {
@@ -57,6 +60,7 @@ public class StoreDto implements Serializable {
             }
         }
 
+        // category
         dto.setStoreCategory(entity.getStoreCategory().getCategoryTitle());
 
         return dto;

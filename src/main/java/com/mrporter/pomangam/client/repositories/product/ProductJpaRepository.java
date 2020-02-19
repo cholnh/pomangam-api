@@ -10,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RepositoryRestResource(exported = false)
 public interface ProductJpaRepository extends JpaRepository<Product, Long>, ProductCustomRepository {
-    Page<Product> findByIdxStoreOrderBySequenceAsc(Long idxStore, Pageable pageable);
+    Page<Product> findByIdxStoreAndIsActiveIsTrueOrderBySequenceAsc(Long idxStore, Pageable pageable);
+    Product findByIdxAndIsActiveIsTrue(Long idx);
+    long countByIsActiveIsTrue();
 }
 
 interface ProductCustomRepository {

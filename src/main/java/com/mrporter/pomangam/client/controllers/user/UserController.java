@@ -78,12 +78,4 @@ public class UserController {
         }
         return user;
     }
-
-    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_STAFF') or hasRole('ROLE_ADMIN'))")
-    @GetMapping
-    public ResponseEntity<?> findRecentlyRegistered(
-            @RequestParam(value = "limit", required = true) Integer limit
-    ) {
-        return new ResponseEntity(userService.findRecentlyRegistered(limit), HttpStatus.OK);
-    }
 }

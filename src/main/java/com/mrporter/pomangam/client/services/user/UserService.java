@@ -21,6 +21,8 @@ public interface UserService {
 
     Boolean isExistByPhone(String phoneNumber);
 
+    Boolean isExistByNickname(String nickname);
+
     User patchUser(String phoneNumber, User user);
 
     Boolean deleteUser(String phoneNumber);

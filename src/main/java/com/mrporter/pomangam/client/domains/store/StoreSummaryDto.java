@@ -1,7 +1,8 @@
 package com.mrporter.pomangam.client.domains.store;
 
 import com.mrporter.pomangam.client.domains.store.image.StoreImage;
-import com.mrporter.pomangam.client.domains.store.image.StoreImageType;
+import com.mrporter.pomangam.client.domains.store.info.StoreInfo;
+import com.mrporter.pomangam.client.domains.store.schedule.StoreSchedule;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -18,6 +19,7 @@ public class StoreSummaryDto implements Serializable {
     private String name;
     private String description;
     private String subDescription;
+    private StoreSchedule storeSchedule;
     private Float avgStar;
     private Integer cntLike;
     private Integer cntComment;
@@ -35,6 +37,7 @@ public class StoreSummaryDto implements Serializable {
     public static StoreSummaryDto fromEntity(Store entity) {
         StoreSummaryDto dto = new ModelMapper().map(entity, StoreSummaryDto.class);
 
+        // images
         List<StoreImage> storeImages = entity.getImages();
         if(storeImages != null && !storeImages.isEmpty()) {
             for(StoreImage storeImage : storeImages) {
@@ -52,10 +55,19 @@ public class StoreSummaryDto implements Serializable {
             }
         }
 
+        // promotion
         dto.setPromotionType(0);
         dto.setPromotionValue(0);
+
+        // coupon
         dto.setCouponType(0);
         dto.setCouponValue(0);
+
+        // info
+        StoreInfo storeInfo = entity.getStoreInfo();
+        dto.setName(storeInfo.getName());
+        dto.setDescription(storeInfo.getDescription());
+        dto.setSubDescription(storeInfo.getSubDescription());
 
         return dto;
     }

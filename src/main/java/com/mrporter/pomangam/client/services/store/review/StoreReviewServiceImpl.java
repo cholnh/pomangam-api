@@ -9,7 +9,6 @@ import com.mrporter.pomangam.client.domains.store.review.image.StoreReviewImageT
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.repositories.store.StoreJpaRepository;
 import com.mrporter.pomangam.client.repositories.store.review.StoreReviewJpaRepository;
-import com.mrporter.pomangam.client.repositories.store.review.image.StoreReviewImageJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import com.mrporter.pomangam.client.services._bases.ImagePath;
 import lombok.AllArgsConstructor;
@@ -20,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -30,23 +28,22 @@ public class StoreReviewServiceImpl implements StoreReviewService {
     StoreReviewJpaRepository storeReviewJpaRepository;
     UserJpaRepository userJpaRepository;
     FileStorageServiceImpl fileStorageService;
-    StoreReviewImageJpaRepository storeReviewImageJpaRepository;
 
     @Override
     public List<StoreReviewDto> findByIdxStore(Long sIdx, Long uIdx, Pageable pageable) {
-        List<StoreReview> entities = storeReviewJpaRepository.findByIdxStore(sIdx, pageable).getContent();
+        List<StoreReview> entities = storeReviewJpaRepository.findByIdxStoreAndIsActiveIsTrue(sIdx, pageable).getContent();
         return fromEntitiesCustom(entities, uIdx);
     }
 
     @Override
     public StoreReviewDto findByIdx(Long idx, Long uIdx) {
-        StoreReview entity = storeReviewJpaRepository.findById(idx).get();
+        StoreReview entity = storeReviewJpaRepository.findByIdxAndIsActiveIsTrue(idx);
         return fromEntityCustom(entity, uIdx);
     }
 
     @Override
     public long count() {
-        return storeReviewJpaRepository.count();
+        return storeReviewJpaRepository.countByIsActiveIsTrue();
     }
 
     @Override
@@ -66,29 +63,25 @@ public class StoreReviewServiceImpl implements StoreReviewService {
 
     @Override
     public StoreReviewDto update(StoreReviewDto dto,  MultipartFile[] images) {
-        Optional<StoreReview> optionalStoreReview = storeReviewJpaRepository.findById(dto.getIdx());
-        if(optionalStoreReview.isPresent()) {
-            // 리뷰 수정
-            StoreReview entity = optionalStoreReview.get();
-            entity = storeReviewJpaRepository.save(entity.update(dto.toEntity()));
+        // 리뷰 수정
+        StoreReview entity = storeReviewJpaRepository.findByIdxAndIsActiveIsTrue(dto.getIdx());
+        entity = storeReviewJpaRepository.save(entity.update(dto.toEntity()));
 
-            // 리뷰 이미지 수정
-            boolean isImageUpdated = dto.getIsImageUpdated() != null && dto.getIsImageUpdated().booleanValue();
-            if(isImageUpdated) {
-                // 기존 이미지 파일 삭제
-                String imagePath = ImagePath.reviews(dto.getIdxDeliverySite(), dto.getIdxStore(), dto.getIdx());
-                fileStorageService.deleteFile(imagePath, true);
-                entity.clearImages();
+        // 리뷰 이미지 수정
+        boolean isImageUpdated = dto.getIsImageUpdated() != null && dto.getIsImageUpdated().booleanValue();
+        if(isImageUpdated) {
+            // 기존 이미지 파일 삭제
+            String imagePath = ImagePath.reviews(dto.getIdxDeliverySite(), dto.getIdxStore(), dto.getIdx());
+            fileStorageService.deleteFile(imagePath, true);
+            entity.clearImages();
 
-                if(images.length > 0) {
-                    // 새로운 이미지 파일 저장
-                    List<StoreReviewImage> savedImages = saveImage(imagePath, images);
-                    entity.addImages(savedImages);
-                }
+            if(images.length > 0) {
+                // 새로운 이미지 파일 저장
+                List<StoreReviewImage> savedImages = saveImage(imagePath, images);
+                entity.addImages(savedImages);
             }
-            return StoreReviewDto.fromEntity(storeReviewJpaRepository.save(entity));
         }
-        return null;
+        return StoreReviewDto.fromEntity(storeReviewJpaRepository.save(entity));
     }
 
     @Override
@@ -127,32 +120,20 @@ public class StoreReviewServiceImpl implements StoreReviewService {
      * 업체 평점 재계산 (add)
      */
     private void addAvgStar(Long sIdx, Long rIdx) {
-        Optional<Store> optionalStore = storeJpaRepository.findById(sIdx);
-        if(optionalStore.isPresent()) {
-            Store store = optionalStore.get();
-            Optional<StoreReview> optionalStoreReview = storeReviewJpaRepository.findById(rIdx);
-            if(optionalStoreReview.isPresent()) {
-                StoreReview storeReview = optionalStoreReview.get();
-                store.addCntComment(storeReview.getStar());
-                storeJpaRepository.save(store);
-            }
-        }
+        Store store = storeJpaRepository.findByIdxAndIsActiveIsTrue(sIdx);
+        StoreReview storeReview = storeReviewJpaRepository.findByIdxAndIsActiveIsTrue(rIdx);
+        store.addCntComment(storeReview.getStar());
+        storeJpaRepository.save(store);
     }
 
     /**
      * 업체 평점 재계산 (sub)
      */
     private void subAvgStar(Long sIdx, Long rIdx) {
-        Optional<Store> optionalStore = storeJpaRepository.findById(sIdx);
-        if(optionalStore.isPresent()) {
-            Store store = optionalStore.get();
-            Optional<StoreReview> optionalStoreReview = storeReviewJpaRepository.findById(rIdx);
-            if(optionalStoreReview.isPresent()) {
-                StoreReview storeReview = optionalStoreReview.get();
-                store.subCntComment(storeReview.getStar());
-                storeJpaRepository.save(store);
-            }
-        }
+        Store store = storeJpaRepository.findByIdxAndIsActiveIsTrue(sIdx);
+        StoreReview storeReview = storeReviewJpaRepository.findByIdxAndIsActiveIsTrue(rIdx);
+        store.subCntComment(storeReview.getStar());
+        storeJpaRepository.save(store);
     }
 
     /**
@@ -183,27 +164,22 @@ public class StoreReviewServiceImpl implements StoreReviewService {
      */
     private StoreReviewDto fromEntityCustom(StoreReview entity, Long uIdx) {
         StoreReviewDto dto = StoreReviewDto.fromEntity(entity);
-
-        Optional<User> optional = userJpaRepository.findById(entity.getIdxUser());
-        if(optional.isPresent()) {
-            User user = optional.get();
-            if (uIdx != null && uIdx.compareTo(user.getIdx()) == 0) {  // isOwn 처리
-                dto.setIsOwn(true);
-                if (entity.getIsAnonymous()) { // anonymous 처리
-                    dto.setNickname(user.getNickname()+"(익명)");
-                } else {
-                    dto.setNickname(user.getNickname());
-                }
+        User user = userJpaRepository.findByIdxAndIsActiveIsTrue(entity.getIdxUser());
+        if (uIdx != null && uIdx.compareTo(user.getIdx()) == 0) {  // isOwn 처리
+            dto.setIsOwn(true);
+            if (entity.getIsAnonymous()) { // anonymous 처리
+                dto.setNickname(user.getNickname()+"(익명)");
             } else {
-                dto.setIsOwn(false);
-                if (entity.getIsAnonymous()) { // anonymous 처리
-                    dto.setNickname("익명");
-                } else {
-                    dto.setNickname(user.getNickname());
-                }
+                dto.setNickname(user.getNickname());
             }
-            return dto;
+        } else {
+            dto.setIsOwn(false);
+            if (entity.getIsAnonymous()) { // anonymous 처리
+                dto.setNickname("익명");
+            } else {
+                dto.setNickname(user.getNickname());
+            }
         }
-        return null;
+        return dto;
     }
 }

@@ -1,8 +1,6 @@
 package com.mrporter.pomangam.client.domains.user.password;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.Column;
@@ -11,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Embeddable
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)  // 상속한 프록시 객체에서만 사용
 public class Password {
 
     PasswordEncoder passwordEncoder;

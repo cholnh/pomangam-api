@@ -3,7 +3,6 @@ package com.mrporter.pomangam.client.services.user;
 import com.mrporter.pomangam._bases.utils.formatter.PhoneNumberFormatter;
 import com.mrporter.pomangam._bases.utils.reflection.ReflectionUtils;
 import com.mrporter.pomangam.client.domains.user.User;
-import com.mrporter.pomangam.client.domains.user.UserDto;
 import com.mrporter.pomangam.client.repositories.user.random_nickname.RandomNicknameJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import lombok.AllArgsConstructor;
@@ -23,18 +22,14 @@ public class UserServiceImpl implements UserService {
     UserJpaRepository userRepository;
     RandomNicknameJpaRepository randomNicknameRepository;
 
-    public List<UserDto> findRecentlyRegistered(int limit) {
-        return UserDto.fromEntities(userRepository.findRecentlyRegistered(limit));
-    }
-
     @Override
     public User findByPhoneNumber(String phoneNumber) {
-        return userRepository.findByPhoneNumber(phoneNumber);
+        return userRepository.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
     }
 
     @Override
     public Long findIdxByPhoneNumber(String phoneNumber) {
-        return userRepository.findIdxByPhoneNumber(phoneNumber);
+        return userRepository.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
     }
 
 
@@ -46,24 +41,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAll(Pageable pageable) {
         return userRepository.findAll(pageable).getContent();
-    }
-
-    private String randomNickname() {
-        String nick, first, second;
-        int count = 0;
-        do {
-            first = randomNicknameRepository.findFirstByRandom();
-            second = randomNicknameRepository.findSecondByRandom();
-            if(first == null || first.isEmpty() || second == null || second.isEmpty()) {
-                nick = "포만이" + new Random().nextInt(9999999);
-            } else {
-                nick = first + second;
-            }
-            if(count++ != 0) {
-                nick += count;
-            }
-        } while(isExistByNickname(nick));
-        return nick;
     }
 
     @Override
@@ -80,13 +57,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean isExistByPhone(String phoneNumber) {
         if(phoneNumber != null) {
-            final User existingUser = userRepository.findByPhoneNumber(phoneNumber);
-            return existingUser != null;
+            return userRepository.existsByPhoneNumber(phoneNumber);
         } else {
             return false;
         }
     }
 
+    @Override
     public Boolean isExistByNickname(String nickname) {
         if(nickname != null) {
             return userRepository.existsByNickname(nickname);
@@ -97,7 +74,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUserPassword(String phoneNumber, String password) {
-        final User fetchedUser = userRepository.findByPhoneNumber(phoneNumber);
+        final User fetchedUser = userRepository.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         if (fetchedUser == null) {
             return null;
         }
@@ -111,7 +88,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User patchUser(String phoneNumber, User user) {
-        final User fetched = userRepository.findByPhoneNumber(phoneNumber);
+        final User fetched = userRepository.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         if(fetched == null) {
             return null;
         }
@@ -131,7 +108,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean deleteUser(String phoneNumber) {
-        final User fetchedUser = userRepository.findByPhoneNumber(phoneNumber);
+        final User fetchedUser = userRepository.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         if (fetchedUser == null) {
             return false;
         } else {
@@ -163,5 +140,21 @@ public class UserServiceImpl implements UserService {
         return p;
     }
 
-
+    private String randomNickname() {
+        String nick, first, second;
+        int count = 0;
+        do {
+            first = randomNicknameRepository.findFirstByRandomAndIsActiveIsTrue();
+            second = randomNicknameRepository.findSecondByRandomAndIsActiveIsTrue();
+            if(first == null || first.isEmpty() || second == null || second.isEmpty()) {
+                nick = "포만이" + new Random().nextInt(9999999);
+            } else {
+                nick = first + second;
+            }
+            if(count++ != 0) {
+                nick += count;
+            }
+        } while(isExistByNickname(nick));
+        return nick;
+    }
 }

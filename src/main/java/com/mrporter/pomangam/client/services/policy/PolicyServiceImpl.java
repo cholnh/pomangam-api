@@ -13,7 +13,7 @@ public class PolicyServiceImpl implements PolicyService {
 
     @Override
     public String getPolicy(String policyName) {
-        Policy policy = policyJpaRepository.getByPolicyName(policyName);
+        Policy policy = policyJpaRepository.findByPolicyNameAndIsActiveIsTrue(policyName);
         if(policy == null) {
             return null;
         } else {

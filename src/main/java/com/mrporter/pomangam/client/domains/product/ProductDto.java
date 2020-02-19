@@ -1,7 +1,9 @@
 package com.mrporter.pomangam.client.domains.product;
 
 import com.mrporter.pomangam.client.domains.product.image.ProductImage;
-import lombok.*;
+import com.mrporter.pomangam.client.domains.product.info.ProductInfo;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 
 import java.io.Serializable;
@@ -18,9 +20,7 @@ public class ProductDto implements Serializable {
     private LocalDateTime modifyDate;
     private Long idxStore;
     private Integer salePrice;
-    private String name;
-    private String description;
-    private String subDescription;
+    private ProductInfo productinfo;
     private String productCategoryTitle;
     private Integer cntLike;
     private Integer sequence;
@@ -38,6 +38,7 @@ public class ProductDto implements Serializable {
         if(entity == null) return null;
         ProductDto dto = new ModelMapper().map(entity, ProductDto.class);
 
+        // images
         List<ProductImage> productImages = entity.getImages();
         if(productImages != null && !productImages.isEmpty()) {
             for(ProductImage productImage : productImages) {
@@ -52,7 +53,10 @@ public class ProductDto implements Serializable {
             }
         }
 
+        // category
         dto.setProductCategoryTitle(entity.getProductCategory().getCategoryTitle());
+
+        // cost
         dto.setSalePrice(entity.getCost().getSalePrice());
 
         return dto;

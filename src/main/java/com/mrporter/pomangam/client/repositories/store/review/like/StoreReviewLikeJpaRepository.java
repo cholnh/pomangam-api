@@ -46,5 +46,4 @@ class StoreReviewLikeCustomRepositoryImpl extends QuerydslRepositorySupport impl
         super(StoreReviewLike.class);
     }
 
-
 }

@@ -17,19 +17,19 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> findByIdxStore(Long sIdx, Pageable pageable) {
-        List<Product> products = productJpaRepository.findByIdxStoreOrderBySequenceAsc(sIdx, pageable).getContent();
+        List<Product> products = productJpaRepository.findByIdxStoreAndIsActiveIsTrueOrderBySequenceAsc(sIdx, pageable).getContent();
         return ProductDto.fromEntities(products);
     }
 
     @Override
     public ProductDto findByIdx(Long idx) {
-        Product entity = productJpaRepository.findById(idx).get();
+        Product entity = productJpaRepository.findByIdxAndIsActiveIsTrue(idx);
         return ProductDto.fromEntity(entity);
     }
 
     @Override
     public long count() {
-        return productJpaRepository.count();
+        return productJpaRepository.countByIsActiveIsTrue();
     }
 
 }

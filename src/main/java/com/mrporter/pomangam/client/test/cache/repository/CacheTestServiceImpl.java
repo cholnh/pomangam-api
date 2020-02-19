@@ -21,7 +21,7 @@ public class CacheTestServiceImpl implements CacheTestService {
     @Override
     public User findByIdNoCache(String id) {
         slowQuery(2000);
-        return userJpaRepository.findByPhoneNumber(id);
+        return userJpaRepository.findByPhoneNumberAndIsActiveIsTrue(id);
     }
 
     @Cacheable(value = "test2")
@@ -34,7 +34,7 @@ public class CacheTestServiceImpl implements CacheTestService {
     @Cacheable(value = "test", key="#id")
     public User findByIdCache(String id) {
         slowQuery(2000);
-        return userJpaRepository.findByPhoneNumber(id);
+        return userJpaRepository.findByPhoneNumberAndIsActiveIsTrue(id);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class CacheTestServiceImpl implements CacheTestService {
 
     @CachePut(value = "test", key="#id")
     public User put(String id, String name) {
-        User user = userJpaRepository.findByPhoneNumber(id);
+        User user = userJpaRepository.findByPhoneNumberAndIsActiveIsTrue(id);
         user.setName(name);
         return userJpaRepository.save(user);
     }

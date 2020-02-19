@@ -25,19 +25,19 @@ public class StoreReviewReplyServiceImpl implements StoreReviewReplyService {
 
     @Override
     public List<StoreReviewReplyDto> findByIdxStoreReview(Long rIdx, Long uIdx, Pageable pageable) {
-        List<StoreReviewReply> entities = storeReviewReplyJpaRepository.findByIdxStoreReview(rIdx, pageable).getContent();
+        List<StoreReviewReply> entities = storeReviewReplyJpaRepository.findByIdxStoreReviewAndIsActiveIsTrue(rIdx, pageable).getContent();
         return fromEntitiesCustom(entities, uIdx);
     }
 
     @Override
     public StoreReviewReplyDto findByIdx(Long idx, Long uIdx) {
-        StoreReviewReply entity = storeReviewReplyJpaRepository.findById(idx).get();
+        StoreReviewReply entity = storeReviewReplyJpaRepository.findByIdxAndIsActiveIsTrue(idx);
         return fromEntityCustom(entity, uIdx);
     }
 
     @Override
     public long count() {
-        return storeReviewReplyJpaRepository.count();
+        return storeReviewReplyJpaRepository.countByIsActiveIsTrue();
     }
 
     @Override
@@ -53,13 +53,9 @@ public class StoreReviewReplyServiceImpl implements StoreReviewReplyService {
 
     @Override
     public StoreReviewReplyDto update(StoreReviewReplyDto dto) {
-        Optional<StoreReviewReply> optionalStoreReviewReply = storeReviewReplyJpaRepository.findById(dto.getIdx());
-        if(optionalStoreReviewReply.isPresent()) {
-            // 댓글 수정
-            StoreReviewReply entity = optionalStoreReviewReply.get();
-            return StoreReviewReplyDto.fromEntity(storeReviewReplyJpaRepository.save(entity.update(dto.toEntity())));
-        }
-        return null;
+        // 댓글 수정
+        StoreReviewReply entity = storeReviewReplyJpaRepository.findByIdxAndIsActiveIsTrue(dto.getIdx());
+        return StoreReviewReplyDto.fromEntity(storeReviewReplyJpaRepository.save(entity.update(dto.toEntity())));
     }
 
     @Override
@@ -75,24 +71,18 @@ public class StoreReviewReplyServiceImpl implements StoreReviewReplyService {
      * 리뷰 댓글 수 증가
      */
     private void addCntReply(Long idxReview) {
-        Optional<StoreReview> optionalStoreReview = storeReviewJpaRepository.findById(idxReview);
-        if(optionalStoreReview.isPresent()) {
-            StoreReview storeReview = optionalStoreReview.get();
-            storeReview.addCntReply();
-            storeReviewJpaRepository.save(storeReview);
-        }
+        StoreReview storeReview = storeReviewJpaRepository.findByIdxAndIsActiveIsTrue(idxReview);
+        storeReview.addCntReply();
+        storeReviewJpaRepository.save(storeReview);
     }
 
     /**
      * 리뷰 댓글 수 감소
      */
     private void subCntReply(Long idxReview) {
-        Optional<StoreReview> optionalStoreReview = storeReviewJpaRepository.findById(idxReview);
-        if(optionalStoreReview.isPresent()) {
-            StoreReview storeReview = optionalStoreReview.get();
-            storeReview.subCntReply();
-            storeReviewJpaRepository.save(storeReview);
-        }
+        StoreReview storeReview = storeReviewJpaRepository.findByIdxAndIsActiveIsTrue(idxReview);
+        storeReview.subCntReply();
+        storeReviewJpaRepository.save(storeReview);
     }
 
     /**
@@ -123,27 +113,22 @@ public class StoreReviewReplyServiceImpl implements StoreReviewReplyService {
      */
     private StoreReviewReplyDto fromEntityCustom(StoreReviewReply entity, Long uIdx) {
         StoreReviewReplyDto dto = StoreReviewReplyDto.fromEntity(entity);
-
-        Optional<User> optional = userJpaRepository.findById(entity.getIdxUser());
-        if(optional.isPresent()) {
-            User user = optional.get();
-            if (uIdx != null && uIdx.compareTo(user.getIdx()) == 0) {  // isOwn 처리
-                dto.setIsOwn(true);
-                if (entity.getIsAnonymous()) { // anonymous 처리
-                    dto.setNickname(user.getNickname()+"(익명)");
-                } else {
-                    dto.setNickname(user.getNickname());
-                }
+        User user = userJpaRepository.findByIdxAndIsActiveIsTrue(entity.getIdxUser());
+        if (uIdx != null && uIdx.compareTo(user.getIdx()) == 0) {  // isOwn 처리
+            dto.setIsOwn(true);
+            if (entity.getIsAnonymous()) { // anonymous 처리
+                dto.setNickname(user.getNickname()+"(익명)");
             } else {
-                dto.setIsOwn(false);
-                if (entity.getIsAnonymous()) { // anonymous 처리
-                    dto.setNickname("익명");
-                } else {
-                    dto.setNickname(user.getNickname());
-                }
+                dto.setNickname(user.getNickname());
             }
-            return dto;
+        } else {
+            dto.setIsOwn(false);
+            if (entity.getIsAnonymous()) { // anonymous 처리
+                dto.setNickname("익명");
+            } else {
+                dto.setNickname(user.getNickname());
+            }
         }
-        return null;
+        return dto;
     }
 }

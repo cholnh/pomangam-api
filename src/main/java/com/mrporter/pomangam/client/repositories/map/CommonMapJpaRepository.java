@@ -11,8 +11,8 @@ import java.util.List;
 @RepositoryRestResource(exported = false)
 public interface CommonMapJpaRepository extends JpaRepository<CommonMap, Long> {
 
-    List<CommonMap> findByKey(@Param("key") String key);
+    List<CommonMap> findByKeyAndIsActiveIsTrue(@Param("key") String key);
 
-    @Query(value = "SELECT * FROM common_map_tbl WHERE idx = :idx", nativeQuery = true)
-    CommonMap findByIdx(@Param("idx") Long idx);
+    @Query(value = "SELECT * FROM common_map_tbl WHERE idx = :idx AND is_active = 'Y'", nativeQuery = true)
+    CommonMap findByIdxAndIsActiveIsTrue(@Param("idx") Long idx);
 }

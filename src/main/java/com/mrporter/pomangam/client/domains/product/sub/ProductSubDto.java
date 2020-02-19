@@ -1,6 +1,7 @@
 package com.mrporter.pomangam.client.domains.product.sub;
 
 import com.mrporter.pomangam.client.domains.product.sub.image.ProductSubImage;
+import com.mrporter.pomangam.client.domains.product.sub.info.ProductSubInfo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -19,9 +20,7 @@ public class ProductSubDto implements Serializable {
     private LocalDateTime modifyDate;
     private Long idxStore;
     private Integer salePrice;
-    private String name;
-    private String description;
-    private String subDescription;
+    private ProductSubInfo productSubInfo;
     private Integer sequence;
     private ProductSubType productSubType;
     private String productSubCategory;
@@ -41,6 +40,7 @@ public class ProductSubDto implements Serializable {
         if(entity == null) return null;
         ProductSubDto dto = new ModelMapper().map(entity, ProductSubDto.class);
 
+        // images
         List<ProductSubImage> productSubImages = entity.getImages();
         if(productSubImages != null && !productSubImages.isEmpty()) {
             for(ProductSubImage productSubImage : productSubImages) {
@@ -55,7 +55,10 @@ public class ProductSubDto implements Serializable {
             }
         }
 
+        // category
         dto.setProductSubCategory(entity.getProductSubCategory().getCategoryTitle());
+
+        // cost
         dto.setSalePrice(entity.getCost().getSalePrice());
 
         return dto;

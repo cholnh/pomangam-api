@@ -8,8 +8,6 @@ import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @AllArgsConstructor
 public class StoreLikeServiceImpl implements StoreLikeService {
@@ -20,7 +18,7 @@ public class StoreLikeServiceImpl implements StoreLikeService {
 
     @Override
     public boolean toggle(String phoneNumber, Long sIdx) {
-        Long uIdx = userJpaRepository.findIdxByPhoneNumber(phoneNumber);
+        Long uIdx = userJpaRepository.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         boolean like = storeLikeJpaRepository.existsByIdxUser(uIdx);
         if(like) {
             cancelLike(uIdx, sIdx);
@@ -32,13 +30,13 @@ public class StoreLikeServiceImpl implements StoreLikeService {
 
     @Override
     public void like(String phoneNumber, Long sIdx) {
-        Long uIdx = userJpaRepository.findIdxByPhoneNumber(phoneNumber);
+        Long uIdx = userJpaRepository.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         like(uIdx, sIdx);
     }
 
     @Override
     public void cancelLike(String phoneNumber, Long sIdx) {
-        Long uIdx = userJpaRepository.findIdxByPhoneNumber(phoneNumber);
+        Long uIdx = userJpaRepository.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         cancelLike(uIdx, sIdx);
     }
 
@@ -65,19 +63,13 @@ public class StoreLikeServiceImpl implements StoreLikeService {
     }
 
     private void addCntLike(Long sIdx) {
-        Optional<Store> optionalStore = storeJpaRepository.findById(sIdx);
-        if(optionalStore.isPresent()) {
-            Store store = optionalStore.get();
-            store.addCntLike();
-            storeJpaRepository.save(store);
-        }
+        Store store = storeJpaRepository.findByIdxAndIsActiveIsTrue(sIdx);
+        store.addCntLike();
+        storeJpaRepository.save(store);
     }
     private void subCntLike(Long sIdx) {
-        Optional<Store> optionalStore = storeJpaRepository.findById(sIdx);
-        if(optionalStore.isPresent()) {
-            Store store = optionalStore.get();
-            store.subCntLike();
-            storeJpaRepository.save(store);
-        }
+        Store store = storeJpaRepository.findByIdxAndIsActiveIsTrue(sIdx);
+        store.subCntLike();
+        storeJpaRepository.save(store);
     }
 }

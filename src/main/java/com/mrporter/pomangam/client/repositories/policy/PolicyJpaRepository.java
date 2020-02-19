@@ -7,5 +7,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource(exported = false)
 public interface PolicyJpaRepository extends JpaRepository<Policy, Long> {
-    Policy getByPolicyName(@Param("policyName") String policyName);
+    Policy findByPolicyNameAndIsActiveIsTrue(@Param("policyName") String policyName);
 }

@@ -8,8 +8,6 @@ import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @AllArgsConstructor
 public class StoreReviewLikeServiceImpl implements StoreReviewLikeService {
@@ -20,7 +18,7 @@ public class StoreReviewLikeServiceImpl implements StoreReviewLikeService {
 
     @Override
     public boolean toggle(String phoneNumber, Long rIdx) {
-        Long uIdx = userJpaRepository.findIdxByPhoneNumber(phoneNumber);
+        Long uIdx = userJpaRepository.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         boolean like = storeReviewLikeJpaRepository.existsByIdxUser(uIdx);
         if(like) {
             cancelLike(uIdx, rIdx);
@@ -32,13 +30,13 @@ public class StoreReviewLikeServiceImpl implements StoreReviewLikeService {
 
     @Override
     public void like(String phoneNumber, Long rIdx) {
-        Long uIdx = userJpaRepository.findIdxByPhoneNumber(phoneNumber);
+        Long uIdx = userJpaRepository.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         like(uIdx, rIdx);
     }
 
     @Override
     public void cancelLike(String phoneNumber, Long rIdx) {
-        Long uIdx = userJpaRepository.findIdxByPhoneNumber(phoneNumber);
+        Long uIdx = userJpaRepository.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         cancelLike(uIdx, rIdx);
     }
 
@@ -65,19 +63,13 @@ public class StoreReviewLikeServiceImpl implements StoreReviewLikeService {
     }
 
     private void addCntLike(Long rIdx) {
-        Optional<StoreReview> optionalStoreReview = storeReviewJpaRepository.findById(rIdx);
-        if(optionalStoreReview.isPresent()) {
-            StoreReview storeReview = optionalStoreReview.get();
-            storeReview.addCntLike();
-            storeReviewJpaRepository.save(storeReview);
-        }
+        StoreReview storeReview = storeReviewJpaRepository.findByIdxAndIsActiveIsTrue(rIdx);
+        storeReview.addCntLike();
+        storeReviewJpaRepository.save(storeReview);
     }
     private void subCntLike(Long rIdx) {
-        Optional<StoreReview> optionalStoreReview = storeReviewJpaRepository.findById(rIdx);
-        if(optionalStoreReview.isPresent()) {
-            StoreReview storeReview = optionalStoreReview.get();
-            storeReview.subCntLike();
-            storeReviewJpaRepository.save(storeReview);
-        }
+        StoreReview storeReview = storeReviewJpaRepository.findByIdxAndIsActiveIsTrue(rIdx);
+        storeReview.subCntLike();
+        storeReviewJpaRepository.save(storeReview);
     }
 }

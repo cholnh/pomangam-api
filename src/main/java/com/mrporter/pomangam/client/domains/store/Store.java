@@ -3,6 +3,8 @@ package com.mrporter.pomangam.client.domains.store;
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import com.mrporter.pomangam.client.domains.store.category.StoreCategory;
 import com.mrporter.pomangam.client.domains.store.image.StoreImage;
+import com.mrporter.pomangam.client.domains.store.info.StoreInfo;
+import com.mrporter.pomangam.client.domains.store.schedule.StoreSchedule;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -27,13 +29,6 @@ public class Store extends EntityAuditing {
     private Long idxDeliverySite;
 
     /**
-     * 업체명
-     * 글자수: utf8 기준 / 영문 20자 / 한글 20자
-     */
-    @Column(name = "name", nullable = false, length = 20)
-    private String name;
-
-    /**
      * 업체 분류
      */
     @JoinColumn(name = "idx_store_category")
@@ -41,18 +36,16 @@ public class Store extends EntityAuditing {
     private StoreCategory storeCategory;
 
     /**
-     * 설명
-     * TEXT: 65535 Byte (64KB) / utf8 기준(3바이트 문자)으로 21844 글자 저장가능
+     * 업체 정보
      */
-    @Column(name = "description", nullable = true, columnDefinition = "TEXT")
-    private String description;
+    @Embedded
+    private StoreInfo storeInfo;
 
     /**
-     * 부가 설명
-     * 글자수: utf8 기준 / 영문 255자 / 한글 255자
+     * 업체 영업 시간
      */
-    @Column(name = "sub_description", nullable = true, length = 255)
-    private String subDescription;
+    @Embedded
+    StoreSchedule storeSchedule;
 
     /**
      * 평균 리뷰 평점
@@ -97,12 +90,11 @@ public class Store extends EntityAuditing {
     }
 
     @Builder
-    public Store(Long idxDeliverySite, String name, StoreCategory storeCategory, String description, String subDescription, Float avgStar, Integer cntLike, Integer cntComment, Integer sequence, List<StoreImage> images) {
+    public Store(Long idxDeliverySite, StoreCategory storeCategory, StoreInfo storeInfo, StoreSchedule storeSchedule, Float avgStar, Integer cntLike, Integer cntComment, Integer sequence, List<StoreImage> images) {
         this.idxDeliverySite = idxDeliverySite;
-        this.name = name;
         this.storeCategory = storeCategory;
-        this.description = description;
-        this.subDescription = subDescription;
+        this.storeInfo = storeInfo;
+        this.storeSchedule = storeSchedule;
         this.avgStar = avgStar;
         this.cntLike = cntLike;
         this.cntComment = cntComment;

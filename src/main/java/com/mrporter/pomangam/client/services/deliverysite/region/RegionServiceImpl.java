@@ -17,18 +17,18 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public List<RegionDto> findAll(Pageable pageable) {
-        List<Region> regions = regionJpaRepository.findAll(pageable).getContent();
+        List<Region> regions = regionJpaRepository.findAllByIsActiveIsTrue(pageable).getContent();
         return RegionDto.fromEntities(regions);
     }
 
     @Override
     public RegionDto findByIdx(Long idx) {
-        Region entity = regionJpaRepository.findById(idx).get();
+        Region entity = regionJpaRepository.findByIdxAndIsActiveIsTrue(idx);
         return RegionDto.fromEntity(entity);
     }
 
     @Override
     public long count() {
-        return regionJpaRepository.count();
+        return regionJpaRepository.countByIsActiveIsTrue();
     }
 }

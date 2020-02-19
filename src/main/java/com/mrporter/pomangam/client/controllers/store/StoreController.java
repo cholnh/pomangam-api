@@ -39,11 +39,12 @@ public class StoreController {
         return new ResponseEntity(storeService.count(), HttpStatus.OK);
     }
 
-    @GetMapping("/search/summaries")
-    public ResponseEntity<?> searchSummaries(
+    @PostMapping("/search/opening")
+    public ResponseEntity<?> findOpeningStores(
             @PathVariable(value = "dIdx", required = true) Long dIdx,
+            @RequestParam(value = "oIdx", required = true) Long oIdx,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
     ) {
-        return new ResponseEntity(storeService.findSummaries(dIdx, pageable), HttpStatus.OK);
+        return new ResponseEntity(storeService.findOpeningStores(dIdx, oIdx, pageable), HttpStatus.OK);
     }
 }

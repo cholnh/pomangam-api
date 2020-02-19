@@ -17,18 +17,18 @@ public class DeliverySiteServiceImpl implements DeliverySiteService {
 
     @Override
     public List<DeliverySiteDto> findAll(Pageable pageable) {
-        List<DeliverySite> deliverySites = deliverySiteRepository.findAll(pageable).getContent();
+        List<DeliverySite> deliverySites = deliverySiteRepository.findAllByIsActiveIsTrue(pageable).getContent();
         return DeliverySiteDto.fromEntities(deliverySites);
     }
 
     @Override
     public DeliverySiteDto findByIdx(Long dIdx) {
-        DeliverySite entity = deliverySiteRepository.findById(dIdx).get();
+        DeliverySite entity = deliverySiteRepository.findByIdxAndIsActiveIsTrue(dIdx);
         return DeliverySiteDto.fromEntity(entity);
     }
 
     @Override
     public long count() {
-        return deliverySiteRepository.count();
+        return deliverySiteRepository.countByIsActiveIsTrue();
     }
 }

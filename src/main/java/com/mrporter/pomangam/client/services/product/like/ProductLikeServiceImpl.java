@@ -8,8 +8,6 @@ import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @AllArgsConstructor
 public class ProductLikeServiceImpl implements ProductLikeService {
@@ -20,7 +18,7 @@ public class ProductLikeServiceImpl implements ProductLikeService {
 
     @Override
     public boolean toggle(String phoneNumber, Long pIdx) {
-        Long uIdx = userJpaRepository.findIdxByPhoneNumber(phoneNumber);
+        Long uIdx = userJpaRepository.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         boolean like = productLikeJpaRepository.existsByIdxUser(uIdx);
         if(like) {
             cancelLike(uIdx, pIdx);
@@ -32,13 +30,13 @@ public class ProductLikeServiceImpl implements ProductLikeService {
 
     @Override
     public void like(String phoneNumber, Long pIdx) {
-        Long uIdx = userJpaRepository.findIdxByPhoneNumber(phoneNumber);
+        Long uIdx = userJpaRepository.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         like(uIdx, pIdx);
     }
 
     @Override
     public void cancelLike(String phoneNumber, Long pIdx) {
-        Long uIdx = userJpaRepository.findIdxByPhoneNumber(phoneNumber);
+        Long uIdx = userJpaRepository.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         cancelLike(uIdx, pIdx);
     }
 
@@ -64,20 +62,14 @@ public class ProductLikeServiceImpl implements ProductLikeService {
         productLikeJpaRepository.deleteByIdxUserAndIdxProductQuery(uIdx, pIdx);
     }
 
-    private void addCntLike(Long sIdx) {
-        Optional<Product> optionalProduct = productJpaRepository.findById(sIdx);
-        if(optionalProduct.isPresent()) {
-            Product product = optionalProduct.get();
-            product.addCntLike();
-            productJpaRepository.save(product);
-        }
+    private void addCntLike(Long pIdx) {
+        Product product = productJpaRepository.findByIdxAndIsActiveIsTrue(pIdx);
+        product.addCntLike();
+        productJpaRepository.save(product);
     }
-    private void subCntLike(Long sIdx) {
-        Optional<Product> optionalProduct = productJpaRepository.findById(sIdx);
-        if(optionalProduct.isPresent()) {
-            Product product = optionalProduct.get();
-            product.subCntLike();
-            productJpaRepository.save(product);
-        }
+    private void subCntLike(Long pIdx) {
+        Product product = productJpaRepository.findByIdxAndIsActiveIsTrue(pIdx);
+        product.subCntLike();
+        productJpaRepository.save(product);
     }
 }

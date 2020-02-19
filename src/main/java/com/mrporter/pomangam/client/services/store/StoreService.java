@@ -10,5 +10,5 @@ public interface StoreService {
     List<StoreDto> findByIdxDeliverySite(Long dIdx, Pageable pageable);
     StoreDto findByIdx(Long idx);
     long count();
-    List<StoreSummaryDto> findSummaries(Long dIdx, Pageable pageable);
+    List<StoreSummaryDto> findOpeningStores(Long dIdx, Long oIdx, Pageable pageable);
 }

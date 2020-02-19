@@ -15,6 +15,6 @@ public class CommonMapServiceImpl implements CommonMapService {
 
     @Override
     public List<CommonMap> findAllByKey(String key) {
-        return commonMapJpaRepository.findByKey(key);
+        return commonMapJpaRepository.findByKeyAndIsActiveIsTrue(key);
     }
 }

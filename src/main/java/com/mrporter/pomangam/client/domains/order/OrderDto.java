@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.client.domains.user.order;
+package com.mrporter.pomangam.client.domains.order;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

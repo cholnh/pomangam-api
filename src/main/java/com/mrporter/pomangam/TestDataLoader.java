@@ -5,27 +5,35 @@ import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSi
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSiteDto;
 import com.mrporter.pomangam.client.domains.deliverysite.region.Region;
 import com.mrporter.pomangam.client.domains.fcm.FcmToken;
+import com.mrporter.pomangam.client.domains.ordertime.OrderTime;
+import com.mrporter.pomangam.client.domains.ordertime.OrderTimeMapper;
 import com.mrporter.pomangam.client.domains.product.Product;
 import com.mrporter.pomangam.client.domains.product.category.ProductCategory;
 import com.mrporter.pomangam.client.domains.product.cost.Cost;
 import com.mrporter.pomangam.client.domains.product.image.ProductImage;
 import com.mrporter.pomangam.client.domains.product.image.ProductImageType;
+import com.mrporter.pomangam.client.domains.product.info.ProductInfo;
 import com.mrporter.pomangam.client.domains.product.sub.ProductSub;
 import com.mrporter.pomangam.client.domains.product.sub.ProductSubMapper;
 import com.mrporter.pomangam.client.domains.product.sub.ProductSubType;
 import com.mrporter.pomangam.client.domains.product.sub.category.ProductSubCategory;
 import com.mrporter.pomangam.client.domains.product.sub.image.ProductSubImage;
 import com.mrporter.pomangam.client.domains.product.sub.image.ProductSubImageType;
+import com.mrporter.pomangam.client.domains.product.sub.info.ProductSubInfo;
 import com.mrporter.pomangam.client.domains.store.Store;
 import com.mrporter.pomangam.client.domains.store.category.StoreCategory;
 import com.mrporter.pomangam.client.domains.store.image.StoreImage;
 import com.mrporter.pomangam.client.domains.store.image.StoreImageType;
+import com.mrporter.pomangam.client.domains.store.info.StoreInfo;
+import com.mrporter.pomangam.client.domains.store.schedule.StoreSchedule;
 import com.mrporter.pomangam.client.domains.user.Sex;
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.domains.user.UserDto;
+import com.mrporter.pomangam.client.repositories.deliverysite.detail.DeliveryDetailSiteJpaRepository;
+import com.mrporter.pomangam.client.repositories.ordertime.OrderTimeJpaRepository;
+import com.mrporter.pomangam.client.repositories.ordertime.OrderTimeMapperJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.random_nickname.RandomNicknameJpaRepository;
 import com.mrporter.pomangam.client.repositories.deliverysite.DeliverySiteJpaRepository;
-import com.mrporter.pomangam.client.repositories.deliverysite.detail.DeliveryDetailJpaRepository;
 import com.mrporter.pomangam.client.repositories.deliverysite.region.RegionJpaRepository;
 import com.mrporter.pomangam.client.repositories.fcm.FcmTokenJpaRepository;
 import com.mrporter.pomangam.client.repositories.product.ProductJpaRepository;
@@ -36,6 +44,7 @@ import com.mrporter.pomangam.client.repositories.product.sub.category.ProductSub
 import com.mrporter.pomangam.client.repositories.store.StoreJpaRepository;
 import com.mrporter.pomangam.client.repositories.store.category.StoreCategoryJpaRepository;
 import com.mrporter.pomangam.client.services.user.UserServiceImpl;
+import org.hibernate.validator.internal.util.privilegedactions.LoadClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -53,7 +62,7 @@ public class TestDataLoader implements ApplicationRunner {
     @Autowired StoreJpaRepository storeJpaRepository;
     @Autowired DeliverySiteJpaRepository deliverySiteJpaRepository;
     @Autowired
-    DeliveryDetailJpaRepository detailJpaRepository;
+    DeliveryDetailSiteJpaRepository detailJpaRepository;
     @Autowired RegionJpaRepository regionJpaRepository;
     @Autowired RandomNicknameJpaRepository randomNicknameJpaRepository;
     @Autowired ProductJpaRepository productJpaRepository;
@@ -63,6 +72,9 @@ public class TestDataLoader implements ApplicationRunner {
     @Autowired ProductSubJpaRepository productSubJpaRepository;
     @Autowired ProductSubMapperJpaRepository productSubMapperJpaRepository;
     @Autowired FcmTokenJpaRepository fcmTokenJpaRepository;
+    @Autowired OrderTimeJpaRepository orderTimeJpaRepository;
+    @Autowired OrderTimeMapperJpaRepository orderTimeMapperJpaRepository;
+
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddl;
@@ -229,9 +241,17 @@ public class TestDataLoader implements ApplicationRunner {
         storeCategoryJpaRepository.save(category3);
 
         Store store1 = Store.builder()
-                .name("맘스터치")
+                .storeInfo(StoreInfo.builder()
+                        .name("맘스터치")
+                        .description("엄마의 손맛, 수제햄버거 전문점 맘스터치ㅋ")
+                        .build())
+                .storeSchedule(StoreSchedule.builder()
+                        .openTime(LocalTime.parse("09:00:00"))
+                        .closeTime(LocalTime.parse("21:00:00"))
+                        .isOpening(true)
+                        .pauseDescription("임시휴무")
+                        .build())
                 .idxDeliverySite(deliverySite.getIdx())
-                .description("엄마의 손맛, 수제햄버거 전문점 맘스터치ㅋ")
                 .avgStar(3.7f)
                 .cntLike(178)
                 .cntComment(54)
@@ -239,9 +259,17 @@ public class TestDataLoader implements ApplicationRunner {
                 .sequence(1)
                 .build();
         Store store2 = Store.builder()
-                .name("한솥도시락")
+                .storeInfo(StoreInfo.builder()
+                        .name("한솥도시락")
+                        .description("싼맛! 싼마이 도시락! 한솥도시락ㅋㅋ")
+                        .build())
+                .storeSchedule(StoreSchedule.builder()
+                        .openTime(LocalTime.parse("09:00:00"))
+                        .closeTime(LocalTime.parse("21:00:00"))
+                        .isOpening(true)
+                        .pauseDescription("임시휴무")
+                        .build())
                 .idxDeliverySite(deliverySite.getIdx())
-                .description("싼맛! 싼마이 도시락! 한솥도시락ㅋㅋ")
                 .avgStar(4.2f)
                 .cntLike(132)
                 .cntComment(79)
@@ -250,23 +278,59 @@ public class TestDataLoader implements ApplicationRunner {
                 .build();
 
         Store store3 = Store.builder()
-                .name("맘스터치 성균관점")
+                .storeInfo(StoreInfo.builder()
+                        .name("맘스터치 성균관점")
+                        .description("엄마의 손맛, 수제햄버거 전문점 맘스터치ㅋ")
+                        .build())
+                .storeSchedule(StoreSchedule.builder()
+                        .openTime(LocalTime.parse("09:00:00"))
+                        .closeTime(LocalTime.parse("21:00:00"))
+                        .isOpening(true)
+                        .pauseDescription("임시휴무")
+                        .build())
                 .idxDeliverySite(deliverySite2.getIdx())
-                .description("엄마의 손맛, 수제햄버거 전문점 맘스터치ㅋ")
                 .avgStar(3.7f)
                 .cntLike(178)
                 .cntComment(54)
                 .storeCategory(category2)
                 .build();
         Store store4 = Store.builder()
-                .name("한솥도시락 성균관점")
+                .storeInfo(StoreInfo.builder()
+                        .name("한솥도시락 성균관점")
+                        .description("싼맛! 싼마이 도시락! 한솥도시락ㅋㅋ")
+                        .build())
+                .storeSchedule(StoreSchedule.builder()
+                        .openTime(LocalTime.parse("09:00:00"))
+                        .closeTime(LocalTime.parse("21:00:00"))
+                        .isOpening(true)
+                        .pauseDescription("임시휴무")
+                        .build())
                 .idxDeliverySite(deliverySite2.getIdx())
-                .description("싼맛! 싼마이 도시락! 한솥도시락ㅋㅋ")
                 .avgStar(4.2f)
                 .cntLike(132)
                 .cntComment(79)
                 .storeCategory(category1)
                 .build();
+
+        Store store5 = Store.builder()
+                .storeInfo(StoreInfo.builder()
+                        .name("피자매니")
+                        .description("껍질치밥으로 유명한 피자매니란다 ㅎ")
+                        .build())
+                .storeSchedule(StoreSchedule.builder()
+                        .openTime(LocalTime.parse("09:00:00"))
+                        .closeTime(LocalTime.parse("21:00:00"))
+                        .isOpening(true)
+                        .pauseDescription("임시휴무")
+                        .build())
+                .idxDeliverySite(deliverySite.getIdx())
+                .avgStar(4.2f)
+                .cntLike(132)
+                .cntComment(79)
+                .storeCategory(category2)
+                .sequence(3)
+                .build();
+
 
         StoreImage storeBrandImage1 = StoreImage.builder()
                 .imagePath("/assets/images/dsites/1/stores/1/brand.png")
@@ -344,7 +408,7 @@ public class TestDataLoader implements ApplicationRunner {
         storeJpaRepository.save(store2);
         storeJpaRepository.save(store3);
         storeJpaRepository.save(store4);
-
+        storeJpaRepository.save(store5);
 
 
 
@@ -358,10 +422,12 @@ public class TestDataLoader implements ApplicationRunner {
         productCategoryJpaRepository.save(productCategory2);
 
         Product product1 = Product.builder()
-                .name("싸이버거세트ㅋ")
+                .productInfo(ProductInfo.builder()
+                        .name("싸이버거세트ㅋ")
+                        .description("손을 넣어만든 수제버거 세트")
+                        .subDescription("한번 맛보면 잊어버리는 맛! 세트")
+                        .build())
                 .idxStore(1L)
-                .description("손을 넣어만든 수제버거 세트")
-                .subDescription("한번 맛보면 잊어버리는 맛! 세트")
                 .productCategory(productCategory1)
                 .sequence(1)
                 .cost(Cost.builder()
@@ -373,10 +439,12 @@ public class TestDataLoader implements ApplicationRunner {
                         .build())
                 .build();
         Product product2 = Product.builder()
-                .name("싸이버거")
+                .productInfo(ProductInfo.builder()
+                        .name("싸이버거")
+                        .description("손을 넣어만든 수제버거 단품")
+                        .subDescription("한번 맛보면 잊어버리는 맛! 단품")
+                        .build())
                 .idxStore(1L)
-                .description("손을 넣어만든 수제버거 단품")
-                .subDescription("한번 맛보면 잊어버리는 맛! 단품")
                 .productCategory(productCategory2)
                 .sequence(2)
                 .cost(Cost.builder()
@@ -388,10 +456,12 @@ public class TestDataLoader implements ApplicationRunner {
                         .build())
                 .build();
         Product product3 = Product.builder()
-                .name("후라이드치킨세트")
+                .productInfo(ProductInfo.builder()
+                        .name("후라이드치킨세트")
+                        .description("후라이까지말라이~")
+                        .subDescription("세트다이거")
+                        .build())
                 .idxStore(1L)
-                .description("후라이까지말라이~")
-                .subDescription("세트다이거")
                 .productCategory(productCategory2)
                 .sequence(3)
                 .cost(Cost.builder()
@@ -403,10 +473,12 @@ public class TestDataLoader implements ApplicationRunner {
                         .build())
                 .build();
         Product product4 = Product.builder()
-                .name("후라이드치킨")
+                .productInfo(ProductInfo.builder()
+                        .name("후라이드치킨")
+                        .description("후라이까지말라우")
+                        .subDescription("단품이다이거")
+                        .build())
                 .idxStore(1L)
-                .description("후라이까지말라우")
-                .subDescription("단품이다이거")
                 .productCategory(productCategory2)
                 .sequence(4)
                 .cost(Cost.builder()
@@ -476,80 +548,94 @@ public class TestDataLoader implements ApplicationRunner {
         productSubCategoryJpaRepository.save(productSubCategory3);
 
         ProductSub productSub1 = ProductSub.builder()
+                .productSubInfo(ProductSubInfo.builder()
+                        .name("착한맛")
+                        .build())
                 .idxStore(1L)
                 .productSubCategory(productSubCategory1)
                 .productSubType(ProductSubType.RADIO)
-                .name("착한맛")
                 .sequence(1)
                 .cost(Cost.builder()
                         .unitCost(0)
                         .build())
                 .build();
         ProductSub productSub2 = ProductSub.builder()
+                .productSubInfo(ProductSubInfo.builder()
+                        .name("보통맛")
+                        .build())
                 .idxStore(1L)
                 .productSubCategory(productSubCategory1)
                 .productSubType(ProductSubType.RADIO)
-                .name("보통맛")
                 .sequence(2)
                 .cost(Cost.builder()
                         .unitCost(0)
                         .build())
                 .build();
         ProductSub productSub3 = ProductSub.builder()
+                .productSubInfo(ProductSubInfo.builder()
+                        .name("매운맛")
+                        .build())
                 .idxStore(1L)
                 .productSubCategory(productSubCategory1)
                 .productSubType(ProductSubType.RADIO)
-                .name("매운맛")
                 .sequence(3)
                 .cost(Cost.builder()
                         .unitCost(0)
                         .build())
                 .build();
         ProductSub productSub4 = ProductSub.builder()
+                .productSubInfo(ProductSubInfo.builder()
+                        .name("케이준양념감자")
+                        .description("쫀딕쫀딕 케이준감자에 양념 뭍힌것이여~")
+                        .subDescription("쪼끔 맵땅깨~")
+                        .build())
                 .idxStore(1L)
                 .productSubCategory(productSubCategory2)
                 .productSubType(ProductSubType.NUMBER)
                 .numberMinimum(0)
                 .numberMaximum(10)
-                .name("케이준양념감자")
-                .description("쫀딕쫀딕 케이준감자에 양념 뭍힌것이여~")
-                .subDescription("쪼끔 맵땅깨~")
                 .sequence(1)
                 .cost(Cost.builder()
                         .unitCost(1600)
                         .build())
                 .build();
         ProductSub productSub5 = ProductSub.builder()
+                .productSubInfo(ProductSubInfo.builder()
+                        .name("사이즈업")
+                        .build())
                 .idxStore(1L)
                 .productSubCategory(productSubCategory2)
                 .productSubType(ProductSubType.CHECKBOX)
-                .name("사이즈업")
                 .sequence(2)
                 .cost(Cost.builder()
                         .unitCost(1000)
                         .build())
                 .build();
         ProductSub productSub6 = ProductSub.builder()
+                .productSubInfo(ProductSubInfo.builder()
+                        .name("콜라")
+                        .description("코카콜라여")
+                        .subDescription("500L")
+                        .build())
                 .idxStore(1L)
                 .productSubCategory(productSubCategory3)
                 .productSubType(ProductSubType.NUMBER)
                 .numberMinimum(0)
-                .name("콜라")
-                .description("코카콜라여")
-                .subDescription("500L")
                 .sequence(1)
                 .cost(Cost.builder()
                         .unitCost(1000)
                         .build())
                 .build();
         ProductSub productSub7 = ProductSub.builder()
+                .productSubInfo(ProductSubInfo.builder()
+                        .name("사이다")
+                        .description("사이다는 칠성이지ㅋ")
+                        .subDescription("500L")
+                        .build())
                 .idxStore(1L)
                 .productSubCategory(productSubCategory3)
                 .productSubType(ProductSubType.NUMBER)
                 .numberMinimum(0)
-                .name("사이다")
-                .description("사이다는 칠성이지ㅋ")
-                .subDescription("500L")
                 .sequence(2)
                 .cost(Cost.builder()
                         .unitCost(1000)
@@ -650,6 +736,118 @@ public class TestDataLoader implements ApplicationRunner {
         productSubMapperJpaRepository.save(mapper8);
         productSubMapperJpaRepository.save(mapper9);
         productSubMapperJpaRepository.save(mapper10);
+
+
+        // 항공대 시간표 1
+        OrderTime orderTime1 = OrderTime.builder()
+                .orderEndTime(LocalTime.parse("11:30:00"))
+                .pickUpTime(LocalTime.parse("11:45:00"))
+                .arrivalTime(LocalTime.parse("12:00:00"))
+                .build();
+        OrderTime orderTime2 = OrderTime.builder()
+                .orderEndTime(LocalTime.parse("12:30:00"))
+                .pickUpTime(LocalTime.parse("12:45:00"))
+                .arrivalTime(LocalTime.parse("13:00:00"))
+                .build();
+        OrderTime orderTime3 = OrderTime.builder()
+                .orderEndTime(LocalTime.parse("17:30:00"))
+                .pickUpTime(LocalTime.parse("17:45:00"))
+                .arrivalTime(LocalTime.parse("18:00:00"))
+                .build();
+        OrderTime orderTime4 = OrderTime.builder()
+                .orderEndTime(LocalTime.parse("18:30:00"))
+                .pickUpTime(LocalTime.parse("18:45:00"))
+                .arrivalTime(LocalTime.parse("19:00:00"))
+                .build();
+
+        // 항공대 시간표 2
+        OrderTime orderTime5 = OrderTime.builder()
+                .orderEndTime(LocalTime.parse("12:00:00"))
+                .pickUpTime(LocalTime.parse("12:15:00"))
+                .arrivalTime(LocalTime.parse("12:30:00"))
+                .build();
+        OrderTime orderTime6 = OrderTime.builder()
+                .orderEndTime(LocalTime.parse("13:00:00"))
+                .pickUpTime(LocalTime.parse("13:15:00"))
+                .arrivalTime(LocalTime.parse("13:30:00"))
+                .build();
+        OrderTime orderTime7 = OrderTime.builder()
+                .orderEndTime(LocalTime.parse("18:00:00"))
+                .pickUpTime(LocalTime.parse("18:15:00"))
+                .arrivalTime(LocalTime.parse("18:30:00"))
+                .build();
+        OrderTime orderTime8 = OrderTime.builder()
+                .orderEndTime(LocalTime.parse("19:00:00"))
+                .pickUpTime(LocalTime.parse("19:15:00"))
+                .arrivalTime(LocalTime.parse("19:30:00"))
+                .build();
+
+        // 성균관대 시간표 1
+        OrderTime orderTime9 = OrderTime.builder()
+                .orderEndTime(LocalTime.parse("11:30:00"))
+                .pickUpTime(LocalTime.parse("11:45:00"))
+                .arrivalTime(LocalTime.parse("12:10:00"))
+                .build();
+        OrderTime orderTime10 = OrderTime.builder()
+                .orderEndTime(LocalTime.parse("12:30:00"))
+                .pickUpTime(LocalTime.parse("12:45:00"))
+                .arrivalTime(LocalTime.parse("13:10:00"))
+                .build();
+        OrderTime orderTime11 = OrderTime.builder()
+                .orderEndTime(LocalTime.parse("17:30:00"))
+                .pickUpTime(LocalTime.parse("17:45:00"))
+                .arrivalTime(LocalTime.parse("18:10:00"))
+                .build();
+        OrderTime orderTime12 = OrderTime.builder()
+                .orderEndTime(LocalTime.parse("18:30:00"))
+                .pickUpTime(LocalTime.parse("18:45:00"))
+                .arrivalTime(LocalTime.parse("19:10:00"))
+                .build();
+
+        orderTimeJpaRepository.save(orderTime1);
+        orderTimeJpaRepository.save(orderTime2);
+        orderTimeJpaRepository.save(orderTime3);
+        orderTimeJpaRepository.save(orderTime4);
+        orderTimeJpaRepository.save(orderTime5);
+        orderTimeJpaRepository.save(orderTime6);
+        orderTimeJpaRepository.save(orderTime7);
+        orderTimeJpaRepository.save(orderTime8);
+        orderTimeJpaRepository.save(orderTime9);
+        orderTimeJpaRepository.save(orderTime10);
+        orderTimeJpaRepository.save(orderTime11);
+        orderTimeJpaRepository.save(orderTime12);
+
+
+        // store1 (항공대 맘스터치)
+        orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime1).store(store1).build());
+        orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime2).store(store1).build());
+        orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime3).store(store1).build());
+        orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime4).store(store1).build());
+
+        // store2 (항공대 한솥도시락)
+        orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime1).store(store2).build());
+        orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime2).store(store2).build());
+        orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime3).store(store2).build());
+        orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime4).store(store2).build());
+
+        // store5 (항공대 화전 피자매니)
+        orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime5).store(store5).build());
+        orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime6).store(store5).build());
+        orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime7).store(store5).build());
+        orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime8).store(store5).build());
+
+        // store3 (성균관대 맘스터치)
+        orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime9).store(store3).build());
+        orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime10).store(store3).build());
+        orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime11).store(store3).build());
+        orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime12).store(store3).build());
+
+        // store4 (성균관대 한솥도시락)
+        orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime9).store(store4).build());
+        orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime10).store(store4).build());
+        orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime11).store(store4).build());
+        orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime12).store(store4).build());
+
 
 //        String[] ff = {"배부른", "용감한", "갸냘픈", "가엾은", "굵은", "던지는", "마법사", "방금온", "브론즈", "마스터", "실버", "골드", "플레티넘", "완고한", "다이아", "감각적인", "가벼운", "잘생긴", "어여쁜"};
 //        String[] ss = {"얼굴", "사마귀", "북극곰", "콜라", "아이폰", "향수", "꼬부기", "파이리", "롱스톤", "티모", "가렌", "마스터이", "언랭", "페이커", "포만이", "비타민", "발바닥", "손바닥", "지갑"};

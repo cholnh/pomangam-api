@@ -14,7 +14,6 @@ import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -36,23 +35,18 @@ public class FcmServiceImpl implements FcmService {
     @Override
     public FcmToken patch(FcmToken token) {
         assert token != null && token.getToken() != null && !token.getToken().isEmpty();
-        Optional<FcmToken> optional = fcmTokenJpaRepository.findById(token.getIdx());
-        if(optional.isPresent()) {
-            final FcmToken fetched = optional.get();
+        final FcmToken fetched = fcmTokenJpaRepository.findByIdxAndIsActiveIsTrue(token.getIdx());
 
-            if (token.getToken() != null) {
-                fetched.setToken(token.getToken());
-            }
-            if (token.getUser() != null) {
-                fetched.setUser(token.getUser());
-            }
-            if (token.getIsActive() != null) {
-                fetched.setIsActive(token.getIsActive());
-            }
-            return fcmTokenJpaRepository.save(fetched);
-        } else {
-            return null;
+        if (token.getToken() != null) {
+            fetched.setToken(token.getToken());
         }
+        if (token.getUser() != null) {
+            fetched.setUser(token.getUser());
+        }
+        if (token.getIsActive() != null) {
+            fetched.setIsActive(token.getIsActive());
+        }
+        return fcmTokenJpaRepository.save(fetched);
     }
 
     @Override

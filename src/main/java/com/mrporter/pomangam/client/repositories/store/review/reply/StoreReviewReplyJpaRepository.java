@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RepositoryRestResource(exported = false)
 public interface StoreReviewReplyJpaRepository extends JpaRepository<StoreReviewReply, Long>, StoreReviewReplyCustomRepository {
-    Page<StoreReviewReply> findByIdxStoreReview(Long idxStoreReview, Pageable pageable);
+    Page<StoreReviewReply> findByIdxStoreReviewAndIsActiveIsTrue(Long idxStoreReview, Pageable pageable);
+    StoreReviewReply findByIdxAndIsActiveIsTrue(Long idx);
+    long countByIsActiveIsTrue();
 }
 
 interface StoreReviewReplyCustomRepository {
