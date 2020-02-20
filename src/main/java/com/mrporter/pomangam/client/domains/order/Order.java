@@ -6,7 +6,6 @@ import com.mrporter.pomangam.client.domains.order.item.OrderItem;
 import com.mrporter.pomangam.client.domains.order.orderer.Orderer;
 import com.mrporter.pomangam.client.domains.order.payment_info.PaymentInfo;
 import com.mrporter.pomangam.client.domains.ordertime.OrderTime;
-import com.mrporter.pomangam.client.domains.user.payment.Payment;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -72,4 +71,14 @@ public class Order extends EntityAuditing {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("idx ASC")
     List<OrderItem> orderItems = new ArrayList<>();
+
+    public Order(OrderType orderType, Short boxNumber, Orderer orderer, PaymentInfo paymentInfo, DeliveryDetailSite deliveryDetailSite, OrderTime orderTime, List<OrderItem> orderItems) {
+        this.orderType = orderType;
+        this.boxNumber = boxNumber;
+        this.orderer = orderer;
+        this.paymentInfo = paymentInfo;
+        this.deliveryDetailSite = deliveryDetailSite;
+        this.orderTime = orderTime;
+        this.orderItems = orderItems;
+    }
 }
