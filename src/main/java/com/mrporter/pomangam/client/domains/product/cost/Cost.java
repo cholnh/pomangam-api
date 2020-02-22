@@ -57,7 +57,7 @@ public class Cost {
      * 판매가 = 원가 + 고객 수수료 총합
      * @return 판매 가격
      */
-    public int getSalePrice() {
+    public int saleCost() {
         return this.unitCost + this.priceClientFee + (this.unitCost*this.percentClientFee/100);
     }
 
@@ -65,7 +65,7 @@ public class Cost {
      * 업체 수수료 총합
      * @return 업체 수수료 총합
      */
-    public int getTotalStoreFee() {
+    public int totalStoreFee() {
         return this.priceStoreFee + (this.unitCost*this.percentStoreFee/100);
     }
 

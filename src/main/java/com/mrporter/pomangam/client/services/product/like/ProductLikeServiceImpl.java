@@ -12,14 +12,14 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class ProductLikeServiceImpl implements ProductLikeService {
 
-    ProductLikeJpaRepository productLikeJpaRepository;
-    ProductJpaRepository productJpaRepository;
-    UserJpaRepository userJpaRepository;
+    ProductLikeJpaRepository productLikeRepo;
+    ProductJpaRepository productRepo;
+    UserJpaRepository userRepo;
 
     @Override
     public boolean toggle(String phoneNumber, Long pIdx) {
-        Long uIdx = userJpaRepository.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
-        boolean like = productLikeJpaRepository.existsByIdxUser(uIdx);
+        Long uIdx = userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
+        boolean like = productLikeRepo.existsByIdxUser(uIdx);
         if(like) {
             cancelLike(uIdx, pIdx);
         } else {
@@ -30,13 +30,13 @@ public class ProductLikeServiceImpl implements ProductLikeService {
 
     @Override
     public void like(String phoneNumber, Long pIdx) {
-        Long uIdx = userJpaRepository.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
+        Long uIdx = userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         like(uIdx, pIdx);
     }
 
     @Override
     public void cancelLike(String phoneNumber, Long pIdx) {
-        Long uIdx = userJpaRepository.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
+        Long uIdx = userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         cancelLike(uIdx, pIdx);
     }
 
@@ -55,21 +55,21 @@ public class ProductLikeServiceImpl implements ProductLikeService {
                 .idxProduct(pIdx)
                 .idxUser(uIdx)
                 .build();
-        productLikeJpaRepository.save(like);
+        productLikeRepo.save(like);
     }
 
     private void deleteLike(Long uIdx, Long pIdx) {
-        productLikeJpaRepository.deleteByIdxUserAndIdxProductQuery(uIdx, pIdx);
+        productLikeRepo.deleteByIdxUserAndIdxProductQuery(uIdx, pIdx);
     }
 
     private void addCntLike(Long pIdx) {
-        Product product = productJpaRepository.findByIdxAndIsActiveIsTrue(pIdx);
+        Product product = productRepo.findByIdxAndIsActiveIsTrue(pIdx);
         product.addCntLike();
-        productJpaRepository.save(product);
+        productRepo.save(product);
     }
     private void subCntLike(Long pIdx) {
-        Product product = productJpaRepository.findByIdxAndIsActiveIsTrue(pIdx);
+        Product product = productRepo.findByIdxAndIsActiveIsTrue(pIdx);
         product.subCntLike();
-        productJpaRepository.save(product);
+        productRepo.save(product);
     }
 }

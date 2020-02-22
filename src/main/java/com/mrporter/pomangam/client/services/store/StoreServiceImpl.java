@@ -15,30 +15,30 @@ import java.util.List;
 @AllArgsConstructor
 public class StoreServiceImpl implements StoreService {
 
-    StoreJpaRepository storeJpaRepository;
-    OrderTimeJpaRepository orderTimeJpaRepository;
+    StoreJpaRepository storeRepo;
+    OrderTimeJpaRepository orderTimeRepo;
 
     @Override
     public List<StoreDto> findByIdxDeliverySite(Long dIdx, Pageable pageable) {
-        List<Store> stores = storeJpaRepository.findByIdxDeliverySiteAndIsActiveIsTrueOrderBySequenceAsc(dIdx, pageable).getContent();
+        List<Store> stores = storeRepo.findByIdxDeliverySiteAndIsActiveIsTrueOrderBySequenceAsc(dIdx, pageable).getContent();
         return StoreDto.fromEntities(stores);
     }
 
     @Override
     public StoreDto findByIdx(Long idx) {
-        Store entity = storeJpaRepository.findByIdxAndIsActiveIsTrue(idx);
+        Store entity = storeRepo.findByIdxAndIsActiveIsTrue(idx);
         return StoreDto.fromEntity(entity);
     }
 
     @Override
     public long count() {
-        return storeJpaRepository.countByIsActiveIsTrue();
+        return storeRepo.countByIsActiveIsTrue();
     }
 
     @Override
     public List<StoreSummaryDto> findOpeningStores(Long dIdx, Long oIdx, Pageable pageable) {
         List<Store> stores // 범위내 업체들 리스트
-                = orderTimeJpaRepository.findStoreByIdxOrderTimeAndIdxDeliverySiteAndIsActiveIsTrue(oIdx, dIdx, pageable).getContent();
+                = orderTimeRepo.findStoreByIdxOrderTimeAndIdxDeliverySiteAndIsActiveIsTrue(oIdx, dIdx, pageable).getContent();
         List<StoreSummaryDto> dtos = StoreSummaryDto.fromEntities(stores);
 
         for(StoreSummaryDto dto : dtos) {

@@ -1,6 +1,7 @@
 package com.mrporter.pomangam.client.domains.promotion;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 
 import java.io.Serializable;
@@ -15,6 +16,12 @@ public class PromotionDto implements Serializable {
     private Long idx;
     private LocalDateTime registerDate;
     private LocalDateTime modifyDate;
+
+    private Integer discountCost;
+    private String title;
+    private String contents;
+    private LocalDateTime beginDate;
+    private LocalDateTime endDate;
 
     public Promotion toEntity() {
         Promotion entity = new ModelMapper().map(this, Promotion.class);

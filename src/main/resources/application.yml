@@ -107,5 +107,5 @@ management:
       #  allow-credentials: true
       #  exposed-headers: "Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
       exposure:
+        include: health, info, prometheus
         exclude: env, beans
-        #include: "*"

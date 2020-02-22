@@ -13,22 +13,22 @@ import java.util.List;
 @AllArgsConstructor
 public class RegionServiceImpl implements RegionService {
 
-    RegionJpaRepository regionJpaRepository;
+    RegionJpaRepository regionRepo;
 
     @Override
     public List<RegionDto> findAll(Pageable pageable) {
-        List<Region> regions = regionJpaRepository.findAllByIsActiveIsTrue(pageable).getContent();
+        List<Region> regions = regionRepo.findAllByIsActiveIsTrue(pageable).getContent();
         return RegionDto.fromEntities(regions);
     }
 
     @Override
     public RegionDto findByIdx(Long idx) {
-        Region entity = regionJpaRepository.findByIdxAndIsActiveIsTrue(idx);
+        Region entity = regionRepo.findByIdxAndIsActiveIsTrue(idx);
         return RegionDto.fromEntity(entity);
     }
 
     @Override
     public long count() {
-        return regionJpaRepository.countByIsActiveIsTrue();
+        return regionRepo.countByIsActiveIsTrue();
     }
 }

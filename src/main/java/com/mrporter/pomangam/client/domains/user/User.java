@@ -2,6 +2,7 @@ package com.mrporter.pomangam.client.domains.user;
 
 import com.mrporter.pomangam._bases.utils.validation.annotation.Phone;
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
+import com.mrporter.pomangam.client.domains.coupon.Coupon;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSite;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "user_tbl")
@@ -88,13 +90,20 @@ public class User extends EntityAuditing {
     @Column(name = "idx_fcm_token", nullable = false)
     private Long idxFcmToken;
 
+    /**
+     * 쿠폰
+     */
+    @JoinColumn(name = "idx_user", nullable = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Coupon> coupons;
+
     @PrePersist
     private void prePersist() {
         this.point = 0; // always 0 when its insert
     }
 
     @Builder
-    public User(Boolean isActive, DeliveryDetailSite deliveryDetailSite, String phoneNumber, String password, String name, String nickname, Sex sex, LocalDate birth, @PositiveOrZero Integer point, Long idxFcmToken) {
+    public User(Boolean isActive, DeliveryDetailSite deliveryDetailSite, String phoneNumber, String password, String name, String nickname, Sex sex, LocalDate birth, @PositiveOrZero Integer point, Long idxFcmToken, List<Coupon> coupons) {
         super.setIsActive(isActive);
         this.deliveryDetailSite = deliveryDetailSite;
         this.phoneNumber = phoneNumber;
@@ -105,5 +114,6 @@ public class User extends EntityAuditing {
         this.birth = birth;
         this.point = point;
         this.idxFcmToken = idxFcmToken;
+        this.coupons = coupons;
     }
 }

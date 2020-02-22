@@ -13,22 +13,22 @@ import java.util.List;
 @AllArgsConstructor
 public class DeliverySiteServiceImpl implements DeliverySiteService {
 
-    DeliverySiteJpaRepository deliverySiteRepository;
+    DeliverySiteJpaRepository deliverySiteRepo;
 
     @Override
     public List<DeliverySiteDto> findAll(Pageable pageable) {
-        List<DeliverySite> deliverySites = deliverySiteRepository.findAllByIsActiveIsTrue(pageable).getContent();
+        List<DeliverySite> deliverySites = deliverySiteRepo.findAllByIsActiveIsTrue(pageable).getContent();
         return DeliverySiteDto.fromEntities(deliverySites);
     }
 
     @Override
     public DeliverySiteDto findByIdx(Long dIdx) {
-        DeliverySite entity = deliverySiteRepository.findByIdxAndIsActiveIsTrue(dIdx);
+        DeliverySite entity = deliverySiteRepo.findByIdxAndIsActiveIsTrue(dIdx);
         return DeliverySiteDto.fromEntity(entity);
     }
 
     @Override
     public long count() {
-        return deliverySiteRepository.countByIsActiveIsTrue();
+        return deliverySiteRepo.countByIsActiveIsTrue();
     }
 }

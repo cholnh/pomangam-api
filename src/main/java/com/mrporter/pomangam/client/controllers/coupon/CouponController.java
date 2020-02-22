@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.client.controllers.user.payment;
+package com.mrporter.pomangam.client.controllers.coupon;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@RequestMapping("/users/{phoneNumber}/coupons")
 @RestController
-@RequestMapping("/users/{phoneNumber}/payments")
 @AllArgsConstructor
-public class UserPaymentController {
+public class CouponController {
 
     @GetMapping
     public ResponseEntity<?> findByPhoneNumber(
@@ -33,7 +33,7 @@ public class UserPaymentController {
     }
 
     @GetMapping("/search/count")
-    public ResponseEntity<?> count(
+    public ResponseEntity<?> countByUser(
             @PathVariable(value = "phoneNumber", required = true) String phoneNumber
     ) {
         return new ResponseEntity(HttpStatus.OK);

@@ -72,6 +72,43 @@ public class Order extends EntityAuditing {
     @OrderBy("idx ASC")
     List<OrderItem> orderItems = new ArrayList<>();
 
+    /**
+     * 고객이 결제해야 할 요금 반환
+     * @return 결제 총 요금
+     */
+    public Integer paymentCost() {
+        Integer total = totalCost();
+        if(total != null) {
+            total -= discountCost();
+            return total > 0 ? total : 0;
+        }
+        return null;
+    }
+
+    /**
+     * 주문 내역 총 가격 반환
+     * @return 주문 내역 총 가격
+     */
+    public Integer totalCost() {
+        Integer total = null;
+        if(this.orderItems != null) {
+            total = 0;
+            for(OrderItem item : this.orderItems) {
+                total += item.paymentCost();
+            }
+        }
+        return total;
+    }
+
+    /**
+     * 할인 내역 총 가격 반환
+     * @return 할인 내역 총 가격
+     */
+    public int discountCost() {
+        return paymentInfo.discountCost();
+    }
+
+    @Builder
     public Order(OrderType orderType, Short boxNumber, Orderer orderer, PaymentInfo paymentInfo, DeliveryDetailSite deliveryDetailSite, OrderTime orderTime, List<OrderItem> orderItems) {
         this.orderType = orderType;
         this.boxNumber = boxNumber;

@@ -12,14 +12,14 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class StoreLikeServiceImpl implements StoreLikeService {
 
-    StoreLikeJpaRepository storeLikeJpaRepository;
-    StoreJpaRepository storeJpaRepository;
-    UserJpaRepository userJpaRepository;
+    StoreLikeJpaRepository storeLikeRepo;
+    StoreJpaRepository storeRepo;
+    UserJpaRepository userRepo;
 
     @Override
     public boolean toggle(String phoneNumber, Long sIdx) {
-        Long uIdx = userJpaRepository.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
-        boolean like = storeLikeJpaRepository.existsByIdxUser(uIdx);
+        Long uIdx = userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
+        boolean like = storeLikeRepo.existsByIdxUser(uIdx);
         if(like) {
             cancelLike(uIdx, sIdx);
         } else {
@@ -30,13 +30,13 @@ public class StoreLikeServiceImpl implements StoreLikeService {
 
     @Override
     public void like(String phoneNumber, Long sIdx) {
-        Long uIdx = userJpaRepository.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
+        Long uIdx = userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         like(uIdx, sIdx);
     }
 
     @Override
     public void cancelLike(String phoneNumber, Long sIdx) {
-        Long uIdx = userJpaRepository.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
+        Long uIdx = userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         cancelLike(uIdx, sIdx);
     }
 
@@ -55,21 +55,21 @@ public class StoreLikeServiceImpl implements StoreLikeService {
                 .idxStore(sIdx)
                 .idxUser(uIdx)
                 .build();
-        storeLikeJpaRepository.save(like);
+        storeLikeRepo.save(like);
     }
 
     private void deleteLike(Long uIdx, Long sIdx) {
-        storeLikeJpaRepository.deleteByIdxUserAndIdxStoreQuery(uIdx, sIdx);
+        storeLikeRepo.deleteByIdxUserAndIdxStoreQuery(uIdx, sIdx);
     }
 
     private void addCntLike(Long sIdx) {
-        Store store = storeJpaRepository.findByIdxAndIsActiveIsTrue(sIdx);
+        Store store = storeRepo.findByIdxAndIsActiveIsTrue(sIdx);
         store.addCntLike();
-        storeJpaRepository.save(store);
+        storeRepo.save(store);
     }
     private void subCntLike(Long sIdx) {
-        Store store = storeJpaRepository.findByIdxAndIsActiveIsTrue(sIdx);
+        Store store = storeRepo.findByIdxAndIsActiveIsTrue(sIdx);
         store.subCntLike();
-        storeJpaRepository.save(store);
+        storeRepo.save(store);
     }
 }

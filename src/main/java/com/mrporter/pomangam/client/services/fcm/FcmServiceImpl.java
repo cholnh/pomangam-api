@@ -21,21 +21,21 @@ import java.util.concurrent.ExecutionException;
 @AllArgsConstructor
 public class FcmServiceImpl implements FcmService {
 
-    FcmRepositoryImpl fcmRepository;
-    FcmTokenJpaRepository fcmTokenJpaRepository;
+    FcmRepositoryImpl fcmRepo;
+    FcmTokenJpaRepository fcmTokenRepo;
     AndroidPushNotificationsServiceImpl androidPushNotificationsService;
 
     @Override
     public FcmToken post(FcmToken token) {
         assert token != null && token.getToken() != null && !token.getToken().isEmpty();
         token.setRegisterDate(LocalDateTime.now());
-        return fcmTokenJpaRepository.save(token);
+        return fcmTokenRepo.save(token);
     }
 
     @Override
     public FcmToken patch(FcmToken token) {
         assert token != null && token.getToken() != null && !token.getToken().isEmpty();
-        final FcmToken fetched = fcmTokenJpaRepository.findByIdxAndIsActiveIsTrue(token.getIdx());
+        final FcmToken fetched = fcmTokenRepo.findByIdxAndIsActiveIsTrue(token.getIdx());
 
         if (token.getToken() != null) {
             fetched.setToken(token.getToken());
@@ -46,18 +46,18 @@ public class FcmServiceImpl implements FcmService {
         if (token.getIsActive() != null) {
             fetched.setIsActive(token.getIsActive());
         }
-        return fcmTokenJpaRepository.save(fetched);
+        return fcmTokenRepo.save(fetched);
     }
 
     @Override
     public String sendToAll(Map<String, Object> paramInfo) {
-        List<FcmToken> tokens = fcmRepository.getTokens();
+        List<FcmToken> tokens = fcmRepo.getTokens();
         return send(paramInfo, tokens);
     }
 
     @Override
     public String sendToDeliverySiteIdx(Map<String, Object> paramInfo, Long dIdx) {
-        List<FcmToken> tokens = fcmRepository.getTokensByDeliverySiteIdx(dIdx);
+        List<FcmToken> tokens = fcmRepo.getTokensByDeliverySiteIdx(dIdx);
         return send(paramInfo, tokens);
     }
 

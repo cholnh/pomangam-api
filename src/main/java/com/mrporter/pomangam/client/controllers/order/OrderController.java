@@ -1,32 +1,31 @@
 package com.mrporter.pomangam.client.controllers.order;
 
+import com.mrporter.pomangam.client.domains.order.OrderResponseDto;
+import com.mrporter.pomangam.client.services.order.OrderServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/orders")
 @AllArgsConstructor
 public class OrderController {
 
-    @GetMapping
-    public ResponseEntity<?> findAll(
-            @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
-    ) {
-        return new ResponseEntity(HttpStatus.OK);
-    }
+    OrderServiceImpl orderService;
 
     @GetMapping("/{idx}")
     public ResponseEntity<?> findByIdx(
-            @PathVariable(value = "idx", required = true) Long idx
+            @PathVariable(value = "idx") Long idx
     ) {
+        return new ResponseEntity(orderService.findByIdx(idx), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> post(
+            @RequestBody OrderResponseDto orderDto
+    ) {
+        System.out.println(orderDto);
         return new ResponseEntity(HttpStatus.OK);
     }
 

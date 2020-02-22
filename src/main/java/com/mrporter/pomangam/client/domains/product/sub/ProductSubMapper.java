@@ -23,11 +23,11 @@ import javax.persistence.Table;
 public class ProductSubMapper extends EntityAuditing {
 
     @ManyToOne
-    @JoinColumn(name = "idx_product")
+    @JoinColumn(name = "idx_product", nullable = false)
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "idx_product_sub")
+    @JoinColumn(name = "idx_product_sub", nullable = false)
     private ProductSub productSub;
 
     @Builder

@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class PolicyServiceImpl implements PolicyService {
 
-    PolicyJpaRepository policyJpaRepository;
+    PolicyJpaRepository policyRepo;
 
     @Override
     public String getPolicy(String policyName) {
-        Policy policy = policyJpaRepository.findByPolicyNameAndIsActiveIsTrue(policyName);
+        Policy policy = policyRepo.findByPolicyNameAndIsActiveIsTrue(policyName);
         if(policy == null) {
             return null;
         } else {

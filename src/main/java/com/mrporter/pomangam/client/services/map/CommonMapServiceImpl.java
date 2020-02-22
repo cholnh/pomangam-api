@@ -11,10 +11,10 @@ import java.util.List;
 @AllArgsConstructor
 public class CommonMapServiceImpl implements CommonMapService {
 
-    CommonMapJpaRepository commonMapJpaRepository;
+    CommonMapJpaRepository commonMapRepo;
 
     @Override
     public List<CommonMap> findAllByKey(String key) {
-        return commonMapJpaRepository.findByKeyAndIsActiveIsTrue(key);
+        return commonMapRepo.findByKeyAndIsActiveIsTrue(key);
     }
 }

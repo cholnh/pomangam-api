@@ -13,23 +13,23 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-    ProductJpaRepository productJpaRepository;
+    ProductJpaRepository productRepo;
 
     @Override
     public List<ProductDto> findByIdxStore(Long sIdx, Pageable pageable) {
-        List<Product> products = productJpaRepository.findByIdxStoreAndIsActiveIsTrueOrderBySequenceAsc(sIdx, pageable).getContent();
+        List<Product> products = productRepo.findByIdxStoreAndIsActiveIsTrueOrderBySequenceAsc(sIdx, pageable).getContent();
         return ProductDto.fromEntities(products);
     }
 
     @Override
     public ProductDto findByIdx(Long idx) {
-        Product entity = productJpaRepository.findByIdxAndIsActiveIsTrue(idx);
+        Product entity = productRepo.findByIdxAndIsActiveIsTrue(idx);
         return ProductDto.fromEntity(entity);
     }
 
     @Override
     public long count() {
-        return productJpaRepository.countByIsActiveIsTrue();
+        return productRepo.countByIsActiveIsTrue();
     }
 
 }

@@ -24,32 +24,32 @@ import java.util.List;
 @AllArgsConstructor
 public class StoreReviewServiceImpl implements StoreReviewService {
 
-    StoreJpaRepository storeJpaRepository;
-    StoreReviewJpaRepository storeReviewJpaRepository;
-    UserJpaRepository userJpaRepository;
+    StoreJpaRepository storeRepo;
+    StoreReviewJpaRepository storeReviewRepo;
+    UserJpaRepository userRepo;
     FileStorageServiceImpl fileStorageService;
 
     @Override
     public List<StoreReviewDto> findByIdxStore(Long sIdx, Long uIdx, Pageable pageable) {
-        List<StoreReview> entities = storeReviewJpaRepository.findByIdxStoreAndIsActiveIsTrue(sIdx, pageable).getContent();
+        List<StoreReview> entities = storeReviewRepo.findByIdxStoreAndIsActiveIsTrue(sIdx, pageable).getContent();
         return fromEntitiesCustom(entities, uIdx);
     }
 
     @Override
     public StoreReviewDto findByIdx(Long idx, Long uIdx) {
-        StoreReview entity = storeReviewJpaRepository.findByIdxAndIsActiveIsTrue(idx);
+        StoreReview entity = storeReviewRepo.findByIdxAndIsActiveIsTrue(idx);
         return fromEntityCustom(entity, uIdx);
     }
 
     @Override
     public long count() {
-        return storeReviewJpaRepository.countByIsActiveIsTrue();
+        return storeReviewRepo.countByIsActiveIsTrue();
     }
 
     @Override
     public StoreReviewDto save(StoreReviewDto dto,  MultipartFile[] images) {
         // 리뷰 추가
-        StoreReview entity = storeReviewJpaRepository.save(dto.toEntity());
+        StoreReview entity = storeReviewRepo.save(dto.toEntity());
 
         // 업체 평점 재 계산, 총 리뷰 수 증가
         addAvgStar(dto.getIdxStore(), entity.getIdx());
@@ -58,14 +58,14 @@ public class StoreReviewServiceImpl implements StoreReviewService {
         String imagePath = ImagePath.reviews(dto.getIdxDeliverySite(), dto.getIdxStore(), entity.getIdx());
         List<StoreReviewImage> savedImages = saveImage(imagePath, images);
         entity.addImages(savedImages);
-        return StoreReviewDto.fromEntity(storeReviewJpaRepository.save(entity));
+        return StoreReviewDto.fromEntity(storeReviewRepo.save(entity));
     }
 
     @Override
     public StoreReviewDto update(StoreReviewDto dto,  MultipartFile[] images) {
         // 리뷰 수정
-        StoreReview entity = storeReviewJpaRepository.findByIdxAndIsActiveIsTrue(dto.getIdx());
-        entity = storeReviewJpaRepository.save(entity.update(dto.toEntity()));
+        StoreReview entity = storeReviewRepo.findByIdxAndIsActiveIsTrue(dto.getIdx());
+        entity = storeReviewRepo.save(entity.update(dto.toEntity()));
 
         // 리뷰 이미지 수정
         boolean isImageUpdated = dto.getIsImageUpdated() != null && dto.getIsImageUpdated().booleanValue();
@@ -81,7 +81,7 @@ public class StoreReviewServiceImpl implements StoreReviewService {
                 entity.addImages(savedImages);
             }
         }
-        return StoreReviewDto.fromEntity(storeReviewJpaRepository.save(entity));
+        return StoreReviewDto.fromEntity(storeReviewRepo.save(entity));
     }
 
     @Override
@@ -90,7 +90,7 @@ public class StoreReviewServiceImpl implements StoreReviewService {
         subAvgStar(sIdx, idx);
 
         // 리뷰 삭제
-        storeReviewJpaRepository.deleteById(idx);
+        storeReviewRepo.deleteById(idx);
 
         // 리뷰 이미지 삭제
         String imagePath = ImagePath.reviews(dIdx, sIdx, idx);
@@ -120,20 +120,20 @@ public class StoreReviewServiceImpl implements StoreReviewService {
      * 업체 평점 재계산 (add)
      */
     private void addAvgStar(Long sIdx, Long rIdx) {
-        Store store = storeJpaRepository.findByIdxAndIsActiveIsTrue(sIdx);
-        StoreReview storeReview = storeReviewJpaRepository.findByIdxAndIsActiveIsTrue(rIdx);
+        Store store = storeRepo.findByIdxAndIsActiveIsTrue(sIdx);
+        StoreReview storeReview = storeReviewRepo.findByIdxAndIsActiveIsTrue(rIdx);
         store.addCntComment(storeReview.getStar());
-        storeJpaRepository.save(store);
+        storeRepo.save(store);
     }
 
     /**
      * 업체 평점 재계산 (sub)
      */
     private void subAvgStar(Long sIdx, Long rIdx) {
-        Store store = storeJpaRepository.findByIdxAndIsActiveIsTrue(sIdx);
-        StoreReview storeReview = storeReviewJpaRepository.findByIdxAndIsActiveIsTrue(rIdx);
+        Store store = storeRepo.findByIdxAndIsActiveIsTrue(sIdx);
+        StoreReview storeReview = storeReviewRepo.findByIdxAndIsActiveIsTrue(rIdx);
         store.subCntComment(storeReview.getStar());
-        storeJpaRepository.save(store);
+        storeRepo.save(store);
     }
 
     /**
@@ -164,7 +164,7 @@ public class StoreReviewServiceImpl implements StoreReviewService {
      */
     private StoreReviewDto fromEntityCustom(StoreReview entity, Long uIdx) {
         StoreReviewDto dto = StoreReviewDto.fromEntity(entity);
-        User user = userJpaRepository.findByIdxAndIsActiveIsTrue(entity.getIdxUser());
+        User user = userRepo.findByIdxAndIsActiveIsTrue(entity.getIdxUser());
         if (uIdx != null && uIdx.compareTo(user.getIdx()) == 0) {  // isOwn 처리
             dto.setIsOwn(true);
             if (entity.getIsAnonymous()) { // anonymous 처리

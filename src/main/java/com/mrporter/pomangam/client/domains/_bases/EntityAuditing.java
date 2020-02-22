@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Data
 public abstract class EntityAuditing implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;

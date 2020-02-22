@@ -23,11 +23,11 @@ import javax.persistence.Table;
 public class OrderTimeMapper extends EntityAuditing {
 
     @ManyToOne
-    @JoinColumn(name = "idx_order_time")
+    @JoinColumn(name = "idx_order_time", nullable = false)
     private OrderTime orderTime;
 
     @ManyToOne
-    @JoinColumn(name = "idx_store")
+    @JoinColumn(name = "idx_store", nullable = false)
     private Store store;
 
     @Builder

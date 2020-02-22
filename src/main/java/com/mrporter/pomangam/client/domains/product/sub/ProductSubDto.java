@@ -59,7 +59,7 @@ public class ProductSubDto implements Serializable {
         dto.setProductSubCategory(entity.getProductSubCategory().getCategoryTitle());
 
         // cost
-        dto.setSalePrice(entity.getCost().getSalePrice());
+        dto.setSalePrice(entity.getCost().saleCost());
 
         return dto;
     }

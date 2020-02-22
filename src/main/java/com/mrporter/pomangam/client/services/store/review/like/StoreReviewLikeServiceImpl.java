@@ -12,14 +12,14 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class StoreReviewLikeServiceImpl implements StoreReviewLikeService {
 
-    StoreReviewLikeJpaRepository storeReviewLikeJpaRepository;
-    StoreReviewJpaRepository storeReviewJpaRepository;
-    UserJpaRepository userJpaRepository;
+    StoreReviewLikeJpaRepository storeReviewLikeRepo;
+    StoreReviewJpaRepository storeReviewRepo;
+    UserJpaRepository userRepo;
 
     @Override
     public boolean toggle(String phoneNumber, Long rIdx) {
-        Long uIdx = userJpaRepository.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
-        boolean like = storeReviewLikeJpaRepository.existsByIdxUser(uIdx);
+        Long uIdx = userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
+        boolean like = storeReviewLikeRepo.existsByIdxUser(uIdx);
         if(like) {
             cancelLike(uIdx, rIdx);
         } else {
@@ -30,13 +30,13 @@ public class StoreReviewLikeServiceImpl implements StoreReviewLikeService {
 
     @Override
     public void like(String phoneNumber, Long rIdx) {
-        Long uIdx = userJpaRepository.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
+        Long uIdx = userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         like(uIdx, rIdx);
     }
 
     @Override
     public void cancelLike(String phoneNumber, Long rIdx) {
-        Long uIdx = userJpaRepository.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
+        Long uIdx = userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         cancelLike(uIdx, rIdx);
     }
 
@@ -55,21 +55,21 @@ public class StoreReviewLikeServiceImpl implements StoreReviewLikeService {
                 .idxStoreReview(rIdx)
                 .idxUser(uIdx)
                 .build();
-        storeReviewLikeJpaRepository.save(like);
+        storeReviewLikeRepo.save(like);
     }
 
     private void deleteLike(Long uIdx, Long rIdx) {
-        storeReviewLikeJpaRepository.deleteByIdxUserAndIdxStoreReviewQuery(uIdx, rIdx);
+        storeReviewLikeRepo.deleteByIdxUserAndIdxStoreReviewQuery(uIdx, rIdx);
     }
 
     private void addCntLike(Long rIdx) {
-        StoreReview storeReview = storeReviewJpaRepository.findByIdxAndIsActiveIsTrue(rIdx);
+        StoreReview storeReview = storeReviewRepo.findByIdxAndIsActiveIsTrue(rIdx);
         storeReview.addCntLike();
-        storeReviewJpaRepository.save(storeReview);
+        storeReviewRepo.save(storeReview);
     }
     private void subCntLike(Long rIdx) {
-        StoreReview storeReview = storeReviewJpaRepository.findByIdxAndIsActiveIsTrue(rIdx);
+        StoreReview storeReview = storeReviewRepo.findByIdxAndIsActiveIsTrue(rIdx);
         storeReview.subCntLike();
-        storeReviewJpaRepository.save(storeReview);
+        storeReviewRepo.save(storeReview);
     }
 }

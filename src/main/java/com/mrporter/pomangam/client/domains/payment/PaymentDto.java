@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.client.domains.user.payment;
+package com.mrporter.pomangam.client.domains.payment;
 
 import lombok.*;
 import org.modelmapper.ModelMapper;

@@ -1,0 +1,27 @@
+package com.mrporter.pomangam.client.repositories.coupon;
+
+import com.mrporter.pomangam.client.domains.coupon.CouponMapper;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.transaction.annotation.Transactional;
+
+
+@RepositoryRestResource(exported = false)
+public interface CouponMapperJpaRepository extends JpaRepository<CouponMapper, Long>, CouponMapperCustomRepository {
+
+}
+
+interface CouponMapperCustomRepository {
+
+}
+
+@Transactional(readOnly = true)
+class CouponMapperCustomRepositoryImpl extends QuerydslRepositorySupport implements CouponMapperCustomRepository {
+
+    public CouponMapperCustomRepositoryImpl() {
+        super(CouponMapper.class);
+    }
+
+
+}

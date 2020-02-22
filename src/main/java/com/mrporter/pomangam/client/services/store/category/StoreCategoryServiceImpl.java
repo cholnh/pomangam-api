@@ -7,5 +7,6 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class StoreCategoryServiceImpl implements StoreCategoryService {
-    StoreCategoryJpaRepository storeCategoryJpaRepository;
+    
+    StoreCategoryJpaRepository storeCategoryRepo;
 }

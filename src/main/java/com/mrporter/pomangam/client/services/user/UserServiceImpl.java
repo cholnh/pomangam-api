@@ -19,28 +19,28 @@ import java.util.Random;
 public class UserServiceImpl implements UserService {
 
     PasswordEncoder passwordEncoder;
-    UserJpaRepository userRepository;
-    RandomNicknameJpaRepository randomNicknameRepository;
+    UserJpaRepository userRepo;
+    RandomNicknameJpaRepository randomNicknameRepo;
 
     @Override
     public User findByPhoneNumber(String phoneNumber) {
-        return userRepository.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
+        return userRepo.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
     }
 
     @Override
     public Long findIdxByPhoneNumber(String phoneNumber) {
-        return userRepository.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
+        return userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
     }
 
 
     @Override
     public List<User> findAll() {
-        return userRepository.findAll();
+        return userRepo.findAll();
     }
 
     @Override
     public List<User> findAll(Pageable pageable) {
-        return userRepository.findAll(pageable).getContent();
+        return userRepo.findAll(pageable).getContent();
     }
 
     @Override
@@ -51,13 +51,13 @@ public class UserServiceImpl implements UserService {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setPhoneNumber(PhoneNumberFormatter.format(user.getPhoneNumber()));
-        return userRepository.save(user);
+        return userRepo.save(user);
     }
 
     @Override
     public Boolean isExistByPhone(String phoneNumber) {
         if(phoneNumber != null) {
-            return userRepository.existsByPhoneNumber(phoneNumber);
+            return userRepo.existsByPhoneNumber(phoneNumber);
         } else {
             return false;
         }
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean isExistByNickname(String nickname) {
         if(nickname != null) {
-            return userRepository.existsByNickname(nickname);
+            return userRepo.existsByNickname(nickname);
         } else {
             return false;
         }
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUserPassword(String phoneNumber, String password) {
-        final User fetchedUser = userRepository.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
+        final User fetchedUser = userRepo.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         if (fetchedUser == null) {
             return null;
         }
@@ -82,13 +82,13 @@ public class UserServiceImpl implements UserService {
         fetchedUser.setPassword(passwordEncoder.encode(password));
         fetchedUser.setModifyDate(LocalDateTime.now());
 
-        userRepository.save(fetchedUser);
+        userRepo.save(fetchedUser);
         return fetchedUser;
     }
 
     @Override
     public User patchUser(String phoneNumber, User user) {
-        final User fetched = userRepository.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
+        final User fetched = userRepo.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         if(fetched == null) {
             return null;
         }
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
             ReflectionUtils.oldInstanceByNewInstance(fetched, user);
             // fetched.setModifyDate(LocalDateTime.now());
             fetched.setPoint(point); // 포인트는 외부 patch 로직으로 인해 변경 불가능
-            userRepository.save(fetched);
+            userRepo.save(fetched);
             return fetched;
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,35 +108,35 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean deleteUser(String phoneNumber) {
-        final User fetchedUser = userRepository.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
+        final User fetchedUser = userRepo.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         if (fetchedUser == null) {
             return false;
         } else {
-            userRepository.delete(fetchedUser);
+            userRepo.delete(fetchedUser);
             return true;
         }
     }
 
     @Override
     public int getPointByIdx(Long idx) {
-        return userRepository.getOne(idx).getPoint();
+        return userRepo.getOne(idx).getPoint();
     }
 
     @Override
     public int plusPointByIdx(Long idx, Integer point) {
-        User user = userRepository.getOne(idx);
+        User user = userRepo.getOne(idx);
         int p = user.getPoint() + point;
         user.setPoint(p);
-        userRepository.save(user);
+        userRepo.save(user);
         return p;
     }
 
     @Override
     public int minusPointByIdx(Long idx, Integer point) {
-        User user = userRepository.getOne(idx);
+        User user = userRepo.getOne(idx);
         int p = user.getPoint() - point;
         user.setPoint(p);
-        userRepository.save(user);
+        userRepo.save(user);
         return p;
     }
 
@@ -144,8 +144,8 @@ public class UserServiceImpl implements UserService {
         String nick, first, second;
         int count = 0;
         do {
-            first = randomNicknameRepository.findFirstByRandomAndIsActiveIsTrue();
-            second = randomNicknameRepository.findSecondByRandomAndIsActiveIsTrue();
+            first = randomNicknameRepo.findFirstByRandomAndIsActiveIsTrue();
+            second = randomNicknameRepo.findSecondByRandomAndIsActiveIsTrue();
             if(first == null || first.isEmpty() || second == null || second.isEmpty()) {
                 nick = "포만이" + new Random().nextInt(9999999);
             } else {

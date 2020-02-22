@@ -12,23 +12,23 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductSubServiceImpl implements ProductSubService {
 
-    ProductSubJpaRepository productSubJpaRepository;
+    ProductSubJpaRepository productSubRepo;
 
     @Override
     public List<ProductSubDto> findByIdxProduct(Long pIdx) {
-        List<ProductSub> productSubs = productSubJpaRepository.findByIdxProductAndIsActiveIsTrue(pIdx);
+        List<ProductSub> productSubs = productSubRepo.findByIdxProductAndIsActiveIsTrue(pIdx);
         return ProductSubDto.fromEntities(productSubs);
     }
 
     @Override
     public ProductSubDto findByIdx(Long idx) {
-        ProductSub entity = productSubJpaRepository.findByIdxAndIsActiveIsTrue(idx);
+        ProductSub entity = productSubRepo.findByIdxAndIsActiveIsTrue(idx);
         return ProductSubDto.fromEntity(entity);
     }
 
     @Override
     public long count() {
-        return productSubJpaRepository.countByIsActiveIsTrue();
+        return productSubRepo.countByIsActiveIsTrue();
     }
 
 }

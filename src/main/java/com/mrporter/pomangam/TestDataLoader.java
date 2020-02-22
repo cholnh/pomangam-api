@@ -1,10 +1,17 @@
 package com.mrporter.pomangam;
 
+import com.mrporter.pomangam.client.domains.coupon.Coupon;
+import com.mrporter.pomangam.client.domains.coupon.CouponMapper;
 import com.mrporter.pomangam.client.domains.deliverysite.DeliverySite;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSite;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSiteDto;
 import com.mrporter.pomangam.client.domains.deliverysite.region.Region;
 import com.mrporter.pomangam.client.domains.fcm.FcmToken;
+import com.mrporter.pomangam.client.domains.order.Order;
+import com.mrporter.pomangam.client.domains.order.OrderType;
+import com.mrporter.pomangam.client.domains.order.orderer.Orderer;
+import com.mrporter.pomangam.client.domains.order.orderer.OrdererType;
+import com.mrporter.pomangam.client.domains.order.payment_info.PaymentInfo;
 import com.mrporter.pomangam.client.domains.ordertime.OrderTime;
 import com.mrporter.pomangam.client.domains.ordertime.OrderTimeMapper;
 import com.mrporter.pomangam.client.domains.product.Product;
@@ -29,9 +36,15 @@ import com.mrporter.pomangam.client.domains.store.schedule.StoreSchedule;
 import com.mrporter.pomangam.client.domains.user.Sex;
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.domains.user.UserDto;
+import com.mrporter.pomangam.client.domains.payment.Payment;
+import com.mrporter.pomangam.client.domains.payment.PaymentType;
+import com.mrporter.pomangam.client.repositories.coupon.CouponJpaRepository;
+import com.mrporter.pomangam.client.repositories.coupon.CouponMapperJpaRepository;
 import com.mrporter.pomangam.client.repositories.deliverysite.detail.DeliveryDetailSiteJpaRepository;
+import com.mrporter.pomangam.client.repositories.order.OrderJpaRepository;
 import com.mrporter.pomangam.client.repositories.ordertime.OrderTimeJpaRepository;
 import com.mrporter.pomangam.client.repositories.ordertime.OrderTimeMapperJpaRepository;
+import com.mrporter.pomangam.client.repositories.payment.PaymentJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.random_nickname.RandomNicknameJpaRepository;
 import com.mrporter.pomangam.client.repositories.deliverysite.DeliverySiteJpaRepository;
 import com.mrporter.pomangam.client.repositories.deliverysite.region.RegionJpaRepository;
@@ -44,7 +57,6 @@ import com.mrporter.pomangam.client.repositories.product.sub.category.ProductSub
 import com.mrporter.pomangam.client.repositories.store.StoreJpaRepository;
 import com.mrporter.pomangam.client.repositories.store.category.StoreCategoryJpaRepository;
 import com.mrporter.pomangam.client.services.user.UserServiceImpl;
-import org.hibernate.validator.internal.util.privilegedactions.LoadClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -53,7 +65,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class TestDataLoader implements ApplicationRunner {
@@ -74,7 +89,10 @@ public class TestDataLoader implements ApplicationRunner {
     @Autowired FcmTokenJpaRepository fcmTokenJpaRepository;
     @Autowired OrderTimeJpaRepository orderTimeJpaRepository;
     @Autowired OrderTimeMapperJpaRepository orderTimeMapperJpaRepository;
-
+    @Autowired OrderJpaRepository orderJpaRepository;
+    @Autowired PaymentJpaRepository paymentJpaRepository;
+    @Autowired CouponJpaRepository couponJpaRepository;
+    @Autowired CouponMapperJpaRepository couponMapperJpaRepository;
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddl;
@@ -848,6 +866,48 @@ public class TestDataLoader implements ApplicationRunner {
         orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime11).store(store4).build());
         orderTimeMapperJpaRepository.save(OrderTimeMapper.builder().orderTime(orderTime12).store(store4).build());
 
+
+
+
+        Coupon coupon1 = Coupon.builder()
+                .title("1,000원 할인쿠폰")
+                .code("1XER-FGT3-1199")
+                .beginDate(LocalDateTime.now())
+                .discountCost(1_000)
+                .user(user1)
+                .build();
+        couponJpaRepository.save(coupon1);
+
+        Payment payment1 = Payment.builder()
+                .paymentType(PaymentType.CREDIT_CARD)
+                .build();
+
+        paymentJpaRepository.save(payment1);
+
+        Order order1 = Order.builder()
+                .boxNumber((short) 1)
+                .deliveryDetailSite(detail1)
+                .orderer(Orderer.builder()
+                        .idxFcmToken(1L)
+                        .ordererType(OrdererType.USER)
+                        .user(user1)
+                        .build())
+                .orderTime(orderTime1)
+                .orderType(OrderType.PAYMENT_READY)
+                .paymentInfo(PaymentInfo.builder()
+                        .payment(payment1)
+                        .usingPoint(1_000)
+                        .savedPoint(50)
+                        .build())
+                .build();
+
+        orderJpaRepository.save(order1);
+
+        CouponMapper couponMapper1 = CouponMapper.builder()
+                .order(order1)
+                .coupon(coupon1)
+                .build();
+        couponMapperJpaRepository.save(couponMapper1);
 
 //        String[] ff = {"배부른", "용감한", "갸냘픈", "가엾은", "굵은", "던지는", "마법사", "방금온", "브론즈", "마스터", "실버", "골드", "플레티넘", "완고한", "다이아", "감각적인", "가벼운", "잘생긴", "어여쁜"};
 //        String[] ss = {"얼굴", "사마귀", "북극곰", "콜라", "아이폰", "향수", "꼬부기", "파이리", "롱스톤", "티모", "가렌", "마스터이", "언랭", "페이커", "포만이", "비타민", "발바닥", "손바닥", "지갑"};

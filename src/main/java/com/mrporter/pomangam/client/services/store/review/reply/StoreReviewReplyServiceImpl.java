@@ -13,37 +13,36 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class StoreReviewReplyServiceImpl implements StoreReviewReplyService {
 
-    StoreReviewReplyJpaRepository storeReviewReplyJpaRepository;
-    UserJpaRepository userJpaRepository;
-    StoreReviewJpaRepository storeReviewJpaRepository;
+    StoreReviewReplyJpaRepository storeReviewReplyRepo;
+    UserJpaRepository userRepo;
+    StoreReviewJpaRepository storeReviewRepo;
 
     @Override
     public List<StoreReviewReplyDto> findByIdxStoreReview(Long rIdx, Long uIdx, Pageable pageable) {
-        List<StoreReviewReply> entities = storeReviewReplyJpaRepository.findByIdxStoreReviewAndIsActiveIsTrue(rIdx, pageable).getContent();
+        List<StoreReviewReply> entities = storeReviewReplyRepo.findByIdxStoreReviewAndIsActiveIsTrue(rIdx, pageable).getContent();
         return fromEntitiesCustom(entities, uIdx);
     }
 
     @Override
     public StoreReviewReplyDto findByIdx(Long idx, Long uIdx) {
-        StoreReviewReply entity = storeReviewReplyJpaRepository.findByIdxAndIsActiveIsTrue(idx);
+        StoreReviewReply entity = storeReviewReplyRepo.findByIdxAndIsActiveIsTrue(idx);
         return fromEntityCustom(entity, uIdx);
     }
 
     @Override
     public long count() {
-        return storeReviewReplyJpaRepository.countByIsActiveIsTrue();
+        return storeReviewReplyRepo.countByIsActiveIsTrue();
     }
 
     @Override
     public StoreReviewReplyDto save(StoreReviewReplyDto dto) {
         // 댓글 추가
-        StoreReviewReply entity = storeReviewReplyJpaRepository.save(dto.toEntity());
+        StoreReviewReply entity = storeReviewReplyRepo.save(dto.toEntity());
 
         // 총 댓글 수 증가
         addCntReply(dto.getIdxStoreReview());
@@ -54,8 +53,8 @@ public class StoreReviewReplyServiceImpl implements StoreReviewReplyService {
     @Override
     public StoreReviewReplyDto update(StoreReviewReplyDto dto) {
         // 댓글 수정
-        StoreReviewReply entity = storeReviewReplyJpaRepository.findByIdxAndIsActiveIsTrue(dto.getIdx());
-        return StoreReviewReplyDto.fromEntity(storeReviewReplyJpaRepository.save(entity.update(dto.toEntity())));
+        StoreReviewReply entity = storeReviewReplyRepo.findByIdxAndIsActiveIsTrue(dto.getIdx());
+        return StoreReviewReplyDto.fromEntity(storeReviewReplyRepo.save(entity.update(dto.toEntity())));
     }
 
     @Override
@@ -64,25 +63,25 @@ public class StoreReviewReplyServiceImpl implements StoreReviewReplyService {
         subCntReply(rIdx);
 
         // 댓글 삭제
-        storeReviewReplyJpaRepository.deleteById(idx);
+        storeReviewReplyRepo.deleteById(idx);
     }
 
     /**
      * 리뷰 댓글 수 증가
      */
     private void addCntReply(Long idxReview) {
-        StoreReview storeReview = storeReviewJpaRepository.findByIdxAndIsActiveIsTrue(idxReview);
+        StoreReview storeReview = storeReviewRepo.findByIdxAndIsActiveIsTrue(idxReview);
         storeReview.addCntReply();
-        storeReviewJpaRepository.save(storeReview);
+        storeReviewRepo.save(storeReview);
     }
 
     /**
      * 리뷰 댓글 수 감소
      */
     private void subCntReply(Long idxReview) {
-        StoreReview storeReview = storeReviewJpaRepository.findByIdxAndIsActiveIsTrue(idxReview);
+        StoreReview storeReview = storeReviewRepo.findByIdxAndIsActiveIsTrue(idxReview);
         storeReview.subCntReply();
-        storeReviewJpaRepository.save(storeReview);
+        storeReviewRepo.save(storeReview);
     }
 
     /**
@@ -113,7 +112,7 @@ public class StoreReviewReplyServiceImpl implements StoreReviewReplyService {
      */
     private StoreReviewReplyDto fromEntityCustom(StoreReviewReply entity, Long uIdx) {
         StoreReviewReplyDto dto = StoreReviewReplyDto.fromEntity(entity);
-        User user = userJpaRepository.findByIdxAndIsActiveIsTrue(entity.getIdxUser());
+        User user = userRepo.findByIdxAndIsActiveIsTrue(entity.getIdxUser());
         if (uIdx != null && uIdx.compareTo(user.getIdx()) == 0) {  // isOwn 처리
             dto.setIsOwn(true);
             if (entity.getIsAnonymous()) { // anonymous 처리

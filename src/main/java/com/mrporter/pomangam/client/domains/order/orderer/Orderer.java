@@ -2,6 +2,7 @@ package com.mrporter.pomangam.client.domains.order.orderer;
 
 import com.mrporter.pomangam.client.domains.user.User;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -41,5 +42,12 @@ public class Orderer {
                 : ordererType == OrdererType.USER
                     ? user.getIdx()
                     : null;
+    }
+
+    @Builder
+    public Orderer(OrdererType ordererType, Long idxFcmToken, User user) {
+        this.ordererType = ordererType;
+        this.idxFcmToken = idxFcmToken;
+        this.user = user;
     }
 }
