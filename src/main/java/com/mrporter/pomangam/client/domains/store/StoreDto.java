@@ -1,6 +1,7 @@
 package com.mrporter.pomangam.client.domains.store;
 
 import com.mrporter.pomangam.client.domains.store.image.StoreImage;
+import com.mrporter.pomangam.client.domains.store.info.ProductionInfo;
 import com.mrporter.pomangam.client.domains.store.info.StoreInfo;
 import com.mrporter.pomangam.client.domains.store.schedule.StoreSchedule;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class StoreDto implements Serializable {
     private Long idxDeliverySite;
     private String storeCategory;
     private StoreInfo storeInfo;
+    private ProductionInfo productionInfo;
     private StoreSchedule storeSchedule;
     private Float avgStar;
     private Integer cntLike;

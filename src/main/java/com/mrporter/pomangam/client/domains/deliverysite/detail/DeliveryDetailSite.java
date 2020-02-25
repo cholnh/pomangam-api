@@ -71,7 +71,8 @@ public class DeliveryDetailSite extends EntityAuditing {
     private String abbreviation;
 
     @Builder
-    public DeliveryDetailSite(DeliverySite deliverySite, String name, String location, Integer sequence, LocalTime additionalTime, Double latitude, Double longitude, String abbreviation) {
+    public DeliveryDetailSite(Long idx, DeliverySite deliverySite, String name, String location, Integer sequence, LocalTime additionalTime, Double latitude, Double longitude, String abbreviation) {
+        super.setIdx(idx);
         this.deliverySite = deliverySite;
         this.name = name;
         this.location = location;

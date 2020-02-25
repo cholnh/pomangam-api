@@ -1,7 +1,5 @@
 package com.mrporter.pomangam;
 
-import com.mrporter.pomangam.client.domains.coupon.Coupon;
-import com.mrporter.pomangam.client.domains.coupon.CouponMapper;
 import com.mrporter.pomangam.client.domains.deliverysite.DeliverySite;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSite;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSiteDto;
@@ -9,11 +7,14 @@ import com.mrporter.pomangam.client.domains.deliverysite.region.Region;
 import com.mrporter.pomangam.client.domains.fcm.FcmToken;
 import com.mrporter.pomangam.client.domains.order.Order;
 import com.mrporter.pomangam.client.domains.order.OrderType;
+import com.mrporter.pomangam.client.domains.order.item.OrderItem;
 import com.mrporter.pomangam.client.domains.order.orderer.Orderer;
 import com.mrporter.pomangam.client.domains.order.orderer.OrdererType;
 import com.mrporter.pomangam.client.domains.order.payment_info.PaymentInfo;
 import com.mrporter.pomangam.client.domains.ordertime.OrderTime;
 import com.mrporter.pomangam.client.domains.ordertime.OrderTimeMapper;
+import com.mrporter.pomangam.client.domains.payment.Payment;
+import com.mrporter.pomangam.client.domains.payment.PaymentType;
 import com.mrporter.pomangam.client.domains.product.Product;
 import com.mrporter.pomangam.client.domains.product.category.ProductCategory;
 import com.mrporter.pomangam.client.domains.product.cost.Cost;
@@ -31,24 +32,23 @@ import com.mrporter.pomangam.client.domains.store.Store;
 import com.mrporter.pomangam.client.domains.store.category.StoreCategory;
 import com.mrporter.pomangam.client.domains.store.image.StoreImage;
 import com.mrporter.pomangam.client.domains.store.image.StoreImageType;
+import com.mrporter.pomangam.client.domains.store.info.ProductionInfo;
 import com.mrporter.pomangam.client.domains.store.info.StoreInfo;
 import com.mrporter.pomangam.client.domains.store.schedule.StoreSchedule;
 import com.mrporter.pomangam.client.domains.user.Sex;
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.domains.user.UserDto;
-import com.mrporter.pomangam.client.domains.payment.Payment;
-import com.mrporter.pomangam.client.domains.payment.PaymentType;
+import com.mrporter.pomangam.client.domains.user.point.rank.PointRank;
 import com.mrporter.pomangam.client.repositories.coupon.CouponJpaRepository;
 import com.mrporter.pomangam.client.repositories.coupon.CouponMapperJpaRepository;
+import com.mrporter.pomangam.client.repositories.deliverysite.DeliverySiteJpaRepository;
 import com.mrporter.pomangam.client.repositories.deliverysite.detail.DeliveryDetailSiteJpaRepository;
+import com.mrporter.pomangam.client.repositories.deliverysite.region.RegionJpaRepository;
+import com.mrporter.pomangam.client.repositories.fcm.FcmTokenJpaRepository;
 import com.mrporter.pomangam.client.repositories.order.OrderJpaRepository;
 import com.mrporter.pomangam.client.repositories.ordertime.OrderTimeJpaRepository;
 import com.mrporter.pomangam.client.repositories.ordertime.OrderTimeMapperJpaRepository;
 import com.mrporter.pomangam.client.repositories.payment.PaymentJpaRepository;
-import com.mrporter.pomangam.client.repositories.user.random_nickname.RandomNicknameJpaRepository;
-import com.mrporter.pomangam.client.repositories.deliverysite.DeliverySiteJpaRepository;
-import com.mrporter.pomangam.client.repositories.deliverysite.region.RegionJpaRepository;
-import com.mrporter.pomangam.client.repositories.fcm.FcmTokenJpaRepository;
 import com.mrporter.pomangam.client.repositories.product.ProductJpaRepository;
 import com.mrporter.pomangam.client.repositories.product.category.ProductCategoryJpaRepository;
 import com.mrporter.pomangam.client.repositories.product.sub.ProductSubJpaRepository;
@@ -56,6 +56,9 @@ import com.mrporter.pomangam.client.repositories.product.sub.ProductSubMapperJpa
 import com.mrporter.pomangam.client.repositories.product.sub.category.ProductSubCategoryJpaRepository;
 import com.mrporter.pomangam.client.repositories.store.StoreJpaRepository;
 import com.mrporter.pomangam.client.repositories.store.category.StoreCategoryJpaRepository;
+import com.mrporter.pomangam.client.repositories.user.point.rank.PointRankJpaRepository;
+import com.mrporter.pomangam.client.repositories.user.random_nickname.RandomNicknameJpaRepository;
+import com.mrporter.pomangam.client.services.order.OrderServiceImpl;
 import com.mrporter.pomangam.client.services.user.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,10 +68,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class TestDataLoader implements ApplicationRunner {
@@ -93,6 +93,8 @@ public class TestDataLoader implements ApplicationRunner {
     @Autowired PaymentJpaRepository paymentJpaRepository;
     @Autowired CouponJpaRepository couponJpaRepository;
     @Autowired CouponMapperJpaRepository couponMapperJpaRepository;
+    @Autowired PointRankJpaRepository pointRankJpaRepository;
+    @Autowired OrderServiceImpl orderService;
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddl;
@@ -195,6 +197,27 @@ public class TestDataLoader implements ApplicationRunner {
         Long fIdx3 = fcmTokenJpaRepository.save(fcmToken3).getIdx();
         Long fIdx4 = fcmTokenJpaRepository.save(fcmToken4).getIdx();
 
+        PointRank pointRank1 = PointRank.builder()
+                .level((short) 1)
+                .title("평범한")
+                .lowerLimitOrderCount(0)
+                .lowerLimitRecommendCount(0)
+                .percentSavePoint(5)
+                .priceSavePoint(0)
+                .rewardCouponPrice(500)
+                .build();
+        PointRank pointRank2 = PointRank.builder()
+                .level((short) 2)
+                .title("알뜰한")
+                .lowerLimitOrderCount(10)
+                .lowerLimitRecommendCount(1)
+                .percentSavePoint(7)
+                .priceSavePoint(0)
+                .rewardCouponPrice(1000)
+                .build();
+        pointRankJpaRepository.save(pointRank1);
+        pointRankJpaRepository.save(pointRank2);
+
         User user1 = User.builder()
                 .deliveryDetailSite(detail1)
                 .phoneNumber("01064784899")
@@ -263,6 +286,11 @@ public class TestDataLoader implements ApplicationRunner {
                         .name("맘스터치")
                         .description("엄마의 손맛, 수제햄버거 전문점 맘스터치ㅋ")
                         .build())
+                .productionInfo(ProductionInfo.builder()
+                        .minimumTime((short) 1)
+                        .parallelProduction((short) 1)
+                        .maximumProduction((short) 20)
+                        .build())
                 .storeSchedule(StoreSchedule.builder()
                         .openTime(LocalTime.parse("09:00:00"))
                         .closeTime(LocalTime.parse("21:00:00"))
@@ -280,6 +308,11 @@ public class TestDataLoader implements ApplicationRunner {
                 .storeInfo(StoreInfo.builder()
                         .name("한솥도시락")
                         .description("싼맛! 싼마이 도시락! 한솥도시락ㅋㅋ")
+                        .build())
+                .productionInfo(ProductionInfo.builder()
+                        .minimumTime((short) 1)
+                        .parallelProduction((short) 1)
+                        .maximumProduction((short) 20)
                         .build())
                 .storeSchedule(StoreSchedule.builder()
                         .openTime(LocalTime.parse("09:00:00"))
@@ -300,6 +333,11 @@ public class TestDataLoader implements ApplicationRunner {
                         .name("맘스터치 성균관점")
                         .description("엄마의 손맛, 수제햄버거 전문점 맘스터치ㅋ")
                         .build())
+                .productionInfo(ProductionInfo.builder()
+                        .minimumTime((short) 1)
+                        .parallelProduction((short) 1)
+                        .maximumProduction((short) 20)
+                        .build())
                 .storeSchedule(StoreSchedule.builder()
                         .openTime(LocalTime.parse("09:00:00"))
                         .closeTime(LocalTime.parse("21:00:00"))
@@ -316,6 +354,11 @@ public class TestDataLoader implements ApplicationRunner {
                 .storeInfo(StoreInfo.builder()
                         .name("한솥도시락 성균관점")
                         .description("싼맛! 싼마이 도시락! 한솥도시락ㅋㅋ")
+                        .build())
+                .productionInfo(ProductionInfo.builder()
+                        .minimumTime((short) 1)
+                        .parallelProduction((short) 1)
+                        .maximumProduction((short) 20)
                         .build())
                 .storeSchedule(StoreSchedule.builder()
                         .openTime(LocalTime.parse("09:00:00"))
@@ -334,6 +377,11 @@ public class TestDataLoader implements ApplicationRunner {
                 .storeInfo(StoreInfo.builder()
                         .name("피자매니")
                         .description("껍질치밥으로 유명한 피자매니란다 ㅎ")
+                        .build())
+                .productionInfo(ProductionInfo.builder()
+                        .minimumTime((short) 1)
+                        .parallelProduction((short) 1)
+                        .maximumProduction((short) 20)
                         .build())
                 .storeSchedule(StoreSchedule.builder()
                         .openTime(LocalTime.parse("09:00:00"))
@@ -869,14 +917,15 @@ public class TestDataLoader implements ApplicationRunner {
 
 
 
-        Coupon coupon1 = Coupon.builder()
-                .title("1,000원 할인쿠폰")
-                .code("1XER-FGT3-1199")
-                .beginDate(LocalDateTime.now())
-                .discountCost(1_000)
-                .user(user1)
-                .build();
-        couponJpaRepository.save(coupon1);
+//        Coupon coupon1 = Coupon.builder()
+//                .isUsed(false)
+//                .title("1,000원 할인쿠폰")
+//                .code("1XER-FGT3-1199")
+//                .beginDate(LocalDateTime.now())
+//                .discountCost(1_000)
+//                .user(user1)
+//                .build();
+//        coupon1 = couponJpaRepository.save(coupon1);
 
         Payment payment1 = Payment.builder()
                 .paymentType(PaymentType.CREDIT_CARD)
@@ -884,30 +933,83 @@ public class TestDataLoader implements ApplicationRunner {
 
         paymentJpaRepository.save(payment1);
 
-        Order order1 = Order.builder()
-                .boxNumber((short) 1)
-                .deliveryDetailSite(detail1)
-                .orderer(Orderer.builder()
-                        .idxFcmToken(1L)
-                        .ordererType(OrdererType.USER)
-                        .user(user1)
-                        .build())
-                .orderTime(orderTime1)
-                .orderType(OrderType.PAYMENT_READY)
-                .paymentInfo(PaymentInfo.builder()
-                        .payment(payment1)
-                        .usingPoint(1_000)
-                        .savedPoint(50)
-                        .build())
-                .build();
 
-        orderJpaRepository.save(order1);
+        // 주문
+        orderJpaRepository.save(getOrder(1L, LocalDate.now(), 1L, payment1, OrderType.ORDER_READY,
+                1L, 1L, 2));
+        orderJpaRepository.save(getOrder(1L, LocalDate.now(), 2L, payment1, OrderType.ORDER_READY,
+                1L, 1L, 1));
+        orderJpaRepository.save(getOrder(1L, LocalDate.now(), 1L, payment1, OrderType.DELIVERY_READY,
+                1L, 1L, 1));
+        orderJpaRepository.save(getOrder(2L, LocalDate.now(), 1L, payment1, OrderType.ORDER_READY,
+                1L, 1L, 2));
+        orderJpaRepository.save(getOrder(2L, LocalDate.now(), 2L, payment1, OrderType.ORDER_READY,
+                1L, 1L, 1));
+        orderJpaRepository.save(getOrder(2L, LocalDate.now(), 1L, payment1, OrderType.DELIVERY_READY,
+                1L, 1L, 1));
+        orderJpaRepository.save(getOrder(3L, LocalDate.now(), 10L, payment1, OrderType.ORDER_READY,
+                3L, 1L, 2));
+        orderJpaRepository.save(getOrder(3L, LocalDate.now(), 10L, payment1, OrderType.DELIVERY_READY,
+                4L, 1L, 1));
+        orderJpaRepository.save(getOrder(3L, LocalDate.now(), 10L, payment1, OrderType.ORDER_READY,
+                3L, 1L, 1));
+        orderJpaRepository.save(getOrder(4L, LocalDate.now(), 11L, payment1, OrderType.DELIVERY_READY,
+                3L, 1L, 2));
+        orderJpaRepository.save(getOrder(4L, LocalDate.now(), 11L, payment1, OrderType.ORDER_READY,
+                4L, 1L, 1));
+        orderJpaRepository.save(getOrder(4L, LocalDate.now(), 10L, payment1, OrderType.DELIVERY_READY,
+                3L, 1L, 1));
 
-        CouponMapper couponMapper1 = CouponMapper.builder()
-                .order(order1)
-                .coupon(coupon1)
-                .build();
-        couponMapperJpaRepository.save(couponMapper1);
+        // 주문 아이템(서브용) 생성
+//        OrderItemSub orderItemSub1 = OrderItemSub.builder()
+//                .productSub(ProductSub.builder().idx(1L).build())
+//                .quantity((short) 1)
+//                .build();
+//        OrderItemSub orderItemSub2 = OrderItemSub.builder()
+//                .productSub(ProductSub.builder().idx(6L).build())
+//                .quantity((short) 2)
+//                .build();
+
+        // 주문 아이템(메인용) 생성
+//        OrderItem orderItem1 = OrderItem.builder()
+//                .store(store1)
+//                .product(product1)
+//                .quantity((short) 1)
+//                .requirement("요구사항입니다. 피클빼주세요.")
+//                .build();
+//
+//        orderItem1.addItem(orderItemSub1);
+//        orderItem1.addItem(orderItemSub2);
+//        order1.addItem(orderItem1);
+//        orderJpaRepository.save(order1);
+
+//        CouponMapper couponMapper1 = CouponMapper.builder()
+//                .order(order1)
+//                .coupon(coupon1)
+//                .build();
+//        couponMapperJpaRepository.save(couponMapper1);
+
+
+//        OrderRequestDto oRequest1 = new OrderRequestDto();
+//        oRequest1.setIdxOrderTime(1L);
+//        oRequest1.setIdxDeliveryDetailSite(1L);
+//        oRequest1.setOrderType(OrderType.PAYMENT_READY);
+//        oRequest1.setBoxNumber((short) 2);
+//        oRequest1.setOrdererType(OrdererType.USER);
+//        oRequest1.setIdxFcmToken(1L);
+//
+//        User inputUser = userService.findByPhoneNumber("01064784899");
+//        oRequest1.setUser(inputUser);
+//        oRequest1.setIdxPayment(1L);
+//        oRequest1.setUsingPoint(0);
+//        oRequest1.setCashReceipt("546-05-11233");
+//
+//        Set<Long> idxesUsingCoupon = new HashSet<>();
+//        idxesUsingCoupon.add(coupon1.getIdx());
+//        oRequest1.setIdxesUsingCoupons(idxesUsingCoupon);
+//
+//        orderService.save(oRequest1);
+
 
 //        String[] ff = {"배부른", "용감한", "갸냘픈", "가엾은", "굵은", "던지는", "마법사", "방금온", "브론즈", "마스터", "실버", "골드", "플레티넘", "완고한", "다이아", "감각적인", "가벼운", "잘생긴", "어여쁜"};
 //        String[] ss = {"얼굴", "사마귀", "북극곰", "콜라", "아이폰", "향수", "꼬부기", "파이리", "롱스톤", "티모", "가렌", "마스터이", "언랭", "페이커", "포만이", "비타민", "발바닥", "손바닥", "지갑"};
@@ -918,9 +1020,36 @@ public class TestDataLoader implements ApplicationRunner {
 //                    .build();
 //            randomNicknameJpaRepository.save(rnick);
 //        }
-
-
-
         //System.out.println(userService.findAll());
+    }
+
+    static int boxCnt = 0;
+    private Order getOrder(Long ddIdx, LocalDate orderDate, Long oIdx, Payment payment, OrderType orderType, Long sIdx, Long pIdx, int quantity) {
+        Order order = Order.builder()
+                .boxNumber((short) boxCnt)
+                .deliveryDetailSite(DeliveryDetailSite.builder().idx(ddIdx).build())
+                .orderer(Orderer.builder()
+                        .idxFcmToken(1L)
+                        .ordererType(OrdererType.USER)
+                        .user(User.builder().idx(1L).build())
+                        .build())
+                .orderDate(orderDate)
+                .orderTime(OrderTime.builder().idx(oIdx).build())
+                .orderType(orderType)
+                .paymentInfo(PaymentInfo.builder()
+                        .payment(payment)
+                        .usingPoint(0)
+                        .savedPoint(0)
+                        .build())
+                .build();
+        OrderItem orderItem1 = OrderItem.builder()
+                .store(Store.builder().idx(sIdx).build())
+                .product(Product.builder().idx(pIdx).build())
+                .quantity((short) quantity)
+                .requirement("box : " + boxCnt + " orderTime : " + oIdx + " detail : " + ddIdx)
+                .build();
+        order.addItem(orderItem1);
+        boxCnt++;
+        return order;
     }
 }

@@ -23,7 +23,8 @@ public class Payment extends EntityAuditing {
     private PaymentType paymentType;
 
     @Builder
-    public Payment(PaymentType paymentType) {
+    public Payment(Long idx, PaymentType paymentType) {
+        super.setIdx(idx);
         this.paymentType = paymentType;
     }
 }

@@ -3,6 +3,7 @@ package com.mrporter.pomangam.client.domains.store;
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import com.mrporter.pomangam.client.domains.store.category.StoreCategory;
 import com.mrporter.pomangam.client.domains.store.image.StoreImage;
+import com.mrporter.pomangam.client.domains.store.info.ProductionInfo;
 import com.mrporter.pomangam.client.domains.store.info.StoreInfo;
 import com.mrporter.pomangam.client.domains.store.schedule.StoreSchedule;
 import lombok.*;
@@ -40,6 +41,12 @@ public class Store extends EntityAuditing {
      */
     @Embedded
     private StoreInfo storeInfo;
+
+    /**
+     * 업체 생산량
+     */
+    @Embedded
+    ProductionInfo productionInfo;
 
     /**
      * 업체 영업 시간
@@ -90,10 +97,12 @@ public class Store extends EntityAuditing {
     }
 
     @Builder
-    public Store(Long idxDeliverySite, StoreCategory storeCategory, StoreInfo storeInfo, StoreSchedule storeSchedule, Float avgStar, Integer cntLike, Integer cntComment, Integer sequence, List<StoreImage> images) {
+    public Store(Long idx, Long idxDeliverySite, StoreCategory storeCategory, StoreInfo storeInfo, ProductionInfo productionInfo, StoreSchedule storeSchedule, Float avgStar, Integer cntLike, Integer cntComment, Integer sequence, List<StoreImage> images) {
+        super.setIdx(idx);
         this.idxDeliverySite = idxDeliverySite;
         this.storeCategory = storeCategory;
         this.storeInfo = storeInfo;
+        this.productionInfo = productionInfo;
         this.storeSchedule = storeSchedule;
         this.avgStar = avgStar;
         this.cntLike = cntLike;

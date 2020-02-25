@@ -85,5 +85,14 @@ public class OrderItem extends EntityAuditing {
         this.requirement = requirement;
         this.orderItemSubs = orderItemSubs;
     }
+
+    public void addItem(OrderItemSub orderItemSub) {
+        if(this.orderItemSubs == null) {
+            this.orderItemSubs = new ArrayList<>();
+        }
+        if(orderItemSub != null) {
+            this.orderItemSubs.add(orderItemSub);
+        }
+    }
 }
 

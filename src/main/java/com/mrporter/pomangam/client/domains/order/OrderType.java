@@ -21,6 +21,27 @@ public enum OrderType {
     PAYMENT_READY,
 
     /**
+     * 결제 준비 실패 - 포인트
+     *
+     * 포인트 관련 검증이 실패한 경우이다.
+     */
+    PAYMENT_READY_FAIL_POINT,
+
+    /**
+     * 결제 준비 실패 - 쿠폰
+     *
+     * 쿠폰 관련 검증이 실패한 경우이다.
+     */
+    PAYMENT_READY_FAIL_COUPON,
+
+    /**
+     * 결제 준비 실패 - 프로모션
+     *
+     * 프로모션 관련 검증이 실패한 경우이다.
+     */
+    PAYMENT_READY_FAIL_PROMOTION,
+
+    /**
      * 결제 성공
      *
      * PG 사에서 결제 성공 응답을 받은 경우, 해당 상태로 전이된다. (t1)

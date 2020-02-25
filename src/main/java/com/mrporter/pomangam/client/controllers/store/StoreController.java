@@ -5,9 +5,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/dsites/{dIdx}/stores")
@@ -43,8 +46,10 @@ public class StoreController {
     public ResponseEntity<?> findOpeningStores(
             @PathVariable(value = "dIdx", required = true) Long dIdx,
             @RequestParam(value = "oIdx", required = true) Long oIdx,
+            @DateTimeFormat(pattern = "yyyy-MM-dd")
+            @RequestParam(value = "oDate", required = true) LocalDate oDate,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
     ) {
-        return new ResponseEntity(storeService.findOpeningStores(dIdx, oIdx, pageable), HttpStatus.OK);
+        return new ResponseEntity(storeService.findOpeningStores(dIdx, oIdx, oDate, pageable), HttpStatus.OK);
     }
 }

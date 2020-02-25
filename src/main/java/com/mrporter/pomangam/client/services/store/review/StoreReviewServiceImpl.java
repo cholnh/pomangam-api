@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class StoreReviewServiceImpl implements StoreReviewService {
     }
 
     @Override
+    @Transactional
     public StoreReviewDto save(StoreReviewDto dto,  MultipartFile[] images) {
         // 리뷰 추가
         StoreReview entity = storeReviewRepo.save(dto.toEntity());
@@ -62,6 +64,7 @@ public class StoreReviewServiceImpl implements StoreReviewService {
     }
 
     @Override
+    @Transactional
     public StoreReviewDto update(StoreReviewDto dto,  MultipartFile[] images) {
         // 리뷰 수정
         StoreReview entity = storeReviewRepo.findByIdxAndIsActiveIsTrue(dto.getIdx());
@@ -85,6 +88,7 @@ public class StoreReviewServiceImpl implements StoreReviewService {
     }
 
     @Override
+    @Transactional
     public void delete(Long dIdx, Long sIdx, Long idx) {
         // 업체 평점 재 계산, 총 리뷰 수 감소
         subAvgStar(sIdx, idx);

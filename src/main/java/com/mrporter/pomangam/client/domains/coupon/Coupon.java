@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.client.domains.coupon;
 
+import com.mrporter.pomangam._bases.annotation.BooleanToYNConverter;
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import com.mrporter.pomangam.client.domains.user.User;
 import lombok.*;
@@ -16,6 +17,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class Coupon extends EntityAuditing {
+
+    /**
+     * 사용 여부 (Y/N)
+     * default: true(Y)
+     * 대문자 필수
+     */
+    @Column(name = "is_used", nullable = false, length = 1)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isUsed;
 
     /**
      * 쿠폰 할인가
@@ -56,14 +66,23 @@ public class Coupon extends EntityAuditing {
     @Column(name = "end_date", nullable = true)
     private LocalDateTime endDate;
 
+    /**
+     * 최소 주문 금액
+     * null: 하한가 없음
+     */
+    // @Column(name = "lower_limit_cost", nullable = true)
+    // private Integer lowerLimitCost;
+
     public boolean isValid() {
         return super.getIsActive() &&
                 LocalDateTime.now().isAfter(this.beginDate) &&
                 (this.endDate == null || LocalDateTime.now().isBefore(this.endDate));
+                // && (lowerLimitCost == null || totalCost >= lowerLimitCost);
     }
 
     @Builder
-    public Coupon(Integer discountCost, String title, String code, User user, LocalDateTime beginDate, LocalDateTime endDate) {
+    public Coupon(Boolean isUsed, Integer discountCost, String title, String code, User user, LocalDateTime beginDate, LocalDateTime endDate) {
+        this.isUsed = isUsed;
         this.discountCost = discountCost;
         this.title = title;
         this.code = code;

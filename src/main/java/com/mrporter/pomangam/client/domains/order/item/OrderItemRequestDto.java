@@ -6,7 +6,6 @@ import com.mrporter.pomangam.client.domains.product.Product;
 import com.mrporter.pomangam.client.domains.store.Store;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.modelmapper.ModelMapper;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,21 +22,13 @@ public class OrderItemRequestDto implements Serializable {
     List<OrderItemSubRequestDto> orderItemSubs = new ArrayList<>();
 
     public OrderItem toEntity() {
-        OrderItem entity = new ModelMapper().map(this, OrderItem.class);
-
-        // 업체
-        Store store = Store.builder().build();
-        store.setIdx(this.idxStore);
-        entity.setStore(store);
-
-        // 제품
-        Product product = Product.builder().build();
-        product.setIdx(this.idxProduct);
-        entity.setProduct(product);
-
-        // 서브 제품
-        entity.setOrderItemSubs(convertOrderItem(this.orderItemSubs));
-
+        OrderItem entity = OrderItem.builder()
+                .store(Store.builder().idx(this.idxStore).build())
+                .product(Product.builder().idx(this.idxProduct).build())
+                .quantity(this.quantity)
+                .requirement(this.requirement)
+                .orderItemSubs(convertOrderItem(this.orderItemSubs))
+                .build();
         return entity;
     }
 

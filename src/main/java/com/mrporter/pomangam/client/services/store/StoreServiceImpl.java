@@ -3,12 +3,18 @@ package com.mrporter.pomangam.client.services.store;
 import com.mrporter.pomangam.client.domains.store.Store;
 import com.mrporter.pomangam.client.domains.store.StoreDto;
 import com.mrporter.pomangam.client.domains.store.StoreSummaryDto;
+import com.mrporter.pomangam.client.repositories.order.OrderJpaRepository;
 import com.mrporter.pomangam.client.repositories.ordertime.OrderTimeJpaRepository;
 import com.mrporter.pomangam.client.repositories.store.StoreJpaRepository;
+import com.mrporter.pomangam.client.services.store.exception.StoreException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,6 +22,7 @@ import java.util.List;
 public class StoreServiceImpl implements StoreService {
 
     StoreJpaRepository storeRepo;
+    OrderJpaRepository orderRepo;
     OrderTimeJpaRepository orderTimeRepo;
 
     @Override
@@ -36,16 +43,34 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<StoreSummaryDto> findOpeningStores(Long dIdx, Long oIdx, Pageable pageable) {
-        List<Store> stores // 범위내 업체들 리스트
-                = orderTimeRepo.findStoreByIdxOrderTimeAndIdxDeliverySiteAndIsActiveIsTrue(oIdx, dIdx, pageable).getContent();
-        List<StoreSummaryDto> dtos = StoreSummaryDto.fromEntities(stores);
-
-        for(StoreSummaryDto dto : dtos) {
-            // Todo: orderable 확인
-
+    public List<StoreSummaryDto> findOpeningStores(Long dIdx, Long oIdx, LocalDate oDate, Pageable pageable) {
+        List<StoreSummaryDto> summaries = new ArrayList<>();
+        LocalTime orderEndTime = _orderEndTime(oIdx);
+        if(LocalTime.now().isBefore(orderEndTime)) {
+            summaries = _orderableStores(dIdx, oIdx, pageable);
+            int dMinute = (int) Duration.between(LocalTime.now(), orderEndTime).toMinutes(); // 주문 마감까지 남은 시간
+            for(StoreSummaryDto dto : summaries) {
+                int pp = dto.getProductionInfo().getParallelProduction();       // 평균 병렬 생산량
+                int mt = dto.getProductionInfo().getMinimumTime();              // 최소 생산 가능 시간
+                int max = dto.getProductionInfo().getMaximumProduction();       // 최대 주문 가능 수량
+                int avp = pp / mt * dMinute;                                    // 생산 가능 수량
+                int aov = orderRepo.accumulatedOrderVolume(dIdx, dto.getIdx(), oIdx, oDate);  // 누적 주문량
+                avp = avp >= max ? max : avp;
+                dto.setQuantityOrderable(avp - aov);
+            }
         }
+        return summaries;
+    }
 
-        return dtos;
+    private LocalTime _orderEndTime(Long oIdx) {
+        return orderTimeRepo.findById(oIdx)
+                .orElseThrow(() -> new StoreException("invalid orderTime."))
+                .getOrderEndTime();
+    }
+
+    private List<StoreSummaryDto> _orderableStores(Long dIdx, Long oIdx, Pageable pageable) {
+        return StoreSummaryDto.fromEntities(orderTimeRepo // (주문시간, 주문장소)에 해당하는 업체들
+                .findStoreByIdxOrderTimeAndIdxDeliverySiteAndIsActiveIsTrue(oIdx, dIdx, pageable)
+                .getContent());
     }
 }

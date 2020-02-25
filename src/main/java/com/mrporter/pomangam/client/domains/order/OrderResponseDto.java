@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -54,6 +55,9 @@ public class OrderResponseDto implements Serializable {
     private String nameDeliverySite;
     private String nameDeliveryDetailSite;
 
+    // 받는 날짜
+    private LocalDate orderDate;
+
     // 받는 시간
     private Long idxOrderTime;
     private LocalTime arrivalTime;
@@ -72,6 +76,9 @@ public class OrderResponseDto implements Serializable {
 
         // 주문자 타입
         dto.setOrdererType(entity.getOrderer().getOrdererType());
+
+        // 사용 포인트
+        dto.setUsingPoint(paymentInfo.getUsingPoint());
 
         // 쿠폰
         List<CouponMapper> couponMappers = paymentInfo.getUsingCoupons();

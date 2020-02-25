@@ -44,6 +44,21 @@ public class Orderer {
                     : null;
     }
 
+    public void setUser(User orderer) {
+        if(orderer != null) {
+            this.user = orderer;
+            this.ordererType = OrdererType.USER;
+            this.idxFcmToken = orderer.getIdxFcmToken();
+        }
+    }
+
+    public void setGuest(Long idxFcmToken) {
+        if(idxFcmToken != null) {
+            this.ordererType = OrdererType.GUEST;
+            this.idxFcmToken = idxFcmToken;
+        }
+    }
+
     @Builder
     public Orderer(OrdererType ordererType, Long idxFcmToken, User user) {
         this.ordererType = ordererType;

@@ -10,6 +10,7 @@ import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,12 @@ public class Order extends EntityAuditing {
     @JoinColumn(name = "idx_delivery_detail_site")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private DeliveryDetailSite deliveryDetailSite;
+
+    /**
+     * 받는 날짜
+     */
+    @Column(name = "order_date", nullable = false)
+    private LocalDate orderDate;
 
     /**
      * 받는 시간
@@ -105,17 +112,32 @@ public class Order extends EntityAuditing {
      * @return 할인 내역 총 가격
      */
     public int discountCost() {
-        return paymentInfo.discountCost();
+        Integer totalCost = totalCost();
+        if(totalCost != null) {
+            return paymentInfo.discountCost(totalCost.intValue());
+        } else {
+            return 0;
+        }
     }
 
     @Builder
-    public Order(OrderType orderType, Short boxNumber, Orderer orderer, PaymentInfo paymentInfo, DeliveryDetailSite deliveryDetailSite, OrderTime orderTime, List<OrderItem> orderItems) {
+    public Order(OrderType orderType, Short boxNumber, Orderer orderer, PaymentInfo paymentInfo, DeliveryDetailSite deliveryDetailSite, LocalDate orderDate, OrderTime orderTime, List<OrderItem> orderItems) {
         this.orderType = orderType;
         this.boxNumber = boxNumber;
         this.orderer = orderer;
         this.paymentInfo = paymentInfo;
         this.deliveryDetailSite = deliveryDetailSite;
+        this.orderDate = orderDate;
         this.orderTime = orderTime;
         this.orderItems = orderItems;
+    }
+
+    public void addItem(OrderItem orderItem) {
+        if(this.orderItems == null) {
+            this.orderItems = new ArrayList<>();
+        }
+        if(orderItem != null) {
+            this.orderItems.add(orderItem);
+        }
     }
 }

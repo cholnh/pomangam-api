@@ -7,6 +7,7 @@ import com.mrporter.pomangam.client.repositories.store.review.like.StoreReviewLi
 import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -17,6 +18,7 @@ public class StoreReviewLikeServiceImpl implements StoreReviewLikeService {
     UserJpaRepository userRepo;
 
     @Override
+    @Transactional
     public boolean toggle(String phoneNumber, Long rIdx) {
         Long uIdx = userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         boolean like = storeReviewLikeRepo.existsByIdxUser(uIdx);
@@ -29,12 +31,14 @@ public class StoreReviewLikeServiceImpl implements StoreReviewLikeService {
     }
 
     @Override
+    @Transactional
     public void like(String phoneNumber, Long rIdx) {
         Long uIdx = userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         like(uIdx, rIdx);
     }
 
     @Override
+    @Transactional
     public void cancelLike(String phoneNumber, Long rIdx) {
         Long uIdx = userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         cancelLike(uIdx, rIdx);

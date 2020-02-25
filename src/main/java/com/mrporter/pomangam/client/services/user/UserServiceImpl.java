@@ -3,12 +3,17 @@ package com.mrporter.pomangam.client.services.user;
 import com.mrporter.pomangam._bases.utils.formatter.PhoneNumberFormatter;
 import com.mrporter.pomangam._bases.utils.reflection.ReflectionUtils;
 import com.mrporter.pomangam.client.domains.user.User;
-import com.mrporter.pomangam.client.repositories.user.random_nickname.RandomNicknameJpaRepository;
+import com.mrporter.pomangam.client.domains.user.point.log.PointLog;
+import com.mrporter.pomangam.client.domains.user.point.log.PointType;
+import com.mrporter.pomangam.client.domains.user.point.rank.PointRank;
 import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
+import com.mrporter.pomangam.client.repositories.user.point.log.PointLogJpaRepository;
+import com.mrporter.pomangam.client.repositories.user.random_nickname.RandomNicknameJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +26,7 @@ public class UserServiceImpl implements UserService {
     PasswordEncoder passwordEncoder;
     UserJpaRepository userRepo;
     RandomNicknameJpaRepository randomNicknameRepo;
+    PointLogJpaRepository pointLogRepo;
 
     @Override
     public User findByPhoneNumber(String phoneNumber) {
@@ -31,7 +37,6 @@ public class UserServiceImpl implements UserService {
     public Long findIdxByPhoneNumber(String phoneNumber) {
         return userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
     }
-
 
     @Override
     public List<User> findAll() {
@@ -44,6 +49,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User saveUser(User user) {
         boolean isEmptyNickname = user.getNickname() == null || user.getNickname().isEmpty();
         if(isEmptyNickname) {
@@ -51,6 +57,7 @@ public class UserServiceImpl implements UserService {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setPhoneNumber(PhoneNumberFormatter.format(user.getPhoneNumber()));
+        user.setPointRank(PointRank.builder().idx(1L).build());
         return userRepo.save(user);
     }
 
@@ -73,6 +80,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User updateUserPassword(String phoneNumber, String password) {
         final User fetchedUser = userRepo.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         if (fetchedUser == null) {
@@ -87,6 +95,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User patchUser(String phoneNumber, User user) {
         final User fetched = userRepo.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         if(fetched == null) {
@@ -107,6 +116,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Boolean deleteUser(String phoneNumber) {
         final User fetchedUser = userRepo.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         if (fetchedUser == null) {
@@ -123,21 +133,45 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int plusPointByIdx(Long idx, Integer point) {
-        User user = userRepo.getOne(idx);
-        int p = user.getPoint() + point;
-        user.setPoint(p);
+    @Transactional
+    public int plusPointByIdx(Long uIdx, int savedPoint, PointType pointType) {
+        User user = userRepo.getOne(uIdx);
+        int userPoint = user.getPoint() + savedPoint;
+        user.setPoint(userPoint);
         userRepo.save(user);
-        return p;
+
+        // 포인트 로그
+        PointLog pointLog = PointLog.builder()
+                .idxUser(uIdx)
+                .point(savedPoint)
+                .postPoint(userPoint)
+                .pointType(pointType)
+                .build();
+        pointLogRepo.save(pointLog);
+        return userPoint;
     }
 
     @Override
-    public int minusPointByIdx(Long idx, Integer point) {
-        User user = userRepo.getOne(idx);
-        int p = user.getPoint() - point;
-        user.setPoint(p);
+    @Transactional
+    public int minusPointByIdx(Long uIdx, int usingPoint, PointType pointType) {
+        if(usingPoint < 0) {
+            return 0;
+        }
+        User user = userRepo.getOne(uIdx);
+        int userPoint = user.getPoint() - usingPoint;
+        user.setPoint(userPoint);
         userRepo.save(user);
-        return p;
+
+        // 포인트 로그
+        PointLog pointLog = PointLog.builder()
+                .idxUser(uIdx)
+                .point(usingPoint)
+                .postPoint(userPoint)
+                .pointType(pointType)
+                .build();
+        pointLogRepo.save(pointLog);
+
+        return userPoint;
     }
 
     private String randomNickname() {

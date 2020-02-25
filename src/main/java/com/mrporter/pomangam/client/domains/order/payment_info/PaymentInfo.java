@@ -5,10 +5,7 @@ import com.mrporter.pomangam.client.domains.promotion.Promotion;
 import com.mrporter.pomangam.client.domains.promotion.PromotionMapper;
 import com.mrporter.pomangam.client.domains.coupon.CouponMapper;
 import com.mrporter.pomangam.client.domains.payment.Payment;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,6 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)  // 상속한 프록시 객체에서만 사용
 @Embeddable
+@ToString(exclude = {"usingCoupons", "usingPromotions"})
 public class PaymentInfo {
 
     /**
@@ -61,11 +59,24 @@ public class PaymentInfo {
         return cashReceipt != null && !cashReceipt.isEmpty();
     }
 
-    public int discountCost() {
+    public int discountCost(int totalCost) {
         int discountTotalCost = 0;
+        // int promotionTotalCost = 0;
 
         // 포인트 할인 적용
         discountTotalCost += usingPoint == null ? 0 : usingPoint.intValue();
+
+        // 프로모션 할인 적용
+        if(usingPromotions != null) {
+            for(PromotionMapper promotionMapper : usingPromotions) {
+                Promotion promotion = promotionMapper.getPromotion();
+                if(promotion.isValid()) {
+                    int promotionCost = promotion.getDiscountCost().intValue();
+                    discountTotalCost += promotionCost;
+                    // promotionTotalCost += promotionCost;
+                }
+            }
+        }
 
         // 쿠폰 할인 적용
         if(usingCoupons != null) {
@@ -76,17 +87,11 @@ public class PaymentInfo {
                 }
             }
         }
-
-        // 프로모션 할인 적용
-        if(usingPromotions != null) {
-            for(PromotionMapper promotionMapper : usingPromotions) {
-                Promotion promotion = promotionMapper.getPromotion();
-                if(promotion.isValid()) {
-                    discountTotalCost += promotion.getDiscountCost().intValue();
-                }
-            }
-        }
         return discountTotalCost;
+    }
+
+    public void usingCouponsClear() {
+        this.usingCoupons.clear();
     }
 
     @Builder

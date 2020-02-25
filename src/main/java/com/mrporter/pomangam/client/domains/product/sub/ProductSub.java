@@ -111,7 +111,8 @@ public class ProductSub extends EntityAuditing {
     }
 
     @Builder
-    public ProductSub(Long idxStore, Cost cost, ProductSubInfo productSubInfo, Integer sequence, List<ProductSubImage> images, ProductSubType productSubType, ProductSubCategory productSubCategory, Integer numberMinimum, Integer numberMaximum, List<ProductSubMapper> products) {
+    public ProductSub(Long idx, Long idxStore, Cost cost, ProductSubInfo productSubInfo, Integer sequence, List<ProductSubImage> images, ProductSubType productSubType, ProductSubCategory productSubCategory, Integer numberMinimum, Integer numberMaximum, List<ProductSubMapper> products) {
+        super.setIdx(idx);
         this.idxStore = idxStore;
         this.cost = cost;
         this.productSubInfo = productSubInfo;

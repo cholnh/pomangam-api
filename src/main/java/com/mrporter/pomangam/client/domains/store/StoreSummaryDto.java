@@ -1,6 +1,7 @@
 package com.mrporter.pomangam.client.domains.store;
 
 import com.mrporter.pomangam.client.domains.store.image.StoreImage;
+import com.mrporter.pomangam.client.domains.store.info.ProductionInfo;
 import com.mrporter.pomangam.client.domains.store.info.StoreInfo;
 import com.mrporter.pomangam.client.domains.store.schedule.StoreSchedule;
 import lombok.Data;
@@ -19,6 +20,7 @@ public class StoreSummaryDto implements Serializable {
     private String name;
     private String description;
     private String subDescription;
+    private ProductionInfo productionInfo;
     private StoreSchedule storeSchedule;
     private Float avgStar;
     private Integer cntLike;
@@ -33,6 +35,7 @@ public class StoreSummaryDto implements Serializable {
     private Integer promotionValue; // promotionType: 0 -> 할인안함 / 1 -> 할인가(단위: 원) / 2 -> 할인률(단위: %)
     private Integer couponType;
     private Integer couponValue;
+    private Integer quantityOrderable;  // 주문 가능 수량
 
     public static StoreSummaryDto fromEntity(Store entity) {
         StoreSummaryDto dto = new ModelMapper().map(entity, StoreSummaryDto.class);

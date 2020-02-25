@@ -1,13 +1,21 @@
 package com.mrporter.pomangam.client.domains.order.log;
 
 import com.mrporter.pomangam.client.domains.order.OrderType;
-import lombok.Builder;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "order_log_tbl")
+@DynamicUpdate
+@Data
+@EqualsAndHashCode(callSuper=false)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class OrderLog implements Serializable {
 
     @Id

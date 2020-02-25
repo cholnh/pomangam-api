@@ -4,6 +4,7 @@ import com.mrporter.pomangam._bases.utils.validation.annotation.Phone;
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import com.mrporter.pomangam.client.domains.coupon.Coupon;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSite;
+import com.mrporter.pomangam.client.domains.user.point.rank.PointRank;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -18,7 +19,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(exclude = {"deliveryDetailSite"})
+@ToString(exclude = {"deliveryDetailSite", "coupons"})
 public class User extends EntityAuditing {
 
     /**
@@ -91,6 +92,13 @@ public class User extends EntityAuditing {
     private Long idxFcmToken;
 
     /**
+     * 포인트 계급
+     */
+    @JoinColumn(name = "idx_point_rank")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private PointRank pointRank;
+
+    /**
      * 쿠폰
      */
     @JoinColumn(name = "idx_user", nullable = true)
@@ -103,7 +111,8 @@ public class User extends EntityAuditing {
     }
 
     @Builder
-    public User(Boolean isActive, DeliveryDetailSite deliveryDetailSite, String phoneNumber, String password, String name, String nickname, Sex sex, LocalDate birth, @PositiveOrZero Integer point, Long idxFcmToken, List<Coupon> coupons) {
+    public User(Long idx, Boolean isActive, DeliveryDetailSite deliveryDetailSite, String phoneNumber, String password, String name, String nickname, Sex sex, LocalDate birth, @PositiveOrZero Integer point, Long idxFcmToken, PointRank pointRank, List<Coupon> coupons) {
+        super.setIdx(idx);
         super.setIsActive(isActive);
         this.deliveryDetailSite = deliveryDetailSite;
         this.phoneNumber = phoneNumber;
@@ -114,6 +123,7 @@ public class User extends EntityAuditing {
         this.birth = birth;
         this.point = point;
         this.idxFcmToken = idxFcmToken;
+        this.pointRank = pointRank;
         this.coupons = coupons;
     }
 }

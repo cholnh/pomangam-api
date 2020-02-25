@@ -7,6 +7,7 @@ import com.mrporter.pomangam.client.repositories.product.like.ProductLikeJpaRepo
 import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -17,6 +18,7 @@ public class ProductLikeServiceImpl implements ProductLikeService {
     UserJpaRepository userRepo;
 
     @Override
+    @Transactional
     public boolean toggle(String phoneNumber, Long pIdx) {
         Long uIdx = userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         boolean like = productLikeRepo.existsByIdxUser(uIdx);
@@ -29,12 +31,14 @@ public class ProductLikeServiceImpl implements ProductLikeService {
     }
 
     @Override
+    @Transactional
     public void like(String phoneNumber, Long pIdx) {
         Long uIdx = userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         like(uIdx, pIdx);
     }
 
     @Override
+    @Transactional
     public void cancelLike(String phoneNumber, Long pIdx) {
         Long uIdx = userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         cancelLike(uIdx, pIdx);
@@ -55,6 +59,7 @@ public class ProductLikeServiceImpl implements ProductLikeService {
                 .idxProduct(pIdx)
                 .idxUser(uIdx)
                 .build();
+
         productLikeRepo.save(like);
     }
 

@@ -10,6 +10,7 @@ import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,7 @@ public class StoreReviewReplyServiceImpl implements StoreReviewReplyService {
     }
 
     @Override
+    @Transactional
     public StoreReviewReplyDto save(StoreReviewReplyDto dto) {
         // 댓글 추가
         StoreReviewReply entity = storeReviewReplyRepo.save(dto.toEntity());
@@ -51,6 +53,7 @@ public class StoreReviewReplyServiceImpl implements StoreReviewReplyService {
     }
 
     @Override
+    @Transactional
     public StoreReviewReplyDto update(StoreReviewReplyDto dto) {
         // 댓글 수정
         StoreReviewReply entity = storeReviewReplyRepo.findByIdxAndIsActiveIsTrue(dto.getIdx());
@@ -58,6 +61,7 @@ public class StoreReviewReplyServiceImpl implements StoreReviewReplyService {
     }
 
     @Override
+    @Transactional
     public void delete(Long rIdx, Long idx) {
         // 총 댓글 수 감소
         subCntReply(rIdx);

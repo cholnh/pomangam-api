@@ -37,7 +37,8 @@ public class OrderTime extends EntityAuditing {
     private LocalTime orderEndTime;
 
     @Builder
-    public OrderTime(LocalTime arrivalTime, LocalTime pickUpTime, LocalTime orderEndTime) {
+    public OrderTime(Long idx, LocalTime arrivalTime, LocalTime pickUpTime, LocalTime orderEndTime) {
+        super.setIdx(idx);
         this.arrivalTime = arrivalTime;
         this.pickUpTime = pickUpTime;
         this.orderEndTime = orderEndTime;
