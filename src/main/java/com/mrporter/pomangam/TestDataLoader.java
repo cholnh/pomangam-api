@@ -456,19 +456,10 @@ public class TestDataLoader implements ApplicationRunner {
                 .sequence(3)
                 .build();
 
-        store1.addImage(storeBrandImage1);
-        store2.addImage(storeBrandImage2);
-        store3.addImage(storeBrandImage3);
-        store4.addImage(storeBrandImage4);
-
-        store1.addImage(storeImage1);
-        store2.addImage(storeImage2_1);
-        store2.addImage(storeImage2_2);
-        store2.addImage(storeImage2_3);
-        store3.addImage(storeImage3);
-        store4.addImage(storeImage4_1);
-        store4.addImage(storeImage4_2);
-        store4.addImage(storeImage4_3);
+        store1.addImages(storeBrandImage1, storeImage1);
+        store2.addImages(storeBrandImage2, storeImage2_1, storeImage2_2, storeImage2_3);
+        store3.addImages(storeBrandImage3, storeImage3);
+        store4.addImages(storeBrandImage4, storeImage4_1, storeImage4_2, storeImage4_3);
 
         storeJpaRepository.save(store1);
         storeJpaRepository.save(store2);

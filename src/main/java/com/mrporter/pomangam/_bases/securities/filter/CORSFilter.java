@@ -31,11 +31,7 @@ public class CORSFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-
-
         if(health.get().getStatus().toString().equals("UP")) {
-            // credential 사용 시 : Origin을 vue-web서버 url(포트포함)으로 설정 후, Credentials 주석 풀기, vue서버 withCredentials 주석풀기
-
             response.setHeader("Access-Control-Allow-Origin", "*");
             response.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
             //response.setHeader("Access-Control-Max-Age", "3600");

@@ -11,6 +11,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -111,11 +112,11 @@ public class Store extends EntityAuditing {
         this.images = images;
     }
 
-    public void addImage(StoreImage storeImage) {
+    public void addImages(StoreImage ...storeImage) {
         if(this.images == null) {
             this.images = new ArrayList<>();
         }
-        this.images.add(storeImage);
+        this.images.addAll(Arrays.asList(storeImage));
     }
     public void addCntLike() {
         if(this.cntLike == null) {

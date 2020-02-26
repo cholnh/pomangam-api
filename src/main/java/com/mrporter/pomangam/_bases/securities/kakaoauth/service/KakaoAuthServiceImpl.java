@@ -20,6 +20,10 @@ public class KakaoAuthServiceImpl implements KakaoAuthService {
     private final static String tmplId = "pmg_auth_1";
     private final static int authCodeLength = 4;
 
+    public static int getAuthCodeLength() {
+        return authCodeLength;
+    }
+
     @Override
     public String getAuthCode() {
         SecureRandom secureRandom;

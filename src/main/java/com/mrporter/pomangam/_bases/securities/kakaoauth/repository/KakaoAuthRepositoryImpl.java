@@ -19,16 +19,21 @@ public class KakaoAuthRepositoryImpl implements KakaoAuthRepository {
     @PersistenceContext
     EntityManager em;
 
-    final int limitCount = 6;
+    final int CHECK_ABUSING_LIMIT_COUNT = 5;
+    final int CHECK_ABUSING_LIMIT_MINUTE = 5;
+    final int INPUT_AUTHCODE_LIMIT_MINUTE = 3;
     QueryRunnerImpl queryRunner;
+
 
     public boolean checkAbusing(String ip) {
         Query query = em
-                    .createNativeQuery("SELECT idx, phone_number, auth_code, ip, register_date FROM kakao_authcode_tbl where ip = ? AND TIMESTAMPDIFF(minute, register_date, now()) < 5")
-                    .setParameter(1, ip);
+                .createNativeQuery("SELECT idx, phone_number, auth_code, ip, register_date FROM kakao_authcode_tbl where ip = ? AND TIMESTAMPDIFF(minute, register_date, now()) < ?")
+                .setParameter(1, ip)
+                .setParameter(2, CHECK_ABUSING_LIMIT_MINUTE);
+
 
         List<KakaoAuthDto> dto = new JpaResultMapper().list(query, KakaoAuthDto.class);
-        if(dto == null || dto.size() < limitCount) {
+        if(dto == null || dto.size() <= CHECK_ABUSING_LIMIT_COUNT) {
             return false;
         } else {
             return true;
@@ -50,8 +55,9 @@ public class KakaoAuthRepositoryImpl implements KakaoAuthRepository {
     @Override
     public boolean checkAuthCode(String phone_number, String auth_code) {
         Query query = em
-                .createNativeQuery("SELECT idx, phone_number, auth_code, ip, register_date FROM kakao_authcode_tbl where phone_number = ? AND TIMESTAMPDIFF(minute, register_date, now()) < 3 ORDER BY register_date DESC")
-                .setParameter(1, phone_number);
+                .createNativeQuery("SELECT idx, phone_number, auth_code, ip, register_date FROM kakao_authcode_tbl where phone_number = ? AND TIMESTAMPDIFF(minute, register_date, now()) < ? ORDER BY register_date DESC")
+                .setParameter(1, phone_number)
+                .setParameter(2, INPUT_AUTHCODE_LIMIT_MINUTE);
 
         List<KakaoAuthDto> dto = new JpaResultMapper().list(query, KakaoAuthDto.class);
         if(dto == null || dto.isEmpty()) {
@@ -72,8 +78,9 @@ public class KakaoAuthRepositoryImpl implements KakaoAuthRepository {
     @Override
     public boolean checkAuthCodeNotDelete(String phone_number, String auth_code) {
         Query query = em
-                .createNativeQuery("SELECT idx, phone_number, auth_code, ip, register_date FROM kakao_authcode_tbl where phone_number = ? AND TIMESTAMPDIFF(minute, register_date, now()) < 3 ORDER BY register_date DESC")
-                .setParameter(1, phone_number);
+                .createNativeQuery("SELECT idx, phone_number, auth_code, ip, register_date FROM kakao_authcode_tbl where phone_number = ? AND TIMESTAMPDIFF(minute, register_date, now()) < ? ORDER BY register_date DESC")
+                .setParameter(1, phone_number)
+                .setParameter(2, INPUT_AUTHCODE_LIMIT_MINUTE);
 
         List<KakaoAuthDto> dto = new JpaResultMapper().list(query, KakaoAuthDto.class);
         if(dto == null || dto.isEmpty()) {

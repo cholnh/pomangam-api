@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.client.services.order;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.mrporter.pomangam.client.domains.coupon.Coupon;
 import com.mrporter.pomangam.client.domains.coupon.CouponMapper;
 import com.mrporter.pomangam.client.domains.order.Order;
@@ -103,20 +104,23 @@ public class OrderServiceImpl implements OrderService {
         orderRepo.save(order);
     }
 
-    private boolean _verifyPG(Long oIdx, int paymentCost) {
+    @VisibleForTesting
+    public boolean _verifyPG(Long oIdx, int paymentCost) {
         // dummy code
         System.out.println("PG] oIdx: " + oIdx + " - paymentCost: " + paymentCost + "원");
         return true;
     }
 
-    private Order _save(OrderRequestDto dto) {
+    @VisibleForTesting
+    public Order _save(OrderRequestDto dto) {
         Order entity = dto.toEntity();
         entity.setBoxNumber(orderRepo.boxNumber(dto.getIdxDeliveryDetailSite(), dto.getIdxOrderTime(), dto.getOrderDate()));
         entity.getPaymentInfo().setSavedPoint(0);
         return orderRepo.saveAndFlush(entity);
     }
 
-    private void verifyUsingPoint(Order order) {
+    @VisibleForTesting
+    public void verifyUsingPoint(Order order) {
         User user = order.getOrderer().getUser();
         if(user != null) {
             int userPoint = user.getPoint();
@@ -130,7 +134,8 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    private void verifyUsingCoupons(Order order, Set<Long> idxesUsingCoupons) {
+    @VisibleForTesting
+    public void verifyUsingCoupons(Order order, Set<Long> idxesUsingCoupons) {
         User user = order.getOrderer().getUser();
         if(user != null && idxesUsingCoupons != null && !idxesUsingCoupons.isEmpty()) {
             List<CouponMapper> couponMappers = new ArrayList<>();
@@ -152,7 +157,8 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    private Coupon findCoupon(List<Coupon> userCoupons, Long findIdx) {
+    @VisibleForTesting
+    public Coupon findCoupon(List<Coupon> userCoupons, Long findIdx) {
         for(Coupon userCoupon : userCoupons) {
             if(findIdx.compareTo(userCoupon.getIdx()) == 0) {
                 return userCoupon;
@@ -161,11 +167,13 @@ public class OrderServiceImpl implements OrderService {
         return null;
     }
 
-    private void verifyUsingPromotions(Order order, Set<Long> idxesUsingPromotions) {
+    @VisibleForTesting
+    public void verifyUsingPromotions(Order order, Set<Long> idxesUsingPromotions) {
         // Todo. 프로모션 개발
     }
 
-    private void verifySavedPoint(Order order) {
+    @VisibleForTesting
+    public void verifySavedPoint(Order order) {
         User user = order.getOrderer().getUser();
         if(user != null) {
             int percentSavePoint = user.getPointRank().getPercentSavePoint();
@@ -177,13 +185,15 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    private void commitSavedPoint(Order order) {
+    @VisibleForTesting
+    public void commitSavedPoint(Order order) {
         User user = order.getOrderer().getUser();
         int savedPoint = order.getPaymentInfo().getSavedPoint();
         userService.plusPointByIdx(user.getIdx(), savedPoint, PointType.ISSUED_BY_BUY);
     }
 
-    private void rollbackUsingPoint(Order order) {
+    @VisibleForTesting
+    public void rollbackUsingPoint(Order order) {
         User user = order.getOrderer().getUser();
         int usingPoint = order.getPaymentInfo().getUsingPoint();
         if(usingPoint > 0) {
@@ -191,7 +201,8 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    private void rollbackUsingCoupons(Order order) {
+    @VisibleForTesting
+    public void rollbackUsingCoupons(Order order) {
         List<CouponMapper> couponMappers = couponMapperRepo.findByOrder_Idx(order.getIdx());
         for(CouponMapper couponMapper : couponMappers) {
             Long cIdx = couponMapper.getCoupon().getIdx();

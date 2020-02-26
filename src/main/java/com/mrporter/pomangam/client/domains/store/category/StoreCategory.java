@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,7 +28,7 @@ public class StoreCategory extends EntityAuditing {
 
     @OneToMany(mappedBy = "storeCategory", fetch = FetchType.LAZY)
     @OrderBy("sequence ASC")
-    private List<Store> stores;
+    private List<Store> stores = new ArrayList<>();
 
     @Builder
     public StoreCategory(String categoryTitle, List<Store> stores) {
