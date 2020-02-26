@@ -38,6 +38,7 @@ import com.mrporter.pomangam.client.domains.store.schedule.StoreSchedule;
 import com.mrporter.pomangam.client.domains.user.Sex;
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.domains.user.UserDto;
+import com.mrporter.pomangam.client.domains.user.password.Password;
 import com.mrporter.pomangam.client.domains.user.point.rank.PointRank;
 import com.mrporter.pomangam.client.repositories.coupon.CouponJpaRepository;
 import com.mrporter.pomangam.client.repositories.coupon.CouponMapperJpaRepository;
@@ -221,7 +222,9 @@ public class TestDataLoader implements ApplicationRunner {
         User user1 = User.builder()
                 .deliveryDetailSite(detail1)
                 .phoneNumber("01064784899")
-                .password("1234")
+                .password(Password.builder()
+                        .value("1234")
+                        .build())
                 .name("최낙형")
                 .nickname("낙지")
                 .sex(Sex.MALE)
@@ -231,7 +234,9 @@ public class TestDataLoader implements ApplicationRunner {
         User user2 = User.builder()
                 .deliveryDetailSite(detail1)
                 .phoneNumber("010-6478-4897")
-                .password("1234")
+                .password(Password.builder()
+                        .value("1234")
+                        .build())
                 .name("김영희")
                 .sex(Sex.FEMALE)
                 .birth(LocalDate.parse("1993-01-11"))
@@ -241,7 +246,9 @@ public class TestDataLoader implements ApplicationRunner {
         User user3 = User.builder()
                 .deliveryDetailSite(detail1)
                 .phoneNumber("010-0000-0000")
-                .password("1234")
+                .password(Password.builder()
+                        .value("1234")
+                        .build())
                 .name("디폴트")
                 .sex(Sex.MALE)
                 .birth(LocalDate.parse("1998-01-26"))

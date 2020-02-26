@@ -4,6 +4,7 @@ import com.mrporter.pomangam._bases.utils.validation.annotation.Phone;
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import com.mrporter.pomangam.client.domains.coupon.Coupon;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSite;
+import com.mrporter.pomangam.client.domains.user.password.Password;
 import com.mrporter.pomangam.client.domains.user.point.rank.PointRank;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
@@ -45,7 +46,7 @@ public class User extends EntityAuditing {
      * 글자수: utf8 기준 / 영문 255자 / 한글 255자
      */
     @Column(name = "password", nullable = false, length = 255)
-    private String password;
+    private Password password;
 
     /**
      * 유저 실명
@@ -111,7 +112,7 @@ public class User extends EntityAuditing {
     }
 
     @Builder
-    public User(Long idx, Boolean isActive, DeliveryDetailSite deliveryDetailSite, String phoneNumber, String password, String name, String nickname, Sex sex, LocalDate birth, @PositiveOrZero Integer point, Long idxFcmToken, PointRank pointRank, List<Coupon> coupons) {
+    public User(Long idx, Boolean isActive, DeliveryDetailSite deliveryDetailSite, String phoneNumber, Password password, String name, String nickname, Sex sex, LocalDate birth, @PositiveOrZero Integer point, Long idxFcmToken, PointRank pointRank, List<Coupon> coupons) {
         super.setIdx(idx);
         super.setIsActive(isActive);
         this.deliveryDetailSite = deliveryDetailSite;

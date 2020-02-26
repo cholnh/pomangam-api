@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
         if(isEmptyNickname) {
             user.setNickname(randomNickname());
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.getPassword().setValue(passwordEncoder.encode(user.getPassword().getValue()));
         user.setPhoneNumber(PhoneNumberFormatter.format(user.getPhoneNumber()));
         user.setPointRank(PointRank.builder().idx(1L).build());
         return userRepo.save(user);
@@ -86,8 +86,7 @@ public class UserServiceImpl implements UserService {
         if (fetchedUser == null) {
             return null;
         }
-
-        fetchedUser.setPassword(passwordEncoder.encode(password));
+        fetchedUser.getPassword().setValue(passwordEncoder.encode(password));
         fetchedUser.setModifyDate(LocalDateTime.now());
 
         userRepo.save(fetchedUser);

@@ -36,7 +36,7 @@ public class _UserServiceImpl implements _UserService {
 
     @Override
     public User saveUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.getPassword().setValue(passwordEncoder.encode(user.getPassword().getValue()));
         user.setPhoneNumber(PhoneNumberFormatter.format(user.getPhoneNumber()));
         return userJpaRepository.save(user);
     }
@@ -57,7 +57,7 @@ public class _UserServiceImpl implements _UserService {
         if (fetchedUser == null) {
             return null;
         }
-        fetchedUser.setPassword(passwordEncoder.encode(pw));
+        fetchedUser.getPassword().setValue(passwordEncoder.encode(pw));
         fetchedUser.setModifyDate(LocalDateTime.now());
 
         userJpaRepository.save(fetchedUser);

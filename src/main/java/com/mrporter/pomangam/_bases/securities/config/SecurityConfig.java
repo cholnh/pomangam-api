@@ -2,7 +2,9 @@ package com.mrporter.pomangam._bases.securities.config;
 
 import com.mrporter.pomangam._bases.securities.handler.CustomLoginFailureHandler;
 import com.mrporter.pomangam._bases.securities.handler.CustomLoginSuccessHandler;
+import com.mrporter.pomangam._bases.securities.service.PostUserDetailsChecker;
 import com.mrporter.pomangam._bases.securities.service.UserDetailsServiceImpl;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,10 +37,11 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
     private UserDetailsServiceImpl userDetailsService;
+    private PostUserDetailsChecker postUserDetailsChecker;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -93,6 +96,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setPostAuthenticationChecks(postUserDetailsChecker);
         authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder()); //패스워드를 암호활 경우 사용한다
         return authenticationProvider;

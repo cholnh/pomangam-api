@@ -1,6 +1,7 @@
 package com.mrporter.pomangam.client.domains.user;
 
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSiteDto;
+import com.mrporter.pomangam.client.domains.user.password.Password;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -32,6 +33,9 @@ public class UserDto implements Serializable {
 
     public User toEntity() {
         User entity = new ModelMapper().map(this, User.class);
+        entity.setPassword(Password.builder()
+                .value(this.password)
+                .build());
         return entity;
     }
 

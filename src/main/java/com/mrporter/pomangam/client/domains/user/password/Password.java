@@ -1,18 +1,18 @@
 package com.mrporter.pomangam.client.domains.user.password;
 
-import lombok.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import java.time.LocalDateTime;
+import javax.validation.constraints.PositiveOrZero;
 
 @Data
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)  // 상속한 프록시 객체에서만 사용
 public class Password {
-
-    PasswordEncoder passwordEncoder;
 
     /**
      * 암호화 된 패스워드
@@ -22,56 +22,15 @@ public class Password {
     private String value;
 
     /**
-     * 아직 미사용.
-     */
-    @Column(name = "password_expiration_date")
-    private LocalDateTime expirationDate;
-
-    /**
      * 패스워드 비교 실패 횟수
      */
-    @Column(name = "password_failed_count", nullable = false)
+    @Column(name = "password_failed_count", nullable = false, columnDefinition = "INT default 0")
+    @PositiveOrZero
     private int failedCount;
 
-    @Column(name = "password_ttl")
-    private long ttl;
-
     @Builder
-    public Password(final String value) {
-        this.ttl = 1209_604; // 1209_604 is 14 days
-        this.value = encodePassword(value);
-        this.expirationDate = extendExpirationDate();
-    }
-
-    public boolean isMatched(final String rawPassword) throws PasswordFailedExceededException {
-        if (failedCount >= 5)
-            throw new PasswordFailedExceededException();
-
-        final boolean matches = passwordEncoder.matches(rawPassword, value);
-        updateFailedCount(matches);
-        return matches;
-    }
-
-    public void changePassword(final String newPassword, final String oldPassword) throws Exception {
-        if (isMatched(oldPassword)) {
-            value = encodePassword(newPassword);
-            extendExpirationDate();
-        }
-    }
-
-    private String encodePassword(String rawPassword) {
-        return passwordEncoder.encode(rawPassword);
-    }
-
-    private LocalDateTime extendExpirationDate() {
-        return LocalDateTime.now().plusDays(ttl);
-    }
-
-    public void updateFailedCount(boolean matches) {
-        if(matches) {
-            this.failedCount = 0;
-        } else {
-            this.failedCount++;
-        }
+    public Password(String value, @PositiveOrZero int failedCount) {
+        this.value = value;
+        this.failedCount = failedCount;
     }
 }
