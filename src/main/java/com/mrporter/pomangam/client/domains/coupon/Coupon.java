@@ -73,13 +73,6 @@ public class Coupon extends EntityAuditing {
     // @Column(name = "lower_limit_cost", nullable = true)
     // private Integer lowerLimitCost;
 
-    public boolean isValid() {
-        return super.getIsActive() &&
-                LocalDateTime.now().isAfter(this.beginDate) &&
-                (this.endDate == null || LocalDateTime.now().isBefore(this.endDate));
-                // && (lowerLimitCost == null || totalCost >= lowerLimitCost);
-    }
-
     @Builder
     public Coupon(Boolean isUsed, Integer discountCost, String title, String code, User user, LocalDateTime beginDate, LocalDateTime endDate) {
         this.isUsed = isUsed;
@@ -89,6 +82,13 @@ public class Coupon extends EntityAuditing {
         this.user = user;
         this.beginDate = beginDate;
         this.endDate = endDate;
+    }
+
+    public boolean isValid() {
+        return super.getIsActive() &&
+                LocalDateTime.now().isAfter(this.beginDate) &&
+                (this.endDate == null || LocalDateTime.now().isBefore(this.endDate));
+        // && (lowerLimitCost == null || totalCost >= lowerLimitCost);
     }
 }
 

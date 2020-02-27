@@ -24,7 +24,8 @@ public class DeliverySiteController {
     }
 
     @GetMapping("/{idx}")
-    public ResponseEntity<?> findByIdx(@PathVariable(value = "idx", required = true) Long idx
+    public ResponseEntity<?> findByIdx(
+            @PathVariable(value = "idx", required = true) Long idx
     ) {
         return new ResponseEntity(deliverySiteService.findByIdx(idx), HttpStatus.OK);
     }
@@ -35,7 +36,8 @@ public class DeliverySiteController {
     }
 
     @GetMapping("/search/consonant")
-    public ResponseEntity<?> findConsonant(@RequestParam(value = "query", required = true) String query
+    public ResponseEntity<?> findConsonant(
+            @RequestParam(value = "query", required = true) String query
     ) {
         return new ResponseEntity("아직 개발 안함", HttpStatus.OK);   //  Todo: 초성검색 개발
     }

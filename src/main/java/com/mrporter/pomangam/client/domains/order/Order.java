@@ -121,7 +121,8 @@ public class Order extends EntityAuditing {
     }
 
     @Builder
-    public Order(OrderType orderType, Short boxNumber, Orderer orderer, PaymentInfo paymentInfo, DeliveryDetailSite deliveryDetailSite, LocalDate orderDate, OrderTime orderTime, List<OrderItem> orderItems) {
+    public Order(Long idx, OrderType orderType, Short boxNumber, Orderer orderer, PaymentInfo paymentInfo, DeliveryDetailSite deliveryDetailSite, LocalDate orderDate, OrderTime orderTime, List<OrderItem> orderItems) {
+        super.setIdx(idx);
         this.orderType = orderType;
         this.boxNumber = boxNumber;
         this.orderer = orderer;

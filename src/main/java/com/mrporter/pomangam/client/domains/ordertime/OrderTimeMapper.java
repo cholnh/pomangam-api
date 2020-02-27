@@ -5,10 +5,7 @@ import com.mrporter.pomangam.client.domains.store.Store;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * orderTime - store [N:M] 연관관계 설정을 위한 양방향 Mapper
@@ -22,11 +19,11 @@ import javax.persistence.Table;
 @ToString
 public class OrderTimeMapper extends EntityAuditing {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idx_order_time", nullable = false)
     private OrderTime orderTime;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idx_store", nullable = false)
     private Store store;
 

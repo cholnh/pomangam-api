@@ -3,6 +3,7 @@ package com.mrporter.pomangam.client.domains.advertisement;
 import lombok.*;
 import org.modelmapper.ModelMapper;
 
+import javax.persistence.Column;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,6 +16,11 @@ public class AdvertisementDto implements Serializable {
     private Long idx;
     private LocalDateTime registerDate;
     private LocalDateTime modifyDate;
+
+    private AdvertisementType advertisementType;
+    private String imagePath;
+    private String nextLocation;
+    private Integer sequence;
 
     public Advertisement toEntity() {
         Advertisement entity = new ModelMapper().map(this, Advertisement.class);

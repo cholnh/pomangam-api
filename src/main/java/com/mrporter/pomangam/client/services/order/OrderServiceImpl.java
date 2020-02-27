@@ -205,9 +205,7 @@ public class OrderServiceImpl implements OrderService {
     public void rollbackUsingCoupons(Order order) {
         List<CouponMapper> couponMappers = couponMapperRepo.findByOrder_Idx(order.getIdx());
         for(CouponMapper couponMapper : couponMappers) {
-            Long cIdx = couponMapper.getCoupon().getIdx();
-            Coupon coupon = couponRepo.findById(cIdx)
-                    .orElseThrow(() -> new OrderException("invalid order coupon."));
+            Coupon coupon = couponMapper.getCoupon();
             coupon.setIsUsed(false);
             couponRepo.save(coupon);
             couponMapperRepo.delete(couponMapper);

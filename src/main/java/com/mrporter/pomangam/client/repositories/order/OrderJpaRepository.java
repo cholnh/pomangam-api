@@ -58,7 +58,7 @@ class OrderCustomRepositoryImpl extends QuerydslRepositorySupport implements Ord
         final QOrder order = QOrder.order;
         final QOrderItem item = QOrderItem.orderItem;
 
-        List<Short> results = from(order)
+        Short result = from(order)
                 .select(item.quantity.sum())
                 .leftJoin(order.orderItems, item)
                 .where(order.deliveryDetailSite.deliverySite.idx.eq(dIdx)
@@ -69,28 +69,22 @@ class OrderCustomRepositoryImpl extends QuerydslRepositorySupport implements Ord
                 .and(order.isActive.isTrue())
                 .and(item.store.idx.eq(sIdx))
                 .and(item.isActive.isTrue()))
-                .fetch();
-        if(results.get(0) != null) {
-            return results.get(0);
-        }
-        return 0;
+                .fetchFirst();
+        return result == null ? 0 : result;
     }
 
     @Override
     public Short boxNumber(Long ddIdx, Long oIdx, LocalDate oDate) {
         final QOrder order = QOrder.order;
 
-        List<Short> results = from(order)
+        Short result = from(order)
                 .select(order.boxNumber.max())
                 .where(order.deliveryDetailSite.idx.eq(ddIdx)
                         .and(order.deliveryDetailSite.deliverySite.isActive.isTrue())
                         .and(order.orderDate.eq(oDate))
                         .and(order.orderTime.idx.eq(oIdx))
                         .and(order.isActive.isTrue()))
-                .fetch();
-        if(results.get(0) != null) {
-            return (short) (results.get(0) + 1);
-        }
-        return 0;
+                .fetchFirst();
+        return result == null ? 0 : (short)(result + 1);
     }
 }

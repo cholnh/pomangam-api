@@ -57,4 +57,12 @@ public class ImagePath {
     public static String reviews(Long dIdx, Long sIdx, Long rIdx) {
         return "images/dsites/" + dIdx + "/stores/" + sIdx + "/reviews/" + rIdx + "/";
     }
+
+    /**
+     * 광고
+     * C:/assets/images/dsites/{dIdx}/advertisements/{adIdx}/
+     */
+    public static String advertisements(Long dIdx, Long adIdx) {
+        return "images/dsites/" + dIdx + "/advertisements/" + adIdx + "/";
+    }
 }

@@ -34,18 +34,29 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throws UsernameNotFoundException
     {
         if( !phoneNumberWithAuthCode.contains("#") ) {
-            throw new UsernameNotFoundException(phoneNumberWithAuthCode);
+            throw new InternalAuthenticationServiceException("INVALID_AUTH_CODE");
         }
         String phoneNumber = phoneNumberWithAuthCode.split("#")[0];
         String authCode = phoneNumberWithAuthCode.split("#")[1];
-
-        // 유저 id 인증
         User user = userRepo.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
+
+        verifyPhoneNumber(user, phoneNumber);
+        verifyAuthCode(authCode, phoneNumber);
+        verifyFailCount(user);
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getPhoneNumber(),
+                user.getPassword().getValue(),
+                AuthorityUtils.createAuthorityList("ROLE_USER"));
+    }
+
+    private void verifyPhoneNumber(User user, String phoneNumber) {
         if ( user == null ) {
             throw new UsernameNotFoundException(phoneNumber);
         }
+    }
 
-        // auth code 인증
+    private void verifyAuthCode(String authCode, String phoneNumber) {
         authCode = authCode.trim();
         if( authCode.length() != kakaoAuthService.getAuthCodeLength() ) {
             throw new InternalAuthenticationServiceException("INVALID_AUTH_CODE");
@@ -56,19 +67,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 throw new InternalAuthenticationServiceException("INVALID_AUTH_CODE");
             }
         }
+    }
 
-        // fail count 확인
+    private void verifyFailCount(User user) {
         int failCount = user.getPassword().getFailedCount();
         if( failCount >= FAIL_LIMIT_COUNT ) {
             throw new InternalAuthenticationServiceException("PASSWORD_FAILED_EXCEEDED");
         }
         user.getPassword().setFailedCount(++failCount); // login 성공시: PostUserDetailsChecker 에서 초기화
         userRepo.save(user);
-
-        // 유저 정보 인증, 전달
-        return new org.springframework.security.core.userdetails.User(
-                user.getPhoneNumber(),
-                user.getPassword().getValue(),
-                AuthorityUtils.createAuthorityList("ROLE_USER"));
     }
 }

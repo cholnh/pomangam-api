@@ -1,6 +1,6 @@
-package com.mrporter.pomangam.client.controllers.advertisement;
+package com.mrporter.pomangam.client.controllers.faq;
 
-import com.mrporter.pomangam.client.services.advertisement.AdvertisementServiceImpl;
+import com.mrporter.pomangam.client.services.faq.FaqServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -13,17 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/dsites/{dIdx}/advertisements")
+@RequestMapping("/dsites/{dIdx}/faqs")
 @AllArgsConstructor
-public class AdvertisementController {
+public class FaqController {
 
-    private AdvertisementServiceImpl advertisementService;
+    private FaqServiceImpl faqService;
 
     @GetMapping
     public ResponseEntity<?> findByIdxDeliverySite(
             @PathVariable(value = "dIdx", required = true) Long dIdx,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, page = 0, size = 10) Pageable pageable
     ) {
-        return new ResponseEntity(advertisementService.findByIdxDeliverySite(dIdx, pageable), HttpStatus.OK);
+        return new ResponseEntity(faqService.findByIdxDeliverySite(dIdx, pageable), HttpStatus.OK);
     }
 }

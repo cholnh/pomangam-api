@@ -1,9 +1,16 @@
 package com.mrporter.pomangam;
 
+import com.mrporter.pomangam.client.domains.advertisement.Advertisement;
+import com.mrporter.pomangam.client.domains.advertisement.AdvertisementMapper;
+import com.mrporter.pomangam.client.domains.advertisement.AdvertisementType;
+import com.mrporter.pomangam.client.domains.coupon.Coupon;
+import com.mrporter.pomangam.client.domains.coupon.CouponMapper;
 import com.mrporter.pomangam.client.domains.deliverysite.DeliverySite;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSite;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSiteDto;
 import com.mrporter.pomangam.client.domains.deliverysite.region.Region;
+import com.mrporter.pomangam.client.domains.event.Event;
+import com.mrporter.pomangam.client.domains.event.EventMapper;
 import com.mrporter.pomangam.client.domains.fcm.FcmToken;
 import com.mrporter.pomangam.client.domains.order.Order;
 import com.mrporter.pomangam.client.domains.order.OrderType;
@@ -40,11 +47,15 @@ import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.domains.user.UserDto;
 import com.mrporter.pomangam.client.domains.user.password.Password;
 import com.mrporter.pomangam.client.domains.user.point.rank.PointRank;
+import com.mrporter.pomangam.client.repositories.advertisement.AdvertisementJpaRepository;
+import com.mrporter.pomangam.client.repositories.advertisement.AdvertisementMapperJpaRepository;
 import com.mrporter.pomangam.client.repositories.coupon.CouponJpaRepository;
 import com.mrporter.pomangam.client.repositories.coupon.CouponMapperJpaRepository;
 import com.mrporter.pomangam.client.repositories.deliverysite.DeliverySiteJpaRepository;
 import com.mrporter.pomangam.client.repositories.deliverysite.detail.DeliveryDetailSiteJpaRepository;
 import com.mrporter.pomangam.client.repositories.deliverysite.region.RegionJpaRepository;
+import com.mrporter.pomangam.client.repositories.event.EventJpaRepository;
+import com.mrporter.pomangam.client.repositories.event.EventMapperJpaRepository;
 import com.mrporter.pomangam.client.repositories.fcm.FcmTokenJpaRepository;
 import com.mrporter.pomangam.client.repositories.order.OrderJpaRepository;
 import com.mrporter.pomangam.client.repositories.ordertime.OrderTimeJpaRepository;
@@ -59,6 +70,7 @@ import com.mrporter.pomangam.client.repositories.store.StoreJpaRepository;
 import com.mrporter.pomangam.client.repositories.store.category.StoreCategoryJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.point.rank.PointRankJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.random_nickname.RandomNicknameJpaRepository;
+import com.mrporter.pomangam.client.services._bases.ImagePath;
 import com.mrporter.pomangam.client.services.order.OrderServiceImpl;
 import com.mrporter.pomangam.client.services.user.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +81,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Component
@@ -96,6 +109,10 @@ public class TestDataLoader implements ApplicationRunner {
     @Autowired CouponMapperJpaRepository couponMapperJpaRepository;
     @Autowired PointRankJpaRepository pointRankJpaRepository;
     @Autowired OrderServiceImpl orderService;
+    @Autowired AdvertisementJpaRepository advertisementJpaRepository;
+    @Autowired AdvertisementMapperJpaRepository advertisementMapperJpaRepository;
+    @Autowired EventJpaRepository eventJpaRepository;
+    @Autowired EventMapperJpaRepository eventMapperJpaRepository;
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddl;
@@ -131,6 +148,57 @@ public class TestDataLoader implements ApplicationRunner {
                 .build();
         deliverySiteJpaRepository.save(deliverySite);
         deliverySiteJpaRepository.save(deliverySite2);
+
+
+        Advertisement advertisement1 = Advertisement.builder()
+                .advertisementType(AdvertisementType.MAIN)
+                .imagePath(ImagePath.advertisements(1L, 1L))
+                .build();
+        Advertisement advertisement2 = Advertisement.builder()
+                .advertisementType(AdvertisementType.MAIN)
+                .imagePath(ImagePath.advertisements(1L, 2L))
+                .build();
+        advertisementJpaRepository.save(advertisement1);
+        advertisementJpaRepository.save(advertisement2);
+
+        AdvertisementMapper advertisementMapper1 = AdvertisementMapper.builder()
+                .advertisement(advertisement1)
+                .deliverySite(deliverySite)
+                .build();
+        AdvertisementMapper advertisementMapper2 = AdvertisementMapper.builder()
+                .advertisement(advertisement2)
+                .deliverySite(deliverySite)
+                .build();
+        advertisementMapperJpaRepository.save(advertisementMapper1);
+        advertisementMapperJpaRepository.save(advertisementMapper2);
+
+
+        Event event1 = Event.builder()
+                .beginDate(LocalDateTime.parse("2020-02-15T00:00:00"))
+                .endDate(LocalDateTime.parse("2020-09-01T11:59:59"))
+                .title("신학기 쿠폰 증정 이벤트")
+                .contents("쿠폰을 받기 위해서는 블라블라 빠큐먹엉")
+                .build();
+        Event event2 = Event.builder()
+                .beginDate(LocalDateTime.parse("2020-02-15T00:00:00"))
+                .title("1일 1닭 이벤트")
+                .contents("1닭 을 받기 위해서는 블라블라 빠큐먹엉")
+                .build();
+        eventJpaRepository.save(event1);
+        eventJpaRepository.save(event2);
+
+        EventMapper eventMapper1 = EventMapper.builder()
+                .deliverySite(deliverySite)
+                .event(event1)
+                .build();
+        EventMapper eventMapper2 = EventMapper.builder()
+                .deliverySite(deliverySite)
+                .event(event2)
+                .build();
+        eventMapperJpaRepository.save(eventMapper1);
+        eventMapperJpaRepository.save(eventMapper2);
+
+
 
         DeliveryDetailSite detail1 = DeliveryDetailSite.builder()
                 .name("학생회관 뒤")
@@ -915,15 +983,15 @@ public class TestDataLoader implements ApplicationRunner {
 
 
 
-//        Coupon coupon1 = Coupon.builder()
-//                .isUsed(false)
-//                .title("1,000원 할인쿠폰")
-//                .code("1XER-FGT3-1199")
-//                .beginDate(LocalDateTime.now())
-//                .discountCost(1_000)
-//                .user(user1)
-//                .build();
-//        coupon1 = couponJpaRepository.save(coupon1);
+        Coupon coupon1 = Coupon.builder()
+                .isUsed(false)
+                .title("1,000원 할인쿠폰")
+                .code("1XER-FGT3-1199")
+                .beginDate(LocalDateTime.now())
+                .discountCost(1_000)
+                .user(user1)
+                .build();
+        coupon1 = couponJpaRepository.save(coupon1);
 
         Payment payment1 = Payment.builder()
                 .paymentType(PaymentType.CREDIT_CARD)
@@ -981,11 +1049,11 @@ public class TestDataLoader implements ApplicationRunner {
 //        order1.addItem(orderItem1);
 //        orderJpaRepository.save(order1);
 
-//        CouponMapper couponMapper1 = CouponMapper.builder()
-//                .order(order1)
-//                .coupon(coupon1)
-//                .build();
-//        couponMapperJpaRepository.save(couponMapper1);
+        CouponMapper couponMapper1 = CouponMapper.builder()
+                .order(Order.builder().idx(1L).build())
+                .coupon(coupon1)
+                .build();
+        couponMapperJpaRepository.save(couponMapper1);
 
 
 //        OrderRequestDto oRequest1 = new OrderRequestDto();
