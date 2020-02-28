@@ -12,6 +12,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -20,7 +22,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(exclude = {"deliveryDetailSite", "coupons"})
+@ToString(exclude = {"deliveryDetailSite"})
 public class User extends EntityAuditing {
 
     /**
@@ -102,17 +104,35 @@ public class User extends EntityAuditing {
     /**
      * 쿠폰
      */
-    @JoinColumn(name = "idx_user", nullable = true)
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Coupon> coupons;
+//    @JoinColumn(name = "idx_user", nullable = true)
+//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Coupon> coupons;
+
+    /**
+     * 유저 권한
+     *
+     * Prefix: "ROLE_"
+     * Delimiter: 쉼표(,)
+     * Client 기본값: "ROLE_USER"
+     * Store Owner 기본값: "ROLE_STORE_OWNER"
+     * 예시: ROLE_USER,ROLE_STORE_OWNER
+     * 글자수: utf8 기준 / 영문 256자 / 한글 256자
+     */
+    @Column(name = "authorities", nullable = false, length = 256)
+    private String authorities;
 
     @PrePersist
     private void prePersist() {
         this.point = 0; // always 0 when its insert
+        this.authorities = authorities == null
+                ? "ROLE_USER"
+                : isValidAuthorities(authorities)
+                    ? authorities
+                    : "ROLE_USER";
     }
 
     @Builder
-    public User(Long idx, Boolean isActive, DeliveryDetailSite deliveryDetailSite, String phoneNumber, Password password, String name, String nickname, Sex sex, LocalDate birth, @PositiveOrZero Integer point, Long idxFcmToken, PointRank pointRank, List<Coupon> coupons) {
+    public User(Long idx, Boolean isActive, DeliveryDetailSite deliveryDetailSite, String phoneNumber, Password password, String name, String nickname, Sex sex, LocalDate birth, @PositiveOrZero Integer point, Long idxFcmToken, PointRank pointRank, String authorities) {
         super.setIdx(idx);
         super.setIsActive(isActive);
         this.deliveryDetailSite = deliveryDetailSite;
@@ -125,6 +145,33 @@ public class User extends EntityAuditing {
         this.point = point;
         this.idxFcmToken = idxFcmToken;
         this.pointRank = pointRank;
-        this.coupons = coupons;
+        this.authorities = authorities;
+    }
+
+    public String[] getAuthorities() {
+        return this.authorities.split(",");
+    }
+
+    public void addAuthority(String authority) {
+        if(this.authorities == null || this.authorities.isEmpty()) {
+            this.authorities = authority;
+        } else {
+            this.authorities += "," + authority;
+        }
+    }
+
+    private boolean isValidAuthorities(String authorities) {
+        try {
+            if(authorities == null || authorities.isEmpty()) return false;
+            for(String authority : getAuthorities()) {
+                if(authority.length() < 6 ||
+                        !authority.toUpperCase().substring(0, 5).equals("ROLE_")) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

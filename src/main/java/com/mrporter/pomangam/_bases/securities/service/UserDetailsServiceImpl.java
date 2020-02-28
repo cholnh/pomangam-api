@@ -3,7 +3,6 @@ package com.mrporter.pomangam._bases.securities.service;
 import com.mrporter.pomangam._bases.securities.kakaoauth.service.KakaoAuthServiceImpl;
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
-import com.mrporter.pomangam.client.services.user.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -47,7 +46,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getPhoneNumber(),
                 user.getPassword().getValue(),
-                AuthorityUtils.createAuthorityList("ROLE_USER"));
+                AuthorityUtils.createAuthorityList(user.getAuthorities()));
     }
 
     private void verifyPhoneNumber(User user, String phoneNumber) {

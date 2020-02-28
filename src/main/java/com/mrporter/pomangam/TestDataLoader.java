@@ -298,6 +298,7 @@ public class TestDataLoader implements ApplicationRunner {
                 .sex(Sex.MALE)
                 .birth(LocalDate.parse("1993-01-10"))
                 .idxFcmToken(fIdx1)
+                .authorities("ROLE_USER,ROLE_STORE_OWNER")
                 .build();
         User user2 = User.builder()
                 .deliveryDetailSite(detail1)
