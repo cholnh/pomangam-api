@@ -20,7 +20,7 @@ public class ProductDto implements Serializable {
     private LocalDateTime modifyDate;
     private Long idxStore;
     private Integer salePrice;
-    private ProductInfo productinfo;
+    private ProductInfo productInfo;
     private String productCategoryTitle;
     private Integer cntLike;
     private Integer sequence;

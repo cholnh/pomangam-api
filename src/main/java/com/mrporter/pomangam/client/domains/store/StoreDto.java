@@ -1,9 +1,12 @@
 package com.mrporter.pomangam.client.domains.store;
 
+import com.mrporter.pomangam.client.domains.product.category.ProductCategoryDto;
 import com.mrporter.pomangam.client.domains.store.image.StoreImage;
 import com.mrporter.pomangam.client.domains.store.info.ProductionInfo;
 import com.mrporter.pomangam.client.domains.store.info.StoreInfo;
 import com.mrporter.pomangam.client.domains.store.schedule.StoreSchedule;
+import com.mrporter.pomangam.client.domains.store.story.StoreStory;
+import com.mrporter.pomangam.client.domains.store.story.StoreStoryDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -20,6 +23,7 @@ public class StoreDto implements Serializable {
     private Long idx;
     private LocalDateTime registerDate;
     private LocalDateTime modifyDate;
+
     private Long idxDeliverySite;
     private String storeCategory;
     private StoreInfo storeInfo;
@@ -34,6 +38,12 @@ public class StoreDto implements Serializable {
     private String brandImagePath;
     private String storeImageMainPath;
     private List<String> storeImageSubPaths = new ArrayList<>();
+
+    // product category
+    private List<ProductCategoryDto> productCategories;
+
+    // story
+    private List<StoreStoryDto> stories;
 
     public Store toEntity() {
         Store entity = new ModelMapper().map(this, Store.class);
@@ -64,6 +74,12 @@ public class StoreDto implements Serializable {
 
         // category
         dto.setStoreCategory(entity.getStoreCategory().getCategoryTitle());
+
+        // product category
+        dto.setProductCategories(ProductCategoryDto.fromEntities(entity.getProductCategories()));
+
+        // story
+        dto.setStories(StoreStoryDto.fromEntities(entity.getStories()));
 
         return dto;
     }

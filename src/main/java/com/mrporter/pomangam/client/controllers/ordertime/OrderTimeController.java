@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.client.controllers.ordertime;
 
+import com.mrporter.pomangam.client.services.ordertime.OrderTimeServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,11 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class OrderTimeController {
 
+    OrderTimeServiceImpl orderTimeService;
+
     @GetMapping("/dsites/{dIdx}/ordertimes")
     public ResponseEntity<?> findByIdxDeliverySite(
             @PathVariable(value = "dIdx", required = true) Long dIdx
     ) {
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(orderTimeService.findByIdxDeliverySite(dIdx), HttpStatus.OK);
     }
 
     @GetMapping("/dsites/{dIdx}/ordertimes/{idx}")

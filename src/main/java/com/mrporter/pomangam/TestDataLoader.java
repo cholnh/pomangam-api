@@ -42,6 +42,8 @@ import com.mrporter.pomangam.client.domains.store.image.StoreImageType;
 import com.mrporter.pomangam.client.domains.store.info.ProductionInfo;
 import com.mrporter.pomangam.client.domains.store.info.StoreInfo;
 import com.mrporter.pomangam.client.domains.store.schedule.StoreSchedule;
+import com.mrporter.pomangam.client.domains.store.story.StoreStory;
+import com.mrporter.pomangam.client.domains.store.story.image.StoreStoryImage;
 import com.mrporter.pomangam.client.domains.user.Sex;
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.domains.user.UserDto;
@@ -152,11 +154,11 @@ public class TestDataLoader implements ApplicationRunner {
 
         Advertisement advertisement1 = Advertisement.builder()
                 .advertisementType(AdvertisementType.MAIN)
-                .imagePath(ImagePath.advertisements(1L, 1L))
+                .imagePath(ImagePath.advertisements(1L, 1L)+"1.jpg")
                 .build();
         Advertisement advertisement2 = Advertisement.builder()
                 .advertisementType(AdvertisementType.MAIN)
-                .imagePath(ImagePath.advertisements(1L, 2L))
+                .imagePath(ImagePath.advertisements(1L, 2L)+"1.jpg")
                 .build();
         advertisementJpaRepository.save(advertisement1);
         advertisementJpaRepository.save(advertisement2);
@@ -490,10 +492,24 @@ public class TestDataLoader implements ApplicationRunner {
                 .imagePath("/assets/images/dsites/1/stores/4/brand.png")
                 .imageType(StoreImageType.BRAND)
                 .build();
+        StoreImage storeBrandImage5 = StoreImage.builder()
+                .imagePath("/assets/images/dsites/1/stores/5/brand.png")
+                .imageType(StoreImageType.BRAND)
+                .build();
 
-        StoreImage storeImage1 = StoreImage.builder()
+        StoreImage storeImage1_1 = StoreImage.builder()
                 .imagePath("/assets/images/dsites/1/stores/1/1.jpg")
                 .imageType(StoreImageType.MAIN)
+                .sequence(1)
+                .build();
+        StoreImage storeImage1_2 = StoreImage.builder()
+                .imagePath("/assets/images/dsites/1/stores/1/2.jpg")
+                .imageType(StoreImageType.SUB)
+                .sequence(1)
+                .build();
+        StoreImage storeImage1_3 = StoreImage.builder()
+                .imagePath("/assets/images/dsites/1/stores/1/3.jpg")
+                .imageType(StoreImageType.SUB)
                 .sequence(1)
                 .build();
         StoreImage storeImage2_1 = StoreImage.builder()
@@ -531,11 +547,70 @@ public class TestDataLoader implements ApplicationRunner {
                 .imageType(StoreImageType.SUB)
                 .sequence(3)
                 .build();
+        StoreImage storeImage5_1 = StoreImage.builder()
+                .imagePath("/assets/images/dsites/1/stores/5/1.jpg")
+                .imageType(StoreImageType.MAIN)
+                .sequence(1)
+                .build();
+        StoreImage storeImage5_2 = StoreImage.builder()
+                .imagePath("/assets/images/dsites/1/stores/5/2.jpg")
+                .imageType(StoreImageType.SUB)
+                .sequence(2)
+                .build();
+        StoreImage storeImage5_3 = StoreImage.builder()
+                .imagePath("/assets/images/dsites/1/stores/5/3.jpg")
+                .imageType(StoreImageType.SUB)
+                .sequence(3)
+                .build();
 
-        store1.addImages(storeBrandImage1, storeImage1);
+        store1.addImages(storeBrandImage1, storeImage1_1, storeImage1_2, storeImage1_3);
         store2.addImages(storeBrandImage2, storeImage2_1, storeImage2_2, storeImage2_3);
         store3.addImages(storeBrandImage3, storeImage3);
         store4.addImages(storeBrandImage4, storeImage4_1, storeImage4_2, storeImage4_3);
+        store5.addImages(storeBrandImage5, storeImage5_1, storeImage5_2, storeImage5_3);
+
+        // store's story
+        StoreStory storeStory1 = StoreStory.builder()
+                .title("고객리뷰")
+                .build();
+        storeStory1.addImages(
+                StoreStoryImage.builder()
+                    .imagePath(ImagePath.reviews(1L, 1L, 1L)+"1.jpg")
+                    .sequence(1)
+                    .build(),
+                StoreStoryImage.builder()
+                    .imagePath(ImagePath.reviews(1L, 1L, 1L)+"2.jpg")
+                    .sequence(2)
+                    .build()
+        );
+        store1.addStories(storeStory1);
+
+
+
+        // store's product category
+        ProductCategory productCategory1 = ProductCategory.builder()
+                .categoryTitle("세트")
+                .build();
+        ProductCategory productCategory2 = ProductCategory.builder()
+                .categoryTitle("단품")
+                .build();
+
+        ProductCategory productCategory3 = ProductCategory.builder()
+                .categoryTitle("보울도시락")
+                .build();
+        ProductCategory productCategory4 = ProductCategory.builder()
+                .categoryTitle("사각도시락")
+                .build();
+        ProductCategory productCategory5 = ProductCategory.builder()
+                .categoryTitle("프리미엄")
+                .build();
+        ProductCategory productCategory6 = ProductCategory.builder()
+                .categoryTitle("간식")
+                .build();
+
+        store1.addProductCategories(productCategory1, productCategory2);
+        store2.addProductCategories(productCategory3, productCategory4, productCategory5, productCategory6);
+
 
         storeJpaRepository.save(store1);
         storeJpaRepository.save(store2);
@@ -543,127 +618,70 @@ public class TestDataLoader implements ApplicationRunner {
         storeJpaRepository.save(store4);
         storeJpaRepository.save(store5);
 
+        Product product1 = getProduct(1L,"싸이버거 세트",
+                1L, 1L, 1, 6_000, 1_000, 500,
+                1, 2, 3);
+        Product product2 = getProduct(2L,"싸이버거",
+                1L, 2L, 2, 4_000, 1_000, 500,
+                1, 2, 3);
+        Product product3 = getProduct(3L,"휠렛버거 세트",
+                1L, 1L, 3, 5_500, 1_000, 500,
+                1, 2, 3);
+        Product product4 = getProduct(4L,"휠렛버거",
+                1L, 2L, 4, 3_500, 1_000, 500,
+                1, 2, 3);
 
+        Product product2_1 = getProduct(5L,"갈비치킨마요",
+                2L, 3L, 1, 3_200, 1_000, 300,
+                1);
+        Product product2_2 = getProduct(6L,"메가치킨마요",
+                2L, 3L, 2, 5_500, 1_000, 300,
+                1);
+        Product product2_3 = getProduct(7L,"메가치킨제육",
+                2L, 4L, 3, 6_900, 1_000, 300,
+                1);
+        Product product2_4 = getProduct(8L,"치킨마요",
+                2L, 3L, 4, 2_900, 1_000, 300,
+                1);
+        Product product2_5 = getProduct(9L,"빅치킨마요",
+                2L, 3L, 5, 3_500, 1_000, 300,
+                1);
+        Product product2_6 = getProduct(10L,"숯불직화구이 덮밥",
+                2L, 5L, 6, 5_700, 1_000, 300,
+                1);
+        Product product2_7 = getProduct(11L,"왕치킨마요",
+                2L, 3L, 7, 4_200, 1_000, 300,
+                1);
+        Product product2_8 = getProduct(12L,"한솥 철판볶음밥",
+                2L, 4L, 8, 3_700, 1_000, 300,
+                1);
+        Product product2_9 = getProduct(13L,"돈까스 카레",
+                2L, 3L, 9, 3_900, 1_000, 300,
+                1);
+        Product product2_10 = getProduct(14L,"불닭비빔밥",
+                2L, 5L, 10, 4_500, 1_000, 300,
+                1);
+        Product product2_11 = getProduct(15L,"돈치마요",
+                2L, 3L, 11, 3_500, 1_000, 300,
+                1);
 
-        ProductCategory productCategory1 = ProductCategory.builder()
-                .categoryTitle("세트")
-                .build();
-        ProductCategory productCategory2 = ProductCategory.builder()
-                .categoryTitle("단품")
-                .build();
-        productCategoryJpaRepository.save(productCategory1);
-        productCategoryJpaRepository.save(productCategory2);
-
-        Product product1 = Product.builder()
-                .productInfo(ProductInfo.builder()
-                        .name("싸이버거세트ㅋ")
-                        .description("손을 넣어만든 수제버거 세트")
-                        .subDescription("한번 맛보면 잊어버리는 맛! 세트")
-                        .build())
-                .idxStore(1L)
-                .productCategory(productCategory1)
-                .sequence(1)
-                .cost(Cost.builder()
-                        .unitCost(6000)
-                        .priceClientFee(1000)
-                        .priceStoreFee(500)
-                        .percentClientFee(0)
-                        .percentStoreFee(0)
-                        .build())
-                .build();
-        Product product2 = Product.builder()
-                .productInfo(ProductInfo.builder()
-                        .name("싸이버거")
-                        .description("손을 넣어만든 수제버거 단품")
-                        .subDescription("한번 맛보면 잊어버리는 맛! 단품")
-                        .build())
-                .idxStore(1L)
-                .productCategory(productCategory2)
-                .sequence(2)
-                .cost(Cost.builder()
-                        .unitCost(4000)
-                        .priceClientFee(1000)
-                        .priceStoreFee(500)
-                        .percentClientFee(0)
-                        .percentStoreFee(0)
-                        .build())
-                .build();
-        Product product3 = Product.builder()
-                .productInfo(ProductInfo.builder()
-                        .name("후라이드치킨세트")
-                        .description("후라이까지말라이~")
-                        .subDescription("세트다이거")
-                        .build())
-                .idxStore(1L)
-                .productCategory(productCategory2)
-                .sequence(3)
-                .cost(Cost.builder()
-                        .unitCost(8000)
-                        .priceClientFee(1000)
-                        .priceStoreFee(500)
-                        .percentClientFee(0)
-                        .percentStoreFee(0)
-                        .build())
-                .build();
-        Product product4 = Product.builder()
-                .productInfo(ProductInfo.builder()
-                        .name("후라이드치킨")
-                        .description("후라이까지말라우")
-                        .subDescription("단품이다이거")
-                        .build())
-                .idxStore(1L)
-                .productCategory(productCategory2)
-                .sequence(4)
-                .cost(Cost.builder()
-                        .unitCost(6500)
-                        .priceClientFee(1000)
-                        .priceStoreFee(500)
-                        .build())
-                .build();
-
-        // /assets/images/products/{idx-product}/{idx-product-image}.jpg
-        ProductImage productImage1_1 = ProductImage.builder()
-                .imagePath("/assets/images/dsites/1/stores/1/products/1/1.jpg")
-                .imageType(ProductImageType.MAIN)
-                .sequence(1)
-                .build();
-        ProductImage productImage1_2 = ProductImage.builder()
-                .imagePath("/assets/images/dsites/1/stores/1/products/1/2.jpg")
-                .imageType(ProductImageType.SUB)
-                .sequence(2)
-                .build();
-        ProductImage productImage1_3 = ProductImage.builder()
-                .imagePath("/assets/images/dsites/1/stores/1/products/1/3.jpg")
-                .imageType(ProductImageType.SUB)
-                .sequence(3)
-                .build();
-        ProductImage productImage2 = ProductImage.builder()
-                .imagePath("/assets/images/dsites/1/stores/1/products/2/1.jpg")
-                .imageType(ProductImageType.MAIN)
-                .sequence(1)
-                .build();
-        ProductImage productImage3 = ProductImage.builder()
-                .imagePath("/assets/images/dsites/1/stores/1/products/3/1.jpg")
-                .imageType(ProductImageType.MAIN)
-                .sequence(1)
-                .build();
-        ProductImage productImage4 = ProductImage.builder()
-                .imagePath("/assets/images/dsites/1/stores/1/products/4/1.jpg")
-                .imageType(ProductImageType.MAIN)
-                .sequence(1)
-                .build();
-
-        product1.addImage(productImage1_1);
-        product1.addImage(productImage1_2);
-        product1.addImage(productImage1_3);
-        product2.addImage(productImage2);
-        product3.addImage(productImage3);
-        product4.addImage(productImage4);
 
         productJpaRepository.save(product1);
         productJpaRepository.save(product2);
         productJpaRepository.save(product3);
         productJpaRepository.save(product4);
+
+        productJpaRepository.save(product2_1);
+        productJpaRepository.save(product2_2);
+        productJpaRepository.save(product2_3);
+        productJpaRepository.save(product2_4);
+        productJpaRepository.save(product2_5);
+        productJpaRepository.save(product2_6);
+        productJpaRepository.save(product2_7);
+        productJpaRepository.save(product2_8);
+        productJpaRepository.save(product2_9);
+        productJpaRepository.save(product2_10);
+        productJpaRepository.save(product2_11);
 
 
 
@@ -1118,5 +1136,35 @@ public class TestDataLoader implements ApplicationRunner {
         order.addItem(orderItem1);
         boxCnt++;
         return order;
+    }
+
+    private Product getProduct(Long idx, String name, Long sIdx, Long cIdx, int seq, int unitCost, int cf, int sf, int...idxesImage) {
+        Product product = Product.builder()
+                .productInfo(ProductInfo.builder()
+                        .name(name)
+                        .description(name+" 설명 부분입니다.")
+                        .subDescription(name+" 부가설명 부분입니다.")
+                        .build())
+                .idxStore(sIdx)
+                .productCategory(ProductCategory.builder().idx(cIdx).build())
+                .sequence(seq)
+                .cost(Cost.builder()
+                        .unitCost(unitCost)
+                        .priceClientFee(cf)
+                        .priceStoreFee(sf)
+                        .build())
+                .build();
+
+        for(int i=0; i<idxesImage.length; i++) {
+            int idxImage = idxesImage[i];
+            ProductImage productImage = ProductImage.builder()
+                    .imagePath(ImagePath.products(1L, sIdx, idx)+idxImage+".jpg")
+                    .imageType(i==0 ? ProductImageType.MAIN : ProductImageType.SUB)
+                    .sequence(i+1)
+                    .build();
+            product.addImage(productImage);
+        }
+
+        return product;
     }
 }

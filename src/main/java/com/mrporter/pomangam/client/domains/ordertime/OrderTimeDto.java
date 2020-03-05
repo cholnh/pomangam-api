@@ -3,8 +3,10 @@ package com.mrporter.pomangam.client.domains.ordertime;
 import lombok.*;
 import org.modelmapper.ModelMapper;
 
+import javax.persistence.Column;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,10 @@ public class OrderTimeDto implements Serializable {
     private Long idx;
     private LocalDateTime registerDate;
     private LocalDateTime modifyDate;
+
+    private LocalTime arrivalTime;
+    private LocalTime pickUpTime;
+    private LocalTime orderEndTime;
 
     public OrderTime toEntity() {
         OrderTime entity = new ModelMapper().map(this, OrderTime.class);

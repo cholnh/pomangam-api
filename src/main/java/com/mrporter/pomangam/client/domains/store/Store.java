@@ -1,11 +1,13 @@
 package com.mrporter.pomangam.client.domains.store;
 
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
+import com.mrporter.pomangam.client.domains.product.category.ProductCategory;
 import com.mrporter.pomangam.client.domains.store.category.StoreCategory;
 import com.mrporter.pomangam.client.domains.store.image.StoreImage;
 import com.mrporter.pomangam.client.domains.store.info.ProductionInfo;
 import com.mrporter.pomangam.client.domains.store.info.StoreInfo;
 import com.mrporter.pomangam.client.domains.store.schedule.StoreSchedule;
+import com.mrporter.pomangam.client.domains.store.story.StoreStory;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -47,13 +49,13 @@ public class Store extends EntityAuditing {
      * 업체 생산량
      */
     @Embedded
-    ProductionInfo productionInfo;
+    private ProductionInfo productionInfo;
 
     /**
      * 업체 영업 시간
      */
     @Embedded
-    StoreSchedule storeSchedule;
+    private StoreSchedule storeSchedule;
 
     /**
      * 평균 리뷰 평점
@@ -88,6 +90,24 @@ public class Store extends EntityAuditing {
     @OrderBy("sequence ASC")
     private List<StoreImage> images = new ArrayList<>();
 
+    /**
+     * 제품 카테고리 정보
+     * 단방향 매핑
+     */
+    @JoinColumn(name = "idx_store", nullable = false)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("idx ASC")
+    private List<ProductCategory> productCategories = new ArrayList<>();
+
+    /**
+     * 스토리
+     * 단방향 매핑
+     */
+    @JoinColumn(name = "idx_store", nullable = false)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("sequence ASC")
+    private List<StoreStory> stories = new ArrayList<>();
+
     @PrePersist
     private void prePersist() {
         // always 0 when its insert
@@ -98,7 +118,7 @@ public class Store extends EntityAuditing {
     }
 
     @Builder
-    public Store(Long idx, Long idxDeliverySite, StoreCategory storeCategory, StoreInfo storeInfo, ProductionInfo productionInfo, StoreSchedule storeSchedule, Float avgStar, Integer cntLike, Integer cntComment, Integer sequence, List<StoreImage> images) {
+    public Store(Long idx, Long idxDeliverySite, StoreCategory storeCategory, StoreInfo storeInfo, ProductionInfo productionInfo, StoreSchedule storeSchedule, Float avgStar, Integer cntLike, Integer cntComment, Integer sequence, List<StoreImage> images, List<ProductCategory> productCategories, List<StoreStory> stories) {
         super.setIdx(idx);
         this.idxDeliverySite = idxDeliverySite;
         this.storeCategory = storeCategory;
@@ -110,6 +130,8 @@ public class Store extends EntityAuditing {
         this.cntComment = cntComment;
         this.sequence = sequence;
         this.images = images;
+        this.productCategories = productCategories;
+        this.stories = stories;
     }
 
     public void addImages(StoreImage ...storeImage) {
@@ -117,6 +139,18 @@ public class Store extends EntityAuditing {
             this.images = new ArrayList<>();
         }
         this.images.addAll(Arrays.asList(storeImage));
+    }
+    public void addProductCategories(ProductCategory ...productCategory) {
+        if(this.productCategories == null) {
+            this.productCategories = new ArrayList<>();
+        }
+        this.productCategories.addAll(Arrays.asList(productCategory));
+    }
+    public void addStories(StoreStory ...storeStory) {
+        if(this.stories == null) {
+            this.stories = new ArrayList<>();
+        }
+        this.stories.addAll(Arrays.asList(storeStory));
     }
     public void addCntLike() {
         if(this.cntLike == null) {

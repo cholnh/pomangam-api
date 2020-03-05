@@ -70,12 +70,12 @@ spring:
 file:
   # 프로젝트 안 upload-dir: ./uploads
   # 맥 upload-dir: /Users/nakzzi/Downloads/assets
-  upload-dir: C:/assets
+  upload-dir: C:/ # file upload url
 ---
 static:
   resource:
     # 맥 location: /Users/nakzzi/Downloads/assets/ -> 확인필요.
-    location: file:///C:/assets/
+    location: file:///C:/assets/  # file download url
 ---
 logging:
   file: log/slf4j.log

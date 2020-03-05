@@ -1,10 +1,10 @@
 package com.mrporter.pomangam.client.domains.product.category;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +13,6 @@ import java.util.List;
 public class ProductCategoryDto implements Serializable {
 
     private Long idx;
-    private LocalDateTime registerDate;
-    private LocalDateTime modifyDate;
     private String categoryTitle;
 
     public ProductCategory toEntity() {

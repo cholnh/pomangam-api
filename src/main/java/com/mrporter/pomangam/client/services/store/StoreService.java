@@ -12,4 +12,5 @@ public interface StoreService {
     StoreDto findByIdx(Long idx);
     long count();
     List<StoreSummaryDto> findOpeningStores(Long dIdx, Long oIdx, LocalDate oDate, Pageable pageable);
+    long countOpeningStores(Long dIdx, Long oIdx, LocalDate oDate);
 }

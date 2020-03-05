@@ -25,15 +25,13 @@ public class ProductCategory extends EntityAuditing {
     @Column(name = "category_title", nullable = false, length = 20)
     private String categoryTitle;
 
-    @OneToMany(mappedBy = "productCategory", fetch = FetchType.LAZY)
-    @OrderBy("sequence ASC")
-    private List<Product> products;
+//    @OneToMany(mappedBy = "productCategory", fetch = FetchType.LAZY)
+//    @OrderBy("sequence ASC")
+//    private List<Product> products;
 
     @Builder
-    public ProductCategory(String categoryTitle, List<Product> products) {
+    public ProductCategory(Long idx, String categoryTitle) {
+        super.setIdx(idx);
         this.categoryTitle = categoryTitle;
-        if(products != null) {
-            this.products = products;
-        }
     }
 }

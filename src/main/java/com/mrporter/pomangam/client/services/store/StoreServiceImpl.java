@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,10 +46,13 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public List<StoreSummaryDto> findOpeningStores(Long dIdx, Long oIdx, LocalDate oDate, Pageable pageable) {
         List<StoreSummaryDto> summaries = new ArrayList<>();
-        LocalTime orderEndTime = _orderEndTime(oIdx);
-        if(LocalTime.now().isBefore(orderEndTime)) {
+
+        LocalDateTime orderEndTime = LocalDateTime.of(oDate, _orderEndTime(oIdx));
+        LocalDateTime now = LocalDateTime.now();
+
+        if(now.isBefore(orderEndTime)) {
             summaries = _orderableStores(dIdx, oIdx, pageable);
-            int dMinute = (int) Duration.between(LocalTime.now(), orderEndTime).toMinutes(); // 주문 마감까지 남은 시간
+            int dMinute = (int) Duration.between(now, orderEndTime).toMinutes(); // 주문 마감까지 남은 시간
             for(StoreSummaryDto dto : summaries) {
                 int pp = dto.getProductionInfo().getParallelProduction();       // 평균 병렬 생산량
                 int mt = dto.getProductionInfo().getMinimumTime();              // 최소 생산 가능 시간
@@ -62,6 +66,18 @@ public class StoreServiceImpl implements StoreService {
         return summaries;
     }
 
+    @Override
+    public long countOpeningStores(Long dIdx, Long oIdx, LocalDate oDate) {
+        LocalDateTime orderEndTime = LocalDateTime.of(oDate, _orderEndTime(oIdx));
+        LocalDateTime now = LocalDateTime.now();
+
+        if(now.isBefore(orderEndTime)) {
+            return storeRepo.countByIdxOrderTimeAndIdxDeliverySiteAndIsActiveIsTrue(oIdx, dIdx);
+        } else {
+            return 0L;
+        }
+    }
+
     private LocalTime _orderEndTime(Long oIdx) {
         return orderTimeRepo.findById(oIdx)
                 .orElseThrow(() -> new StoreException("invalid orderTime."))
@@ -69,7 +85,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     private List<StoreSummaryDto> _orderableStores(Long dIdx, Long oIdx, Pageable pageable) {
-        return StoreSummaryDto.fromEntities(orderTimeRepo // (주문시간, 주문장소)에 해당하는 업체들
+        return StoreSummaryDto.fromEntities(storeRepo // (주문시간, 주문장소)에 해당하는 업체들
                 .findStoreByIdxOrderTimeAndIdxDeliverySiteAndIsActiveIsTrue(oIdx, dIdx, pageable)
                 .getContent());
     }

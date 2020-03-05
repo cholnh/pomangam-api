@@ -22,9 +22,16 @@ public class StoreController {
     @GetMapping
     public ResponseEntity<?> findByIdxDeliverySite(
             @PathVariable(value = "dIdx", required = true) Long dIdx,
+            @RequestParam(value = "oIdx", required = false) Long oIdx,
+            @DateTimeFormat(pattern = "yyyy-MM-dd")
+            @RequestParam(value = "oDate", required = false) LocalDate oDate,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
     ) {
-        return new ResponseEntity(storeService.findByIdxDeliverySite(dIdx, pageable), HttpStatus.OK);
+        if(oIdx != null && oDate != null) {
+            return new ResponseEntity(storeService.findOpeningStores(dIdx, oIdx, oDate, pageable), HttpStatus.OK);
+        } else {
+            return new ResponseEntity(storeService.findByIdxDeliverySite(dIdx, pageable), HttpStatus.OK);
+        }
     }
 
     @GetMapping("/{idx}")
@@ -37,19 +44,15 @@ public class StoreController {
 
     @GetMapping("/search/count")
     public ResponseEntity<?> count(
-            @PathVariable(value = "dIdx", required = true) Long dIdx
-    ) {
-        return new ResponseEntity(storeService.count(), HttpStatus.OK);
-    }
-
-    @PostMapping("/search/opening")
-    public ResponseEntity<?> findOpeningStores(
             @PathVariable(value = "dIdx", required = true) Long dIdx,
-            @RequestParam(value = "oIdx", required = true) Long oIdx,
+            @RequestParam(value = "oIdx", required = false) Long oIdx,
             @DateTimeFormat(pattern = "yyyy-MM-dd")
-            @RequestParam(value = "oDate", required = true) LocalDate oDate,
-            @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
+            @RequestParam(value = "oDate", required = false) LocalDate oDate
     ) {
-        return new ResponseEntity(storeService.findOpeningStores(dIdx, oIdx, oDate, pageable), HttpStatus.OK);
+        if(oIdx != null && oDate != null) {
+            return new ResponseEntity(storeService.countOpeningStores(dIdx, oIdx, oDate), HttpStatus.OK);
+        } else {
+            return new ResponseEntity(storeService.count(), HttpStatus.OK);
+        }
     }
 }

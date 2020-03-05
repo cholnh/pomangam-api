@@ -20,6 +20,7 @@ public class UserDto implements Serializable {
     private Long idx;
     private LocalDateTime registerDate;
     private LocalDateTime modifyDate;
+
     private DeliveryDetailSiteDto deliveryDetailSite;
     private String phoneNumber;
     @JsonIgnore
