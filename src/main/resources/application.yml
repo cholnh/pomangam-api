@@ -41,6 +41,7 @@ spring:
       password: skrwl486
       #driver-class-name: mysql.jdbc.Driver
       # maximum-pool-size: 2
+      connection-init-sql: "SET NAMES 'utf8mb4'"
 
   security:
     basic:

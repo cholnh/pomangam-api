@@ -86,7 +86,7 @@ public class Store extends EntityAuditing {
      * 단방향 매핑
      */
     @JoinColumn(name = "idx_store", nullable = false)
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("sequence ASC")
     private List<StoreImage> images = new ArrayList<>();
 

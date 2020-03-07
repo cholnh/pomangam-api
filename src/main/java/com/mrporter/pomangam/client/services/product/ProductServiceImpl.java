@@ -2,7 +2,7 @@ package com.mrporter.pomangam.client.services.product;
 
 import com.mrporter.pomangam.client.domains.product.Product;
 import com.mrporter.pomangam.client.domains.product.ProductDto;
-import com.mrporter.pomangam.client.domains.product.sub.ProductSummaryDto;
+import com.mrporter.pomangam.client.domains.product.ProductSummaryDto;
 import com.mrporter.pomangam.client.repositories.product.ProductJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;

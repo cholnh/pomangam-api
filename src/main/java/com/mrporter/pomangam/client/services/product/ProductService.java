@@ -1,7 +1,7 @@
 package com.mrporter.pomangam.client.services.product;
 
 import com.mrporter.pomangam.client.domains.product.ProductDto;
-import com.mrporter.pomangam.client.domains.product.sub.ProductSummaryDto;
+import com.mrporter.pomangam.client.domains.product.ProductSummaryDto;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

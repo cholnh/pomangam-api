@@ -1,6 +1,5 @@
-package com.mrporter.pomangam.client.domains.product.sub;
+package com.mrporter.pomangam.client.domains.product;
 
-import com.mrporter.pomangam.client.domains.product.Product;
 import com.mrporter.pomangam.client.domains.product.image.ProductImage;
 import lombok.*;
 import org.modelmapper.ModelMapper;

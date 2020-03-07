@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/dsites/{dIdx}/stores")
@@ -25,9 +26,12 @@ public class StoreController {
             @RequestParam(value = "oIdx", required = false) Long oIdx,
             @DateTimeFormat(pattern = "yyyy-MM-dd")
             @RequestParam(value = "oDate", required = false) LocalDate oDate,
+            @RequestParam(value = "sIdxes", required = false) List<Long> sIdxes,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
     ) {
-        if(oIdx != null && oDate != null) {
+        if(sIdxes != null) {
+            return new ResponseEntity(storeService.findQuantityOrderableByIdxes(dIdx, oIdx, oDate, sIdxes), HttpStatus.OK);
+        } else if(oIdx != null && oDate != null) {
             return new ResponseEntity(storeService.findOpeningStores(dIdx, oIdx, oDate, pageable), HttpStatus.OK);
         } else {
             return new ResponseEntity(storeService.findByIdxDeliverySite(dIdx, pageable), HttpStatus.OK);

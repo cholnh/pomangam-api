@@ -2,7 +2,9 @@ package com.mrporter.pomangam.client.services.store;
 
 import com.mrporter.pomangam.client.domains.store.Store;
 import com.mrporter.pomangam.client.domains.store.StoreDto;
+import com.mrporter.pomangam.client.domains.store.StoreQuantityOrderableDto;
 import com.mrporter.pomangam.client.domains.store.StoreSummaryDto;
+import com.mrporter.pomangam.client.domains.store.info.ProductionInfo;
 import com.mrporter.pomangam.client.repositories.order.OrderJpaRepository;
 import com.mrporter.pomangam.client.repositories.ordertime.OrderTimeJpaRepository;
 import com.mrporter.pomangam.client.repositories.store.StoreJpaRepository;
@@ -51,19 +53,28 @@ public class StoreServiceImpl implements StoreService {
         LocalDateTime now = LocalDateTime.now();
 
         if(now.isBefore(orderEndTime)) {
-            summaries = _orderableStores(dIdx, oIdx, pageable);
-            int dMinute = (int) Duration.between(now, orderEndTime).toMinutes(); // 주문 마감까지 남은 시간
-            for(StoreSummaryDto dto : summaries) {
-                int pp = dto.getProductionInfo().getParallelProduction();       // 평균 병렬 생산량
-                int mt = dto.getProductionInfo().getMinimumTime();              // 최소 생산 가능 시간
-                int max = dto.getProductionInfo().getMaximumProduction();       // 최대 주문 가능 수량
-                int avp = pp / mt * dMinute;                                    // 생산 가능 수량
-                int aov = orderRepo.accumulatedOrderVolume(dIdx, dto.getIdx(), oIdx, oDate);  // 누적 주문량
-                avp = avp >= max ? max : avp;
-                dto.setQuantityOrderable(avp - aov);
+            int dMinute = (int) Duration.between(now, orderEndTime).toMinutes();  // 주문 마감까지 남은 시간
+            for(Store store : _orderableStores(dIdx, oIdx, pageable)) {
+                StoreSummaryDto dto = StoreSummaryDto.fromEntity(store);
+                dto.setQuantityOrderable(qo(store.getProductionInfo(), dMinute, aov(dIdx, store.getIdx(), oIdx, oDate)));
+                summaries.add(dto);
             }
         }
         return summaries;
+    }
+
+    @Override
+    public List<StoreQuantityOrderableDto> findQuantityOrderableByIdxes(Long dIdx, Long oIdx, LocalDate oDate, List<Long> sIdxes) {
+        List<StoreQuantityOrderableDto> quantities = new ArrayList<>();
+
+        int dMinute = (int) Duration.between(LocalDateTime.now(), LocalDateTime.of(oDate, _orderEndTime(oIdx))).toMinutes(); // 주문 마감까지 남은 시간
+        for(Store store : storeRepo.findAllById(sIdxes)) {
+            quantities.add(StoreQuantityOrderableDto.builder()
+                    .idx(store.getIdx())
+                    .quantityOrderable(qo(store.getProductionInfo(), dMinute, aov(dIdx, store.getIdx(), oIdx, oDate)))
+                    .build());
+        }
+        return quantities;
     }
 
     @Override
@@ -78,15 +89,36 @@ public class StoreServiceImpl implements StoreService {
         }
     }
 
+    /**
+     * 주문 가능 수량
+     * quantityOrderable
+     */
+    private int qo(ProductionInfo info, int dMinute, int aov) {
+        int pp = info.getParallelProduction();       // 평균 병렬 생산량
+        int mt = info.getMinimumTime();              // 최소 생산 가능 시간
+        int max = info.getMaximumProduction();       // 최대 주문 가능 수량
+        int avp = pp / mt * dMinute;                 // 생산 가능 수량
+        avp = avp >= max ? max : avp;
+        return avp - aov < 0 ? 0 : avp - aov;
+    }
+
+    /**
+     * 누적 주문량
+     * available order volume
+     */
+    private int aov(Long dIdx, Long sIdx, Long oIdx, LocalDate oDate) {
+        return orderRepo.accumulatedOrderVolume(dIdx, sIdx, oIdx, oDate);
+    }
+
     private LocalTime _orderEndTime(Long oIdx) {
         return orderTimeRepo.findById(oIdx)
                 .orElseThrow(() -> new StoreException("invalid orderTime."))
                 .getOrderEndTime();
     }
 
-    private List<StoreSummaryDto> _orderableStores(Long dIdx, Long oIdx, Pageable pageable) {
-        return StoreSummaryDto.fromEntities(storeRepo // (주문시간, 주문장소)에 해당하는 업체들
-                .findStoreByIdxOrderTimeAndIdxDeliverySiteAndIsActiveIsTrue(oIdx, dIdx, pageable)
-                .getContent());
+    private List<Store> _orderableStores(Long dIdx, Long oIdx, Pageable pageable) {
+        return storeRepo // (주문시간, 주문장소)에 해당하는 업체들
+            .findStoreByIdxOrderTimeAndIdxDeliverySiteAndIsActiveIsTrue(oIdx, dIdx, pageable)
+            .getContent();
     }
 }
