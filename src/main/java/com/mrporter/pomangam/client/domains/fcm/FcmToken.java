@@ -32,7 +32,8 @@ public class FcmToken extends EntityAuditing {
     private User user;
 
     @Builder
-    public FcmToken(String token, User user) {
+    public FcmToken(Long idx, String token, User user) {
+        super.setIdx(idx);
         this.token = token;
         if(user != null) {
             this.user = user;

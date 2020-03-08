@@ -74,7 +74,8 @@ public class Coupon extends EntityAuditing {
     // private Integer lowerLimitCost;
 
     @Builder
-    public Coupon(Boolean isUsed, Integer discountCost, String title, String code, User user, LocalDateTime beginDate, LocalDateTime endDate) {
+    public Coupon(Long idx, Boolean isUsed, Integer discountCost, String title, String code, User user, LocalDateTime beginDate, LocalDateTime endDate) {
+        super.setIdx(idx);
         this.isUsed = isUsed;
         this.discountCost = discountCost;
         this.title = title;

@@ -5,7 +5,6 @@ import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "advertisement_tbl")
@@ -49,7 +48,8 @@ public class Advertisement extends EntityAuditing {
     }
 
     @Builder
-    public Advertisement(AdvertisementType advertisementType, String imagePath, String nextLocation, Integer sequence) {
+    public Advertisement(Long idx, AdvertisementType advertisementType, String imagePath, String nextLocation, Integer sequence) {
+        super.setIdx(idx);
         this.advertisementType = advertisementType;
         this.imagePath = imagePath;
         this.nextLocation = nextLocation;

@@ -58,7 +58,8 @@ public class DeliverySite extends EntityAuditing {
     }
 
     @Builder
-    public DeliverySite(String name, String location, String campus, Region region, List<DeliveryDetailSite> detailSites) {
+    public DeliverySite(Long idx, String name, String location, String campus, Region region, List<DeliveryDetailSite> detailSites) {
+        super.setIdx(idx);
         this.name = name;
         this.location = location;
         this.campus = campus;

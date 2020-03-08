@@ -29,7 +29,8 @@ public class ProductSubCategory extends EntityAuditing {
     private List<ProductSub> productSubs;
 
     @Builder
-    public ProductSubCategory(String categoryTitle, List<ProductSub> productSubs) {
+    public ProductSubCategory(Long idx, String categoryTitle, List<ProductSub> productSubs) {
+        super.setIdx(idx);
         this.categoryTitle = categoryTitle;
         if(productSubs != null) {
             this.productSubs = productSubs;

@@ -23,7 +23,7 @@ public class StoreStory extends EntityAuditing {
      * 제목
      * 글자수: utf8 기준 / 영문 20자 / 한글 20자
      */
-    @Column(name = "title", nullable = false, length = 10)
+    @Column(name = "title", nullable = false, length = 20)
     private String title;
 
     /**

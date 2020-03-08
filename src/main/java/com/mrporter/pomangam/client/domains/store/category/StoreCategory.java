@@ -31,7 +31,8 @@ public class StoreCategory extends EntityAuditing {
     private List<Store> stores = new ArrayList<>();
 
     @Builder
-    public StoreCategory(String categoryTitle, List<Store> stores) {
+    public StoreCategory(Long idx, String categoryTitle, List<Store> stores) {
+        super.setIdx(idx);
         this.categoryTitle = categoryTitle;
         if(stores != null) {
             this.stores = stores;

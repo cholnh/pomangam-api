@@ -45,7 +45,8 @@ public class Event extends EntityAuditing {
     private LocalDateTime endDate;
 
     @Builder
-    public Event(String title, String contents, LocalDateTime beginDate, LocalDateTime endDate) {
+    public Event(Long idx, String title, String contents, LocalDateTime beginDate, LocalDateTime endDate) {
+        super.setIdx(idx);
         this.title = title;
         this.contents = contents;
         this.beginDate = beginDate;

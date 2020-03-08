@@ -28,7 +28,8 @@ public class Region extends EntityAuditing {
     private List<DeliverySite> deliverySites;
 
     @Builder
-    public Region(String name, List<DeliverySite> deliverySites) {
+    public Region(Long idx, String name, List<DeliverySite> deliverySites) {
+        super.setIdx(idx);
         this.name = name;
         if(deliverySites != null) {
             this.deliverySites = deliverySites;
