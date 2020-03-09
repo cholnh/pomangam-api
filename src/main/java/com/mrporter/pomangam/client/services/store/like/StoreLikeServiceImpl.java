@@ -21,7 +21,7 @@ public class StoreLikeServiceImpl implements StoreLikeService {
     @Transactional
     public boolean toggle(String phoneNumber, Long sIdx) {
         Long uIdx = userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
-        boolean like = storeLikeRepo.existsByIdxUser(uIdx);
+        boolean like = storeLikeRepo.existsByIdxUserAndIdxStore(uIdx, sIdx);
         if(like) {
             cancelLike(uIdx, sIdx);
         } else {

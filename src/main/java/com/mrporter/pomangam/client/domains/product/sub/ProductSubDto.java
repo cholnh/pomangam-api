@@ -46,10 +46,10 @@ public class ProductSubDto implements Serializable {
             for(ProductSubImage productSubImage : productSubImages) {
                 switch (productSubImage.getImageType()) {
                     case MAIN:
-                        dto.setProductImageMainPath(productSubImage.getImagePath());
+                        dto.setProductImageMainPath(productSubImage.getImagePath()+"?v="+productSubImage.getModifyDate());
                         break;
                     case SUB:
-                        dto.getProductImageSubPaths().add(productSubImage.getImagePath());
+                        dto.getProductImageSubPaths().add(productSubImage.getImagePath()+"?v="+productSubImage.getModifyDate());
                         break;
                 }
             }

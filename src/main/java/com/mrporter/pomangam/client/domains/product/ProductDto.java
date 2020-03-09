@@ -23,11 +23,15 @@ public class ProductDto implements Serializable {
     private ProductInfo productInfo;
     private String productCategoryTitle;
     private Integer cntLike;
+    private Integer cntReply;
     private Integer sequence;
 
     // images
     private String productImageMainPath;
     private List<String> productImageSubPaths = new ArrayList<>();
+
+    // like
+    private Boolean isLike;
 
     public Product toEntity() {
         Product entity = new ModelMapper().map(this, Product.class);
@@ -44,10 +48,10 @@ public class ProductDto implements Serializable {
             for(ProductImage productImage : productImages) {
                 switch (productImage.getImageType()) {
                     case MAIN:
-                        dto.setProductImageMainPath(productImage.getImagePath());
+                        dto.setProductImageMainPath(productImage.getImagePath()+"?v="+productImage.getModifyDate());
                         break;
                     case SUB:
-                        dto.getProductImageSubPaths().add(productImage.getImagePath());
+                        dto.getProductImageSubPaths().add(productImage.getImagePath()+"?v="+productImage.getModifyDate());
                         break;
                 }
             }

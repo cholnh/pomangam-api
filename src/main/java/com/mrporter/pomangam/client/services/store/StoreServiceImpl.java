@@ -8,6 +8,8 @@ import com.mrporter.pomangam.client.domains.store.info.ProductionInfo;
 import com.mrporter.pomangam.client.repositories.order.OrderJpaRepository;
 import com.mrporter.pomangam.client.repositories.ordertime.OrderTimeJpaRepository;
 import com.mrporter.pomangam.client.repositories.store.StoreJpaRepository;
+import com.mrporter.pomangam.client.repositories.store.like.StoreLikeJpaRepository;
+import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import com.mrporter.pomangam.client.services.store.exception.StoreException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +29,8 @@ public class StoreServiceImpl implements StoreService {
     StoreJpaRepository storeRepo;
     OrderJpaRepository orderRepo;
     OrderTimeJpaRepository orderTimeRepo;
+    StoreLikeJpaRepository storeLikeRepo;
+    UserJpaRepository userRepo;
 
     @Override
     public List<StoreDto> findByIdxDeliverySite(Long dIdx, Pageable pageable) {
@@ -35,9 +39,16 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreDto findByIdx(Long idx) {
+    public StoreDto findByIdx(Long idx, String phoneNumber) {
         Store entity = storeRepo.findByIdxAndIsActiveIsTrue(idx);
-        return StoreDto.fromEntity(entity);
+        StoreDto dto = StoreDto.fromEntity(entity);
+        boolean isLike = false;
+        if(phoneNumber != null) {
+            Long uIdx = userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
+            isLike = storeLikeRepo.existsByIdxUserAndIdxStore(uIdx, idx);
+        }
+        dto.setIsLike(isLike);
+        return dto;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.client.domains.product.like;
+package com.mrporter.pomangam.client.domains.store.review.reply.like;
 
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import lombok.*;
@@ -9,13 +9,13 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "product_like_tbl")
+@Table(name = "store_review_reply_like_tbl")
 @DynamicUpdate
 @Data
 @EqualsAndHashCode(callSuper=false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class ProductLike extends EntityAuditing {
+public class StoreReviewReplyLike extends EntityAuditing {
 
     /**
      * 유저 인덱스
@@ -24,15 +24,15 @@ public class ProductLike extends EntityAuditing {
     private Long idxUser;
 
     /**
-     * 제품 인덱스
+     * 제품 댓글 인덱스
      */
-    @Column(name="idx_product", nullable = false)
-    private Long idxProduct;
+    @Column(name="idx_store_review_reply", nullable = false)
+    private Long idxStoreReviewReply;
 
     @Builder
-    public ProductLike(Long idxUser, Long idxProduct) {
+    public StoreReviewReplyLike(Long idxUser, Long idxStoreReviewReply) {
         this.idxUser = idxUser;
-        this.idxProduct = idxProduct;
+        this.idxStoreReviewReply = idxStoreReviewReply;
     }
 }
 

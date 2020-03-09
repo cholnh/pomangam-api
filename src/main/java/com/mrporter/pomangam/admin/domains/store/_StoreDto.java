@@ -1,8 +1,6 @@
 package com.mrporter.pomangam.admin.domains.store;
 
-import com.mrporter.pomangam.client.domains.deliverysite.DeliverySiteDto;
 import com.mrporter.pomangam.client.domains.store.Store;
-import com.mrporter.pomangam.client.domains.store.info.StoreInfo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -50,7 +48,7 @@ public class _StoreDto implements Serializable {
                 entity.getStoreInfo().getDescription(),
                 entity.getAvgStar(),
                 entity.getCntLike(),
-                entity.getCntComment()
+                entity.getCntReview()
         );
     }
 

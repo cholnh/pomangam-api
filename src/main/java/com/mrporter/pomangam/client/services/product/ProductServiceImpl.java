@@ -4,6 +4,8 @@ import com.mrporter.pomangam.client.domains.product.Product;
 import com.mrporter.pomangam.client.domains.product.ProductDto;
 import com.mrporter.pomangam.client.domains.product.ProductSummaryDto;
 import com.mrporter.pomangam.client.repositories.product.ProductJpaRepository;
+import com.mrporter.pomangam.client.repositories.product.like.ProductLikeJpaRepository;
+import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,8 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     ProductJpaRepository productRepo;
+    UserJpaRepository userRepo;
+    ProductLikeJpaRepository productLikeRepo;
 
     @Override
     public List<ProductSummaryDto> findByIdxStore(Long sIdx, Pageable pageable) {
@@ -29,9 +33,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto findByIdx(Long idx) {
+    public ProductDto findByIdx(Long idx, String phoneNumber) {
         Product entity = productRepo.findByIdxAndIsActiveIsTrue(idx);
-        return ProductDto.fromEntity(entity);
+        ProductDto dto = ProductDto.fromEntity(entity);
+        boolean isLike = false;
+        if(phoneNumber != null) {
+            Long uIdx = userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
+            isLike = productLikeRepo.existsByIdxUserAndIdxProduct(uIdx, idx);
+        }
+        dto.setIsLike(isLike);
+        return dto;
     }
 
     @Override

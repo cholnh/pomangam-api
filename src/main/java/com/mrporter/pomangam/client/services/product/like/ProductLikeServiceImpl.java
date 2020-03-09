@@ -21,7 +21,7 @@ public class ProductLikeServiceImpl implements ProductLikeService {
     @Transactional
     public boolean toggle(String phoneNumber, Long pIdx) {
         Long uIdx = userRepo.findIdxByPhoneNumberAndIsActiveIsTrue(phoneNumber);
-        boolean like = productLikeRepo.existsByIdxUser(uIdx);
+        boolean like = productLikeRepo.existsByIdxUserAndIdxProduct(uIdx, pIdx);
         if(like) {
             cancelLike(uIdx, pIdx);
         } else {

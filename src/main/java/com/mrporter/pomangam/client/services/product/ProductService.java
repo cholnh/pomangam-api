@@ -9,7 +9,7 @@ import java.util.List;
 public interface ProductService {
     List<ProductSummaryDto> findByIdxStore(Long sIdx, Pageable pageable);
     List<ProductSummaryDto> findByIdxProductCategory(Long cIdx, Pageable pageable);
-    ProductDto findByIdx(Long idx);
+    ProductDto findByIdx(Long idx, String phoneNumber);
     long countByIdxStore(Long sIdx);
     long countByIdxProductCategory(Long cIdx);
 }

@@ -55,6 +55,12 @@ public class Product extends EntityAuditing {
     private Integer cntLike;
 
     /**
+     * 총 댓글 개수
+     */
+    @Column(name = "cnt_reply", nullable = false, columnDefinition = "INT default 0")
+    private Integer cntReply;
+
+    /**
      * 순서
      */
     @Column(name = "sequence", nullable = false, columnDefinition = "INT default 0")
@@ -79,17 +85,19 @@ public class Product extends EntityAuditing {
     @PrePersist
     private void prePersist() {
         this.cntLike = 0; // always 0 when its insert
+        this.cntReply = 0;
         this.sequence = sequence == null ? 0 : sequence;
     }
 
     @Builder
-    public Product(Long idx, Long idxStore, Cost cost, ProductInfo productInfo, ProductCategory productCategory, Integer cntLike, Integer sequence, List<ProductImage> images, List<ProductSubMapper> subs) {
+    public Product(Long idx, Long idxStore, Cost cost, ProductInfo productInfo, ProductCategory productCategory, Integer cntLike, Integer cntReply, Integer sequence, List<ProductImage> images, List<ProductSubMapper> subs) {
         super.setIdx(idx);
         this.idxStore = idxStore;
         this.cost = cost;
         this.productInfo = productInfo;
         this.productCategory = productCategory;
         this.cntLike = cntLike;
+        this.cntReply = cntReply;
         this.sequence = sequence;
         this.images = images;
         this.subs = subs;
@@ -107,6 +115,13 @@ public class Product extends EntityAuditing {
         }
         this.cntLike++;
     }
+    public void addCntReply() {
+        if(this.cntReply == null) {
+            this.cntReply = 0;
+        }
+        this.cntReply++;
+    }
+
     public void subCntLike() {
         if(this.cntLike == null) {
             this.cntLike = 0;
@@ -114,6 +129,15 @@ public class Product extends EntityAuditing {
         this.cntLike--;
         if(this.cntLike < 0) {
             this.cntLike = 0;
+        }
+    }
+    public void subCntReply() {
+        if(this.cntReply == null) {
+            this.cntReply = 0;
+        }
+        this.cntReply--;
+        if(this.cntReply < 0) {
+            this.cntReply = 0;
         }
     }
 }

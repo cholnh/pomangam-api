@@ -1,5 +1,8 @@
 package com.mrporter.pomangam.client.controllers.store;
 
+import com.mrporter.pomangam.client.domains.order.orderer.OrdererType;
+import com.mrporter.pomangam.client.domains.user.User;
+import com.mrporter.pomangam.client.services.order.exception.OrderException;
 import com.mrporter.pomangam.client.services.store.StoreServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -8,6 +11,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -41,9 +46,14 @@ public class StoreController {
     @GetMapping("/{idx}")
     public ResponseEntity<?> findByIdx(
             @PathVariable(value = "dIdx", required = true) Long dIdx,
-            @PathVariable(value = "idx", required = true) Long idx
+            @PathVariable(value = "idx", required = true) Long idx,
+            Authentication auth
     ) {
-        return new ResponseEntity(storeService.findByIdx(idx), HttpStatus.OK);
+        String phoneNumber = null;
+        if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
+            phoneNumber = auth.getName();
+        }
+        return new ResponseEntity(storeService.findByIdx(idx, phoneNumber), HttpStatus.OK);
     }
 
     @GetMapping("/search/count")

@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RepositoryRestResource(exported = false)
 public interface ProductLikeJpaRepository extends JpaRepository<ProductLike, Long>, ProductLikeCustomRepository {
 
-    boolean existsByIdxUser(Long idxUser);
+    boolean existsByIdxUserAndIdxProduct(Long idxUser, Long idxProduct);
 
     /**
      * [주의사항]

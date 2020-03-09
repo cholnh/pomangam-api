@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RepositoryRestResource(exported = false)
 public interface StoreLikeJpaRepository extends JpaRepository<StoreLike, Long>, StoreLikeCustomRepository {
 
-    boolean existsByIdxUser(Long idxUser);
+    boolean existsByIdxUserAndIdxStore(Long idxUser, Long idxStore);
 
     /**
      * [주의사항]

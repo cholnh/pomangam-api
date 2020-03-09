@@ -72,8 +72,8 @@ public class Store extends EntityAuditing {
     /**
      * 총 리뷰 개수
      */
-    @Column(name = "cnt_comment", nullable = false, columnDefinition = "INT default 0")
-    private Integer cntComment;
+    @Column(name = "cnt_review", nullable = false, columnDefinition = "INT default 0")
+    private Integer cntReview;
 
     /**
      * 순서
@@ -111,14 +111,14 @@ public class Store extends EntityAuditing {
     @PrePersist
     private void prePersist() {
         // always 0 when its insert
-        this.avgStar = 0f;
-        this.cntLike = 0;
-        this.cntComment = 0;
+//        this.avgStar = 0f;
+//        this.cntLike = 0;
+//        this.cntComment = 0;
         this.sequence = sequence == null ? 0 : sequence;
     }
 
     @Builder
-    public Store(Long idx, Long idxDeliverySite, StoreCategory storeCategory, StoreInfo storeInfo, ProductionInfo productionInfo, StoreSchedule storeSchedule, Float avgStar, Integer cntLike, Integer cntComment, Integer sequence, List<StoreImage> images, List<ProductCategory> productCategories, List<StoreStory> stories) {
+    public Store(Long idx, Long idxDeliverySite, StoreCategory storeCategory, StoreInfo storeInfo, ProductionInfo productionInfo, StoreSchedule storeSchedule, Float avgStar, Integer cntLike, Integer cntReview, Integer sequence, List<StoreImage> images, List<ProductCategory> productCategories, List<StoreStory> stories) {
         super.setIdx(idx);
         this.idxDeliverySite = idxDeliverySite;
         this.storeCategory = storeCategory;
@@ -127,7 +127,7 @@ public class Store extends EntityAuditing {
         this.storeSchedule = storeSchedule;
         this.avgStar = avgStar;
         this.cntLike = cntLike;
-        this.cntComment = cntComment;
+        this.cntReview = cntReview;
         this.sequence = sequence;
         this.images = images;
         this.productCategories = productCategories;
@@ -158,14 +158,14 @@ public class Store extends EntityAuditing {
         }
         this.cntLike++;
     }
-    public void addCntComment(Float star) {
-        if(this.cntComment == null) {
-            this.cntComment = 0;
+    public void addCntReview(Float star) {
+        if(this.cntReview == null) {
+            this.cntReview = 0;
         }
         if(this.avgStar == null) {
             this.avgStar = 0f;
         }
-        this.avgStar = ((avgStar * cntComment) + star) / (++this.cntComment);
+        this.avgStar = ((avgStar * cntReview) + star) / (++this.cntReview);
     }
     public void subCntLike() {
         if(this.cntLike == null) {
@@ -176,14 +176,14 @@ public class Store extends EntityAuditing {
             this.cntLike = 0;
         }
     }
-    public void subCntComment(Float star) {
-        if(this.cntComment == null || this.cntComment <= 1) {
-            this.cntComment = 0;
+    public void subCntReview(Float star) {
+        if(this.cntReview == null || this.cntReview <= 1) {
+            this.cntReview = 0;
             this.avgStar = 0f;
         } else if(this.avgStar == null || this.avgStar <= 0) {
             this.avgStar = 0f;
         } else {
-            this.avgStar = ((avgStar * cntComment) - star) / (--this.cntComment);
+            this.avgStar = ((avgStar * cntReview) - star) / (--this.cntReview);
         }
     }
 

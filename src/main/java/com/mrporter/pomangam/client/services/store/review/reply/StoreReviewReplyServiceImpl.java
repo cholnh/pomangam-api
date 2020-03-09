@@ -6,6 +6,7 @@ import com.mrporter.pomangam.client.domains.store.review.reply.StoreReviewReplyD
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.repositories.store.review.StoreReviewJpaRepository;
 import com.mrporter.pomangam.client.repositories.store.review.reply.StoreReviewReplyJpaRepository;
+import com.mrporter.pomangam.client.repositories.store.review.reply.like.StoreReviewReplyLikeJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ public class StoreReviewReplyServiceImpl implements StoreReviewReplyService {
     StoreReviewReplyJpaRepository storeReviewReplyRepo;
     UserJpaRepository userRepo;
     StoreReviewJpaRepository storeReviewRepo;
+    StoreReviewReplyLikeJpaRepository storeReviewReplyLikeRepo;
 
     @Override
     public List<StoreReviewReplyDto> findByIdxStoreReview(Long rIdx, Long uIdx, Pageable pageable) {
@@ -119,6 +121,7 @@ public class StoreReviewReplyServiceImpl implements StoreReviewReplyService {
         User user = userRepo.findByIdxAndIsActiveIsTrue(entity.getIdxUser());
         if (uIdx != null && uIdx.compareTo(user.getIdx()) == 0) {  // isOwn 처리
             dto.setIsOwn(true);
+            dto.setIsLike(storeReviewReplyLikeRepo.existsByIdxUserAndIdxStoreReviewReply(uIdx, entity.getIdx()));
             if (entity.getIsAnonymous()) { // anonymous 처리
                 dto.setNickname(user.getNickname()+"(익명)");
             } else {
@@ -126,6 +129,7 @@ public class StoreReviewReplyServiceImpl implements StoreReviewReplyService {
             }
         } else {
             dto.setIsOwn(false);
+            dto.setIsLike(false);
             if (entity.getIsAnonymous()) { // anonymous 처리
                 dto.setNickname("익명");
             } else {

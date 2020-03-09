@@ -7,6 +7,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -34,9 +36,14 @@ public class ProductController {
     public ResponseEntity<?> findByIdx(
             @PathVariable(value = "dIdx", required = true) Long dIdx,
             @PathVariable(value = "sIdx", required = true) Long sIdx,
-            @PathVariable(value = "idx", required = true) Long idx
+            @PathVariable(value = "idx", required = true) Long idx,
+            Authentication auth
     ) {
-        return new ResponseEntity(productService.findByIdx(idx), HttpStatus.OK);
+        String phoneNumber = null;
+        if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
+            phoneNumber = auth.getName();
+        }
+        return new ResponseEntity(productService.findByIdx(idx, phoneNumber), HttpStatus.OK);
     }
 
     @GetMapping("/search/count")

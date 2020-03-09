@@ -31,7 +31,7 @@ public class ProductSummaryDto implements Serializable {
             for(ProductImage productImage : productImages) {
                 switch (productImage.getImageType()) {
                     case MAIN:
-                        dto.setProductImageMainPath(productImage.getImagePath());
+                        dto.setProductImageMainPath(productImage.getImagePath()+"?v="+productImage.getModifyDate());
                         break;
                     default:
                         break;

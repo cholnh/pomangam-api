@@ -1,6 +1,7 @@
 package com.mrporter.pomangam.client.domains.store.review;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.mrporter.pomangam.client.domains.product.reply.ProductReplyDtoView;
 import com.mrporter.pomangam.client.domains.store.review.image.StoreReviewImage;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -49,6 +50,9 @@ public class StoreReviewDto implements Serializable {
 
     @JsonView(StoreReviewDtoView.CustomView.class)
     private Boolean isOwn;      // 자신이 쓴 글인지 아닌지. (read only)
+
+    @JsonView(StoreReviewDtoView.CustomView.class)
+    private Boolean isLike;
 
     private Long idxDeliverySite;
 

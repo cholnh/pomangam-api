@@ -9,6 +9,7 @@ import com.mrporter.pomangam.client.domains.store.review.image.StoreReviewImageT
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.repositories.store.StoreJpaRepository;
 import com.mrporter.pomangam.client.repositories.store.review.StoreReviewJpaRepository;
+import com.mrporter.pomangam.client.repositories.store.review.like.StoreReviewLikeJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import com.mrporter.pomangam.client.services._bases.ImagePath;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,7 @@ public class StoreReviewServiceImpl implements StoreReviewService {
 
     StoreJpaRepository storeRepo;
     StoreReviewJpaRepository storeReviewRepo;
+    StoreReviewLikeJpaRepository storeReviewLikeRepo;
     UserJpaRepository userRepo;
     FileStorageServiceImpl fileStorageService;
 
@@ -126,7 +128,7 @@ public class StoreReviewServiceImpl implements StoreReviewService {
     private void addAvgStar(Long sIdx, Long rIdx) {
         Store store = storeRepo.findByIdxAndIsActiveIsTrue(sIdx);
         StoreReview storeReview = storeReviewRepo.findByIdxAndIsActiveIsTrue(rIdx);
-        store.addCntComment(storeReview.getStar());
+        store.addCntReview(storeReview.getStar());
         storeRepo.save(store);
     }
 
@@ -136,7 +138,7 @@ public class StoreReviewServiceImpl implements StoreReviewService {
     private void subAvgStar(Long sIdx, Long rIdx) {
         Store store = storeRepo.findByIdxAndIsActiveIsTrue(sIdx);
         StoreReview storeReview = storeReviewRepo.findByIdxAndIsActiveIsTrue(rIdx);
-        store.subCntComment(storeReview.getStar());
+        store.subCntReview(storeReview.getStar());
         storeRepo.save(store);
     }
 
@@ -171,6 +173,7 @@ public class StoreReviewServiceImpl implements StoreReviewService {
         User user = userRepo.findByIdxAndIsActiveIsTrue(entity.getIdxUser());
         if (uIdx != null && uIdx.compareTo(user.getIdx()) == 0) {  // isOwn 처리
             dto.setIsOwn(true);
+            dto.setIsLike(storeReviewLikeRepo.existsByIdxUserAndIdxStoreReview(uIdx, entity.getIdx()));
             if (entity.getIsAnonymous()) { // anonymous 처리
                 dto.setNickname(user.getNickname()+"(익명)");
             } else {
@@ -178,6 +181,7 @@ public class StoreReviewServiceImpl implements StoreReviewService {
             }
         } else {
             dto.setIsOwn(false);
+            dto.setIsLike(false);
             if (entity.getIsAnonymous()) { // anonymous 처리
                 dto.setNickname("익명");
             } else {

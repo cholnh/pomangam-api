@@ -1,6 +1,6 @@
-package com.mrporter.pomangam.client.repositories.store.review.like;
+package com.mrporter.pomangam.client.repositories.product.reply.like;
 
-import com.mrporter.pomangam.client.domains.store.review.like.StoreReviewLike;
+import com.mrporter.pomangam.client.domains.product.reply.like.ProductReplyLike;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @RepositoryRestResource(exported = false)
-public interface StoreReviewLikeJpaRepository extends JpaRepository<StoreReviewLike, Long>, StoreReviewLikeCustomRepository {
-    boolean existsByIdxUserAndIdxStoreReview(Long idxUser, Long idxStoreReview);
+public interface ProductReplyLikeJpaRepository extends JpaRepository<ProductReplyLike, Long>, ProductReplyLikeCustomRepository {
+    boolean existsByIdxUserAndIdxProductReply(Long idxUser, Long idxProductReply);
 
     /**
      * [주의사항]
@@ -24,26 +24,26 @@ public interface StoreReviewLikeJpaRepository extends JpaRepository<StoreReviewL
      */
     @Modifying
     @Transactional
-    void deleteByIdxUserAndIdxStoreReview(Long idxUser, Long idxStoreReview);
+    void deleteByIdxUserAndIdxProductReply(Long idxUser, Long idxProductReply);
 
     /**
      * 범위 조건의 삭제 쿼리 (위 문제를 해결)
      */
     @Transactional
     @Modifying
-    @Query(value = "delete from store_review_like_tbl where idx_user = :uIdx and idx_store_review = :rIdx", nativeQuery = true)
-    void deleteByIdxUserAndIdxStoreReviewQuery(@Param("uIdx") Long uIdx, @Param("rIdx") Long rIdx);
+    @Query(value = "delete from product_reply_like_tbl where idx_user = :uIdx and idx_product_reply = :prIdx", nativeQuery = true)
+    void deleteByIdxUserAndIdxProductReplyQuery(@Param("uIdx") Long uIdx, @Param("prIdx") Long prIdx);
 }
 
-interface StoreReviewLikeCustomRepository {
+interface ProductReplyLikeCustomRepository {
 
 }
 
 @Transactional(readOnly = true)
-class StoreReviewLikeCustomRepositoryImpl extends QuerydslRepositorySupport implements StoreReviewLikeCustomRepository {
+class ProductReplyLikeCustomRepositoryImpl extends QuerydslRepositorySupport implements ProductReplyLikeCustomRepository {
 
-    public StoreReviewLikeCustomRepositoryImpl() {
-        super(StoreReviewLike.class);
+    public ProductReplyLikeCustomRepositoryImpl() {
+        super(ProductReplyLike.class);
     }
 
 }

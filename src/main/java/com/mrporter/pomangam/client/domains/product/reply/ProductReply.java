@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.client.domains.store.review.reply;
+package com.mrporter.pomangam.client.domains.product.reply;
 
 import com.mrporter.pomangam._bases.annotation.BooleanToYNConverter;
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
@@ -8,13 +8,13 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "store_review_reply_tbl")
+@Table(name = "product_reply_tbl")
 @DynamicUpdate
 @Data
 @EqualsAndHashCode(callSuper=false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class StoreReviewReply extends EntityAuditing {
+public class ProductReply extends EntityAuditing {
 
     /**
      * 유저 인덱스
@@ -23,10 +23,10 @@ public class StoreReviewReply extends EntityAuditing {
     private Long idxUser;
 
     /**
-     * 업체 리뷰 인덱스
+     * 제품 인덱스
      */
-    @Column(name="idx_store_review", nullable = false)
-    private Long idxStoreReview;
+    @Column(name="idx_product", nullable = false)
+    private Long idxProduct;
 
     /**
      * 익명 여부
@@ -56,16 +56,16 @@ public class StoreReviewReply extends EntityAuditing {
     }
 
     @Builder
-    public StoreReviewReply(Long idxUser, Long idxStoreReview, Boolean isAnonymous, String contents, Integer cntLike) {
+    public ProductReply(Long idxUser, Long idxProduct, Boolean isAnonymous, String contents, Integer cntLike) {
         this.idxUser = idxUser;
-        this.idxStoreReview = idxStoreReview;
+        this.idxProduct = idxProduct;
         this.isAnonymous = isAnonymous;
         this.contents = contents;
         this.cntLike = cntLike;
     }
 
-    public StoreReviewReply update(StoreReviewReply from) {
-        if(from.getIdxStoreReview() != null) { this.setIdxStoreReview(from.getIdxStoreReview()); }
+    public ProductReply update(ProductReply from) {
+        if(from.getIdxProduct() != null) { this.setIdxProduct(from.getIdxProduct()); }
         if(from.getIsAnonymous() != null) { this.setIsAnonymous(from.getIsAnonymous()); }
         if(from.getContents() != null) { this.setContents(from.getContents()); }
         return this;

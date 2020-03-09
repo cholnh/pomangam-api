@@ -51,7 +51,7 @@ public class StoreData {
                 .idxDeliverySite(dIdx)
                 .avgStar(avgStar)
                 .cntLike(cntLike)
-                .cntComment(cntComment)
+                .cntReview(cntComment)
                 .storeCategory(StoreCategory.builder().idx(scIdx).build())
                 .sequence(sequence)
                 .build();

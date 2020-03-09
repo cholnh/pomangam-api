@@ -24,7 +24,7 @@ public class StoreSummaryDto implements Serializable {
     private StoreSchedule storeSchedule;
     private Float avgStar;
     private Integer cntLike;
-    private Integer cntComment;
+    private Integer cntReview;
     private Integer sequence;
 
     // 추가 사항
@@ -46,13 +46,13 @@ public class StoreSummaryDto implements Serializable {
             for(StoreImage storeImage : storeImages) {
                 switch (storeImage.getImageType()) {
                     case MAIN:
-                        dto.setStoreImageMainPath(storeImage.getImagePath());
+                        dto.setStoreImageMainPath(storeImage.getImagePath()+"?v="+storeImage.getModifyDate());
                         break;
                     case SUB:
-                        dto.getStoreImageSubPaths().add(storeImage.getImagePath());
+                        dto.getStoreImageSubPaths().add(storeImage.getImagePath()+"?v="+storeImage.getModifyDate());
                         break;
                     case BRAND:
-                        dto.setBrandImagePath(storeImage.getImagePath());
+                        dto.setBrandImagePath(storeImage.getImagePath()+"?v="+storeImage.getModifyDate());
                         break;
                 }
             }

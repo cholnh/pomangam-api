@@ -197,7 +197,7 @@ public class TestDataLoader implements ApplicationRunner {
                 Arrays.asList(1,2,3),
                 Arrays.asList("항공대이벤트", "1일 1닭"),
                 Arrays.asList("보울도시락", "사각도시락", "프리미엄", "간식"));
-        store.of(6L, 1L, 3L, "항공반점", "항슐랭 \uD83E\uDD57\uD83C\uDF08 맛집 인증. 항공반점입니다.", null,
+        store.of(6L, 1L, 3L, "항공반점", "항슐랭 \uD83C\uDF08 맛집 인증. 항공반점입니다.", null,
                 4.4F, 56, 43, 4,
                 Arrays.asList(1,2,3),
                 Arrays.asList(),
@@ -222,16 +222,16 @@ public class TestDataLoader implements ApplicationRunner {
 
         product.of(5L,"갈비치킨마요",
                 2L, 3L, 1, 3_200, 1_000, 300,
-                1);
+                1,2,3);
         product.of(6L,"메가치킨마요",
                 2L, 3L, 2, 5_500, 1_000, 300,
-                1);
+                1,2,3);
         product.of(7L,"메가치킨제육",
                 2L, 4L, 3, 6_900, 1_000, 300,
-                1);
+                1,2,3);
         product.of(8L,"치킨마요",
                 2L, 3L, 4, 2_900, 1_000, 300,
-                1);
+                1,2,3);
         product.of(9L,"빅치킨마요",
                 2L, 3L, 5, 3_500, 1_000, 300,
                 1);

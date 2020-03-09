@@ -1,6 +1,6 @@
-package com.mrporter.pomangam.client.repositories.store.review.like;
+package com.mrporter.pomangam.client.repositories.store.review.reply.like;
 
-import com.mrporter.pomangam.client.domains.store.review.like.StoreReviewLike;
+import com.mrporter.pomangam.client.domains.store.review.reply.like.StoreReviewReplyLike;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @RepositoryRestResource(exported = false)
-public interface StoreReviewLikeJpaRepository extends JpaRepository<StoreReviewLike, Long>, StoreReviewLikeCustomRepository {
-    boolean existsByIdxUserAndIdxStoreReview(Long idxUser, Long idxStoreReview);
+public interface StoreReviewReplyLikeJpaRepository extends JpaRepository<StoreReviewReplyLike, Long>, StoreReviewReplyLikeCustomRepository {
+    boolean existsByIdxUserAndIdxStoreReviewReply(Long idxUser, Long idxStoreReviewReply);
 
     /**
      * [주의사항]
@@ -24,26 +24,26 @@ public interface StoreReviewLikeJpaRepository extends JpaRepository<StoreReviewL
      */
     @Modifying
     @Transactional
-    void deleteByIdxUserAndIdxStoreReview(Long idxUser, Long idxStoreReview);
+    void deleteByIdxUserAndIdxStoreReviewReply(Long idxUser, Long idxStoreReviewReply);
 
     /**
      * 범위 조건의 삭제 쿼리 (위 문제를 해결)
      */
     @Transactional
     @Modifying
-    @Query(value = "delete from store_review_like_tbl where idx_user = :uIdx and idx_store_review = :rIdx", nativeQuery = true)
-    void deleteByIdxUserAndIdxStoreReviewQuery(@Param("uIdx") Long uIdx, @Param("rIdx") Long rIdx);
+    @Query(value = "delete from store_review_reply_like_tbl where idx_user = :uIdx and idx_store_review_reply = :rpIdx", nativeQuery = true)
+    void deleteByIdxUserAndIdxStoreReviewReplyQuery(@Param("uIdx") Long uIdx, @Param("rpIdx") Long rpIdx);
 }
 
-interface StoreReviewLikeCustomRepository {
+interface StoreReviewReplyLikeCustomRepository {
 
 }
 
 @Transactional(readOnly = true)
-class StoreReviewLikeCustomRepositoryImpl extends QuerydslRepositorySupport implements StoreReviewLikeCustomRepository {
+class StoreReviewReplyLikeCustomRepositoryImpl extends QuerydslRepositorySupport implements StoreReviewReplyLikeCustomRepository {
 
-    public StoreReviewLikeCustomRepositoryImpl() {
-        super(StoreReviewLike.class);
+    public StoreReviewReplyLikeCustomRepositoryImpl() {
+        super(StoreReviewReplyLike.class);
     }
 
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface StoreService {
     List<StoreDto> findByIdxDeliverySite(Long dIdx, Pageable pageable);
-    StoreDto findByIdx(Long idx);
+    StoreDto findByIdx(Long idx, String phoneNumber);
     long count();
     List<StoreSummaryDto> findOpeningStores(Long dIdx, Long oIdx, LocalDate oDate, Pageable pageable);
     long countOpeningStores(Long dIdx, Long oIdx, LocalDate oDate);

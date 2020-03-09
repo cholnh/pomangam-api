@@ -30,6 +30,9 @@ public class AdvertisementDto implements Serializable {
     public static AdvertisementDto fromEntity(Advertisement entity) {
         if(entity == null) return null;
         AdvertisementDto dto = new ModelMapper().map(entity, AdvertisementDto.class);
+
+        dto.setImagePath(entity.getImagePath()+"?v="+entity.getModifyDate());
+
         return dto;
     }
 

@@ -35,7 +35,7 @@ public class StoreStoryDto implements Serializable {
         List<StoreStoryImage> storyImages = entity.getImages();
         if(storyImages != null && !storyImages.isEmpty()) {
             for (StoreStoryImage storyImage : storyImages) {
-                dto.getImages().add(storyImage.getImagePath());
+                dto.getImages().add(storyImage.getImagePath()+"?v="+storyImage.getModifyDate());
             }
         }
         return dto;

@@ -40,6 +40,9 @@ public class StoreReviewReplyDto implements Serializable {
     @JsonView(StoreReviewReplyDtoView.CustomView.class)
     private Boolean isOwn;      // 자신이 쓴 글인지 아닌지. (read only)
 
+    @JsonView(StoreReviewReplyDtoView.CustomView.class)
+    private Boolean isLike;
+
     public StoreReviewReply toEntity() {
         StoreReviewReply entity = new ModelMapper().map(this, StoreReviewReply.class);
         return entity;
