@@ -6,6 +6,7 @@ import com.mrporter.pomangam.client.domains.product.cost.Cost;
 import com.mrporter.pomangam.client.domains.product.image.ProductImage;
 import com.mrporter.pomangam.client.domains.product.info.ProductInfo;
 import com.mrporter.pomangam.client.domains.product.sub.ProductSubMapper;
+import com.mrporter.pomangam.client.domains.product.sub.category.ProductSubCategory;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 

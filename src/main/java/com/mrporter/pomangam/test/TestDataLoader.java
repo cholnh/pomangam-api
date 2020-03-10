@@ -48,9 +48,9 @@ public class TestDataLoader implements ApplicationRunner {
     @Autowired PointRankData pointRank;
     @Autowired UserData userData;
     @Autowired StoreCategoryData storeCategory;
+    @Autowired ProductSubCategoryData productSubCategory;
     @Autowired StoreData store;
     @Autowired ProductData product;
-    @Autowired ProductSubCategoryData productSubCategory;
     @Autowired ProductSubData productSub;
     @Autowired ProductSubMapperData productSubMapper;
     @Autowired OrderTimeData orderTime;
@@ -196,7 +196,7 @@ public class TestDataLoader implements ApplicationRunner {
                 2.7F, 32, 129, 3,
                 Arrays.asList(1,2,3),
                 Arrays.asList("항공대이벤트", "1일 1닭"),
-                Arrays.asList("보울도시락", "사각도시락", "프리미엄", "간식"));
+                Arrays.asList("피자", "치킨", "껍질", "간식"));
         store.of(6L, 1L, 3L, "항공반점", "항슐랭 \uD83C\uDF08 맛집 인증. 항공반점입니다.", null,
                 4.4F, 56, 43, 4,
                 Arrays.asList(1,2,3),
@@ -256,10 +256,10 @@ public class TestDataLoader implements ApplicationRunner {
 
 
         /*
-         * 서브 제품 카테고리
+         * 서브 카테고리
          */
         productSubCategory.of(1L, "맛 필수 선택");
-        productSubCategory.of(2L, "서브메뉴");
+        productSubCategory.of(2L, "서브");
         productSubCategory.of(3L, "음료");
 
 
@@ -276,7 +276,7 @@ public class TestDataLoader implements ApplicationRunner {
 
 
         /*
-         * 제품-업체 연결
+         * 제품-서브 연결
          */
         productSubMapper.of(1L, 4L, 6L, 7L);
         productSubMapper.of(2L, 4L, 6L, 7L);

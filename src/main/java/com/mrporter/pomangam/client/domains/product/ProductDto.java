@@ -2,6 +2,8 @@ package com.mrporter.pomangam.client.domains.product;
 
 import com.mrporter.pomangam.client.domains.product.image.ProductImage;
 import com.mrporter.pomangam.client.domains.product.info.ProductInfo;
+import com.mrporter.pomangam.client.domains.product.sub.category.ProductSubCategory;
+import com.mrporter.pomangam.client.domains.product.sub.category.ProductSubCategoryDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;

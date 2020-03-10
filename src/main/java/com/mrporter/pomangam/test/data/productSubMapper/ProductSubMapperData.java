@@ -15,11 +15,11 @@ public class ProductSubMapperData {
     ProductSubMapperJpaRepository productSubMapperJpaRepository;
 
     @Transactional
-    public void of(Long pIdx, Long ...sIdxes) {
-        for(Long sIdx : sIdxes) {
+    public void of(Long pIdx, Long ...subIdxes) {
+        for(Long subIdx : subIdxes) {
             ProductSubMapper mapper = ProductSubMapper.builder()
                     .product(Product.builder().idx(pIdx).build())
-                    .productSub(ProductSub.builder().idx(sIdx).build())
+                    .productSub(ProductSub.builder().idx(subIdx).build())
                     .build();
             productSubMapperJpaRepository.save(mapper);
         }

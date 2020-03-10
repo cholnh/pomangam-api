@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.client.domains.product.sub.category;
 
+import com.mrporter.pomangam.client.domains.product.sub.ProductSubDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -17,6 +18,7 @@ public class ProductSubCategoryDto implements Serializable {
     private LocalDateTime registerDate;
     private LocalDateTime modifyDate;
     private String categoryTitle;
+    private List<ProductSubDto> productSubs;
 
     public ProductSubCategory toEntity() {
         ProductSubCategory entity = new ModelMapper().map(this, ProductSubCategory.class);
@@ -25,7 +27,12 @@ public class ProductSubCategoryDto implements Serializable {
 
     public static ProductSubCategoryDto fromEntity(ProductSubCategory entity) {
         if(entity == null) return null;
-        ProductSubCategoryDto dto = new ModelMapper().map(entity, ProductSubCategoryDto.class);
+        ProductSubCategoryDto dto = new ProductSubCategoryDto();
+        dto.setIdx(entity.getIdx());
+        dto.setRegisterDate(entity.getRegisterDate());
+        dto.setModifyDate(entity.getModifyDate());
+        dto.setCategoryTitle(entity.getCategoryTitle());
+        dto.setProductSubs(ProductSubDto.fromEntities(entity.getProductSubs()));
         return dto;
     }
 

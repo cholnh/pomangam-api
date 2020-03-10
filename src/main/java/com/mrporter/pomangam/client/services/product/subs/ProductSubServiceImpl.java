@@ -2,6 +2,8 @@ package com.mrporter.pomangam.client.services.product.subs;
 
 import com.mrporter.pomangam.client.domains.product.sub.ProductSub;
 import com.mrporter.pomangam.client.domains.product.sub.ProductSubDto;
+import com.mrporter.pomangam.client.domains.product.sub.category.ProductSubCategory;
+import com.mrporter.pomangam.client.domains.product.sub.category.ProductSubCategoryDto;
 import com.mrporter.pomangam.client.repositories.product.sub.ProductSubJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,9 +17,9 @@ public class ProductSubServiceImpl implements ProductSubService {
     ProductSubJpaRepository productSubRepo;
 
     @Override
-    public List<ProductSubDto> findByIdxProduct(Long pIdx) {
-        List<ProductSub> productSubs = productSubRepo.findByIdxProductAndIsActiveIsTrue(pIdx);
-        return ProductSubDto.fromEntities(productSubs);
+    public List<ProductSubCategoryDto> findByIdxProduct(Long pIdx) {
+        List<ProductSubCategory> productSubs = productSubRepo.findCategoryByIdxProductAndIsActiveIsTrue(pIdx);
+        return ProductSubCategoryDto.fromEntities(productSubs);
     }
 
     @Override

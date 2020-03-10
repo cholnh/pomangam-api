@@ -28,8 +28,8 @@ public class ProductSubDto implements Serializable {
     private Integer numberMaximum;
 
     // images
-    private String productImageMainPath;
-    private List<String> productImageSubPaths = new ArrayList<>();
+    // private String productImageMainPath;
+    // private List<String> productImageSubPaths = new ArrayList<>();
 
     public ProductSub toEntity() {
         ProductSub entity = new ModelMapper().map(this, ProductSub.class);
@@ -41,19 +41,19 @@ public class ProductSubDto implements Serializable {
         ProductSubDto dto = new ModelMapper().map(entity, ProductSubDto.class);
 
         // images
-        List<ProductSubImage> productSubImages = entity.getImages();
-        if(productSubImages != null && !productSubImages.isEmpty()) {
-            for(ProductSubImage productSubImage : productSubImages) {
-                switch (productSubImage.getImageType()) {
-                    case MAIN:
-                        dto.setProductImageMainPath(productSubImage.getImagePath()+"?v="+productSubImage.getModifyDate());
-                        break;
-                    case SUB:
-                        dto.getProductImageSubPaths().add(productSubImage.getImagePath()+"?v="+productSubImage.getModifyDate());
-                        break;
-                }
-            }
-        }
+        // List<ProductSubImage> productSubImages = entity.getImages();
+        // if(productSubImages != null && !productSubImages.isEmpty()) {
+        //    for(ProductSubImage productSubImage : productSubImages) {
+        //        switch (productSubImage.getImageType()) {
+        //            case MAIN:
+        //                dto.setProductImageMainPath(productSubImage.getImagePath()+"?v="+productSubImage.getModifyDate());
+        //                break;
+        //            case SUB:
+        //                dto.getProductImageSubPaths().add(productSubImage.getImagePath()+"?v="+productSubImage.getModifyDate());
+        //                break;
+        //        }
+        //    }
+        //}
 
         // category
         dto.setProductSubCategory(entity.getProductSubCategory().getCategoryTitle());
