@@ -57,18 +57,6 @@ public class ProductSub extends EntityAuditing {
     private List<ProductSubImage> images = new ArrayList<>();
 
     /**
-     * 서브 제품 종류
-     * 다중선택: ProductSubType.CHECKBOX
-     * 단일선택(필수선택강요): ProductSubType.RADIO
-     * 수량기입: ProductSubType.NUMBER
-     * 변경불가(선택된상태): ProductSubType.READONLY -> 기본으로 제공되는 서브제품을 가시적으로 표현할 때 사용.
-     * 글자수: utf8 기준 / 영문 20자 / 한글 20자
-     */
-    @Column(name = "product_sub_type", nullable = false, length = 20)
-    @Enumerated(EnumType.STRING)
-    private ProductSubType productSubType;
-
-    /**
      * 서브 제품 분류
      * ProductSubType.RADIO 선택 시,
      * ProductSubCategory 가 같은 ProductSub 끼리 Grouping 하여 CustomView 에 표현.
@@ -111,14 +99,13 @@ public class ProductSub extends EntityAuditing {
     }
 
     @Builder
-    public ProductSub(Long idx, Long idxStore, Cost cost, ProductSubInfo productSubInfo, Integer sequence, List<ProductSubImage> images, ProductSubType productSubType, ProductSubCategory productSubCategory, Integer numberMinimum, Integer numberMaximum, List<ProductSubMapper> products) {
+    public ProductSub(Long idx, Long idxStore, Cost cost, ProductSubInfo productSubInfo, Integer sequence, List<ProductSubImage> images, ProductSubCategory productSubCategory, Integer numberMinimum, Integer numberMaximum, List<ProductSubMapper> products) {
         super.setIdx(idx);
         this.idxStore = idxStore;
         this.cost = cost;
         this.productSubInfo = productSubInfo;
         this.sequence = sequence;
         this.images = images;
-        this.productSubType = productSubType;
         this.productSubCategory = productSubCategory;
         this.numberMinimum = numberMinimum;
         this.numberMaximum = numberMaximum;

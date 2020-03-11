@@ -16,6 +16,7 @@ import com.mrporter.pomangam.test.data.ordertimeMapper.OrderTimeMapperData;
 import com.mrporter.pomangam.test.data.payment.PaymentData;
 import com.mrporter.pomangam.test.data.point.PointRankData;
 import com.mrporter.pomangam.test.data.product.ProductData;
+import com.mrporter.pomangam.test.data.productReply.ProductReplyData;
 import com.mrporter.pomangam.test.data.productSub.ProductSubData;
 import com.mrporter.pomangam.test.data.productSubCategory.ProductSubCategoryData;
 import com.mrporter.pomangam.test.data.productSubMapper.ProductSubMapperData;
@@ -59,6 +60,7 @@ public class TestDataLoader implements ApplicationRunner {
     @Autowired PaymentData payment;
     @Autowired OrderData order;
     @Autowired RandomNicknameData randomNickname;
+    @Autowired ProductReplyData productReply;
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddl;
@@ -258,21 +260,24 @@ public class TestDataLoader implements ApplicationRunner {
         /*
          * 서브 카테고리
          */
-        productSubCategory.of(1L, "맛 필수 선택");
-        productSubCategory.of(2L, "서브");
-        productSubCategory.of(3L, "음료");
-
+        productSubCategory.of(1L, "맛 필수 선택", ProductSubType.RADIO);
+        productSubCategory.of(2L, "서브", ProductSubType.CHECKBOX);
+        productSubCategory.of(3L, "음료", ProductSubType.NUMBER);
+        productSubCategory.of(4L, "서브", ProductSubType.CHECKBOX);
+        productSubCategory.of(5L, "음료", ProductSubType.NUMBER);
 
         /*
          * 서브 제품
          */
-        productSub.of(1L, 1L, 1L, 1L, ProductSubType.RADIO,"착한맛", null, null,1, 0, null, null, Arrays.asList());
-        productSub.of(2L, 1L, 1L, 1L, ProductSubType.RADIO,"보통맛", null, null,2, 0, null, null, Arrays.asList());
-        productSub.of(3L, 1L, 1L, 1L, ProductSubType.RADIO,"매운맛", null, null,4, 0, null, null, Arrays.asList());
-        productSub.of(4L, 1L, 1L, 2L, ProductSubType.NUMBER,"케이준양념감자", "쫀딕쫀딕 케이준감자에 양념 뭍힌것이여~", "쪼끔 맵땅깨~",1, 160, 0, 10, Arrays.asList(1,2));
-        productSub.of(5L, 1L, 1L, 2L, ProductSubType.CHECKBOX,"사이즈업", null, null,3, 1000, null, null, Arrays.asList());
-        productSub.of(6L, 1L, 1L, 3L, ProductSubType.NUMBER,"콜라", "코카콜라", "500ml",5, 1300, null, null, Arrays.asList(1));
-        productSub.of(7L, 1L, 1L, 3L, ProductSubType.NUMBER,"사이다", "칠성사이다", "500ml",6, 1300, null, null, Arrays.asList(1));
+        productSub.of(1L, 1L, 1L, 1L, "착한맛", null, null,1, 0, null, null, Arrays.asList());
+        productSub.of(2L, 1L, 1L, 1L, "보통맛", null, null,2, 0, null, null, Arrays.asList());
+        productSub.of(3L, 1L, 1L, 1L, "매운맛", null, null,3, 0, null, null, Arrays.asList());
+        productSub.of(4L, 1L, 1L, 2L, "케이준양념감자", "쫀딕쫀딕 케이준감자에 양념 뭍힌것이여~", "쪼끔 맵땅깨~",1, 160, 0, 10, Arrays.asList(1,2));
+        productSub.of(5L, 1L, 1L, 4L, "사이즈업", null, null,4, 1000, null, null, Arrays.asList());
+        productSub.of(6L, 1L, 1L, 3L, "콜라", "코카콜라", "500ml",2, 1300, null, null, Arrays.asList(1));
+        productSub.of(7L, 1L, 1L, 3L, "사이다", "칠성사이다", "500ml",3, 1300, null, null, Arrays.asList(1));
+        productSub.of(8L, 1L, 1L, 5L, "콜라375", "코카콜라375", "375ml",5, 1000, null, null, Arrays.asList(1));
+        productSub.of(9L, 1L, 1L, 5L, "사이다375", "칠성사이다375", "375ml",6, 1000, null, null, Arrays.asList(1));
 
 
         /*
@@ -282,17 +287,17 @@ public class TestDataLoader implements ApplicationRunner {
         productSubMapper.of(2L, 4L, 6L, 7L);
         productSubMapper.of(3L, 4L, 6L, 7L);
         productSubMapper.of(4L, 4L, 6L, 7L);
-        productSubMapper.of(5L, 1L, 2L, 3L, 5L);
-        productSubMapper.of(6L, 1L, 2L, 3L, 5L);
-        productSubMapper.of(7L, 1L, 2L, 3L, 5L);
-        productSubMapper.of(8L, 1L, 2L, 3L, 5L);
-        productSubMapper.of(9L, 1L, 2L, 3L, 5L);
-        productSubMapper.of(10L, 1L, 2L, 3L, 5L);
-        productSubMapper.of(11L, 1L, 2L, 3L, 5L);
-        productSubMapper.of(12L, 1L, 2L, 3L, 5L);
-        productSubMapper.of(13L, 1L, 2L, 3L, 5L);
-        productSubMapper.of(14L, 1L, 2L, 3L, 5L);
-        productSubMapper.of(15L, 1L, 2L, 3L, 5L);
+        productSubMapper.of(5L, 1L, 2L, 3L, 5L, 8L, 9L);
+        productSubMapper.of(6L, 1L, 2L, 3L, 5L, 8L, 9L);
+        productSubMapper.of(7L, 1L, 2L, 3L, 5L, 8L, 9L);
+        productSubMapper.of(8L, 1L, 2L, 3L, 5L, 8L, 9L);
+        productSubMapper.of(9L, 1L, 2L, 3L, 5L, 8L, 9L);
+        productSubMapper.of(10L, 1L, 2L, 3L, 5L, 8L, 9L);
+        productSubMapper.of(11L, 1L, 2L, 3L, 5L, 8L, 9L);
+        productSubMapper.of(12L, 1L, 2L, 3L, 5L, 8L, 9L);
+        productSubMapper.of(13L, 1L, 2L, 3L, 5L, 8L, 9L);
+        productSubMapper.of(14L, 1L, 2L, 3L, 5L, 8L, 9L);
+        productSubMapper.of(15L, 1L, 2L, 3L, 5L, 8L, 9L);
 
 
         /*
@@ -373,10 +378,21 @@ public class TestDataLoader implements ApplicationRunner {
 
 
         /*
+         * 제품 댓글
+         */
+        productReply.of(1L, 1L, "몇일 전 부터 [싸이버거세트]가 너무 먹고 싶어서 시켜 먹었는데 맛뿐만 아니라 양이 너무 많아서 깜짝놀랄 정도 였습니다. 두 번 먹으세요!!", false);
+        productReply.of(2L, 1L, "아니, 이딴걸 왜 돈주고 사먹는지 이해가 안갈정도임ㅡㅡ", true);
+        productReply.of(2L, 1L, "흠 별로내요.. 학기중에 절대로 다시는 시켜먹고 싶지 않네요.", true);
+        productReply.of(1L, 5L, "몇일 전 부터 [갈비치킨마요]가 너무 먹고 싶어서 시켜 먹었는데 맛뿐만 아니라 양이 너무 많아서 깜짝놀랄 정도 였습니다. 두 번 먹으세요!!", false);
+        productReply.of(2L, 5L, "아니, 이딴걸 왜 돈주고 사먹는지 이해가 안갈정도임ㅡㅡ", true);
+        productReply.of(2L, 5L, "흠 별로내요.. 학기중에 절대로 다시는 시켜먹고 싶지 않네요.", true);
+
+
+        /*
          * 랜덤 닉네임
          */
-        String[] ff = {"배부른", "용감한", "갸냘픈", "가엾은", "굵은", "던지는", "마법사", "방금온", "브론즈", "마스터", "실버", "골드", "플레티넘", "완고한", "다이아", "감각적인", "가벼운", "잘생긴", "어여쁜"};
-        String[] ss = {"얼굴", "사마귀", "북극곰", "콜라", "아이폰", "향수", "꼬부기", "파이리", "롱스톤", "티모", "가렌", "마스터이", "언랭", "페이커", "포만이", "비타민", "발바닥", "손바닥", "지갑"};
-        randomNickname.of(ff, ss);
+//        String[] ff = {"배부른", "용감한", "갸냘픈", "가엾은", "굵은", "던지는", "마법사", "방금온", "브론즈", "마스터", "실버", "골드", "플레티넘", "완고한", "다이아", "감각적인", "가벼운", "잘생긴", "어여쁜"};
+//        String[] ss = {"얼굴", "사마귀", "북극곰", "콜라", "아이폰", "향수", "꼬부기", "파이리", "롱스톤", "티모", "가렌", "마스터이", "언랭", "페이커", "포만이", "비타민", "발바닥", "손바닥", "지갑"};
+//        randomNickname.of(ff, ss);
     }
 }

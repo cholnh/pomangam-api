@@ -22,7 +22,7 @@ public class ProductSubData {
     ProductSubJpaRepository productSubJpaRepository;
 
     @Transactional
-    public void of(Long idx, Long dIdx, Long sIdx, Long cIdx, ProductSubType type, String name, String desc, String sub, int sequence, int cost, Integer min, Integer max, List<Integer> imagePaths) {
+    public void of(Long idx, Long dIdx, Long sIdx, Long cIdx, String name, String desc, String sub, int sequence, int cost, Integer min, Integer max, List<Integer> imagePaths) {
         ProductSub productSub = ProductSub.builder()
                 .idx(idx)
                 .productSubInfo(ProductSubInfo.builder()
@@ -32,7 +32,6 @@ public class ProductSubData {
                         .build())
                 .idxStore(sIdx)
                 .productSubCategory(ProductSubCategory.builder().idx(cIdx).build())
-                .productSubType(type)
                 .numberMinimum(min)
                 .numberMaximum(max)
                 .sequence(sequence)

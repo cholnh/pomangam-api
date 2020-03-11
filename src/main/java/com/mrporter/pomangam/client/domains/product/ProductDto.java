@@ -2,7 +2,7 @@ package com.mrporter.pomangam.client.domains.product;
 
 import com.mrporter.pomangam.client.domains.product.image.ProductImage;
 import com.mrporter.pomangam.client.domains.product.info.ProductInfo;
-import com.mrporter.pomangam.client.domains.product.sub.category.ProductSubCategory;
+import com.mrporter.pomangam.client.domains.product.reply.ProductReplyDto;
 import com.mrporter.pomangam.client.domains.product.sub.category.ProductSubCategoryDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,6 +34,12 @@ public class ProductDto implements Serializable {
 
     // like
     private Boolean isLike;
+
+    // reply
+    private List<ProductReplyDto> replies;
+
+    // product category
+    private List<ProductSubCategoryDto> productSubCategories;
 
     public Product toEntity() {
         Product entity = new ModelMapper().map(this, Product.class);

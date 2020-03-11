@@ -4,10 +4,7 @@ import com.mrporter.pomangam.client.services.product.subs.ProductSubServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/dsites/{dIdx}/stores/{sIdx}/products/{pIdx}/subs")
@@ -20,9 +17,15 @@ public class ProductSubController {
     public ResponseEntity<?> findByIdxProduct(
             @PathVariable(value = "dIdx", required = true) Long dIdx,
             @PathVariable(value = "sIdx", required = true) Long sIdx,
-            @PathVariable(value = "pIdx", required = true) Long pIdx
+            @PathVariable(value = "pIdx", required = true) Long pIdx,
+            @RequestParam(value = "cIdx", required = false) Long cIdx
     ) {
-        return new ResponseEntity(productSubService.findByIdxProduct(pIdx), HttpStatus.OK);
+        if(cIdx == null) {
+            return new ResponseEntity(productSubService.findByIdxProduct(pIdx), HttpStatus.OK);
+        } else {
+            return new ResponseEntity(productSubService.findByIdxProductSubCategory(cIdx), HttpStatus.OK);
+        }
+
     }
 
     @GetMapping("/{idx}")

@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface ProductSubService {
     List<ProductSubCategoryDto> findByIdxProduct(Long pIdx);
+    List<ProductSubCategoryDto> findByIdxProductSubCategory(Long cIdx);
     ProductSubDto findByIdx(Long idx);
     long count();
 }

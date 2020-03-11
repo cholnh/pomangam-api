@@ -1,6 +1,5 @@
 package com.mrporter.pomangam.client.domains.product.sub;
 
-import com.mrporter.pomangam.client.domains.product.sub.image.ProductSubImage;
 import com.mrporter.pomangam.client.domains.product.sub.info.ProductSubInfo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +21,6 @@ public class ProductSubDto implements Serializable {
     private Integer salePrice;
     private ProductSubInfo productSubInfo;
     private Integer sequence;
-    private ProductSubType productSubType;
     private String productSubCategory;
     private Integer numberMinimum;
     private Integer numberMaximum;
