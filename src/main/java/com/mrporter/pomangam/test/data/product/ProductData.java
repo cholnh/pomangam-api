@@ -1,20 +1,18 @@
 package com.mrporter.pomangam.test.data.product;
 
 import com.mrporter.pomangam.client.domains.product.Product;
+import com.mrporter.pomangam.client.domains.product.ProductType;
 import com.mrporter.pomangam.client.domains.product.category.ProductCategory;
 import com.mrporter.pomangam.client.domains.product.cost.Cost;
 import com.mrporter.pomangam.client.domains.product.image.ProductImage;
 import com.mrporter.pomangam.client.domains.product.image.ProductImageType;
 import com.mrporter.pomangam.client.domains.product.info.ProductInfo;
-import com.mrporter.pomangam.client.domains.product.sub.category.ProductSubCategory;
 import com.mrporter.pomangam.client.repositories.product.ProductJpaRepository;
 import com.mrporter.pomangam.client.repositories.product.sub.category.ProductSubCategoryJpaRepository;
 import com.mrporter.pomangam.client.services._bases.ImagePath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Component
 public class ProductData {
@@ -26,7 +24,7 @@ public class ProductData {
     ProductSubCategoryJpaRepository productSubCategoryJpaRepository;
 
     @Transactional
-    public void of(Long idx, String name, Long sIdx, Long cIdx, int seq, int unitCost, int cf, int sf, int ...idxesImage) {
+    public void of(Long idx, String name, ProductType productType, Long sIdx, Long cIdx, int seq, int unitCost, int cf, int sf, int ...idxesImage) {
         Product product = Product.builder()
                 .productInfo(ProductInfo.builder()
                         .name(name)
@@ -41,6 +39,7 @@ public class ProductData {
                         .priceClientFee(cf)
                         .priceStoreFee(sf)
                         .build())
+                .productType(productType)
                 .build();
 
         // image

@@ -84,6 +84,16 @@ public class Product extends EntityAuditing {
     @OrderBy("sequence ASC")
     private List<ProductSubMapper> subs = new ArrayList<>();
 
+    /**
+     * 제품 종류
+     * ProductType.NORMAL: 일반 제품
+     * ProductType.CUSTOMIZING: 커스터마이징 제품 (도시락 상품)
+     * 글자수: utf8 기준 / 영문 20자 / 한글 20자
+     */
+    @Column(name = "product_type", nullable = false, length = 20)
+    @Enumerated(EnumType.STRING)
+    private ProductType productType;
+
     @PrePersist
     private void prePersist() {
         this.cntLike = 0; // always 0 when its insert
@@ -92,7 +102,7 @@ public class Product extends EntityAuditing {
     }
 
     @Builder
-    public Product(Long idx, Long idxStore, Cost cost, ProductInfo productInfo, ProductCategory productCategory, Integer cntLike, Integer cntReply, Integer sequence, List<ProductImage> images, List<ProductSubMapper> subs) {
+    public Product(Long idx, Long idxStore, Cost cost, ProductInfo productInfo, ProductCategory productCategory, Integer cntLike, Integer cntReply, Integer sequence, List<ProductImage> images, List<ProductSubMapper> subs, ProductType productType) {
         super.setIdx(idx);
         this.idxStore = idxStore;
         this.cost = cost;
@@ -103,6 +113,7 @@ public class Product extends EntityAuditing {
         this.sequence = sequence;
         this.images = images;
         this.subs = subs;
+        this.productType = productType;
     }
 
     public void addImage(ProductImage productImage) {

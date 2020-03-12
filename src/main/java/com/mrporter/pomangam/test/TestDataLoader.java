@@ -2,6 +2,7 @@ package com.mrporter.pomangam.test;
 
 import com.mrporter.pomangam.client.domains.order.OrderType;
 import com.mrporter.pomangam.client.domains.payment.PaymentType;
+import com.mrporter.pomangam.client.domains.product.ProductType;
 import com.mrporter.pomangam.client.domains.product.sub.ProductSubType;
 import com.mrporter.pomangam.client.domains.user.Sex;
 import com.mrporter.pomangam.test.data.advertisement.AdvertisementData;
@@ -204,56 +205,70 @@ public class TestDataLoader implements ApplicationRunner {
                 Arrays.asList(1,2,3),
                 Arrays.asList(),
                 Arrays.asList("메인", "서브", "프리미엄"));
-
+        store.of(7L, 1L, 1L, "포만감 도시락", "\uD83D\uDE0E내가 먹고싶은 음식만 골라 담아 \uD83C\uDF71 도시락을 만들어 먹는다. \uD83D\uDE0B신개념 커스터마이징 도시락\uD83D\uDC40", "\uD83D\uDD25항공대 이벤트 중입니다.\uD83D\uDD25",
+                4.9F, 627, 311, 3,
+                Arrays.asList(1,2,3),
+                Arrays.asList("고객리뷰", "이벤트안내"),
+                Arrays.asList("메인 도시락", "서브 도시락", "프리미엄 도시락"));
 
         /*
          * 제품
          */
-        product.of(1L,"싸이버거 세트",
+        product.of(1L,"싸이버거 세트", ProductType.NORMAL,
                 1L, 1L, 1, 6_000, 1_000, 500,
                 1, 2, 3);
-        product.of(2L,"싸이버거",
+        product.of(2L,"싸이버거", ProductType.NORMAL,
                 1L, 2L, 2, 4_000, 1_000, 500,
                 1, 2, 3);
-        product.of(3L,"휠렛버거 세트",
+        product.of(3L,"휠렛버거 세트", ProductType.NORMAL,
                 1L, 1L, 3, 5_500, 1_000, 500,
                 1, 2, 3);
-        product.of(4L,"휠렛버거",
+        product.of(4L,"휠렛버거", ProductType.NORMAL,
                 1L, 2L, 4, 3_500, 1_000, 500,
                 1, 2, 3);
 
-        product.of(5L,"갈비치킨마요",
+        product.of(5L,"갈비치킨마요", ProductType.NORMAL,
                 2L, 3L, 1, 3_200, 1_000, 300,
                 1,2,3);
-        product.of(6L,"메가치킨마요",
+        product.of(6L,"메가치킨마요", ProductType.NORMAL,
                 2L, 3L, 2, 5_500, 1_000, 300,
                 1,2,3);
-        product.of(7L,"메가치킨제육",
+        product.of(7L,"메가치킨제육", ProductType.NORMAL,
                 2L, 4L, 3, 6_900, 1_000, 300,
                 1,2,3);
-        product.of(8L,"치킨마요",
+        product.of(8L,"치킨마요", ProductType.NORMAL,
                 2L, 3L, 4, 2_900, 1_000, 300,
                 1,2,3);
-        product.of(9L,"빅치킨마요",
+        product.of(9L,"빅치킨마요", ProductType.NORMAL,
                 2L, 3L, 5, 3_500, 1_000, 300,
                 1);
-        product.of(10L,"숯불직화구이 덮밥",
+        product.of(10L,"숯불직화구이 덮밥", ProductType.NORMAL,
                 2L, 5L, 6, 5_700, 1_000, 300,
                 1);
-        product.of(11L,"왕치킨마요",
+        product.of(11L,"왕치킨마요", ProductType.NORMAL,
                 2L, 3L, 7, 4_200, 1_000, 300,
                 1);
-        product.of(12L,"한솥 철판볶음밥",
+        product.of(12L,"한솥 철판볶음밥", ProductType.NORMAL,
                 2L, 4L, 8, 3_700, 1_000, 300,
                 1);
-        product.of(13L,"돈까스 카레",
+        product.of(13L,"돈까스 카레", ProductType.NORMAL,
                 2L, 3L, 9, 3_900, 1_000, 300,
                 1);
-        product.of(14L,"불닭비빔밥",
+        product.of(14L,"불닭비빔밥", ProductType.NORMAL,
                 2L, 5L, 10, 4_500, 1_000, 300,
                 1);
-        product.of(15L,"돈치마요",
+        product.of(15L,"돈치마요", ProductType.NORMAL,
                 2L, 3L, 11, 3_500, 1_000, 300,
+                1);
+
+        product.of(16L,"도시락(S)", ProductType.CUSTOMIZING_2,
+                7L, 20L, 1, 3_000, 1_000, 500,
+                1);
+        product.of(17L,"도시락(M)", ProductType.CUSTOMIZING_3,
+                7L, 20L, 2, 4_500, 1_000, 500,
+                1);
+        product.of(18L,"도시락(L)", ProductType.CUSTOMIZING_4,
+                7L, 20L, 3, 6_000, 1_000, 500,
                 1);
 
 
@@ -265,6 +280,10 @@ public class TestDataLoader implements ApplicationRunner {
         productSubCategory.of(3L, "음료", ProductSubType.NUMBER);
         productSubCategory.of(4L, "서브", ProductSubType.CHECKBOX);
         productSubCategory.of(5L, "음료", ProductSubType.NUMBER);
+        productSubCategory.of(6L, "선택1", ProductSubType.CUSTOMIZING_SUB);
+        productSubCategory.of(7L, "선택2", ProductSubType.CUSTOMIZING_SUB);
+        productSubCategory.of(8L, "선택3", ProductSubType.CUSTOMIZING_SUB);
+
 
         /*
          * 서브 제품
@@ -278,6 +297,26 @@ public class TestDataLoader implements ApplicationRunner {
         productSub.of(7L, 1L, 1L, 3L, "사이다", "칠성사이다", "500ml",3, 1300, null, null, Arrays.asList(1));
         productSub.of(8L, 1L, 1L, 5L, "콜라375", "코카콜라375", "375ml",5, 1000, null, null, Arrays.asList(1));
         productSub.of(9L, 1L, 1L, 5L, "사이다375", "칠성사이다375", "375ml",6, 1000, null, null, Arrays.asList(1));
+
+        productSub.of(10L, 1L, 7L, 6L, "흰쌀밥", null, null,1, 0, null, null, Arrays.asList(1));
+        productSub.of(11L, 1L, 7L, 6L, "현미밥", "국내산 현미 100%", null,2, 0, null, null, Arrays.asList(1));
+        productSub.of(12L, 1L, 7L, 6L, "잡곡밥", "국내산 잡곡 100%", null,3, 0, null, null, Arrays.asList(1));
+        productSub.of(13L, 1L, 7L, 6L, "서리태밥", "국내산 서리태 100%", null,4, 300, null, null, Arrays.asList(1));
+        productSub.of(14L, 1L, 7L, 6L, "김치베이컨 필라프", "김치와 베이컨을 볶은 필라프", null,5, 1000, null, null, Arrays.asList(1));
+
+        productSub.of(15L, 1L, 7L, 7L, "제육볶음", "국내산 돼지고기", "650g",1, 0, null, null, Arrays.asList(1));
+        productSub.of(16L, 1L, 7L, 7L, "제육볶음 곱빼기", "국내산 돼지고기", "850g",2, 1000, null, null, Arrays.asList(1));
+        productSub.of(17L, 1L, 7L, 7L, "돈까스", "수제 돈까스", "500g",3, 0, null, null, Arrays.asList(1));
+        productSub.of(18L, 1L, 7L, 7L, "치즈돈까스", "임실치즈 수제 돈까스", "600g",4, 500, null, null, Arrays.asList(1));
+        productSub.of(19L, 1L, 7L, 7L, "고등어조림", "국내산 고등어 조림", "고등어 2개",5, 0, null, null, Arrays.asList(1));
+        productSub.of(20L, 1L, 7L, 7L, "고기산적", "다진고기로 만든 산적", "산적 3개",6, 0, null, null, Arrays.asList(1));
+
+        productSub.of(21L, 1L, 7L, 8L, "김치", "국내산 김치", "250g",1, 0, null, null, Arrays.asList(1));
+        productSub.of(22L, 1L, 7L, 8L, "볶음김치", "국내산 김치", "250g",2, 0, null, null, Arrays.asList(1));
+        productSub.of(23L, 1L, 7L, 8L, "멸치볶음", "국내산 멸치볶음", "150g",3, 0, null, null, Arrays.asList(1));
+        productSub.of(24L, 1L, 7L, 8L, "연근조림", "싱싱한 연근조림", "200g",4, 0, null, null, Arrays.asList(1));
+        productSub.of(25L, 1L, 7L, 8L, "무말랭이", "국내산 무말랭이 무침", "300g",5, 0, null, null, Arrays.asList(1));
+        productSub.of(26L, 1L, 7L, 8L, "봄나물무침", "향긋한 봄나물", "200g",6, 0, null, null, Arrays.asList(1));
 
 
         /*
@@ -298,6 +337,9 @@ public class TestDataLoader implements ApplicationRunner {
         productSubMapper.of(13L, 1L, 2L, 3L, 5L, 8L, 9L);
         productSubMapper.of(14L, 1L, 2L, 3L, 5L, 8L, 9L);
         productSubMapper.of(15L, 1L, 2L, 3L, 5L, 8L, 9L);
+
+        productSubMapper.of(16L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L);
+        productSubMapper.of(17L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L, 24L, 25L, 26L);
 
 
         /*
@@ -329,6 +371,7 @@ public class TestDataLoader implements ApplicationRunner {
         orderTimeMapper.of(4L, 9L, 10L, 11L, 12L);  // 연세대 미래캠 한솥도시락
         orderTimeMapper.of(5L, 5L, 6L, 7L, 8L);     // 항공대 피자매니
         orderTimeMapper.of(6L, 5L, 6L, 7L, 8L);     // 항공대 항공반점
+        orderTimeMapper.of(7L, 1L, 2L, 3L, 4L);     // 항공대 포만감 도시락
 
 
         /*

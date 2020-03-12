@@ -41,6 +41,8 @@ public class ProductDto implements Serializable {
     // product category
     private List<ProductSubCategoryDto> productSubCategories;
 
+    private ProductType productType;
+
     public Product toEntity() {
         Product entity = new ModelMapper().map(this, Product.class);
         return entity;
