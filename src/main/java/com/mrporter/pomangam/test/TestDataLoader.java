@@ -277,9 +277,9 @@ public class TestDataLoader implements ApplicationRunner {
          */
         productSubCategory.of(1L, "맛 필수 선택", ProductSubType.RADIO);
         productSubCategory.of(2L, "서브", ProductSubType.CHECKBOX);
-        productSubCategory.of(3L, "음료", ProductSubType.NUMBER);
+        productSubCategory.of(3L, "음료", ProductSubType.CHECKBOX);
         productSubCategory.of(4L, "서브", ProductSubType.CHECKBOX);
-        productSubCategory.of(5L, "음료", ProductSubType.NUMBER);
+        productSubCategory.of(5L, "음료", ProductSubType.CHECKBOX);
         productSubCategory.of(6L, "선택1", ProductSubType.CUSTOMIZING_SUB);
         productSubCategory.of(7L, "선택2", ProductSubType.CUSTOMIZING_SUB);
         productSubCategory.of(8L, "선택3", ProductSubType.CUSTOMIZING_SUB);
