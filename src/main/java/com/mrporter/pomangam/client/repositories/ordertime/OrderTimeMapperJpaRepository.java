@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RepositoryRestResource(exported = false)
 public interface OrderTimeMapperJpaRepository extends JpaRepository<OrderTimeMapper, Long>, OrderTimeMapperCustomRepository {
-
+    boolean existsByOrderTime_IdxAndStore_Idx(Long oIdx, Long sIdx);
 }
 
 interface OrderTimeMapperCustomRepository {

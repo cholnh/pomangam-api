@@ -7,6 +7,7 @@ import com.mrporter.pomangam.client.domains.store.StoreSummaryDto;
 import com.mrporter.pomangam.client.domains.store.info.ProductionInfo;
 import com.mrporter.pomangam.client.repositories.order.OrderJpaRepository;
 import com.mrporter.pomangam.client.repositories.ordertime.OrderTimeJpaRepository;
+import com.mrporter.pomangam.client.repositories.ordertime.OrderTimeMapperJpaRepository;
 import com.mrporter.pomangam.client.repositories.store.StoreJpaRepository;
 import com.mrporter.pomangam.client.repositories.store.like.StoreLikeJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
@@ -29,6 +30,7 @@ public class StoreServiceImpl implements StoreService {
     StoreJpaRepository storeRepo;
     OrderJpaRepository orderRepo;
     OrderTimeJpaRepository orderTimeRepo;
+    OrderTimeMapperJpaRepository orderTimeMapperRepo;
     StoreLikeJpaRepository storeLikeRepo;
     UserJpaRepository userRepo;
 
@@ -80,10 +82,12 @@ public class StoreServiceImpl implements StoreService {
 
         int dMinute = (int) Duration.between(LocalDateTime.now(), LocalDateTime.of(oDate, _orderEndTime(oIdx))).toMinutes(); // 주문 마감까지 남은 시간
         for(Store store : storeRepo.findAllById(sIdxes)) {
-            quantities.add(StoreQuantityOrderableDto.builder()
-                    .idx(store.getIdx())
-                    .quantityOrderable(qo(store.getProductionInfo(), dMinute, aov(dIdx, store.getIdx(), oIdx, oDate)))
-                    .build());
+            if(orderTimeMapperRepo.existsByOrderTime_IdxAndStore_Idx(oIdx, store.getIdx())) {
+                quantities.add(StoreQuantityOrderableDto.builder()
+                        .idx(store.getIdx())
+                        .quantityOrderable(qo(store.getProductionInfo(), dMinute, aov(dIdx, store.getIdx(), oIdx, oDate)))
+                        .build());
+            }
         }
         return quantities;
     }
