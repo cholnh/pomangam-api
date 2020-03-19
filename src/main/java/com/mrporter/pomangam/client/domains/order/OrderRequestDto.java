@@ -25,9 +25,6 @@ import java.util.Set;
 @ToString(exclude = {"user"})
 public class OrderRequestDto implements Serializable {
 
-    // 기본 정보
-    private OrderType orderType;
-
     // 주문 날짜
     private LocalDate orderDate;
 
@@ -53,7 +50,7 @@ public class OrderRequestDto implements Serializable {
 
     public Order toEntity() {
         Order entity = Order.builder()
-                .orderType(this.orderType)
+                .orderType(OrderType.PAYMENT_READY)
                 .orderDate(this.orderDate)
                 .orderTime(OrderTime.builder()
                         .idx(this.idxOrderTime)
