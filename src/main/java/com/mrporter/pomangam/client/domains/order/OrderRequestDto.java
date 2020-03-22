@@ -41,9 +41,9 @@ public class OrderRequestDto implements Serializable {
 
     // PaymentInfo
     private Long idxPayment;
-    private Integer usingPoint;                                  // idValid (유저소유인증 추가 필요)
-    private Set<Long> idxesUsingCoupons = new HashSet<>();       // isValid (유저소유인증 추가 필요), 외부에서 등록
-    private Set<Long> idxesUsingPromotions = new HashSet<>();    // idValid, 외부에서 등록
+    private Integer usingPoint;
+    private Set<Long> idxesUsingCoupons = new HashSet<>();
+    private Set<Long> idxesUsingPromotions = new HashSet<>();
     private String cashReceipt;
 
     List<OrderItemRequestDto> orderItems = new ArrayList<>();

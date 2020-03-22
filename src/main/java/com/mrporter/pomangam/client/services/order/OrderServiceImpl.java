@@ -107,6 +107,7 @@ public class OrderServiceImpl implements OrderService {
     @VisibleForTesting
     public boolean _verifyPG(Long oIdx, int paymentCost) {
         // dummy code
+        // Todo..
         System.out.println("PG] oIdx: " + oIdx + " - paymentCost: " + paymentCost + "원");
         return true;
     }
