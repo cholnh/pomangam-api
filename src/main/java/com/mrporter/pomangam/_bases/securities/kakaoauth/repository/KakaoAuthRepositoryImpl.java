@@ -55,7 +55,7 @@ public class KakaoAuthRepositoryImpl implements KakaoAuthRepository {
     @Override
     public boolean checkAuthCode(String phone_number, String auth_code) {
         Query query = em
-                .createNativeQuery("SELECT idx, phone_number, auth_code, ip, register_date FROM kakao_authcode_tbl where phone_number = ? AND TIMESTAMPDIFF(minute, register_date, now()) < ? ORDER BY register_date DESC")
+                .createNativeQuery("SELECT idx, phone_number, auth_code, ip, register_date FROM kakao_authcode_tbl where phone_number = ? AND TIMESTAMPDIFF(minute, register_date, now()) < ? ORDER BY register_date DESC, idx desc")
                 .setParameter(1, phone_number)
                 .setParameter(2, INPUT_AUTHCODE_LIMIT_MINUTE);
 
@@ -78,7 +78,7 @@ public class KakaoAuthRepositoryImpl implements KakaoAuthRepository {
     @Override
     public boolean checkAuthCodeNotDelete(String phone_number, String auth_code) {
         Query query = em
-                .createNativeQuery("SELECT idx, phone_number, auth_code, ip, register_date FROM kakao_authcode_tbl where phone_number = ? AND TIMESTAMPDIFF(minute, register_date, now()) < ? ORDER BY register_date DESC")
+                .createNativeQuery("SELECT idx, phone_number, auth_code, ip, register_date FROM kakao_authcode_tbl where phone_number = ? AND TIMESTAMPDIFF(minute, register_date, now()) < ? ORDER BY register_date DESC, idx desc")
                 .setParameter(1, phone_number)
                 .setParameter(2, INPUT_AUTHCODE_LIMIT_MINUTE);
 

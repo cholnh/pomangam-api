@@ -4,6 +4,8 @@ import com.mrporter.pomangam.client.domains.order.OrderRequestDto;
 import com.mrporter.pomangam.client.domains.order.OrderResponseDto;
 import com.mrporter.pomangam.client.domains.order.orderer.OrdererType;
 import com.mrporter.pomangam.client.domains.user.User;
+import com.mrporter.pomangam.client.domains.user.UserDto;
+import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import com.mrporter.pomangam.client.services.order.OrderServiceImpl;
 import com.mrporter.pomangam.client.services.order.exception.OrderException;
 import com.mrporter.pomangam.client.services.user.UserServiceImpl;
@@ -26,7 +28,7 @@ import java.util.List;
 public class OrderController {
 
     OrderServiceImpl orderService;
-    UserServiceImpl userService;
+    UserJpaRepository userRepo;
 
     @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN') or ( #phoneNumber == principal.username ))")
     @GetMapping("/{phn}")
@@ -46,7 +48,7 @@ public class OrderController {
     ) {
 
         if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
-            User user = userService.findByPhoneNumber(auth.getName());
+            User user = userRepo.findByPhoneNumberAndIsActiveIsTrue(auth.getName());
             orderDto.setUser(user);
             orderDto.setIdxFcmToken(user.getIdxFcmToken());
             orderDto.setOrdererType(OrdererType.USER);

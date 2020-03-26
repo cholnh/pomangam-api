@@ -5,7 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mrporter.pomangam._bases.securities.kakaoauth.domain.PhoneNumber;
 import com.mrporter.pomangam._bases.securities.kakaoauth.domain.UpdateInputDto;
 import com.mrporter.pomangam._bases.securities.kakaoauth.service.KakaoAuthServiceImpl;
-import com.mrporter.pomangam.client.domains.user.User;
+import com.mrporter.pomangam.client.domains.user.UserDto;
 import com.mrporter.pomangam.client.services.user.UserServiceImpl;
 import com.mrporter.pomangam._bases.utils.formatter.PhoneNumberFormatter;
 import com.mrporter.pomangam._bases.utils.security.Ip;
@@ -74,7 +74,7 @@ public class KakaoAuthController {
         String authCode = phone.getCode();
         phoneNumber = PhoneNumberFormatter.format(phoneNumber);
         if(kakaoAuthService.checkAuthCode(phoneNumber, authCode)) {
-            User user = userService.findByPhoneNumber(phoneNumber);
+            UserDto user = userService.findByPhoneNumber(phoneNumber);
             if(user == null) {
                 return new ResponseEntity(false, HttpStatus.BAD_REQUEST);
             }
@@ -113,7 +113,7 @@ public class KakaoAuthController {
         phoneNumber = PhoneNumberFormatter.format(phoneNumber);
         if(kakaoAuthService.checkAuthCode(phoneNumber, authCode)) {
             if(userService.isExistByPhone(phoneNumber)) {
-                User user = userService.updateUserPassword(phoneNumber, dto.getPassword());
+                UserDto user = userService.updateUserPassword(phoneNumber, dto.getPassword());
                 user.setPassword(null);
                 return new ResponseEntity(user, HttpStatus.OK);
             } else {

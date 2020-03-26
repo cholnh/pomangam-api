@@ -2,6 +2,7 @@ package com.mrporter.pomangam.client.domains.user;
 
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSiteDto;
 import com.mrporter.pomangam.client.domains.user.password.Password;
+import com.mrporter.pomangam.client.domains.user.point.rank.PointRankDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -32,6 +33,8 @@ public class UserDto implements Serializable {
     private Integer point;
     private Long idxFcmToken;
 
+    private PointRankDto pointRank;
+
     public User toEntity() {
         User entity = new ModelMapper().map(this, User.class);
         entity.setPassword(Password.builder()
@@ -43,6 +46,8 @@ public class UserDto implements Serializable {
     public static UserDto fromEntity(User entity) {
         if(entity == null) return null;
         UserDto dto = new ModelMapper().map(entity, UserDto.class);
+        dto.setPassword(null);
+        dto.setPointRank(PointRankDto.fromEntity(entity.getPointRank()));
         return dto;
     }
 

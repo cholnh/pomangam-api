@@ -30,16 +30,16 @@ public class PointRank extends EntityAuditing {
     private String title;
 
     /**
-     * 등업 조건 - 최소 누적 주문 횟수
+     * 등업 조건 - (다음레벨) 최소 누적 주문 횟수
      */
-    @Column(name = "lower_limit_order_count", nullable = false)
-    private Integer lowerLimitOrderCount;
+    @Column(name = "next_lower_limit_order_count", nullable = false)
+    private Integer nextLowerLimitOrderCount;
 
     /**
-     * 등업 조건 - 최소 누적 추천인 수
+     * 등업 조건 - (다음레벨) 최소 누적 추천인 수
      */
-    @Column(name = "lower_limit_recommend_count", nullable = false)
-    private Integer lowerLimitRecommendCount;
+    @Column(name = "next_lower_limit_recommend_count", nullable = false)
+    private Integer nextLowerLimitRecommendCount;
 
     /**
      * 등업 혜택 - 제공 쿠폰가격
@@ -60,12 +60,12 @@ public class PointRank extends EntityAuditing {
     private Integer priceSavePoint;
 
     @Builder
-    public PointRank(Long idx, Short level, String title, Integer lowerLimitOrderCount, Integer lowerLimitRecommendCount, Integer rewardCouponPrice, Integer percentSavePoint, Integer priceSavePoint) {
+    public PointRank(Long idx, Short level, String title, Integer nextLowerLimitOrderCount, Integer nextLowerLimitRecommendCount, Integer rewardCouponPrice, Integer percentSavePoint, Integer priceSavePoint) {
         super.setIdx(idx);
         this.level = level;
         this.title = title;
-        this.lowerLimitOrderCount = lowerLimitOrderCount;
-        this.lowerLimitRecommendCount = lowerLimitRecommendCount;
+        this.nextLowerLimitOrderCount = nextLowerLimitOrderCount;
+        this.nextLowerLimitRecommendCount = nextLowerLimitRecommendCount;
         this.rewardCouponPrice = rewardCouponPrice;
         this.percentSavePoint = percentSavePoint;
         this.priceSavePoint = priceSavePoint;

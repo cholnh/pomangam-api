@@ -1,6 +1,5 @@
 package com.mrporter.pomangam.client.controllers.user;
 
-import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.domains.user.UserDto;
 import com.mrporter.pomangam.client.services.user.UserServiceImpl;
 import lombok.AllArgsConstructor;
@@ -26,7 +25,7 @@ public class UserController {
             @PathVariable(value = "phn") String phoneNumber,
             Principal principal
     ) {
-        return UserDto.fromEntity(removePassword(userService.findByPhoneNumber(phoneNumber)));
+        return userService.findByPhoneNumber(phoneNumber);
     }
 
     @GetMapping("/search/exist/phone")
@@ -47,7 +46,7 @@ public class UserController {
     public ResponseEntity<?> post(
             @RequestBody(required = true) UserDto dto
     ) {
-        return new ResponseEntity<>(UserDto.fromEntity(removePassword(userService.saveUser(dto.toEntity()))), HttpStatus.OK);
+        return new ResponseEntity<>(userService.saveUser(dto.toEntity()), HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN') or ( #phoneNumber == principal.username ))")
@@ -65,17 +64,10 @@ public class UserController {
             @RequestBody(required = true) UserDto dto
     ) {
         try {
-            return new ResponseEntity<>(UserDto.fromEntity(removePassword(userService.patchUser(phoneNumber, dto.toEntity()))), HttpStatus.OK);
+            return new ResponseEntity<>(userService.patchUser(phoneNumber, dto.toEntity()), HttpStatus.OK);
         }catch (Exception e) {
             e.printStackTrace();
         }
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    private User removePassword(User user) {
-        if(user != null) {
-            user.setPassword(null);
-        }
-        return user;
     }
 }

@@ -3,9 +3,11 @@ package com.mrporter.pomangam.client.services.user;
 import com.mrporter.pomangam._bases.utils.formatter.PhoneNumberFormatter;
 import com.mrporter.pomangam._bases.utils.reflection.ReflectionUtils;
 import com.mrporter.pomangam.client.domains.user.User;
+import com.mrporter.pomangam.client.domains.user.UserDto;
 import com.mrporter.pomangam.client.domains.user.point.log.PointLog;
 import com.mrporter.pomangam.client.domains.user.point.log.PointType;
 import com.mrporter.pomangam.client.domains.user.point.rank.PointRank;
+import com.mrporter.pomangam.client.repositories.order.OrderJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.point.log.PointLogJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.random_nickname.RandomNicknameJpaRepository;
@@ -27,10 +29,14 @@ public class UserServiceImpl implements UserService {
     UserJpaRepository userRepo;
     RandomNicknameJpaRepository randomNicknameRepo;
     PointLogJpaRepository pointLogRepo;
+    OrderJpaRepository orderRepo;
 
     @Override
-    public User findByPhoneNumber(String phoneNumber) {
-        return userRepo.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
+    public UserDto findByPhoneNumber(String phoneNumber) {
+        UserDto userDto = UserDto.fromEntity(userRepo.findByPhoneNumberAndIsActiveIsTrue(phoneNumber));
+        userDto.getPointRank().setUserOrderCount((int) orderRepo.countByIsActiveIsTrue());
+        userDto.getPointRank().setUserRecommendCount(0);
+        return userDto;
     }
 
     @Override
@@ -39,26 +45,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAll() {
-        return userRepo.findAll();
+    public List<UserDto> findAll() {
+        return UserDto.fromEntities(userRepo.findAll());
     }
 
     @Override
-    public List<User> findAll(Pageable pageable) {
-        return userRepo.findAll(pageable).getContent();
+    public List<UserDto> findAll(Pageable pageable) {
+        return UserDto.fromEntities(userRepo.findAll(pageable).getContent());
     }
 
     @Override
     @Transactional
-    public User saveUser(User user) {
+    public UserDto saveUser(User user) {
         boolean isEmptyNickname = user.getNickname() == null || user.getNickname().isEmpty();
         if(isEmptyNickname) {
             user.setNickname(randomNickname());
         }
+        user.getPassword().setFailedCount(0);
         user.getPassword().setValue(passwordEncoder.encode(user.getPassword().getValue()));
         user.setPhoneNumber(PhoneNumberFormatter.format(user.getPhoneNumber()));
         user.setPointRank(PointRank.builder().idx(1L).build());
-        return userRepo.save(user);
+
+        return UserDto.fromEntity(userRepo.save(user));
     }
 
     @Override
@@ -81,7 +89,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User updateUserPassword(String phoneNumber, String password) {
+    public UserDto updateUserPassword(String phoneNumber, String password) {
         final User fetchedUser = userRepo.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         if (fetchedUser == null) {
             return null;
@@ -90,12 +98,12 @@ public class UserServiceImpl implements UserService {
         fetchedUser.setModifyDate(LocalDateTime.now());
 
         userRepo.save(fetchedUser);
-        return fetchedUser;
+        return UserDto.fromEntity(fetchedUser);
     }
 
     @Override
     @Transactional
-    public User patchUser(String phoneNumber, User user) {
+    public UserDto patchUser(String phoneNumber, User user) {
         final User fetched = userRepo.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
         if(fetched == null) {
             return null;
@@ -107,7 +115,7 @@ public class UserServiceImpl implements UserService {
             // fetched.setModifyDate(LocalDateTime.now());
             fetched.setPoint(point); // 포인트는 외부 patch 로직으로 인해 변경 불가능
             userRepo.save(fetched);
-            return fetched;
+            return UserDto.fromEntity(fetched);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

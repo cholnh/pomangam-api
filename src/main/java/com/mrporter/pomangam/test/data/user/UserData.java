@@ -24,6 +24,7 @@ public class UserData {
                 .deliveryDetailSite(DeliveryDetailSite.builder().idx(ddIdx).build())
                 .phoneNumber(phoneNumber)
                 .password(Password.builder()
+                        .failedCount(0)
                         .value(password)
                         .build())
                 .name(name)
