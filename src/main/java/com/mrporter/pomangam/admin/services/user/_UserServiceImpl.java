@@ -4,10 +4,14 @@ import com.mrporter.pomangam._bases.utils.formatter.PhoneNumberFormatter;
 import com.mrporter.pomangam._bases.utils.reflection.ReflectionUtils;
 import com.mrporter.pomangam.admin.repositories.user._UserJpaRepository;
 import com.mrporter.pomangam.client.domains.user.User;
+import com.mrporter.pomangam.client.domains.user.point.log.PointLog;
+import com.mrporter.pomangam.client.domains.user.point.log.PointType;
+import com.mrporter.pomangam.client.services.user.point.log.PointLogServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +22,7 @@ public class _UserServiceImpl implements _UserService {
 
     PasswordEncoder passwordEncoder;
     _UserJpaRepository userJpaRepository;
+    PointLogServiceImpl pointLogService;
 
     @Override
     public User findByPhoneNumber(String phoneNumber) {
@@ -94,25 +99,32 @@ public class _UserServiceImpl implements _UserService {
     }
 
     @Override
-    public int getPointByIdx(Long idx) {
-        return userJpaRepository.getOne(idx).getPoint();
+    public int getPointByIdx(Long uIdx) {
+        return pointLogService.findByIdxUser(uIdx);
     }
 
-    @Override
-    public int plusPointByIdx(Long idx, Integer point) {
-        User user = userJpaRepository.getOne(idx);
-        int p = user.getPoint() + point;
-        user.setPoint(p);
-        userJpaRepository.save(user);
-        return p;
+    @Transactional
+    public int plusPointByIdx(Long uIdx, int savedPoint, PointType pointType) {
+        // 포인트 로그
+        PointLog pointLog = PointLog.builder()
+                .idxUser(uIdx)
+                .point(savedPoint)
+                .pointType(pointType)
+                .build();
+        return pointLogService.save(pointLog).getPostPoint();
     }
 
-    @Override
-    public int minusPointByIdx(Long idx, Integer point) {
-        User user = userJpaRepository.getOne(idx);
-        int p = user.getPoint() - point;
-        user.setPoint(p);
-        userJpaRepository.save(user);
-        return p;
+    @Transactional
+    public int minusPointByIdx(Long uIdx, int usingPoint, PointType pointType) {
+        if(usingPoint < 0) {
+            return 0;
+        }
+        // 포인트 로그
+        PointLog pointLog = PointLog.builder()
+                .idxUser(uIdx)
+                .point(usingPoint)
+                .pointType(pointType)
+                .build();
+        return pointLogService.save(pointLog).getPostPoint();
     }
 }

@@ -31,7 +31,7 @@ public interface UserService {
 
     int getPointByIdx(Long idx);
 
-    int plusPointByIdx(Long idx, int point, PointType pointType);
+    int plusPointByIdx(Long idx, int point, PointType pointType, Long oIdx);
 
-    int minusPointByIdx(Long idx, int point, PointType pointType);
+    int minusPointByIdx(Long idx, int point, PointType pointType, Long oIdx);
 }

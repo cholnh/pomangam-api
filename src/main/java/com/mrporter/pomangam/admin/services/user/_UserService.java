@@ -1,6 +1,7 @@
 package com.mrporter.pomangam.admin.services.user;
 
 import com.mrporter.pomangam.client.domains.user.User;
+import com.mrporter.pomangam.client.domains.user.point.log.PointType;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public interface _UserService {
 
     int getPointByIdx(Long idx);
 
-    int plusPointByIdx(Long idx, Integer point);
+    int plusPointByIdx(Long uIdx, int savedPoint, PointType pointType);
 
-    int minusPointByIdx(Long idx, Integer point);
+    int minusPointByIdx(Long uIdx, int usingPoint, PointType pointType);
 }

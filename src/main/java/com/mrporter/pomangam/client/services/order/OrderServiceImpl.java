@@ -16,6 +16,7 @@ import com.mrporter.pomangam.client.repositories.order.OrderJpaRepository;
 import com.mrporter.pomangam.client.repositories.order.OrderLogJpaRepository;
 import com.mrporter.pomangam.client.services.order.exception.OrderException;
 import com.mrporter.pomangam.client.services.user.UserServiceImpl;
+import com.mrporter.pomangam.client.services.user.point.log.PointLogServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class OrderServiceImpl implements OrderService {
     UserServiceImpl userService;
     CouponJpaRepository couponRepo;
     CouponMapperJpaRepository couponMapperRepo;
+    PointLogServiceImpl pointLogService;
 
     @Override
     public List<OrderResponseDto> findByPhoneNumber(String phoneNumber, Pageable pageable) {
@@ -124,14 +126,14 @@ public class OrderServiceImpl implements OrderService {
     public void verifyUsingPoint(Order order) {
         User user = order.getOrderer().getUser();
         if(user != null) {
-            int userPoint = user.getPoint();
+            int userPoint = pointLogService.findByIdxUser(user.getIdx());
             int usingPoint = order.getPaymentInfo().getUsingPoint();
             if(usingPoint == 0) return;
             if(userPoint < usingPoint || usingPoint < 0) {
                 log(order.getIdx(), OrderType.PAYMENT_READY_FAIL_POINT);
                 throw new OrderException("invalid using point.");
             }
-            userService.minusPointByIdx(user.getIdx(), usingPoint, PointType.USED_BY_BUY);
+            userService.minusPointByIdx(user.getIdx(), usingPoint, PointType.USED_BY_BUY, order.getIdx());
         }
     }
 
@@ -190,7 +192,7 @@ public class OrderServiceImpl implements OrderService {
     public void commitSavedPoint(Order order) {
         User user = order.getOrderer().getUser();
         int savedPoint = order.getPaymentInfo().getSavedPoint();
-        userService.plusPointByIdx(user.getIdx(), savedPoint, PointType.ISSUED_BY_BUY);
+        userService.plusPointByIdx(user.getIdx(), savedPoint, PointType.ISSUED_BY_BUY, order.getIdx());
     }
 
     @VisibleForTesting
@@ -198,7 +200,7 @@ public class OrderServiceImpl implements OrderService {
         User user = order.getOrderer().getUser();
         int usingPoint = order.getPaymentInfo().getUsingPoint();
         if(usingPoint > 0) {
-            userService.plusPointByIdx(user.getIdx(), usingPoint, PointType.ROLLBACK_BY_PAYMENT_CANCEL);
+            userService.plusPointByIdx(user.getIdx(), usingPoint, PointType.ROLLBACK_BY_PAYMENT_CANCEL, order.getIdx());
         }
     }
 

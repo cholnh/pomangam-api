@@ -11,6 +11,7 @@ import com.mrporter.pomangam.client.repositories.order.OrderJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.point.log.PointLogJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.random_nickname.RandomNicknameJpaRepository;
+import com.mrporter.pomangam.client.services.user.point.log.PointLogServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,12 +31,14 @@ public class UserServiceImpl implements UserService {
     RandomNicknameJpaRepository randomNicknameRepo;
     PointLogJpaRepository pointLogRepo;
     OrderJpaRepository orderRepo;
+    PointLogServiceImpl pointLogService;
 
     @Override
     public UserDto findByPhoneNumber(String phoneNumber) {
         UserDto userDto = UserDto.fromEntity(userRepo.findByPhoneNumberAndIsActiveIsTrue(phoneNumber));
-        userDto.getPointRank().setUserOrderCount((int) orderRepo.countByIsActiveIsTrue());
-        userDto.getPointRank().setUserRecommendCount(0);
+        userDto.setUserPoint(pointLogService.findByIdxUser(userDto.getIdx()));
+        userDto.getUserPointRank().setUserOrderCount((int) orderRepo.countByIsActiveIsTrue());
+        userDto.getUserPointRank().setUserRecommendCount(0);
         return userDto;
     }
 
@@ -46,12 +49,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> findAll() {
-        return UserDto.fromEntities(userRepo.findAll());
+        List<UserDto> dtos = UserDto.fromEntities(userRepo.findAll());
+        for(UserDto userDto : dtos) {
+            userDto.setUserPoint(pointLogService.findByIdxUser(userDto.getIdx()));
+        }
+        return dtos;
     }
 
     @Override
     public List<UserDto> findAll(Pageable pageable) {
-        return UserDto.fromEntities(userRepo.findAll(pageable).getContent());
+        List<UserDto> dtos = UserDto.fromEntities(userRepo.findAll(pageable).getContent());
+        for(UserDto userDto : dtos) {
+            userDto.setUserPoint(pointLogService.findByIdxUser(userDto.getIdx()));
+        }
+        return dtos;
     }
 
     @Override
@@ -66,7 +77,9 @@ public class UserServiceImpl implements UserService {
         user.setPhoneNumber(PhoneNumberFormatter.format(user.getPhoneNumber()));
         user.setPointRank(PointRank.builder().idx(1L).build());
 
-        return UserDto.fromEntity(userRepo.save(user));
+        UserDto dto = UserDto.fromEntity(userRepo.save(user));
+        dto.setUserPoint(0);
+        return dto;
     }
 
     @Override
@@ -98,7 +111,10 @@ public class UserServiceImpl implements UserService {
         fetchedUser.setModifyDate(LocalDateTime.now());
 
         userRepo.save(fetchedUser);
-        return UserDto.fromEntity(fetchedUser);
+
+        UserDto dto = UserDto.fromEntity(fetchedUser);
+        dto.setUserPoint(pointLogService.findByIdxUser(dto.getIdx()));
+        return dto;
     }
 
     @Override
@@ -110,11 +126,11 @@ public class UserServiceImpl implements UserService {
         }
 
         try {
-            int point = fetched.getPoint();
             ReflectionUtils.oldInstanceByNewInstance(fetched, user);
-            // fetched.setModifyDate(LocalDateTime.now());
-            fetched.setPoint(point); // 포인트는 외부 patch 로직으로 인해 변경 불가능
             userRepo.save(fetched);
+
+            UserDto dto = UserDto.fromEntity(fetched);
+            dto.setUserPoint(pointLogService.findByIdxUser(dto.getIdx()));
             return UserDto.fromEntity(fetched);
         } catch (Exception e) {
             e.printStackTrace();
@@ -135,50 +151,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int getPointByIdx(Long idx) {
-        return userRepo.getOne(idx).getPoint();
+    public int getPointByIdx(Long uIdx) {
+        return pointLogService.findByIdxUser(uIdx);
     }
 
     @Override
     @Transactional
-    public int plusPointByIdx(Long uIdx, int savedPoint, PointType pointType) {
-        User user = userRepo.getOne(uIdx);
-        int userPoint = user.getPoint() + savedPoint;
-        user.setPoint(userPoint);
-        userRepo.save(user);
-
+    public int plusPointByIdx(Long uIdx, int savedPoint, PointType pointType, Long oIdx) {
         // 포인트 로그
         PointLog pointLog = PointLog.builder()
                 .idxUser(uIdx)
+                .idxOrder(oIdx)
                 .point(savedPoint)
-                .postPoint(userPoint)
                 .pointType(pointType)
                 .build();
-        pointLogRepo.save(pointLog);
-        return userPoint;
+        return pointLogService.save(pointLog).getPostPoint();
     }
 
     @Override
     @Transactional
-    public int minusPointByIdx(Long uIdx, int usingPoint, PointType pointType) {
+    public int minusPointByIdx(Long uIdx, int usingPoint, PointType pointType, Long oIdx) {
         if(usingPoint < 0) {
             return 0;
         }
-        User user = userRepo.getOne(uIdx);
-        int userPoint = user.getPoint() - usingPoint;
-        user.setPoint(userPoint);
-        userRepo.save(user);
-
         // 포인트 로그
         PointLog pointLog = PointLog.builder()
                 .idxUser(uIdx)
+                .idxOrder(oIdx)
                 .point(usingPoint)
-                .postPoint(userPoint)
                 .pointType(pointType)
                 .build();
-        pointLogRepo.save(pointLog);
-
-        return userPoint;
+        return pointLogService.save(pointLog).getPostPoint();
     }
 
     private String randomNickname() {

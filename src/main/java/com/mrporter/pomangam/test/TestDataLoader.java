@@ -5,6 +5,8 @@ import com.mrporter.pomangam.client.domains.payment.PaymentType;
 import com.mrporter.pomangam.client.domains.product.ProductType;
 import com.mrporter.pomangam.client.domains.product.sub.ProductSubType;
 import com.mrporter.pomangam.client.domains.user.Sex;
+import com.mrporter.pomangam.client.domains.user.point.log.PointLog;
+import com.mrporter.pomangam.client.domains.user.point.log.PointType;
 import com.mrporter.pomangam.test.data.advertisement.AdvertisementData;
 import com.mrporter.pomangam.test.data.coupon.CouponData;
 import com.mrporter.pomangam.test.data.deliverysite.DeliverySiteData;
@@ -15,6 +17,7 @@ import com.mrporter.pomangam.test.data.order.OrderData;
 import com.mrporter.pomangam.test.data.ordertime.OrderTimeData;
 import com.mrporter.pomangam.test.data.ordertimeMapper.OrderTimeMapperData;
 import com.mrporter.pomangam.test.data.payment.PaymentData;
+import com.mrporter.pomangam.test.data.point.PointLogData;
 import com.mrporter.pomangam.test.data.point.PointRankData;
 import com.mrporter.pomangam.test.data.product.ProductData;
 import com.mrporter.pomangam.test.data.productReply.ProductReplyData;
@@ -62,6 +65,7 @@ public class TestDataLoader implements ApplicationRunner {
     @Autowired OrderData order;
     @Autowired RandomNicknameData randomNickname;
     @Autowired ProductReplyData productReply;
+    @Autowired PointLogData pointLog;
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddl;
@@ -429,6 +433,20 @@ public class TestDataLoader implements ApplicationRunner {
         productReply.of(1L, 5L, "몇일 전 부터 [갈비치킨마요]가 너무 먹고 싶어서 시켜 먹었는데 맛뿐만 아니라 양이 너무 많아서 깜짝놀랄 정도 였습니다. 두 번 먹으세요!!", false);
         productReply.of(2L, 5L, "아니, 이딴걸 왜 돈주고 사먹는지 이해가 안갈정도임ㅡㅡ", true);
         productReply.of(2L, 5L, "흠 별로내요.. 학기중에 절대로 다시는 시켜먹고 싶지 않네요.", true);
+
+
+        /*
+         * 포인트 로그
+         */
+        pointLog.plus(1L, 1000, PointType.ISSUED_BY_BUY, 1L);
+        pointLog.plus(1L, 500, PointType.ISSUED_BY_BUY, 2L);
+        pointLog.plus(1L, 300, PointType.ISSUED_BY_BUY, 3L);
+        pointLog.plus(1L, 2000, PointType.ISSUED_BY_PROMOTION, null);
+        pointLog.minus(1L, 3000, PointType.USED_BY_BUY, 4L);
+
+        pointLog.plus(2L, 300, PointType.ISSUED_BY_BUY, 5L);
+        pointLog.plus(2L, 5000, PointType.UPDATED_PLUS_BY_ADMIN, null);
+        pointLog.plus(2L, 300, PointType.ISSUED_BY_BUY, 7L);
 
 
         /*

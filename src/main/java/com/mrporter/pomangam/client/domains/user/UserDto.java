@@ -30,10 +30,10 @@ public class UserDto implements Serializable {
     private String nickname;
     private Sex sex;
     private LocalDate birth;
-    private Integer point;
     private Long idxFcmToken;
 
-    private PointRankDto pointRank;
+    private PointRankDto userPointRank;
+    private Integer userPoint;
 
     public User toEntity() {
         User entity = new ModelMapper().map(this, User.class);
@@ -45,9 +45,19 @@ public class UserDto implements Serializable {
 
     public static UserDto fromEntity(User entity) {
         if(entity == null) return null;
-        UserDto dto = new ModelMapper().map(entity, UserDto.class);
+        UserDto dto = new UserDto();
+        dto.setIdx(entity.getIdx());
+        dto.setRegisterDate(entity.getRegisterDate());
+        dto.setModifyDate(entity.getModifyDate());
+        dto.setDeliveryDetailSite(DeliveryDetailSiteDto.fromEntity(entity.getDeliveryDetailSite()));
+        dto.setPhoneNumber(entity.getPhoneNumber());
+        dto.setName(entity.getName());
+        dto.setNickname(entity.getNickname());
+        dto.setSex(entity.getSex());
+        dto.setBirth(entity.getBirth());
+        dto.setIdxFcmToken(entity.getIdxFcmToken());
         dto.setPassword(null);
-        dto.setPointRank(PointRankDto.fromEntity(entity.getPointRank()));
+        dto.setUserPointRank(PointRankDto.fromEntity(entity.getPointRank()));
         return dto;
     }
 

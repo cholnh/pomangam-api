@@ -80,13 +80,14 @@ public class User extends EntityAuditing {
     private LocalDate birth;
 
     /**
-     * 포인트
+     * 포인트 (Deprecated - PointLog 로 대체)
      * 현재 가용 포인트 (계산 되어 진 최종 포인트)
      * 포인트 변경은 서버 내부 로직에서만 변경 가능함. (외부 api 통해 변경 불가능, 관리자 제외)
      */
-    @Column(name = "point", nullable = false, columnDefinition = "INT default 0")
-    @PositiveOrZero
-    private Integer point;
+//    @Deprecated
+//    @Column(name = "point", nullable = false, columnDefinition = "INT default 0")
+//    @PositiveOrZero
+//    private Integer point;
 
     /**
      * Fcm token 인덱스
@@ -123,7 +124,6 @@ public class User extends EntityAuditing {
 
     @PrePersist
     private void prePersist() {
-        this.point = 0; // always 0 when its insert
         this.authorities = authorities == null
                 ? "ROLE_USER"
                 : isValidAuthorities(authorities)
@@ -132,7 +132,7 @@ public class User extends EntityAuditing {
     }
 
     @Builder
-    public User(Long idx, Boolean isActive, DeliveryDetailSite deliveryDetailSite, String phoneNumber, Password password, String name, String nickname, Sex sex, LocalDate birth, @PositiveOrZero Integer point, Long idxFcmToken, PointRank pointRank, String authorities) {
+    public User(Long idx, Boolean isActive, DeliveryDetailSite deliveryDetailSite, String phoneNumber, Password password, String name, String nickname, Sex sex, LocalDate birth, Long idxFcmToken, PointRank pointRank, String authorities) {
         super.setIdx(idx);
         super.setIsActive(isActive);
         this.deliveryDetailSite = deliveryDetailSite;
@@ -142,7 +142,6 @@ public class User extends EntityAuditing {
         this.nickname = nickname;
         this.sex = sex;
         this.birth = birth;
-        this.point = point;
         this.idxFcmToken = idxFcmToken;
         this.pointRank = pointRank;
         this.authorities = authorities;
