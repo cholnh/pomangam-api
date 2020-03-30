@@ -25,6 +25,7 @@ public class StoreSummaryDto implements Serializable {
     private Float avgStar;
     private Integer cntLike;
     private Integer cntReview;
+    private Integer cntOrder;
     private Integer sequence;
 
     // 추가 사항

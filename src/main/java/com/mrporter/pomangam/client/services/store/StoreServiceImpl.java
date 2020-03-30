@@ -1,9 +1,6 @@
 package com.mrporter.pomangam.client.services.store;
 
-import com.mrporter.pomangam.client.domains.store.Store;
-import com.mrporter.pomangam.client.domains.store.StoreDto;
-import com.mrporter.pomangam.client.domains.store.StoreQuantityOrderableDto;
-import com.mrporter.pomangam.client.domains.store.StoreSummaryDto;
+import com.mrporter.pomangam.client.domains.store.*;
 import com.mrporter.pomangam.client.domains.store.info.ProductionInfo;
 import com.mrporter.pomangam.client.repositories.order.OrderJpaRepository;
 import com.mrporter.pomangam.client.repositories.ordertime.OrderTimeJpaRepository;
@@ -59,7 +56,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<StoreSummaryDto> findOpeningStores(Long dIdx, Long oIdx, LocalDate oDate, Pageable pageable) {
+    public List<StoreSummaryDto> findOpeningStores(Long dIdx, Long oIdx, LocalDate oDate, Pageable pageable, SortType sortType) {
         List<StoreSummaryDto> summaries = new ArrayList<>();
 
         LocalDateTime orderEndTime = LocalDateTime.of(oDate, _orderEndTime(oIdx));
@@ -67,7 +64,7 @@ public class StoreServiceImpl implements StoreService {
 
         if(now.isBefore(orderEndTime)) {
             int dMinute = (int) Duration.between(now, orderEndTime).toMinutes();  // 주문 마감까지 남은 시간
-            for(Store store : _orderableStores(dIdx, oIdx, pageable)) {
+            for(Store store : _orderableStores(dIdx, oIdx, pageable, sortType)) {
                 StoreSummaryDto dto = StoreSummaryDto.fromEntity(store);
                 dto.setQuantityOrderable(qo(store.getProductionInfo(), dMinute, aov(dIdx, store.getIdx(), oIdx, oDate)));
                 summaries.add(dto);
@@ -131,9 +128,10 @@ public class StoreServiceImpl implements StoreService {
                 .getOrderEndTime();
     }
 
-    private List<Store> _orderableStores(Long dIdx, Long oIdx, Pageable pageable) {
+    private List<Store> _orderableStores(Long dIdx, Long oIdx, Pageable pageable, SortType sortType) {
+
         return storeRepo // (주문시간, 주문장소)에 해당하는 업체들
-            .findStoreByIdxOrderTimeAndIdxDeliverySiteAndIsActiveIsTrue(oIdx, dIdx, pageable)
+            .findStoreByIdxOrderTimeAndIdxDeliverySiteAndIsActiveIsTrue(oIdx, dIdx, pageable, sortType)
             .getContent();
     }
 }

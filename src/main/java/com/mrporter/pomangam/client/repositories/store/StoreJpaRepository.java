@@ -2,16 +2,26 @@ package com.mrporter.pomangam.client.repositories.store;
 
 import com.mrporter.pomangam.client.domains.ordertime.QOrderTime;
 import com.mrporter.pomangam.client.domains.ordertime.QOrderTimeMapper;
+import com.mrporter.pomangam.client.domains.store.QStore;
+import com.mrporter.pomangam.client.domains.store.SortType;
 import com.mrporter.pomangam.client.domains.store.Store;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.SimplePath;
+import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.*;
 import java.util.List;
+import java.util.Optional;
 
 
 @RepositoryRestResource(exported = false)
@@ -32,7 +42,7 @@ interface StoreCustomRepository {
      * @param pageable pageable
      * @return  주문 가능한 업체 리스트
      */
-    Page<Store> findStoreByIdxOrderTimeAndIdxDeliverySiteAndIsActiveIsTrue(Long oIdx, Long dIdx, Pageable pageable);
+    Page<Store> findStoreByIdxOrderTimeAndIdxDeliverySiteAndIsActiveIsTrue(Long oIdx, Long dIdx, Pageable pageable, SortType sortType);
 
     long countByIdxOrderTimeAndIdxDeliverySiteAndIsActiveIsTrue(Long oIdx, Long dIdx);
 }
@@ -45,11 +55,11 @@ class StoreCustomRepositoryImpl extends QuerydslRepositorySupport implements Sto
     }
 
     @Override
-    public Page<Store> findStoreByIdxOrderTimeAndIdxDeliverySiteAndIsActiveIsTrue(Long oIdx, Long dIdx, Pageable pageable) {
+    public Page<Store> findStoreByIdxOrderTimeAndIdxDeliverySiteAndIsActiveIsTrue(Long oIdx, Long dIdx, Pageable pageable, SortType sortType) {
         final QOrderTimeMapper mapper = QOrderTimeMapper.orderTimeMapper;
         final QOrderTime orderTime = QOrderTime.orderTime;
 
-        List<Store> results =
+        JPQLQuery<Store> query =
                 from(orderTime)
                 .select(mapper.store)
                 .join(mapper).on(orderTime.idx.eq(mapper.orderTime.idx))
@@ -59,9 +69,23 @@ class StoreCustomRepositoryImpl extends QuerydslRepositorySupport implements Sto
                 .and(orderTime.isActive.isTrue())
                 .and(mapper.store.idxDeliverySite.eq(dIdx)))
                 .limit(pageable.getPageSize())
-                .offset(pageable.getOffset())
-                .fetch();
-        return new PageImpl<>(results, pageable, results.size());
+                .offset(pageable.getOffset());
+
+        switch (sortType) {
+            case SORT_BY_RECOMMEND_DESC:
+                // query.orderBy(mapper.store.idx.desc());
+                break;
+            case SORT_BY_ORDER_DESC:
+                query.orderBy(mapper.store.cntOrder.desc());
+                break;
+            case SORT_BY_STAR_DESC:
+                query.orderBy(mapper.store.avgStar.desc());
+                break;
+            case SORT_BY_REVIEW_DESC:
+                query.orderBy(mapper.store.cntReview.desc());
+                break;
+        }
+        return new PageImpl<>(query.fetch(), pageable, query.fetchCount());
     }
 
     @Override

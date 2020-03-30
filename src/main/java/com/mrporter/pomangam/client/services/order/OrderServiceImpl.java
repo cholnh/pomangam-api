@@ -8,12 +8,14 @@ import com.mrporter.pomangam.client.domains.order.OrderRequestDto;
 import com.mrporter.pomangam.client.domains.order.OrderResponseDto;
 import com.mrporter.pomangam.client.domains.order.OrderType;
 import com.mrporter.pomangam.client.domains.order.log.OrderLog;
+import com.mrporter.pomangam.client.domains.store.Store;
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.domains.user.point.log.PointType;
 import com.mrporter.pomangam.client.repositories.coupon.CouponJpaRepository;
 import com.mrporter.pomangam.client.repositories.coupon.CouponMapperJpaRepository;
 import com.mrporter.pomangam.client.repositories.order.OrderJpaRepository;
 import com.mrporter.pomangam.client.repositories.order.OrderLogJpaRepository;
+import com.mrporter.pomangam.client.repositories.store.StoreJpaRepository;
 import com.mrporter.pomangam.client.services.order.exception.OrderException;
 import com.mrporter.pomangam.client.services.user.UserServiceImpl;
 import com.mrporter.pomangam.client.services.user.point.log.PointLogServiceImpl;
@@ -22,9 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -37,6 +37,7 @@ public class OrderServiceImpl implements OrderService {
     CouponJpaRepository couponRepo;
     CouponMapperJpaRepository couponMapperRepo;
     PointLogServiceImpl pointLogService;
+    StoreJpaRepository storeRepo;
 
     @Override
     public List<OrderResponseDto> findByPhoneNumber(String phoneNumber, Pageable pageable) {
@@ -67,6 +68,7 @@ public class OrderServiceImpl implements OrderService {
         boolean isVerified = _verifyPG(oIdx, order.paymentCost());
         if(isVerified) {
             commitSavedPoint(order);
+            addCntOrder(order);
             log(oIdx, OrderType.PAYMENT_SUCCESS, OrderType.ORDER_READY);
         } else {
             rollbackUsingPoint(order);
@@ -214,5 +216,22 @@ public class OrderServiceImpl implements OrderService {
             couponMapperRepo.delete(couponMapper);
             order.getPaymentInfo().usingCouponsClear(); // order 쪽도 변경해줘야 함.
         }
+    }
+
+    @VisibleForTesting
+    public void addCntOrder(Order order) {
+        Map<Long, Short> map = new HashMap<>();
+        order.getOrderItems().forEach((item) -> {
+            short quantity = item.getQuantity();
+            if(map.containsKey(item.getStore().getIdx())) {
+                quantity += map.get(item.getStore().getIdx());
+            }
+            map.put(item.getStore().getIdx(), quantity);
+        });
+        map.forEach((k, v) -> {
+            Store store = storeRepo.findByIdxAndIsActiveIsTrue(k);
+            store.setCntOrder(store.getCntOrder() + Short.toUnsignedInt(v));
+            storeRepo.save(store);
+        });
     }
 }

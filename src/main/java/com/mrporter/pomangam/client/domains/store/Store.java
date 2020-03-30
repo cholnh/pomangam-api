@@ -76,6 +76,12 @@ public class Store extends EntityAuditing {
     private Integer cntReview;
 
     /**
+     * 총 주문 개수
+     */
+    @Column(name = "cnt_order", nullable = false, columnDefinition = "INT default 0")
+    private Integer cntOrder;
+
+    /**
      * 순서
      */
     @Column(name = "sequence", nullable = false, columnDefinition = "INT default 0")
@@ -118,7 +124,7 @@ public class Store extends EntityAuditing {
     }
 
     @Builder
-    public Store(Long idx, Long idxDeliverySite, StoreCategory storeCategory, StoreInfo storeInfo, ProductionInfo productionInfo, StoreSchedule storeSchedule, Float avgStar, Integer cntLike, Integer cntReview, Integer sequence, List<StoreImage> images, List<ProductCategory> productCategories, List<StoreStory> stories) {
+    public Store(Long idx, Long idxDeliverySite, StoreCategory storeCategory, StoreInfo storeInfo, ProductionInfo productionInfo, StoreSchedule storeSchedule, Float avgStar, Integer cntLike, Integer cntReview, Integer cntOrder, Integer sequence, List<StoreImage> images, List<ProductCategory> productCategories, List<StoreStory> stories) {
         super.setIdx(idx);
         this.idxDeliverySite = idxDeliverySite;
         this.storeCategory = storeCategory;
@@ -128,6 +134,7 @@ public class Store extends EntityAuditing {
         this.avgStar = avgStar;
         this.cntLike = cntLike;
         this.cntReview = cntReview;
+        this.cntOrder = cntOrder;
         this.sequence = sequence;
         this.images = images;
         this.productCategories = productCategories;

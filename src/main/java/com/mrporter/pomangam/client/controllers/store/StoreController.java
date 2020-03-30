@@ -1,8 +1,6 @@
 package com.mrporter.pomangam.client.controllers.store;
 
-import com.mrporter.pomangam.client.domains.order.orderer.OrdererType;
-import com.mrporter.pomangam.client.domains.user.User;
-import com.mrporter.pomangam.client.services.order.exception.OrderException;
+import com.mrporter.pomangam.client.domains.store.SortType;
 import com.mrporter.pomangam.client.services.store.StoreServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -32,12 +30,13 @@ public class StoreController {
             @DateTimeFormat(pattern = "yyyy-MM-dd")
             @RequestParam(value = "oDate", required = false) LocalDate oDate,
             @RequestParam(value = "sIdxes", required = false) List<Long> sIdxes,
-            @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
+            @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable,
+            @RequestParam(value = "sortType", required = false, defaultValue = "SORT_BY_RECOMMEND_DESC") SortType sortType
     ) {
         if(sIdxes != null) {
             return new ResponseEntity(storeService.findQuantityOrderableByIdxes(dIdx, oIdx, oDate, sIdxes), HttpStatus.OK);
         } else if(oIdx != null && oDate != null) {
-            return new ResponseEntity(storeService.findOpeningStores(dIdx, oIdx, oDate, pageable), HttpStatus.OK);
+            return new ResponseEntity(storeService.findOpeningStores(dIdx, oIdx, oDate, pageable, sortType), HttpStatus.OK);
         } else {
             return new ResponseEntity(storeService.findByIdxDeliverySite(dIdx, pageable), HttpStatus.OK);
         }

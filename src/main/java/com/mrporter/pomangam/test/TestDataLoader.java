@@ -180,37 +180,37 @@ public class TestDataLoader implements ApplicationRunner {
          * 업체
          */
         store.of(1L, 1L, 2L, "맘스터치", "엄마의 손맛, 수제햄버거 전문점 맘스터치", null,
-                3.7F, 178, 54, 1,
+                3.7F, 178, 54, 1, 1,
                 Arrays.asList(1,2,3),
                 Arrays.asList("고객리뷰", "이벤트안내"),
                 Arrays.asList("세트", "단품"));
         store.of(2L, 1L, 1L, "한솥도시락", "\uD83C\uDF71 싼맛! 싼마이 도시락! 한솥도시락 \uD83C\uDF71", "리뷰이벤트 중입니다 ♥",
-                4.2F, 132, 79, 2,
+                4.2F, 132, 79, 0, 2,
                 Arrays.asList(1,2,3),
                 Arrays.asList("new Arrival", "도시락증정"),
                 Arrays.asList("보울도시락", "사각도시락", "프리미엄", "간식"));
         store.of(3L, 2L, 2L, "맘스터치", "엄마의 손맛, 수제햄버거 전문점 맘스터치 -연세점-", null,
-                4.6F, 209, 57, 1,
+                4.6F, 209, 57, 0, 1,
                 Arrays.asList(1,2,3),
                 Arrays.asList("연세이벤트"),
                 Arrays.asList("세트", "단품"));
         store.of(4L, 2L, 1L, "한솥도시락", "\uD83C\uDF71 싼맛! 싼마이 도시락! 한솥도시락 \uD83C\uDF71", "항상 감사합니다.",
-                4.0F, 343, 61, 2,
+                4.0F, 343, 61, 0, 2,
                 Arrays.asList(1,2,3),
                 Arrays.asList("new Arrival", "도시락증정"),
                 Arrays.asList("보울도시락", "사각도시락", "프리미엄", "간식"));
         store.of(5L, 1L, 2L, "피자매니", "껍질치밥으로 유명한 피자매니란다 \uD83C\uDF55\uD83C\uDF5F\uD83C\uDF2E", "리뷰이벤트 중입니다 \uD83E\uDD27\uD83E\uDD2D",
-                2.7F, 32, 129, 3,
+                2.7F, 32, 129, 0, 3,
                 Arrays.asList(1,2,3),
                 Arrays.asList("항공대이벤트", "1일 1닭"),
                 Arrays.asList("피자", "치킨", "껍질", "간식"));
         store.of(6L, 1L, 3L, "항공반점", "항슐랭 \uD83C\uDF08 맛집 인증. 항공반점입니다.", null,
-                4.4F, 56, 43, 4,
+                4.4F, 56, 43, 0, 4,
                 Arrays.asList(1,2,3),
                 Arrays.asList(),
                 Arrays.asList("메인", "서브", "프리미엄"));
         store.of(7L, 1L, 1L, "포만감 도시락", "\uD83D\uDE0E내가 먹고싶은 음식만 골라 담아 \uD83C\uDF71 도시락을 만들어 먹는다. \uD83D\uDE0B신개념 커스터마이징 도시락\uD83D\uDC40", "\uD83D\uDD25항공대 이벤트 중입니다.\uD83D\uDD25",
-                4.9F, 627, 311, 3,
+                4.9F, 627, 311, 0, 3,
                 Arrays.asList(1,2,3),
                 Arrays.asList("고객리뷰", "이벤트안내"),
                 Arrays.asList("메인 도시락", "서브 도시락", "프리미엄 도시락"));

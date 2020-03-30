@@ -29,7 +29,7 @@ public class StoreData {
 
 
     @Transactional
-    public void of(Long idx, Long dIdx, Long scIdx, String name, String desc, String sub, float avgStar, int cntLike, int cntComment, int sequence, List<Integer> imagePaths, List<String> stories, List<String> productCategories) {
+    public void of(Long idx, Long dIdx, Long scIdx, String name, String desc, String sub, float avgStar, int cntLike, int cntComment, int cntOrder, int sequence, List<Integer> imagePaths, List<String> stories, List<String> productCategories) {
         Store store = Store.builder()
                 .idx(idx)
                 .storeInfo(StoreInfo.builder()
@@ -52,6 +52,7 @@ public class StoreData {
                 .avgStar(avgStar)
                 .cntLike(cntLike)
                 .cntReview(cntComment)
+                .cntOrder(cntOrder)
                 .storeCategory(StoreCategory.builder().idx(scIdx).build())
                 .sequence(sequence)
                 .build();

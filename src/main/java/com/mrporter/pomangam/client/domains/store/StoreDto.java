@@ -32,6 +32,7 @@ public class StoreDto implements Serializable {
     private Float avgStar;
     private Integer cntLike;
     private Integer cntReview;
+    private Integer cntOrder;
     private Integer sequence;
 
     // images
