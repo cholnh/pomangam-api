@@ -1,8 +1,8 @@
 package com.mrporter.pomangam.test.data.coupon;
 
-import com.mrporter.pomangam.client.domains.coupon.Coupon;
+import com.mrporter.pomangam.client.domains.user.coupon.Coupon;
 import com.mrporter.pomangam.client.domains.user.User;
-import com.mrporter.pomangam.client.repositories.coupon.CouponJpaRepository;
+import com.mrporter.pomangam.client.repositories.user.coupon.CouponJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,15 +16,16 @@ public class CouponData {
     CouponJpaRepository couponJpaRepository;
 
     @Transactional
-    public void of(Long idx, Long uIdx, String title, String code, LocalDateTime begin, int discountCost) {
+    public void of(Long idx, Long uIdx, String title, String code, LocalDateTime begin, LocalDateTime end, int discountCost, boolean isUsed) {
         Coupon coupon = Coupon.builder()
                 .idx(idx)
-                .isUsed(false)
+                .isUsed(isUsed)
                 .title(title)
                 .code(code)
                 .beginDate(begin)
+                .endDate(end)
                 .discountCost(discountCost)
-                .user(User.builder().idx(uIdx).build())
+                .user(uIdx == null ? null : User.builder().idx(uIdx).build())
                 .build();
         couponJpaRepository.save(coupon);
     }

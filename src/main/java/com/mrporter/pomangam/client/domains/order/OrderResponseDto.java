@@ -1,8 +1,8 @@
 package com.mrporter.pomangam.client.domains.order;
 
-import com.mrporter.pomangam.client.domains.coupon.Coupon;
-import com.mrporter.pomangam.client.domains.coupon.CouponDto;
-import com.mrporter.pomangam.client.domains.coupon.CouponMapper;
+import com.mrporter.pomangam.client.domains.user.coupon.Coupon;
+import com.mrporter.pomangam.client.domains.user.coupon.CouponDto;
+import com.mrporter.pomangam.client.domains.user.coupon.CouponMapper;
 import com.mrporter.pomangam.client.domains.deliverysite.DeliverySite;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSite;
 import com.mrporter.pomangam.client.domains.order.item.OrderItem;

@@ -1,7 +1,7 @@
 package com.mrporter.pomangam.test.data.order;
 
-import com.mrporter.pomangam.client.domains.coupon.Coupon;
-import com.mrporter.pomangam.client.domains.coupon.CouponMapper;
+import com.mrporter.pomangam.client.domains.user.coupon.Coupon;
+import com.mrporter.pomangam.client.domains.user.coupon.CouponMapper;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSite;
 import com.mrporter.pomangam.client.domains.order.Order;
 import com.mrporter.pomangam.client.domains.order.OrderType;
@@ -14,7 +14,7 @@ import com.mrporter.pomangam.client.domains.payment.Payment;
 import com.mrporter.pomangam.client.domains.product.Product;
 import com.mrporter.pomangam.client.domains.store.Store;
 import com.mrporter.pomangam.client.domains.user.User;
-import com.mrporter.pomangam.client.repositories.coupon.CouponMapperJpaRepository;
+import com.mrporter.pomangam.client.repositories.user.coupon.CouponMapperJpaRepository;
 import com.mrporter.pomangam.client.repositories.order.OrderJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

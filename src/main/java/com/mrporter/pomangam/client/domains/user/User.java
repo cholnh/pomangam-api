@@ -2,7 +2,6 @@ package com.mrporter.pomangam.client.domains.user;
 
 import com.mrporter.pomangam._bases.utils.validation.annotation.Phone;
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
-import com.mrporter.pomangam.client.domains.coupon.Coupon;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSite;
 import com.mrporter.pomangam.client.domains.user.password.Password;
 import com.mrporter.pomangam.client.domains.user.point.rank.PointRank;
@@ -10,11 +9,7 @@ import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Entity
 @Table(name = "user_tbl")

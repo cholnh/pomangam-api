@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.client.domains.coupon;
+package com.mrporter.pomangam.client.domains.user.coupon;
 
 import com.mrporter.pomangam._bases.annotation.BooleanToYNConverter;
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
@@ -42,7 +42,7 @@ public class Coupon extends EntityAuditing {
     /**
      * 쿠폰 식별 코드
      */
-    @Column(name = "code", nullable = false, length = 100)
+    @Column(name = "code", nullable = false, length = 100, unique = true)
     private String code;
 
     /**
@@ -87,6 +87,7 @@ public class Coupon extends EntityAuditing {
 
     public boolean isValid() {
         return super.getIsActive() &&
+                !this.isUsed &&
                 LocalDateTime.now().isAfter(this.beginDate) &&
                 (this.endDate == null || LocalDateTime.now().isBefore(this.endDate));
         // && (lowerLimitCost == null || totalCost >= lowerLimitCost);

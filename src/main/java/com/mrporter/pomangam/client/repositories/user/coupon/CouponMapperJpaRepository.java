@@ -1,6 +1,6 @@
-package com.mrporter.pomangam.client.repositories.coupon;
+package com.mrporter.pomangam.client.repositories.user.coupon;
 
-import com.mrporter.pomangam.client.domains.coupon.CouponMapper;
+import com.mrporter.pomangam.client.domains.user.coupon.CouponMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;

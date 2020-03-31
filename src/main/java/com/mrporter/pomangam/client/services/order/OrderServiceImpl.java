@@ -1,8 +1,8 @@
 package com.mrporter.pomangam.client.services.order;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.mrporter.pomangam.client.domains.coupon.Coupon;
-import com.mrporter.pomangam.client.domains.coupon.CouponMapper;
+import com.mrporter.pomangam.client.domains.user.coupon.Coupon;
+import com.mrporter.pomangam.client.domains.user.coupon.CouponMapper;
 import com.mrporter.pomangam.client.domains.order.Order;
 import com.mrporter.pomangam.client.domains.order.OrderRequestDto;
 import com.mrporter.pomangam.client.domains.order.OrderResponseDto;
@@ -11,8 +11,8 @@ import com.mrporter.pomangam.client.domains.order.log.OrderLog;
 import com.mrporter.pomangam.client.domains.store.Store;
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.domains.user.point.log.PointType;
-import com.mrporter.pomangam.client.repositories.coupon.CouponJpaRepository;
-import com.mrporter.pomangam.client.repositories.coupon.CouponMapperJpaRepository;
+import com.mrporter.pomangam.client.repositories.user.coupon.CouponJpaRepository;
+import com.mrporter.pomangam.client.repositories.user.coupon.CouponMapperJpaRepository;
 import com.mrporter.pomangam.client.repositories.order.OrderJpaRepository;
 import com.mrporter.pomangam.client.repositories.order.OrderLogJpaRepository;
 import com.mrporter.pomangam.client.repositories.store.StoreJpaRepository;
@@ -53,6 +53,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepo.findByIdxAndIsActiveIsTrue(idxOrder)
                 .orElseThrow(() -> new OrderException("invalid order save"));
         verifyUsingPoint(order); // 사용 포인트 검증
+        verifyUsingCouponCode(order, dto.getUsingCouponCode());
         verifyUsingCoupons(order, dto.getIdxesUsingCoupons()); // 사용 쿠폰 검증
         verifyUsingPromotions(order, dto.getIdxesUsingPromotions()); // 프로모션 검증
         verifySavedPoint(order); // 적립 포인트 검증
@@ -144,7 +145,7 @@ public class OrderServiceImpl implements OrderService {
         User user = order.getOrderer().getUser();
         if(user != null && idxesUsingCoupons != null && !idxesUsingCoupons.isEmpty()) {
             List<CouponMapper> couponMappers = new ArrayList<>();
-            List<Coupon> userCoupons = couponRepo.findByUser_IdxAndIsActiveIsTrueAndIsUsedIsFalse(user.getIdx());
+            List<Coupon> userCoupons = couponRepo.findByUser_IdxAndIsActiveIsTrue(user.getIdx());
             for(Long idxUsingCoupon : idxesUsingCoupons) {
                 Coupon coupon = findCoupon(userCoupons, idxUsingCoupon);
                 if(coupon == null || !coupon.isValid()) {
@@ -158,7 +159,26 @@ public class OrderServiceImpl implements OrderService {
                         .build());
             }
             couponMapperRepo.saveAll(couponMappers);
-            order.getPaymentInfo().setUsingCoupons(couponMappers);
+            //order.getPaymentInfo().getUsingCoupons().addAll(couponMappers);
+        }
+    }
+
+    public void verifyUsingCouponCode(Order order, String couponCode) {
+        if(couponCode != null) {
+            Optional<Coupon> optional = couponRepo.findByCodeAndIsActiveIsTrueAndUserIsNull(couponCode);
+            if(optional.isPresent() && optional.get().isValid()) {
+                Coupon coupon = optional.get();
+                coupon.setIsUsed(true);
+                CouponMapper mapper = CouponMapper.builder()
+                        .order(order)
+                        .coupon(coupon)
+                        .build();
+                couponMapperRepo.save(mapper);
+                //order.getPaymentInfo().getUsingCoupons().add(mapper);
+            } else {
+                log(order.getIdx(), OrderType.PAYMENT_READY_FAIL_COUPON);
+                throw new OrderException("invalid coupon code.");
+            }
         }
     }
 

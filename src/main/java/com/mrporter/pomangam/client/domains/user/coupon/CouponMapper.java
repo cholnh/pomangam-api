@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.client.domains.coupon;
+package com.mrporter.pomangam.client.domains.user.coupon;
 
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import com.mrporter.pomangam.client.domains.order.Order;

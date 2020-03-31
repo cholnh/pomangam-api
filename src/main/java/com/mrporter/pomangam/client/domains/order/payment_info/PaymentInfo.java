@@ -1,9 +1,9 @@
 package com.mrporter.pomangam.client.domains.order.payment_info;
 
-import com.mrporter.pomangam.client.domains.coupon.Coupon;
+import com.mrporter.pomangam.client.domains.user.coupon.Coupon;
 import com.mrporter.pomangam.client.domains.promotion.Promotion;
 import com.mrporter.pomangam.client.domains.promotion.PromotionMapper;
-import com.mrporter.pomangam.client.domains.coupon.CouponMapper;
+import com.mrporter.pomangam.client.domains.user.coupon.CouponMapper;
 import com.mrporter.pomangam.client.domains.payment.Payment;
 import lombok.*;
 
@@ -59,19 +59,19 @@ public class PaymentInfo {
         return cashReceipt != null && !cashReceipt.isEmpty();
     }
 
-    public int discountCost(int totalCost) {
+    public int discountCost() {
         int discountTotalCost = 0;
         // int promotionTotalCost = 0;
 
         // 포인트 할인 적용
-        discountTotalCost += usingPoint == null ? 0 : usingPoint.intValue();
+        discountTotalCost += usingPoint == null ? 0 : usingPoint;
 
         // 프로모션 할인 적용
         if(usingPromotions != null) {
             for(PromotionMapper promotionMapper : usingPromotions) {
                 Promotion promotion = promotionMapper.getPromotion();
                 if(promotion.isValid()) {
-                    int promotionCost = promotion.getDiscountCost().intValue();
+                    int promotionCost = promotion.getDiscountCost();
                     discountTotalCost += promotionCost;
                     // promotionTotalCost += promotionCost;
                 }
@@ -82,9 +82,7 @@ public class PaymentInfo {
         if(usingCoupons != null) {
             for(CouponMapper couponMapper : usingCoupons) {
                 Coupon coupon = couponMapper.getCoupon();
-                if(coupon.isValid()) {
-                    discountTotalCost += coupon.getDiscountCost().intValue();
-                }
+                discountTotalCost += coupon.getDiscountCost();
             }
         }
         return discountTotalCost;

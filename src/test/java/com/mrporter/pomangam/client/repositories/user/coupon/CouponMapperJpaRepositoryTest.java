@@ -1,7 +1,7 @@
-package com.mrporter.pomangam.client.repositories.coupon;
+package com.mrporter.pomangam.client.repositories.user.coupon;
 
-import com.mrporter.pomangam.client.domains.coupon.Coupon;
-import com.mrporter.pomangam.client.domains.coupon.CouponMapper;
+import com.mrporter.pomangam.client.domains.user.coupon.Coupon;
+import com.mrporter.pomangam.client.domains.user.coupon.CouponMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

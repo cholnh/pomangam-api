@@ -381,8 +381,15 @@ public class TestDataLoader implements ApplicationRunner {
         /*
          * 쿠폰
          */
-        coupon.of(1L, 1L, "1,000원 할인쿠폰", "1XER-FGT3-1199", LocalDateTime.now(), 1_000);
-        coupon.of(2L, 1L, "2,000원 할인쿠폰", "1XER-FE34-3300", LocalDateTime.now(), 2_000);
+        coupon.of(1L, 1L, "1,000원 할인쿠폰", "1XER-FGT3-1199", LocalDateTime.now(), null, 1_000, false);
+        coupon.of(2L, 1L, "2,000원 할인쿠폰", "235D-FE34-3300", LocalDateTime.now().minusDays(20), LocalDateTime.now().minusDays(15), 2_000, false);
+        coupon.of(3L, 1L, "5,000원 할인쿠폰", "45DD-6GGG-4566", LocalDateTime.now(), null, 5_000, false);
+        coupon.of(4L, 1L, "1,500원 할인쿠폰", "4JU6-YU55-TTHH", LocalDateTime.now(), null, 1_500, false);
+        coupon.of(5L, 1L, "2,000원 할인쿠폰", "25HS-FE34-905H", LocalDateTime.now(), null, 2_000, true);
+        coupon.of(6L, 1L, "2,000원 할인쿠폰", "98JN-FEEE-3540", LocalDateTime.now(), null, 2_000, true);
+
+        coupon.of(7L, null, "2,500원 할인쿠폰", "TEST-TEST-1111", LocalDateTime.now(), null, 2_500, false);
+        coupon.of(8L, null, "2,500원 할인쿠폰", "TEST-TEST-2222", LocalDateTime.now(), null, 2_500, false);
 
 
         /*

@@ -42,6 +42,7 @@ public class OrderRequestDto implements Serializable {
     // PaymentInfo
     private Long idxPayment;
     private Integer usingPoint;
+    private String usingCouponCode;
     private Set<Long> idxesUsingCoupons = new HashSet<>();
     private Set<Long> idxesUsingPromotions = new HashSet<>();
     private String cashReceipt;

@@ -46,7 +46,6 @@ public class OrderController {
             @RequestBody OrderRequestDto orderDto,
             Authentication auth
     ) {
-
         if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
             User user = userRepo.findByPhoneNumberAndIsActiveIsTrue(auth.getName());
             orderDto.setUser(user);

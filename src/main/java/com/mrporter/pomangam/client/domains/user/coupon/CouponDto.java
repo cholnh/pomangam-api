@@ -1,4 +1,4 @@
-package com.mrporter.pomangam.client.domains.coupon;
+package com.mrporter.pomangam.client.domains.user.coupon;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +17,7 @@ public class CouponDto implements Serializable {
     private LocalDateTime registerDate;
     private LocalDateTime modifyDate;
 
+    private Boolean isUsed;
     private Integer discountCost;
     private String title;
     private String code;
@@ -33,7 +34,7 @@ public class CouponDto implements Serializable {
         if(entity == null) return null;
         CouponDto dto = new ModelMapper().map(entity, CouponDto.class);
 
-        dto.setIdxUser(entity.getUser().getIdx());
+        dto.setIdxUser(entity.getUser() == null ? null : entity.getUser().getIdx());
 
         return dto;
     }

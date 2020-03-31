@@ -6,6 +6,7 @@ import com.mrporter.pomangam.client.domains.order.item.OrderItem;
 import com.mrporter.pomangam.client.domains.order.orderer.Orderer;
 import com.mrporter.pomangam.client.domains.order.payment_info.PaymentInfo;
 import com.mrporter.pomangam.client.domains.ordertime.OrderTime;
+import com.mrporter.pomangam.client.domains.user.coupon.CouponMapper;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -112,12 +113,7 @@ public class Order extends EntityAuditing {
      * @return 할인 내역 총 가격
      */
     public int discountCost() {
-        Integer totalCost = totalCost();
-        if(totalCost != null) {
-            return paymentInfo.discountCost(totalCost.intValue());
-        } else {
-            return 0;
-        }
+        return paymentInfo.discountCost();
     }
 
     @Builder
@@ -141,4 +137,5 @@ public class Order extends EntityAuditing {
             this.orderItems.add(orderItem);
         }
     }
+
 }
