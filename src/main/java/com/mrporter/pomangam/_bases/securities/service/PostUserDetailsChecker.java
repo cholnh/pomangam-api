@@ -1,5 +1,6 @@
 package com.mrporter.pomangam._bases.securities.service;
 
+import com.mrporter.pomangam._bases.securities.kakaoauth.service.KakaoAuthServiceImpl;
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,15 @@ import org.springframework.stereotype.Service;
 public class PostUserDetailsChecker implements UserDetailsChecker {
 
     private UserJpaRepository userRepo;
+    private KakaoAuthServiceImpl kakaoAuthService;
 
     @Autowired
-    public PostUserDetailsChecker(@Lazy UserJpaRepository userRepo) {
+    public PostUserDetailsChecker(
+        @Lazy UserJpaRepository userRepo,
+        @Lazy KakaoAuthServiceImpl kakaoAuthService
+    ) {
         this.userRepo = userRepo;
+        this.kakaoAuthService = kakaoAuthService;
     }
 
     @Override
@@ -23,5 +29,7 @@ public class PostUserDetailsChecker implements UserDetailsChecker {
         User user = userRepo.findByPhoneNumberAndIsActiveIsTrue(toCheck.getUsername());
         user.getPassword().setFailedCount(0);
         userRepo.save(user);
+
+        kakaoAuthService.deleteAuthCode(user.getPhoneNumber());
     }
 }

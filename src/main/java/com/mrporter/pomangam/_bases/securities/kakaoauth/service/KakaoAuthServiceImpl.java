@@ -2,6 +2,8 @@ package com.mrporter.pomangam._bases.securities.kakaoauth.service;
 
 import com.mrporter.pomangam._bases.securities.kakaoauth.repository.KakaoAuthRepositoryImpl;
 import com.mrporter.pomangam._bases.utils.apiclient.BizmApi;
+import com.mrporter.pomangam.client.domains.user.User;
+import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.security.SecureRandom;
 public class KakaoAuthServiceImpl implements KakaoAuthService {
 
     KakaoAuthRepositoryImpl kakaoAuthRepository;
+    UserJpaRepository userRepo;
 
     private final static String msg1 = "[포만감] 인증번호 : ";
     private final static String msg2 = "\n정확히 입력해주세요.";
@@ -56,11 +59,21 @@ public class KakaoAuthServiceImpl implements KakaoAuthService {
 
     @Override
     public boolean checkAuthCode(String phone_number, String auth_code) {
+        User user = userRepo.findByPhoneNumberAndIsActiveIsTrue(phone_number);
+        user.getPassword().setFailedCount(0);
+        userRepo.save(user);
         return kakaoAuthRepository.checkAuthCode(phone_number, auth_code);
     }
 
     @Override
     public boolean checkAuthCodeNotDelete(String phone_number, String auth_code) {
+        User user = userRepo.findByPhoneNumberAndIsActiveIsTrue(phone_number);
+        user.getPassword().setFailedCount(0);
+        userRepo.save(user);
         return kakaoAuthRepository.checkAuthCodeNotDelete(phone_number, auth_code);
+    }
+
+    public void deleteAuthCode(String phone_number) {
+        kakaoAuthRepository.deleteAuthCode(phone_number);
     }
 }

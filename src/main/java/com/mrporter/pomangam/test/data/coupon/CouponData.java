@@ -21,7 +21,7 @@ public class CouponData {
                 .idx(idx)
                 .isUsed(isUsed)
                 .title(title)
-                .code(code)
+                .code(code.replaceAll("-", ""))
                 .beginDate(begin)
                 .endDate(end)
                 .discountCost(discountCost)

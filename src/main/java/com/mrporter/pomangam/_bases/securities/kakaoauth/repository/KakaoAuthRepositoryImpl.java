@@ -93,4 +93,12 @@ public class KakaoAuthRepositoryImpl implements KakaoAuthRepository {
             }
         }
     }
+
+    @Transactional
+    public void deleteAuthCode(String phone_number) {
+        em
+            .createNativeQuery("DELETE FROM kakao_authcode_tbl WHERE phone_number = ?")
+            .setParameter(1, phone_number)
+            .executeUpdate();
+    }
 }

@@ -60,7 +60,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if( authCode.length() != kakaoAuthService.getAuthCodeLength() ) {
             throw new InternalAuthenticationServiceException("INVALID_AUTH_CODE");
         }
-        boolean isValidAuthCode = kakaoAuthService.checkAuthCode(phoneNumber, authCode);
+        boolean isValidAuthCode = kakaoAuthService.checkAuthCodeNotDelete(phoneNumber, authCode);
         if( !isValidAuthCode ) {
             if(!authCode.toLowerCase().equals("test")) {
                 throw new InternalAuthenticationServiceException("INVALID_AUTH_CODE");
