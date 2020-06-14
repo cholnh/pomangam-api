@@ -27,6 +27,13 @@ public class DeliverySite extends EntityAuditing {
     private String name;
 
     /**
+     * 배달 타입
+     */
+    @Column(name = "delivery_type", nullable = false, length = 30)
+    @Enumerated(EnumType.STRING)
+    private DeliveryType deliveryType;
+
+    /**
      * 배달지 주소
      * 글자수: utf8 기준 / 영문 100자 / 한글 10자
      */
@@ -58,9 +65,10 @@ public class DeliverySite extends EntityAuditing {
     }
 
     @Builder
-    public DeliverySite(Long idx, String name, String location, String campus, Region region, List<DeliveryDetailSite> detailSites) {
+    public DeliverySite(Long idx, String name, DeliveryType deliveryType, String location, String campus, Region region, List<DeliveryDetailSite> detailSites) {
         super.setIdx(idx);
         this.name = name;
+        this.deliveryType = deliveryType;
         this.location = location;
         this.campus = campus;
         this.region = region;

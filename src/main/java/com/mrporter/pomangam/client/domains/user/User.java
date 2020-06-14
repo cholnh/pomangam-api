@@ -142,6 +142,7 @@ public class User extends EntityAuditing {
         this.authorities = authorities;
     }
 
+
     public String[] getAuthorities() {
         return this.authorities.split(",");
     }

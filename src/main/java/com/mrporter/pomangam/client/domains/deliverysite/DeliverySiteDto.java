@@ -18,6 +18,7 @@ public class DeliverySiteDto implements Serializable {
     private LocalDateTime registerDate;
     private LocalDateTime modifyDate;
     private String name;
+    private DeliveryType deliveryType;
     private String location;
     private String campus;
     private Long idxRegion;

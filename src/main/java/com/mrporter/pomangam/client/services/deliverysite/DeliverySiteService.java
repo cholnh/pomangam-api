@@ -9,4 +9,5 @@ public interface DeliverySiteService {
     List<DeliverySiteDto> findAll(Pageable pageable);
     DeliverySiteDto findByIdx(Long dIdx);
     long count();
+    List<DeliverySiteDto> search(String query);
 }

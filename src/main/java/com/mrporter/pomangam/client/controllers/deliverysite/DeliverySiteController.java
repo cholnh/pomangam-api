@@ -45,4 +45,10 @@ public class DeliverySiteController {
         return new ResponseEntity("아직 개발 안함", HttpStatus.OK);   //  Todo: 초성검색 개발
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<?> search(
+            @RequestParam(value = "query", required = true) String query
+    ) {
+        return new ResponseEntity(deliverySiteService.search(query), HttpStatus.OK);
+    }
 }

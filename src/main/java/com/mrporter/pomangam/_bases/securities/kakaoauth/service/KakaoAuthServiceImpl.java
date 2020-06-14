@@ -60,6 +60,9 @@ public class KakaoAuthServiceImpl implements KakaoAuthService {
     @Override
     public boolean checkAuthCode(String phone_number, String auth_code) {
         User user = userRepo.findByPhoneNumberAndIsActiveIsTrue(phone_number);
+        if(user == null) {
+            return false;
+        }
         user.getPassword().setFailedCount(0);
         userRepo.save(user);
         return kakaoAuthRepository.checkAuthCode(phone_number, auth_code);
@@ -68,6 +71,9 @@ public class KakaoAuthServiceImpl implements KakaoAuthService {
     @Override
     public boolean checkAuthCodeNotDelete(String phone_number, String auth_code) {
         User user = userRepo.findByPhoneNumberAndIsActiveIsTrue(phone_number);
+        if(user == null) {
+            return false;
+        }
         user.getPassword().setFailedCount(0);
         userRepo.save(user);
         return kakaoAuthRepository.checkAuthCodeNotDelete(phone_number, auth_code);

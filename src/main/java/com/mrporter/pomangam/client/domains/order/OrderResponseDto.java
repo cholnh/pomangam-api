@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.client.domains.order;
 
+import com.mrporter.pomangam.client.domains.order.cash_receipt.CashReceiptType;
 import com.mrporter.pomangam.client.domains.user.coupon.Coupon;
 import com.mrporter.pomangam.client.domains.user.coupon.CouponDto;
 import com.mrporter.pomangam.client.domains.user.coupon.CouponMapper;
@@ -45,6 +46,7 @@ public class OrderResponseDto implements Serializable {
     private List<PromotionDto> usingPromotions = new ArrayList<>();
     private Integer savedPoint;
     private String cashReceipt;
+    private CashReceiptType cashReceiptType;
     private Integer totalCost;
     private Integer discountCost;
     private Integer paymentCost;
@@ -67,41 +69,30 @@ public class OrderResponseDto implements Serializable {
 
     public static OrderResponseDto fromEntity(Order entity) {
         if(entity == null) return null;
-        OrderResponseDto dto = new ModelMapper().map(entity, OrderResponseDto.class);
+        OrderResponseDto dto = new OrderResponseDto(); // new ModelMapper().map(entity, OrderResponseDto.class); -> cashReceiptType 매핑 오류
 
+        // 기본 정보 (mapper 대체)
+        dto.setIdx(entity.getIdx());
+        dto.setRegisterDate(entity.getRegisterDate());
+        dto.setModifyDate(entity.getModifyDate());
+
+        // 주문 기본 정보
         PaymentInfo paymentInfo = entity.getPaymentInfo();
-
-        // 주문 타입
-        dto.setPaymentType(paymentInfo.getPayment().getPaymentType());
-
-        // 주문자 타입
+        dto.setOrderType(entity.getOrderType());
+        dto.setBoxNumber(entity.getBoxNumber());
+        dto.setPaymentType(paymentInfo.getPaymentType());
         dto.setOrdererType(entity.getOrderer().getOrdererType());
 
-        // 사용 포인트
+        // 결제 정보
         dto.setUsingPoint(paymentInfo.getUsingPoint());
-
-        // 쿠폰
-        List<CouponMapper> couponMappers = paymentInfo.getUsingCoupons();
-        dto.setUsingCoupons(convertCoupons(couponMappers));
-
-        // 프로모션
-        List<PromotionMapper> promotionMappers = paymentInfo.getUsingPromotions();
-        dto.setUsingPromotions(convertPromotions(promotionMappers));
-
-        // 총 주문 가격
-        dto.setTotalCost(entity.totalCost());
-
-        // 총 할인 가격
-        dto.setDiscountCost(entity.discountCost());
-
-        // 결제 금액
-        dto.setPaymentCost(entity.paymentCost());
-
-        // 적립 포인트
+        dto.setUsingCoupons(convertCoupons(paymentInfo.getUsingCoupons()));
+        dto.setUsingPromotions(convertPromotions(paymentInfo.getUsingPromotions()));
         dto.setSavedPoint(paymentInfo.getSavedPoint());
-
-        // 현금영수증
         dto.setCashReceipt(paymentInfo.getCashReceipt());
+        dto.setCashReceiptType(paymentInfo.getCashReceiptType());
+        dto.setTotalCost(entity.totalCost());
+        dto.setDiscountCost(entity.discountCost());
+        dto.setPaymentCost(entity.paymentCost());
 
         // 받는 장소
         DeliveryDetailSite deliveryDetailSite = entity.getDeliveryDetailSite();
@@ -110,6 +101,9 @@ public class OrderResponseDto implements Serializable {
         dto.setIdxDeliveryDetailSite(deliveryDetailSite.getIdx());
         dto.setNameDeliverySite(deliverySite.getName());
         dto.setNameDeliveryDetailSite(deliveryDetailSite.getName());
+
+        // 받는 날짜
+        dto.setOrderDate(entity.getOrderDate());
 
         // 받는 시간
         OrderTime orderTime = entity.getOrderTime();

@@ -28,13 +28,13 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public CouponDto findOneByCode(String code) {
-        return CouponDto.fromEntity(couponRepo.findByCodeAndIsActiveIsTrueAndUserIsNull(code)
+        return CouponDto.fromEntity(couponRepo.findByCodeAndIsActiveIsTrueAndUserIsNull(code.replaceAll("-", ""))
                 .orElseThrow(() -> new CouponException("invalid coupon code")));
     }
 
     @Override
     public CouponDto saveOneByCode(String code, User user) {
-        Coupon coupon = couponRepo.findByCodeAndIsActiveIsTrueAndUserIsNull(code)
+        Coupon coupon = couponRepo.findByCodeAndIsActiveIsTrueAndUserIsNull(code.replaceAll("-", ""))
                 .orElseThrow(() -> new CouponException("invalid coupon code"));
         coupon.setUser(user);
         return CouponDto.fromEntity(couponRepo.save(coupon));

@@ -7,11 +7,15 @@ import javax.servlet.http.HttpServletRequest;
 
 public class Ip {
     public static String getInfo() {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        String ip = request.getHeader("X-FORWARDED-FOR");
-        if(ip == null) {
-            ip = request.getRemoteAddr();
+        try {
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+            String ip = request.getHeader("X-FORWARDED-FOR");
+            if(ip == null) {
+                ip = request.getRemoteAddr();
+            }
+            return ip;
+        } catch (Exception e) {
+            return "unknown ip";
         }
-        return ip;
     }
 }

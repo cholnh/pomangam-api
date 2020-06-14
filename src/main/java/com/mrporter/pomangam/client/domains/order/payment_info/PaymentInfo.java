@@ -1,10 +1,11 @@
 package com.mrporter.pomangam.client.domains.order.payment_info;
 
+import com.mrporter.pomangam.client.domains.order.cash_receipt.CashReceiptType;
+import com.mrporter.pomangam.client.domains.payment.PaymentType;
 import com.mrporter.pomangam.client.domains.user.coupon.Coupon;
 import com.mrporter.pomangam.client.domains.promotion.Promotion;
 import com.mrporter.pomangam.client.domains.promotion.PromotionMapper;
 import com.mrporter.pomangam.client.domains.user.coupon.CouponMapper;
-import com.mrporter.pomangam.client.domains.payment.Payment;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,12 +19,11 @@ import java.util.List;
 public class PaymentInfo {
 
     /**
-     * 결제 수단
-     * 단방향 매핑
+     * 결제 수단 타입
      */
-    @JoinColumn(name = "idx_payment")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private Payment payment;
+    @Column(name = "payment_type", nullable = true, length = 30)
+    @Enumerated(EnumType.STRING)
+    private PaymentType paymentType;
 
     /**
      * 사용 포인트
@@ -54,6 +54,13 @@ public class PaymentInfo {
      */
     @Column(name = "cash_receipt", nullable = true, length = 100)
     private String cashReceipt;
+
+    /**
+     * 현금영수증 종류
+     */
+    @Column(name = "cash_receipt_type", nullable = true, length = 30)
+    @Enumerated(EnumType.STRING)
+    private CashReceiptType cashReceiptType;
 
     public boolean hasCashReceipt() {
         return cashReceipt != null && !cashReceipt.isEmpty();
@@ -93,12 +100,13 @@ public class PaymentInfo {
     }
 
     @Builder
-    public PaymentInfo(Payment payment, Integer usingPoint, List<CouponMapper> usingCoupons, List<PromotionMapper> usingPromotions, Integer savedPoint, String cashReceipt) {
-        this.payment = payment;
+    public PaymentInfo(PaymentType paymentType, Integer usingPoint, List<CouponMapper> usingCoupons, List<PromotionMapper> usingPromotions, Integer savedPoint, String cashReceipt, CashReceiptType cashReceiptType) {
+        this.paymentType = paymentType;
         this.usingPoint = usingPoint;
         this.usingCoupons = usingCoupons;
         this.usingPromotions = usingPromotions;
         this.savedPoint = savedPoint;
         this.cashReceipt = cashReceipt;
+        this.cashReceiptType = cashReceiptType;
     }
 }

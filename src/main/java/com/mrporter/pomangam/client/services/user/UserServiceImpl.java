@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.client.services.user;
 
+import com.mrporter.pomangam._bases.securities.kakaoauth.service.KakaoAuthServiceImpl;
 import com.mrporter.pomangam._bases.utils.formatter.PhoneNumberFormatter;
 import com.mrporter.pomangam._bases.utils.reflection.ReflectionUtils;
 import com.mrporter.pomangam.client.domains.user.User;
@@ -32,10 +33,15 @@ public class UserServiceImpl implements UserService {
     PointLogJpaRepository pointLogRepo;
     OrderJpaRepository orderRepo;
     PointLogServiceImpl pointLogService;
+    KakaoAuthServiceImpl kakaoAuthService;
 
     @Override
     public UserDto findByPhoneNumber(String phoneNumber) {
-        UserDto userDto = UserDto.fromEntity(userRepo.findByPhoneNumberAndIsActiveIsTrue(phoneNumber));
+        User user = userRepo.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
+        if(user == null) {
+            return null;
+        }
+        UserDto userDto = UserDto.fromEntity(user);
         userDto.setUserPoint(pointLogService.findByIdxUser(userDto.getIdx()));
         userDto.getUserPointRank().setUserOrderCount((int) orderRepo.countByIsActiveIsTrue());
         userDto.getUserPointRank().setUserRecommendCount(0);
@@ -78,6 +84,10 @@ public class UserServiceImpl implements UserService {
         user.setPointRank(PointRank.builder().idx(1L).build());
 
         UserDto dto = UserDto.fromEntity(userRepo.save(user));
+
+        String authCode = kakaoAuthService.getAuthCode();
+        kakaoAuthService.saveAuthCode(dto.getPhoneNumber(), authCode);
+        dto.setPhoneNumber(dto.getPhoneNumber()+"#"+authCode);
         dto.setUserPoint(0);
         return dto;
     }

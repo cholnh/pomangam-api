@@ -1,11 +1,11 @@
 package com.mrporter.pomangam.test;
 
+import com.mrporter.pomangam.client.domains.deliverysite.DeliveryType;
 import com.mrporter.pomangam.client.domains.order.OrderType;
 import com.mrporter.pomangam.client.domains.payment.PaymentType;
 import com.mrporter.pomangam.client.domains.product.ProductType;
 import com.mrporter.pomangam.client.domains.product.sub.ProductSubType;
 import com.mrporter.pomangam.client.domains.user.Sex;
-import com.mrporter.pomangam.client.domains.user.point.log.PointLog;
 import com.mrporter.pomangam.client.domains.user.point.log.PointType;
 import com.mrporter.pomangam.test.data.advertisement.AdvertisementData;
 import com.mrporter.pomangam.test.data.coupon.CouponData;
@@ -13,10 +13,10 @@ import com.mrporter.pomangam.test.data.deliverysite.DeliverySiteData;
 import com.mrporter.pomangam.test.data.detailsite.DeliveryDetailSiteData;
 import com.mrporter.pomangam.test.data.event.EventData;
 import com.mrporter.pomangam.test.data.fcmtoken.FcmTokenData;
+import com.mrporter.pomangam.test.data.notice.NoticeData;
 import com.mrporter.pomangam.test.data.order.OrderData;
 import com.mrporter.pomangam.test.data.ordertime.OrderTimeData;
 import com.mrporter.pomangam.test.data.ordertimeMapper.OrderTimeMapperData;
-import com.mrporter.pomangam.test.data.payment.PaymentData;
 import com.mrporter.pomangam.test.data.point.PointLogData;
 import com.mrporter.pomangam.test.data.point.PointRankData;
 import com.mrporter.pomangam.test.data.product.ProductData;
@@ -61,11 +61,12 @@ public class TestDataLoader implements ApplicationRunner {
     @Autowired OrderTimeData orderTime;
     @Autowired OrderTimeMapperData orderTimeMapper;
     @Autowired CouponData coupon;
-    @Autowired PaymentData payment;
+    // @Autowired PaymentData payment;
     @Autowired OrderData order;
     @Autowired RandomNicknameData randomNickname;
     @Autowired ProductReplyData productReply;
     @Autowired PointLogData pointLog;
+    @Autowired NoticeData notice;
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddl;
@@ -91,8 +92,10 @@ public class TestDataLoader implements ApplicationRunner {
         /*
          * 배달지
          */
-        deliverySite.of(1L, "한국항공대", 1L, "본캠", "경기도 고양시 덕양구 항공대학로 76");
-        deliverySite.of(2L, "연세대", 1L, "미래캠", "강원도 원주시 연세대길 1");
+        deliverySite.of(1L, "한국항공대", DeliveryType.BUNDLE,1L, "본캠", "경기도 고양시 덕양구 항공대학로 76");
+        deliverySite.of(2L, "연세대", DeliveryType.BUNDLE,1L, "미래캠", "강원도 원주시 연세대길 1");
+        deliverySite.of(3L, "탄현 풍림아파트 14단지", DeliveryType.BUNDLE,1L, "14단지", "경기도 고양시 탄현로 143-32");
+        deliverySite.of(4L, "탄현 풍림아파트 15단지", DeliveryType.BUNDLE,1L, "15단지", "경기도 고양시 탄현로 143-32");
 
 
         /*
@@ -107,6 +110,19 @@ public class TestDataLoader implements ApplicationRunner {
         deliveryDetailSite.of(4L, 2L, "미디어관", "미디어 플레이스",
                 "ㄴ",2, 37.598048, 126.866489, 7);
 
+        deliveryDetailSite.of(5L, 3L, "101동", "101동",
+                "101",1, 37.598048, 126.866489, 0);
+        deliveryDetailSite.of(6L, 3L, "102동", "102동",
+                "102",2, 37.598048, 126.866489, 10);
+        deliveryDetailSite.of(7L, 3L, "103동", "103동",
+                "103",3, 37.598048, 126.866489, 20);
+        deliveryDetailSite.of(8L, 4L, "104동", "104동",
+                "104",1, 37.598048, 126.866489, 0);
+        deliveryDetailSite.of(9L, 4L, "105동", "105동",
+                "105",2, 37.598048, 126.866489, 10);
+        deliveryDetailSite.of(10L, 4L, "106동", "106동",
+                "106",3, 37.598048, 126.866489, 20);
+
 
         /*
          * 광고
@@ -117,6 +133,17 @@ public class TestDataLoader implements ApplicationRunner {
         advertisement.of(4L, 1L, null, 4);
         advertisement.of(5L, 1L, null, 5);
 
+        advertisement.of(6L, 3L, null, 1);
+        advertisement.of(7L, 3L, null, 2);
+        advertisement.of(8L, 3L, null, 3);
+        advertisement.of(9L, 3L, null, 4);
+        advertisement.of(10L, 3L, null, 5);
+
+        advertisement.of(11L, 4L, null, 1);
+        advertisement.of(12L, 4L, null, 2);
+        advertisement.of(13L, 4L, null, 3);
+        advertisement.of(14L, 4L, null, 4);
+        advertisement.of(15L, 4L, null, 5);
 
         /*
          * 이벤트
@@ -126,6 +153,13 @@ public class TestDataLoader implements ApplicationRunner {
         event.of(2L, 1L, "쿠폰 이벤트", "쿠폰 을 받기 위해서는 블라블라",
                 LocalDateTime.now(), LocalDateTime.parse("2020-09-01T00:00:00"));
 
+        /*
+         * 공지사항
+         */
+        notice.of(1L, 1L, "개인정보 처리방침 변경 안내", "안녕하세요. 대한민국 1등 반찬 정기배송 앱 포만감입니다.\n포만감 개인정보 처리방침이 아래와 같이 변경됩니다.\n\n\n1. 변경 사항",
+                LocalDateTime.now(), null);
+        notice.of(2L, 1L, "친구 초대 서비스 종료 안내", "친구 초대 서비스 종료 안내 블라블라",
+                LocalDateTime.now(), null);
 
         /*
          * fcm 토큰
@@ -179,22 +213,22 @@ public class TestDataLoader implements ApplicationRunner {
         /*
          * 업체
          */
-        store.of(1L, 1L, 2L, "맘스터치", "엄마의 손맛, 수제햄버거 전문점 맘스터치", null,
+        store.of(1L, 1L, 2L, "맘스터치(항공대)", "엄마의 손맛, 수제햄버거 전문점 맘스터치", null,
                 3.7F, 178, 54, 1, 1,
                 Arrays.asList(1,2,3),
                 Arrays.asList("고객리뷰", "이벤트안내"),
                 Arrays.asList("세트", "단품"));
-        store.of(2L, 1L, 1L, "한솥도시락", "\uD83C\uDF71 싼맛! 싼마이 도시락! 한솥도시락 \uD83C\uDF71", "리뷰이벤트 중입니다 ♥",
+        store.of(2L, 1L, 1L, "한솥도시락(항공대)", "\uD83C\uDF71 싼맛! 싼마이 도시락! 한솥도시락 \uD83C\uDF71", "리뷰이벤트 중입니다 ♥",
                 4.2F, 132, 79, 0, 2,
                 Arrays.asList(1,2,3),
                 Arrays.asList("new Arrival", "도시락증정"),
                 Arrays.asList("보울도시락", "사각도시락", "프리미엄", "간식"));
-        store.of(3L, 2L, 2L, "맘스터치", "엄마의 손맛, 수제햄버거 전문점 맘스터치 -연세점-", null,
+        store.of(3L, 2L, 2L, "맘스터치(연세대)", "엄마의 손맛, 수제햄버거 전문점 맘스터치 -연세점-", null,
                 4.6F, 209, 57, 0, 1,
                 Arrays.asList(1,2,3),
                 Arrays.asList("연세이벤트"),
                 Arrays.asList("세트", "단품"));
-        store.of(4L, 2L, 1L, "한솥도시락", "\uD83C\uDF71 싼맛! 싼마이 도시락! 한솥도시락 \uD83C\uDF71", "항상 감사합니다.",
+        store.of(4L, 2L, 1L, "한솥도시락(연세대)", "\uD83C\uDF71 싼맛! 싼마이 도시락! 한솥도시락 \uD83C\uDF71", "항상 감사합니다.",
                 4.0F, 343, 61, 0, 2,
                 Arrays.asList(1,2,3),
                 Arrays.asList("new Arrival", "도시락증정"),
@@ -211,6 +245,18 @@ public class TestDataLoader implements ApplicationRunner {
                 Arrays.asList("메인", "서브", "프리미엄"));
         store.of(7L, 1L, 1L, "포만감 도시락", "\uD83D\uDE0E내가 먹고싶은 음식만 골라 담아 \uD83C\uDF71 도시락을 만들어 먹는다. \uD83D\uDE0B신개념 커스터마이징 도시락\uD83D\uDC40", "\uD83D\uDD25항공대 이벤트 중입니다.\uD83D\uDD25",
                 4.9F, 627, 311, 0, 3,
+                Arrays.asList(1,2,3),
+                Arrays.asList("고객리뷰", "이벤트안내"),
+                Arrays.asList("메인 도시락", "서브 도시락", "프리미엄 도시락"));
+
+        store.of(8L, 3L, 1L, "반찬탁", "\uD83C\uDF71 싼맛! 싼마이 도시락! 한솥도시락 \uD83C\uDF71 \uD83D\uDE0E", "\uD83D\uDD25탄현 이벤트 중입니다.\uD83D\uDD25",
+                4.3F, 4687, 988, 0, 1,
+                Arrays.asList(1,2,3),
+                Arrays.asList("고객리뷰", "이벤트안내"),
+                Arrays.asList("메인 도시락", "서브 도시락", "프리미엄 도시락"));
+
+        store.of(9L, 3L, 1L, "포만감 도시락", "\uD83D\uDE0E내가 먹고싶은 음식만 골라 담아 \uD83C\uDF71 도시락을 만들어 먹는다. \uD83D\uDE0B신개념 커스터마이징 도시락\uD83D\uDC40", "\uD83D\uDD25탄현 이벤트 중입니다.\uD83D\uDD25",
+                4.9F, 627, 311, 0, 2,
                 Arrays.asList(1,2,3),
                 Arrays.asList("고객리뷰", "이벤트안내"),
                 Arrays.asList("메인 도시락", "서브 도시락", "프리미엄 도시락"));
@@ -365,6 +411,11 @@ public class TestDataLoader implements ApplicationRunner {
         orderTime.of(11L, LocalTime.parse("17:30:00"), LocalTime.parse("17:45:00"), LocalTime.parse("18:10:00"));
         orderTime.of(12L, LocalTime.parse("18:30:00"), LocalTime.parse("18:45:00"), LocalTime.parse("19:10:00"));
 
+        /// 탄현
+        orderTime.of(13L, LocalTime.parse("06:30:00"), LocalTime.parse("06:45:00"), LocalTime.parse("07:00:00"));
+        orderTime.of(14L, LocalTime.parse("11:30:00"), LocalTime.parse("11:45:00"), LocalTime.parse("12:00:00"));
+        orderTime.of(15L, LocalTime.parse("17:30:00"), LocalTime.parse("17:45:00"), LocalTime.parse("18:00:00"));
+
 
         /*
          * 시간표 연결
@@ -377,6 +428,8 @@ public class TestDataLoader implements ApplicationRunner {
         orderTimeMapper.of(6L, 5L, 6L, 7L, 8L);     // 항공대 항공반점
         orderTimeMapper.of(7L, 1L, 2L, 3L, 4L);     // 항공대 포만감 도시락
 
+        orderTimeMapper.of(8L, 13L, 14L, 15L);     // 탄현 반찬탁
+        orderTimeMapper.of(9L, 13L, 14L, 15L);     // 탄현 포만감 도시락
 
         /*
          * 쿠폰
@@ -395,39 +448,39 @@ public class TestDataLoader implements ApplicationRunner {
         /*
          * 결제수단
          */
-        payment.of(1L, PaymentType.CREDIT_CARD);
-        payment.of(2L, PaymentType.PHONE);
-        payment.of(3L, PaymentType.V_BANK);
+//        payment.of(1L, PaymentType.CREDIT_CARD);
+//        payment.of(2L, PaymentType.PHONE);
+//        payment.of(3L, PaymentType.V_BANK);
 
 
         /*
          * 주문
          */
-        order.of(1L, 1, 1L, LocalDate.now(), 1L, 1L, OrderType.ORDER_READY,
+        order.of(1L, 1, 1L, LocalDate.now(), 1L, PaymentType.COMMON_CREDIT_CARD, OrderType.ORDER_READY,
                 1L, 1L, 2, 1L);
-        order.of(2L, 2, 1L, LocalDate.now(), 1L, 1L, OrderType.ORDER_READY,
+        order.of(2L, 2, 1L, LocalDate.now(), 1L, PaymentType.COMMON_CREDIT_CARD, OrderType.ORDER_READY,
                 1L, 1L, 2);
-        order.of(3L, 3, 1L, LocalDate.now(), 2L, 1L, OrderType.ORDER_READY,
+        order.of(3L, 3, 1L, LocalDate.now(), 2L, PaymentType.PERIODIC_CREDIT_CARD, OrderType.ORDER_READY,
                 1L, 1L, 1);
-        order.of(4L, 4, 1L, LocalDate.now(), 1L, 1L, OrderType.DELIVERY_READY,
+        order.of(4L, 4, 1L, LocalDate.now(), 1L, PaymentType.PERIODIC_CREDIT_CARD, OrderType.DELIVERY_READY,
                 1L, 1L, 1);
-        order.of(5L, 5, 1L, LocalDate.now(), 1L, 1L, OrderType.ORDER_READY,
+        order.of(5L, 5, 1L, LocalDate.now(), 1L, PaymentType.PERIODIC_CREDIT_CARD, OrderType.ORDER_READY,
                 1L, 1L, 2);
-        order.of(6L, 6, 1L, LocalDate.now(), 2L, 1L, OrderType.ORDER_READY,
+        order.of(6L, 6, 1L, LocalDate.now(), 2L, PaymentType.COMMON_CREDIT_CARD, OrderType.ORDER_READY,
                 1L, 1L, 1);
-        order.of(7L, 7, 1L, LocalDate.now(), 1L, 1L, OrderType.DELIVERY_READY,
+        order.of(7L, 7, 1L, LocalDate.now(), 1L, PaymentType.COMMON_CREDIT_CARD, OrderType.DELIVERY_READY,
                 1L, 1L, 1);
-        order.of(8L, 8, 1L, LocalDate.now(), 10L, 1L, OrderType.ORDER_READY,
+        order.of(8L, 8, 1L, LocalDate.now(), 10L, PaymentType.COMMON_KAKAOPAY, OrderType.ORDER_READY,
                 3L, 1L, 2);
-        order.of(9L, 9, 1L, LocalDate.now(), 10L, 1L, OrderType.DELIVERY_READY,
+        order.of(9L, 9, 1L, LocalDate.now(), 10L, PaymentType.COMMON_KAKAOPAY, OrderType.DELIVERY_READY,
                 4L, 1L, 1);
-        order.of(10L, 10, 1L, LocalDate.now(), 10L, 1L, OrderType.ORDER_READY,
+        order.of(10L, 10, 1L, LocalDate.now(), 10L, PaymentType.COMMON_CREDIT_CARD, OrderType.ORDER_READY,
                 3L, 1L, 1);
-        order.of(11L, 11, 1L, LocalDate.now(), 11L, 1L, OrderType.DELIVERY_READY,
+        order.of(11L, 11, 1L, LocalDate.now(), 11L, PaymentType.COMMON_CREDIT_CARD, OrderType.DELIVERY_READY,
                 3L, 1L, 2);
-        order.of(12L, 12, 1L, LocalDate.now(), 11L, 1L, OrderType.ORDER_READY,
+        order.of(12L, 12, 1L, LocalDate.now(), 11L, PaymentType.COMMON_CREDIT_CARD, OrderType.ORDER_READY,
                 4L, 1L, 1);
-        order.of(13L, 13, 1L, LocalDate.now(), 10L, 1L, OrderType.DELIVERY_READY,
+        order.of(13L, 13, 1L, LocalDate.now(), 10L, PaymentType.COMMON_CREDIT_CARD, OrderType.DELIVERY_READY,
                 3L, 1L, 1);
 
 
@@ -454,6 +507,7 @@ public class TestDataLoader implements ApplicationRunner {
         pointLog.plus(2L, 300, PointType.ISSUED_BY_BUY, 5L);
         pointLog.plus(2L, 5000, PointType.UPDATED_PLUS_BY_ADMIN, null);
         pointLog.plus(2L, 300, PointType.ISSUED_BY_BUY, 7L);
+
 
 
         /*

@@ -46,7 +46,8 @@ public class Notice extends EntityAuditing {
     private LocalDateTime endDate;
 
     @Builder
-    public Notice(String title, String contents, LocalDateTime beginDate, LocalDateTime endDate) {
+    public Notice(Long idx, String title, String contents, LocalDateTime beginDate, LocalDateTime endDate) {
+        super.setIdx(idx);
         this.title = title;
         this.contents = contents;
         this.beginDate = beginDate;

@@ -31,4 +31,10 @@ public class DeliverySiteServiceImpl implements DeliverySiteService {
     public long count() {
         return deliverySiteRepo.countByIsActiveIsTrue();
     }
+
+    @Override
+    public List<DeliverySiteDto> search(String query) {
+        List<DeliverySite> entity = deliverySiteRepo.findAllByNameContainingOrLocationContainingOrCampusContaining(query, query, query);
+        return DeliverySiteDto.fromEntities(entity);
+    }
 }

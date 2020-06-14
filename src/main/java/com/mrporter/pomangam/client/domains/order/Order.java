@@ -6,7 +6,6 @@ import com.mrporter.pomangam.client.domains.order.item.OrderItem;
 import com.mrporter.pomangam.client.domains.order.orderer.Orderer;
 import com.mrporter.pomangam.client.domains.order.payment_info.PaymentInfo;
 import com.mrporter.pomangam.client.domains.ordertime.OrderTime;
-import com.mrporter.pomangam.client.domains.user.coupon.CouponMapper;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 

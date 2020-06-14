@@ -73,11 +73,11 @@ public class KakaoAuthController {
         String phoneNumber = phone.getPhoneNumber();
         String authCode = phone.getCode();
         phoneNumber = PhoneNumberFormatter.format(phoneNumber);
+        UserDto user = userService.findByPhoneNumber(phoneNumber);
+        if(user == null) {
+            return new ResponseEntity(false, HttpStatus.OK);
+        }
         if(kakaoAuthService.checkAuthCodeNotDelete(phoneNumber, authCode)) {
-            UserDto user = userService.findByPhoneNumber(phoneNumber);
-            if(user == null) {
-                return new ResponseEntity(false, HttpStatus.OK);
-            }
             user.setPassword(null);
             return new ResponseEntity(true, HttpStatus.OK);
         } else {

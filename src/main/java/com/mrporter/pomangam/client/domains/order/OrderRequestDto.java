@@ -1,13 +1,14 @@
 package com.mrporter.pomangam.client.domains.order;
 
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSite;
+import com.mrporter.pomangam.client.domains.order.cash_receipt.CashReceiptType;
 import com.mrporter.pomangam.client.domains.order.item.OrderItem;
 import com.mrporter.pomangam.client.domains.order.item.OrderItemRequestDto;
 import com.mrporter.pomangam.client.domains.order.orderer.Orderer;
 import com.mrporter.pomangam.client.domains.order.orderer.OrdererType;
 import com.mrporter.pomangam.client.domains.order.payment_info.PaymentInfo;
 import com.mrporter.pomangam.client.domains.ordertime.OrderTime;
-import com.mrporter.pomangam.client.domains.payment.Payment;
+import com.mrporter.pomangam.client.domains.payment.PaymentType;
 import com.mrporter.pomangam.client.domains.user.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,12 +41,13 @@ public class OrderRequestDto implements Serializable {
     private User user;  // 내부 작성용
 
     // PaymentInfo
-    private Long idxPayment;
+    private PaymentType paymentType;
     private Integer usingPoint;
     private String usingCouponCode;
     private Set<Long> idxesUsingCoupons = new HashSet<>();
     private Set<Long> idxesUsingPromotions = new HashSet<>();
     private String cashReceipt;
+    private CashReceiptType cashReceiptType;
 
     List<OrderItemRequestDto> orderItems = new ArrayList<>();
 
@@ -65,11 +67,10 @@ public class OrderRequestDto implements Serializable {
                         .user(this.user)
                         .build())
                 .paymentInfo(PaymentInfo.builder()
-                        .payment(Payment.builder()
-                                .idx(this.idxPayment)
-                                .build())
+                        .paymentType(this.paymentType)
                         .usingPoint(this.usingPoint)
                         .cashReceipt(this.cashReceipt)
+                        .cashReceiptType(this.cashReceiptType)
                         .build())
                 .orderItems(convertOrderItem(this.orderItems))
                 .build();

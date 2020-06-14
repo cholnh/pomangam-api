@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.test.data.order;
 
+import com.mrporter.pomangam.client.domains.payment.PaymentType;
 import com.mrporter.pomangam.client.domains.user.coupon.Coupon;
 import com.mrporter.pomangam.client.domains.user.coupon.CouponMapper;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSite;
@@ -10,7 +11,6 @@ import com.mrporter.pomangam.client.domains.order.orderer.Orderer;
 import com.mrporter.pomangam.client.domains.order.orderer.OrdererType;
 import com.mrporter.pomangam.client.domains.order.payment_info.PaymentInfo;
 import com.mrporter.pomangam.client.domains.ordertime.OrderTime;
-import com.mrporter.pomangam.client.domains.payment.Payment;
 import com.mrporter.pomangam.client.domains.product.Product;
 import com.mrporter.pomangam.client.domains.store.Store;
 import com.mrporter.pomangam.client.domains.user.User;
@@ -32,7 +32,7 @@ public class OrderData {
     CouponMapperJpaRepository couponMapperJpaRepository;
 
     @Transactional
-    public void of(Long idx, int boxIdx, Long ddIdx, LocalDate orderDate, Long oIdx, Long payIdx, OrderType orderType, Long sIdx, Long pIdx, int quantity, Long ...idxesCoupon) {
+    public void of(Long idx, int boxIdx, Long ddIdx, LocalDate orderDate, Long oIdx, PaymentType paymentType, OrderType orderType, Long sIdx, Long pIdx, int quantity, Long ...idxesCoupon) {
         Order order = Order.builder()
                 .idx(idx)
                 .boxNumber((short) boxIdx)
@@ -46,7 +46,7 @@ public class OrderData {
                 .orderTime(OrderTime.builder().idx(oIdx).build())
                 .orderType(orderType)
                 .paymentInfo(PaymentInfo.builder()
-                        .payment(Payment.builder().idx(payIdx).build())
+                        .paymentType(paymentType)
                         .usingPoint(0)
                         .savedPoint(0)
                         .build())

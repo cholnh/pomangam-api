@@ -8,13 +8,13 @@ server:
     session:
       tracking-modes: cookie
 
-  ssl:
-    # 배포용 key path -> C:/ssl/keystore
-    # 개발용 key path -> /Users/nakzzi/Downloads/keystore
-    key-store: C:/ssl/keystore
-    key-store-password: eun*zzi92!
-    key-password: eun*zzi92!
-    key-alias: alias
+#  ssl:
+#    # 배포용 key path -> C:/ssl/keystore
+#    # 개발용 key path -> /Users/nakzzi/Downloads/keystore
+#    key-store: C:/ssl/keystore
+#    key-store-password: eun*zzi92!
+#    key-password: eun*zzi92!
+#    key-alias: alias
 
   compression:
     enabled: true

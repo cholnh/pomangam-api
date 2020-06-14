@@ -19,6 +19,7 @@ public interface DeliverySiteJpaRepository extends JpaRepository<DeliverySite, L
     Page<DeliverySite> findAllByIsActiveIsTrue(Pageable pageable);
     DeliverySite findByIdxAndIsActiveIsTrue(Long idx);
     long countByIsActiveIsTrue();
+    List<DeliverySite> findAllByNameContainingOrLocationContainingOrCampusContaining(String query1, String query2, String query3);
 }
 
 interface DeliverySiteCustomRepository {
