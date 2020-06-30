@@ -72,6 +72,8 @@ dependencies {
 
     compile("com.querydsl:querydsl-jpa") // querydsl
     compile("com.querydsl:querydsl-apt") // querydsl
+
+    implementation 'com.google.firebase:firebase-admin:6.8.1'
 }
 
 // querydsl 적용

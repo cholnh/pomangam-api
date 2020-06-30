@@ -8,6 +8,8 @@ public interface FcmService {
     FcmToken post(FcmToken token);
     FcmToken patch(FcmToken token);
 
+    String send(Map<String, Object> paramInfo);
+    String send(String title, String message, FcmToken...tokens);
     String sendToAll(Map<String, Object> paramInfo);
     String sendToDeliverySiteIdx(Map<String, Object> paramInfo, Long deliverySiteIdx);
 }

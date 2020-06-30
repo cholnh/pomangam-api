@@ -40,9 +40,9 @@ public class ReactController {
     @LogExecutionTime
     @GetMapping
     public ResponseEntity<?> test1(){
-        log.info("controller test1 in");
+        log.info("controllers test1 in");
         ResponseEntity res = new ResponseEntity(reactService.test1(), HttpStatus.OK);
-        log.info("controller test1 out");
+        log.info("controllers test1 out");
         return res;
     }
 }

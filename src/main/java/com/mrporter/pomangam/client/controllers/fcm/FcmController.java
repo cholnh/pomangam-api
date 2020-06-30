@@ -30,6 +30,19 @@ public class FcmController {
         }
     }
 
+    @PostMapping(value = "/sends", produces = {"application/json; charset=UTF-8"})
+    public ResponseEntity<?> send(
+            @RequestBody Map<String, Object> paramInfo
+    ) throws JSONException {
+
+        String firebaseResponse = fcmService.send(paramInfo);
+        if(firebaseResponse == null) {
+            return new ResponseEntity<>("Push Notification Error", HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(firebaseResponse, HttpStatus.OK);
+        }
+    }
+
     @PostMapping(value = "/sends/dsites/{dIdx}", produces = {"application/json"})
     public ResponseEntity<?> sendToDeliverySiteIdx(
         @RequestBody Map<String, Object> paramInfo,

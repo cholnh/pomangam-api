@@ -28,6 +28,7 @@ import com.mrporter.pomangam.test.data.randomNickname.RandomNicknameData;
 import com.mrporter.pomangam.test.data.region.RegionData;
 import com.mrporter.pomangam.test.data.store.StoreData;
 import com.mrporter.pomangam.test.data.storeCategory.StoreCategoryData;
+import com.mrporter.pomangam.test.data.storeOwner.StoreOwnerData;
 import com.mrporter.pomangam.test.data.user.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,6 +68,7 @@ public class TestDataLoader implements ApplicationRunner {
     @Autowired ProductReplyData productReply;
     @Autowired PointLogData pointLog;
     @Autowired NoticeData notice;
+    @Autowired StoreOwnerData storeOwner;
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddl;
@@ -187,10 +189,10 @@ public class TestDataLoader implements ApplicationRunner {
          */
         userData.of(1L, 1L, 1L,
                 "01064784899", "1234", "최낙형", "낙지", Sex.MALE, LocalDate.parse("1993-01-10"),
-                "ROLE_USER,ROLE_STORE_OWNER");
+                "ROLE_USER, ROLE_ADMIN");
         userData.of(2L, 2L, 2L,
                 "01011111111", "1234", "최은성", "은스타", Sex.MALE, LocalDate.parse("1993-01-10"),
-                "ROLE_USER");
+                "ROLE_STAFF");
         userData.of(3L, 3L, 1L,
                 "01022222222", "1234", "김영찬", "찬찬", Sex.MALE, LocalDate.parse("1993-01-10"),
                 "ROLE_USER");
@@ -508,6 +510,10 @@ public class TestDataLoader implements ApplicationRunner {
         pointLog.plus(2L, 5000, PointType.UPDATED_PLUS_BY_ADMIN, null);
         pointLog.plus(2L, 300, PointType.ISSUED_BY_BUY, 7L);
 
+
+        storeOwner.of(1L, 31L, "store_1", "store_1_pw", "업체1", "010-1233-1231", Sex.MALE, LocalDate.now(), null);
+        storeOwner.of(2L, 32L, "store_2", "store_2_pw", "업체2", "010-1233-1232", Sex.FEMALE, LocalDate.now(), null);
+        storeOwner.of(3L, 33L, "store_3", "store_3_pw", "업체3", "010-1233-1233", Sex.MALE, LocalDate.now(), null);
 
 
         /*

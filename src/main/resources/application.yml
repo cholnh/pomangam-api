@@ -68,6 +68,12 @@ spring:
       cache: true
       enabled: true
   cache-period: 3600
+
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 ---
 file:
   # 프로젝트 안 upload-dir: ./uploads

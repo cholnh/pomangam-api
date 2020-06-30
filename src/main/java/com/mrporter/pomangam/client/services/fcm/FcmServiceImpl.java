@@ -10,10 +10,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -50,6 +50,13 @@ public class FcmServiceImpl implements FcmService {
     }
 
     @Override
+    public String send(Map<String, Object> paramInfo) {
+        List<FcmToken> tokens = new ArrayList<>();
+        tokens.add(new FcmToken(null, paramInfo.get("fcmToken")+"", null));
+        return send(paramInfo, tokens);
+    }
+
+    @Override
     public String sendToAll(Map<String, Object> paramInfo) {
         List<FcmToken> tokens = fcmRepo.getTokens();
         return send(paramInfo, tokens);
@@ -59,6 +66,17 @@ public class FcmServiceImpl implements FcmService {
     public String sendToDeliverySiteIdx(Map<String, Object> paramInfo, Long dIdx) {
         List<FcmToken> tokens = fcmRepo.getTokensByDeliverySiteIdx(dIdx);
         return send(paramInfo, tokens);
+    }
+
+    @Override
+    public String send(String title, String message, FcmToken...tokens) {
+        if(tokens == null || tokens.length == 0) return null;
+
+        Map<String, Object> paramInfo = new HashMap<>();
+        paramInfo.put("title", title);
+        paramInfo.put("message", message);
+
+        return send(paramInfo, Arrays.asList(tokens));
     }
 
     private String send(Map<String, Object> paramInfo, List<FcmToken> tokens) {
@@ -75,18 +93,16 @@ public class FcmServiceImpl implements FcmService {
 
         // set notification
         JSONObject notification = new JSONObject();
+        notification.put("title", paramInfo.get("title")+"");
+        notification.put("body", paramInfo.get("message")+"");
+        notification.put("sound", "default");
 
-
-        try {
-            notification.put("title", URLEncoder.encode(paramInfo.get("title")+"" ,"UTF-8"));
-            notification.put("body",  URLEncoder.encode(paramInfo.get("message")+"", "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        if(array.length() == 1) {
+            body.put("to", array.get(0));
+        } else {
+            body.put("registration_ids", array);
         }
-
-
-        body.put("registration_ids", array);
-        body.put("data", notification);
+        body.put("notification", notification);
 
         HttpEntity<String> request = new HttpEntity<>(body.toString());
         CompletableFuture<String> pushNotification = androidPushNotificationsService.send(request);
@@ -99,7 +115,6 @@ public class FcmServiceImpl implements FcmService {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        //System.out.println("firebaseResponse : " + firebaseResponse);
         return firebaseResponse;
     }
 }
