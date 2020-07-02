@@ -26,9 +26,12 @@ import com.mrporter.pomangam.test.data.productSubCategory.ProductSubCategoryData
 import com.mrporter.pomangam.test.data.productSubMapper.ProductSubMapperData;
 import com.mrporter.pomangam.test.data.randomNickname.RandomNicknameData;
 import com.mrporter.pomangam.test.data.region.RegionData;
+import com.mrporter.pomangam.test.data.staff.StaffData;
 import com.mrporter.pomangam.test.data.store.StoreData;
 import com.mrporter.pomangam.test.data.storeCategory.StoreCategoryData;
 import com.mrporter.pomangam.test.data.storeOwner.StoreOwnerData;
+import com.mrporter.pomangam.test.data.storeReview.StoreReviewData;
+import com.mrporter.pomangam.test.data.storeReviewReply.StoreReviewReplyData;
 import com.mrporter.pomangam.test.data.user.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -69,6 +72,9 @@ public class TestDataLoader implements ApplicationRunner {
     @Autowired PointLogData pointLog;
     @Autowired NoticeData notice;
     @Autowired StoreOwnerData storeOwner;
+    @Autowired StoreReviewData storeReviewData;
+    @Autowired StoreReviewReplyData storeReviewReplyData;
+    @Autowired StaffData staffData;
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddl;
@@ -511,9 +517,38 @@ public class TestDataLoader implements ApplicationRunner {
         pointLog.plus(2L, 300, PointType.ISSUED_BY_BUY, 7L);
 
 
+        /*
+         * 업주
+         */
         storeOwner.of(1L, 31L, "store_1", "store_1_pw", "업체1", "010-1233-1231", Sex.MALE, LocalDate.now(), null);
         storeOwner.of(2L, 32L, "store_2", "store_2_pw", "업체2", "010-1233-1232", Sex.FEMALE, LocalDate.now(), null);
         storeOwner.of(3L, 33L, "store_3", "store_3_pw", "업체3", "010-1233-1233", Sex.MALE, LocalDate.now(), null);
+
+
+        /*
+         * 관리자
+         */
+        staffData.of(1L, 41L, "staff_1", "staff_1_pw", "직원1", "010-1233-1231", Sex.MALE, LocalDate.now(), null);
+        staffData.of(2L, 42L, "staff_2", "staff_2_pw", "직원2", "010-1233-1232", Sex.FEMALE, LocalDate.now(), null);
+        staffData.of(3L, 43L, "staff_3", "staff_3_pw", "직원3", "010-1233-1233", Sex.FEMALE, LocalDate.now(), null);
+        staffData.of(4L, 44L, "staff_4", "staff_4_pw", "직원4", "010-1233-1234", Sex.MALE, LocalDate.now(), null);
+        staffData.of(5L, 45L, "admin", "1234", "관리자", "010-0000-0000", Sex.MALE, LocalDate.now(), "ROLE_ADMIN");
+
+
+        /*
+         * 업체 리뷰
+         */
+        storeReviewData.of(1L, 1L, 1L, 1L, "이 업체 너무 좋아요", "내용입니다~~", 4.5F, false, "1", "2", "3", "4", "5");
+        storeReviewData.of(2L, 2L, 1L, 1L, "여기 음식이 전반적으로 짜네요.", "조금만 더 싱거웠으면..", 3.0F, true, "1", "2", "3");
+        storeReviewData.of(3L, 3L, 1L, 1L, "조금 짜네요.", "밥도둑 ㅎㅎㅎ..", 2.5F, false);
+
+
+        /*
+         * 업체 리뷰 - 댓글
+         */
+        storeReviewReplyData.of(4L, 1L, "저도 그렇게 생각합니다^^", false);
+        storeReviewReplyData.of(4L, 2L, "저는 그렇게 생각하지않습니다ㅡㅡ", true);
+        storeReviewReplyData.of(4L, 3L, "저도 그렇게 생각합니다^^**", false);
 
 
         /*

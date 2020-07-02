@@ -1,6 +1,7 @@
 package com.mrporter.pomangam.client.domains.store.review.reply;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.mrporter.pomangam.client.domains.store.review.StoreReviewDtoView;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -33,6 +34,9 @@ public class StoreReviewReplyDto implements Serializable {
 
     @JsonView(StoreReviewReplyDtoView.CustomView.class)
     private String contents;
+
+    @JsonView(StoreReviewReplyDtoView.CustomView.class)
+    private Integer cntLike;
 
     @JsonView(StoreReviewReplyDtoView.CustomView.class)
     private String nickname;    // user info (read only)

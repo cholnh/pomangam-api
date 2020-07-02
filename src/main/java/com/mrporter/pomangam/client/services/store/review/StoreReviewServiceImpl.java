@@ -50,6 +50,11 @@ public class StoreReviewServiceImpl implements StoreReviewService {
     }
 
     @Override
+    public StoreReviewDto save(StoreReviewDto dto) {
+        return save(dto, null);
+    }
+
+    @Override
     @Transactional
     public StoreReviewDto save(StoreReviewDto dto,  MultipartFile[] images) {
         // 리뷰 추가
@@ -59,9 +64,12 @@ public class StoreReviewServiceImpl implements StoreReviewService {
         addAvgStar(dto.getIdxStore(), entity.getIdx());
 
         // 리뷰 이미지 저장
-        String imagePath = ImagePath.reviews(dto.getIdxDeliverySite(), dto.getIdxStore(), entity.getIdx());
-        List<StoreReviewImage> savedImages = saveImage(imagePath, images);
-        entity.addImages(savedImages);
+        if(images != null) {
+            String imagePath = ImagePath.reviews(dto.getIdxDeliverySite(), dto.getIdxStore(), entity.getIdx());
+            List<StoreReviewImage> savedImages = saveImage(imagePath, images);
+            entity.addImages(savedImages);
+        }
+
         return StoreReviewDto.fromEntity(storeReviewRepo.save(entity));
     }
 

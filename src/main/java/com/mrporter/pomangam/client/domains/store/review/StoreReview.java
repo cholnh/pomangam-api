@@ -92,7 +92,8 @@ public class StoreReview extends EntityAuditing {
     }
 
     @Builder
-    public StoreReview(Long idxUser, Long idxStore, Boolean isAnonymous, String title, String contents, Float star, Integer cntLike, Integer cntReply, List<StoreReviewImage> images) {
+    public StoreReview(Long idx, Long idxUser, Long idxStore, Boolean isAnonymous, String title, String contents, Float star, Integer cntLike, Integer cntReply, List<StoreReviewImage> images) {
+        super.setIdx(idx);
         this.idxUser = idxUser;
         this.idxStore = idxStore;
         this.isAnonymous = isAnonymous;

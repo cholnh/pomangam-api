@@ -58,8 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
 
             .authorizeRequests()
-                .antMatchers("/admin").hasRole("ADMIN") // Not Working
-                .antMatchers("/admin/**").hasRole("ADMIN") // Not Working
+                .antMatchers("/staff").hasRole("ADMIN") // Not Working
+                .antMatchers("/staff/**").hasRole("ADMIN") // Not Working
                 .antMatchers("/jpa").denyAll()
                 .antMatchers("/jpa/**").denyAll()
 	            //.antMatchers("/**").permitAll()

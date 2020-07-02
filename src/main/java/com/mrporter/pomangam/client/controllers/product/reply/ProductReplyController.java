@@ -71,7 +71,7 @@ public class ProductReplyController {
             Principal principal
     ) {
         Long uIdx = userService.findIdxByPhoneNumber(principal.getName());
-        dto.setIdxUser(uIdx);   // 댓글작성자 등록 (who)
+        dto.setIdxUser(uIdx);       // 댓글작성자 등록 (who)
         dto.setIdxProduct(pIdx);    // 리뷰 인덱스 등록 (where)
         return new ResponseEntity(productReplyService.save(dto), HttpStatus.OK);
     }

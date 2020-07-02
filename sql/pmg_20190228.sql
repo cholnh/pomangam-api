@@ -363,7 +363,7 @@ CREATE TABLE `customer_tbl` (
 
 LOCK TABLES `customer_tbl` WRITE;
 /*!40000 ALTER TABLE `customer_tbl` DISABLE KEYS */;
-INSERT INTO `customer_tbl` VALUES (1,1,'cholnh','$2a$10$Gye6eNp8DgS.knEDLycE5OzHicrRqe18nkdeUcT0De72Soiuuy2DC','홍길동','낙지',0,2019,12,31,'010-1234-1234',1,'2019-01-08 05:52:27','2019-01-08 05:52:27',3000),(2,1,'admin','$2a$10$Gye6eNp8DgS.knEDLycE5OzHicrRqe18nkdeUcT0De72Soiuuy2DC','관리자','관리자',0,2019,12,31,'010-1234-1234',1,'2019-01-08 05:52:27','2019-01-08 05:52:27',3000),(3,1,'test','$2a$10$Gye6eNp8DgS.knEDLycE5OzHicrRqe18nkdeUcT0De72Soiuuy2DC','테스트','ㅇㅇ',0,2019,12,31,'010-1234-1234',1,'2019-02-11 10:18:25',NULL,0);
+INSERT INTO `customer_tbl` VALUES (1,1,'cholnh','$2a$10$Gye6eNp8DgS.knEDLycE5OzHicrRqe18nkdeUcT0De72Soiuuy2DC','홍길동','낙지',0,2019,12,31,'010-1234-1234',1,'2019-01-08 05:52:27','2019-01-08 05:52:27',3000),(2,1,'staff','$2a$10$Gye6eNp8DgS.knEDLycE5OzHicrRqe18nkdeUcT0De72Soiuuy2DC','관리자','관리자',0,2019,12,31,'010-1234-1234',1,'2019-01-08 05:52:27','2019-01-08 05:52:27',3000),(3,1,'test','$2a$10$Gye6eNp8DgS.knEDLycE5OzHicrRqe18nkdeUcT0De72Soiuuy2DC','테스트','ㅇㅇ',0,2019,12,31,'010-1234-1234',1,'2019-02-11 10:18:25',NULL,0);
 /*!40000 ALTER TABLE `customer_tbl` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -647,7 +647,7 @@ CREATE TABLE `employee_tbl` (
 
 LOCK TABLES `employee_tbl` WRITE;
 /*!40000 ALTER TABLE `employee_tbl` DISABLE KEYS */;
-INSERT INTO `employee_tbl` VALUES (1,1,1,'admin','$2a$10$Gye6eNp8DgS.knEDLycE5OzHicrRqe18nkdeUcT0De72Soiuuy2DC','관리자',0,1993,1,10,'010-1234-1234','cholnh1@naver.com',1,'2019-02-11 12:44:29','2019-02-11 12:44:05',NULL,30000000,1500000,50),(2,6,2,'emp1','$2a$10$Gye6eNp8DgS.knEDLycE5OzHicrRqe18nkdeUcT0De72Soiuuy2DC','홍길동',0,1999,1,1,'010-1234-1234','hh@naver.com',1,'2019-02-11 12:44:29','2019-02-11 12:47:16','2019-02-11 13:55:44',2000000,0,0);
+INSERT INTO `employee_tbl` VALUES (1,1,1,'staff','$2a$10$Gye6eNp8DgS.knEDLycE5OzHicrRqe18nkdeUcT0De72Soiuuy2DC','관리자',0,1993,1,10,'010-1234-1234','cholnh1@naver.com',1,'2019-02-11 12:44:29','2019-02-11 12:44:05',NULL,30000000,1500000,50),(2,6,2,'emp1','$2a$10$Gye6eNp8DgS.knEDLycE5OzHicrRqe18nkdeUcT0De72Soiuuy2DC','홍길동',0,1999,1,1,'010-1234-1234','hh@naver.com',1,'2019-02-11 12:44:29','2019-02-11 12:47:16','2019-02-11 13:55:44',2000000,0,0);
 /*!40000 ALTER TABLE `employee_tbl` ENABLE KEYS */;
 UNLOCK TABLES;
 

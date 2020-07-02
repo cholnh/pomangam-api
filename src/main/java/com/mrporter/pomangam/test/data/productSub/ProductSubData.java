@@ -2,7 +2,6 @@ package com.mrporter.pomangam.test.data.productSub;
 
 import com.mrporter.pomangam.client.domains.product.cost.Cost;
 import com.mrporter.pomangam.client.domains.product.sub.ProductSub;
-import com.mrporter.pomangam.client.domains.product.sub.ProductSubType;
 import com.mrporter.pomangam.client.domains.product.sub.category.ProductSubCategory;
 import com.mrporter.pomangam.client.domains.product.sub.image.ProductSubImage;
 import com.mrporter.pomangam.client.domains.product.sub.image.ProductSubImageType;
