@@ -21,28 +21,10 @@ public class OrderTimeController {
         return new ResponseEntity(orderTimeService.findByIdxDeliverySite(dIdx), HttpStatus.OK);
     }
 
-    @GetMapping("/dsites/{dIdx}/ordertimes/{idx}")
-    public ResponseEntity<?> findByIdxAndIdxDeliverySite(
-            @PathVariable(value = "dIdx", required = true) Long dIdx,
-            @PathVariable(value = "idx", required = true) Long idx
-    ) {
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    @GetMapping("/dsites/{dIdx}/stores/{sIdx}/ordertimes")
+    @GetMapping("/stores/{sIdx}/ordertimes")
     public ResponseEntity<?> findByIdxDeliverySiteAndIdxStore(
-            @PathVariable(value = "dIdx", required = true) Long dIdx,
             @PathVariable(value = "sIdx", required = true) Long sIdx
     ) {
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    @GetMapping("/dsites/{dIdx}/stores/{sIdx}/ordertimes/{idx}")
-    public ResponseEntity<?> findByIdxAndIdxDeliverySiteAndIdxStore(
-            @PathVariable(value = "dIdx", required = true) Long dIdx,
-            @PathVariable(value = "sIdx", required = true) Long sIdx,
-            @PathVariable(value = "idx", required = true) Long idx
-    ) {
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(orderTimeService.findByIdxStore(sIdx), HttpStatus.OK);
     }
 }

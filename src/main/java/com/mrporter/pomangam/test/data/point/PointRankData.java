@@ -13,7 +13,7 @@ public class PointRankData {
     PointRankJpaRepository pointRankJpaRepository;
 
     @Transactional
-    public void of(Long idx, String title, int level, int percentSavePoint, int priceSavePoint, int rewardCouponPrice, int nextLowerLimitOrderCount, int nextLowerLimitRecommendCount) {
+    public void of(Long idx, String title, int level, float percentSavePoint, int priceSavePoint, int rewardCouponPrice, int nextLowerLimitOrderCount, int nextLowerLimitRecommendCount) {
         PointRank pointRank = PointRank.builder()
                 .idx(idx)
                 .level((short) level)

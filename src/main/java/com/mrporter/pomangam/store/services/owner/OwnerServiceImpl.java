@@ -50,7 +50,7 @@ public class OwnerServiceImpl implements OwnerService {
     @Transactional
     public OwnerDto saveOwner(Owner owner) {
         owner.getPassword().setFailedCount(0);
-        owner.getPassword().setValue(passwordEncoder.encode(owner.getPassword().getValue()));
+        owner.getPassword().setPasswordValue(passwordEncoder.encode(owner.getPassword().getPasswordValue()));
         owner.setPhoneNumber(PhoneNumberFormatter.format(owner.getPhoneNumber()));
 
         OwnerDto dto = OwnerDto.fromEntity(ownerRepo.save(owner));
@@ -74,7 +74,7 @@ public class OwnerServiceImpl implements OwnerService {
         if (fetched == null) {
             return null;
         }
-        fetched.getPassword().setValue(passwordEncoder.encode(password));
+        fetched.getPassword().setPasswordValue(passwordEncoder.encode(password));
         fetched.setModifyDate(LocalDateTime.now());
 
         ownerRepo.save(fetched);

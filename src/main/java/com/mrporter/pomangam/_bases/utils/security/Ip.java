@@ -18,4 +18,16 @@ public class Ip {
             return "unknown ip";
         }
     }
+
+    public static boolean isBootpayIp() {
+        String ip = getInfo();
+        System.out.println(ip);
+        for(int i=1; i<256; i++) {
+            String bootpayIp = "223.130.82." + i;
+            if(bootpayIp.equals(ip)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -1,6 +1,5 @@
 package com.mrporter.pomangam.client.controllers.user;
 
-import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.domains.user.UserDto;
 import com.mrporter.pomangam.client.services.user.UserServiceImpl;
 import lombok.AllArgsConstructor;

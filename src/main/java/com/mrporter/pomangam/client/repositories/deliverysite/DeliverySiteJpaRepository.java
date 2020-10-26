@@ -19,11 +19,12 @@ public interface DeliverySiteJpaRepository extends JpaRepository<DeliverySite, L
     Page<DeliverySite> findAllByIsActiveIsTrue(Pageable pageable);
     DeliverySite findByIdxAndIsActiveIsTrue(Long idx);
     long countByIsActiveIsTrue();
-    List<DeliverySite> findAllByNameContainingOrLocationContainingOrCampusContaining(String query1, String query2, String query3);
+    //List<DeliverySite> findAllByIsActiveIsTrueAndNameContainingOrLocationContainingOrCampusContaining(String query1, String query2, String query3);
 }
 
 interface DeliverySiteCustomRepository {
     Page<DeliverySite> findAllFetchJoinByIsActiveIsTrue(Pageable pageable); // N+1 문제 해결
+    List<DeliverySite> search(String query);
 }
 
 @Transactional(readOnly = true)
@@ -47,5 +48,16 @@ class DeliverySiteCustomRepositoryImpl extends QuerydslRepositorySupport impleme
                 .offset(pageable.getOffset())
                 .fetch();
         return new PageImpl<>(results, pageable, results.size());
+    }
+
+    public List<DeliverySite> search(String query) {
+        QDeliverySite deliverySite = QDeliverySite.deliverySite;
+        return from(deliverySite)
+                .select(deliverySite)
+                .where(deliverySite.isActive.isTrue()
+                .and(deliverySite.name.containsIgnoreCase(query)
+                .or(deliverySite.location.containsIgnoreCase(query)
+                .or(deliverySite.campus.containsIgnoreCase(query)))))
+                .fetch();
     }
 }

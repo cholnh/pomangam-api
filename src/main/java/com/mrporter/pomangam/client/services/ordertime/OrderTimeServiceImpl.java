@@ -14,6 +14,10 @@ public class OrderTimeServiceImpl implements OrderTimeService {
     private OrderTimeJpaRepository orderTimeRepo;
 
     public List<OrderTimeDto> findByIdxDeliverySite(Long dIdx) {
-        return OrderTimeDto.fromEntities(orderTimeRepo.findByIdxDeliverySiteAndIsActiveIsTrue(dIdx));
+        return OrderTimeDto.fromEntities(orderTimeRepo.findByIdxDeliverySite(dIdx));
+    }
+
+    public List<OrderTimeDto> findByIdxStore(Long sIdx) {
+        return OrderTimeDto.fromEntities(orderTimeRepo.findByIdxStore(sIdx));
     }
 }

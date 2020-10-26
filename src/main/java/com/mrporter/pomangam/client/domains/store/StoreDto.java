@@ -49,6 +49,8 @@ public class StoreDto implements Serializable {
     // like
     private Boolean isLike;
 
+    private Integer quantityOrderable;  // 주문 가능 수량
+
     public Store toEntity() {
         Store entity = new ModelMapper().map(this, Store.class);
         return entity;

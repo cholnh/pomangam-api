@@ -21,7 +21,7 @@ public class OrderItemSub extends EntityAuditing {
      * 단방향 매핑
      */
     @JoinColumn(name = "idx_product_sub")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private ProductSub productSub;
 
     /**

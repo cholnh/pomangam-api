@@ -1,17 +1,22 @@
 package com.mrporter.pomangam.client.services.store.review;
 
 import com.mrporter.pomangam._bases.files.service.FileStorageServiceImpl;
+import com.mrporter.pomangam.client.domains.order.item.OrderItem;
 import com.mrporter.pomangam.client.domains.store.Store;
 import com.mrporter.pomangam.client.domains.store.review.StoreReview;
 import com.mrporter.pomangam.client.domains.store.review.StoreReviewDto;
+import com.mrporter.pomangam.client.domains.store.review.StoreReviewSortType;
 import com.mrporter.pomangam.client.domains.store.review.image.StoreReviewImage;
 import com.mrporter.pomangam.client.domains.store.review.image.StoreReviewImageType;
 import com.mrporter.pomangam.client.domains.user.User;
+import com.mrporter.pomangam.client.repositories.order.item.OrderItemJpaRepository;
 import com.mrporter.pomangam.client.repositories.store.StoreJpaRepository;
 import com.mrporter.pomangam.client.repositories.store.review.StoreReviewJpaRepository;
 import com.mrporter.pomangam.client.repositories.store.review.like.StoreReviewLikeJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import com.mrporter.pomangam.client.services._bases.ImagePath;
+import com.mrporter.pomangam.client.services.order.exception.OrderException;
+import com.mrporter.pomangam.client.services.store.review.reply.StoreReviewReplyServiceImpl;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.domain.Pageable;
@@ -29,12 +34,14 @@ public class StoreReviewServiceImpl implements StoreReviewService {
     StoreJpaRepository storeRepo;
     StoreReviewJpaRepository storeReviewRepo;
     StoreReviewLikeJpaRepository storeReviewLikeRepo;
+    StoreReviewReplyServiceImpl storeReviewReplyService;
     UserJpaRepository userRepo;
     FileStorageServiceImpl fileStorageService;
+    OrderItemJpaRepository orderItemRepo;
 
     @Override
-    public List<StoreReviewDto> findByIdxStore(Long sIdx, Long uIdx, Pageable pageable) {
-        List<StoreReview> entities = storeReviewRepo.findByIdxStoreAndIsActiveIsTrue(sIdx, pageable).getContent();
+    public List<StoreReviewDto> findByIdxStore(Long sIdx, Long uIdx, StoreReviewSortType sortType, Pageable pageable) {
+        List<StoreReview> entities = storeReviewRepo.findByIdxStore(sIdx, sortType, pageable).getContent();
         return fromEntitiesCustom(entities, uIdx);
     }
 
@@ -50,13 +57,8 @@ public class StoreReviewServiceImpl implements StoreReviewService {
     }
 
     @Override
-    public StoreReviewDto save(StoreReviewDto dto) {
-        return save(dto, null);
-    }
-
-    @Override
     @Transactional
-    public StoreReviewDto save(StoreReviewDto dto,  MultipartFile[] images) {
+    public StoreReviewDto save(StoreReviewDto dto,  List<MultipartFile> images, String idxesOrderItem) {
         // 리뷰 추가
         StoreReview entity = storeReviewRepo.save(dto.toEntity());
 
@@ -70,12 +72,20 @@ public class StoreReviewServiceImpl implements StoreReviewService {
             entity.addImages(savedImages);
         }
 
+        // order item isReviewWrite 수정
+        for(String idxOrderItem : idxesOrderItem.split(",")) {
+            OrderItem item = orderItemRepo.findById(Long.parseLong(idxOrderItem))
+                    .orElseThrow(() -> new RuntimeException("invalid order item index"));
+            item.setIsReviewWrite(true);
+            orderItemRepo.save(item);
+        }
+
         return StoreReviewDto.fromEntity(storeReviewRepo.save(entity));
     }
 
     @Override
     @Transactional
-    public StoreReviewDto update(StoreReviewDto dto,  MultipartFile[] images) {
+    public StoreReviewDto update(StoreReviewDto dto, List<MultipartFile> images) {
         // 리뷰 수정
         StoreReview entity = storeReviewRepo.findByIdxAndIsActiveIsTrue(dto.getIdx());
         entity = storeReviewRepo.save(entity.update(dto.toEntity()));
@@ -88,7 +98,7 @@ public class StoreReviewServiceImpl implements StoreReviewService {
             fileStorageService.deleteFile(imagePath, true);
             entity.clearImages();
 
-            if(images.length > 0) {
+            if(images.size() > 0) {
                 // 새로운 이미지 파일 저장
                 List<StoreReviewImage> savedImages = saveImage(imagePath, images);
                 entity.addImages(savedImages);
@@ -111,10 +121,10 @@ public class StoreReviewServiceImpl implements StoreReviewService {
         fileStorageService.deleteFile(imagePath, true);
     }
 
-    private List<StoreReviewImage> saveImage(String imagePath, MultipartFile[] images) {
+    private List<StoreReviewImage> saveImage(String imagePath, List<MultipartFile> images) {
         List<StoreReviewImage> storeReviewImages = new ArrayList<>();
-        for(int i=0; i<images.length; i++) {
-            MultipartFile image = images[i];
+        for(int i=0; i<images.size(); i++) {
+            MultipartFile image = images.get(i);
             String fileName = (i+1) + "." + FilenameUtils.getExtension(image.getOriginalFilename());
 
             // 리뷰 이미지 파일 저장
@@ -183,7 +193,7 @@ public class StoreReviewServiceImpl implements StoreReviewService {
             dto.setIsOwn(true);
             dto.setIsLike(storeReviewLikeRepo.existsByIdxUserAndIdxStoreReview(uIdx, entity.getIdx()));
             if (entity.getIsAnonymous()) { // anonymous 처리
-                dto.setNickname(user.getNickname()+"(익명)");
+                dto.setNickname("나 (익명)");
             } else {
                 dto.setNickname(user.getNickname());
             }

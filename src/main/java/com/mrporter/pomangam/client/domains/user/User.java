@@ -34,7 +34,7 @@ public class User extends EntityAuditing {
      * 글자수: utf8 기준 / 영문 15자 / 한글 15자
      */
     @Column(name = "phone_number", unique = true, nullable = false, length = 15)
-    @Phone
+    //@Phone
     private String phoneNumber;
 
     /**
@@ -71,7 +71,7 @@ public class User extends EntityAuditing {
     /**
      * 생일
      */
-    @Column(name = "birth", nullable = false)
+    @Column(name = "birth", nullable = true)
     private LocalDate birth;
 
     /**
@@ -83,12 +83,6 @@ public class User extends EntityAuditing {
 //    @Column(name = "point", nullable = false, columnDefinition = "INT default 0")
 //    @PositiveOrZero
 //    private Integer point;
-
-    /**
-     * Fcm token 인덱스
-     */
-    @Column(name = "idx_fcm_token", nullable = false)
-    private Long idxFcmToken;
 
     /**
      * 포인트 계급
@@ -127,7 +121,7 @@ public class User extends EntityAuditing {
     }
 
     @Builder
-    public User(Long idx, Boolean isActive, DeliveryDetailSite deliveryDetailSite, String phoneNumber, Password password, String name, String nickname, Sex sex, LocalDate birth, Long idxFcmToken, PointRank pointRank, String authorities) {
+    public User(Long idx, Boolean isActive, DeliveryDetailSite deliveryDetailSite, String phoneNumber, Password password, String name, String nickname, Sex sex, LocalDate birth, PointRank pointRank, String authorities) {
         super.setIdx(idx);
         super.setIsActive(isActive);
         this.deliveryDetailSite = deliveryDetailSite;
@@ -137,7 +131,6 @@ public class User extends EntityAuditing {
         this.nickname = nickname;
         this.sex = sex;
         this.birth = birth;
-        this.idxFcmToken = idxFcmToken;
         this.pointRank = pointRank;
         this.authorities = authorities;
     }

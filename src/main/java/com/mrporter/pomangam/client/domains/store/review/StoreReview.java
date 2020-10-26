@@ -4,9 +4,11 @@ import com.mrporter.pomangam._bases.annotation.BooleanToYNConverter;
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import com.mrporter.pomangam.client.domains.store.review.image.StoreReviewImage;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,6 +84,27 @@ public class StoreReview extends EntityAuditing {
     @OrderBy("sequence ASC")
     private List<StoreReviewImage> images = new ArrayList<>();
 
+    /**
+     * 제품명
+     * 글자수: utf8 기준 / 영문 255자 / 한글 255자
+     */
+    @Column(name="product_name", nullable = false, length = 255)
+    private String productName;
+
+    /**
+     * 사장님 답글
+     * TEXT: 65535 Byte (64KB) / utf8 기준(3바이트 문자)으로 21844 글자 저장가능
+     */
+    @Column(name = "owner_reply", nullable = true, columnDefinition = "TEXT")
+    private String ownerReply;
+
+    /**
+     * 사장님 답글 등록 날짜
+     */
+    @Column(name = "owner_reply_modify_date", nullable = true)
+    private LocalDateTime ownerReplyModifyDate;
+
+
     @PrePersist
     private void prePersist() {
         this.star = star == null || star < 1 || star > 5
@@ -92,7 +115,7 @@ public class StoreReview extends EntityAuditing {
     }
 
     @Builder
-    public StoreReview(Long idx, Long idxUser, Long idxStore, Boolean isAnonymous, String title, String contents, Float star, Integer cntLike, Integer cntReply, List<StoreReviewImage> images) {
+    public StoreReview(Long idx, Long idxUser, Long idxStore, Boolean isAnonymous, String title, String contents, Float star, Integer cntLike, Integer cntReply, List<StoreReviewImage> images, String productName, String ownerReply, LocalDateTime ownerReplyModifyDate) {
         super.setIdx(idx);
         this.idxUser = idxUser;
         this.idxStore = idxStore;
@@ -103,6 +126,9 @@ public class StoreReview extends EntityAuditing {
         this.cntLike = cntLike;
         this.cntReply = cntReply;
         this.images = images;
+        this.productName = productName;
+        this.ownerReply = ownerReply;
+        this.ownerReplyModifyDate = ownerReplyModifyDate;
     }
 
     public void clearImages() {

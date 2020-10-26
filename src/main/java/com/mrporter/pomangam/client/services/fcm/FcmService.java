@@ -1,15 +1,17 @@
 package com.mrporter.pomangam.client.services.fcm;
 
-import com.mrporter.pomangam.client.domains.fcm.FcmToken;
-
-import java.util.Map;
+import com.mrporter.pomangam.client.domains.fcm.FcmRequestDto;
+import com.mrporter.pomangam.client.domains.fcm.client.FcmClientTokenDto;
+import com.mrporter.pomangam.client.domains.fcm.owner.FcmOwnerTokenDto;
+import com.mrporter.pomangam.client.domains.fcm.staff.FcmStaffTokenDto;
 
 public interface FcmService {
-    FcmToken post(FcmToken token);
-    FcmToken patch(FcmToken token);
+    String send(FcmRequestDto fcmRequest);
+    FcmClientTokenDto postClient(FcmClientTokenDto token);
+    FcmOwnerTokenDto postOwner(FcmOwnerTokenDto token);
+    FcmStaffTokenDto postStaff(FcmStaffTokenDto token);
+    void deleteClient(Long fIdx);
+    void deleteOwner(Long fIdx);
+    void deleteStaff(Long fIdx);
 
-    String send(Map<String, Object> paramInfo);
-    String send(String title, String message, FcmToken...tokens);
-    String sendToAll(Map<String, Object> paramInfo);
-    String sendToDeliverySiteIdx(Map<String, Object> paramInfo, Long deliverySiteIdx);
 }

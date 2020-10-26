@@ -28,6 +28,7 @@ public class OrderItemRequestDto implements Serializable {
                 .quantity(this.quantity)
                 .requirement(this.requirement)
                 .orderItemSubs(convertOrderItem(this.orderItemSubs))
+                .isReviewWrite(false)
                 .build();
         return entity;
     }

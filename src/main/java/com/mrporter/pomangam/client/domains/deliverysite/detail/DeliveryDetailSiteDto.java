@@ -37,7 +37,9 @@ public class DeliveryDetailSiteDto implements Serializable {
 
     public static DeliveryDetailSiteDto fromEntity(DeliveryDetailSite entity) {
         DeliveryDetailSiteDto dto = new ModelMapper().map(entity, DeliveryDetailSiteDto.class);
-        dto.setIdxDeliverySite(entity.getDeliverySite().getIdx());
+        if(entity.getDeliverySite() != null) {
+            dto.setIdxDeliverySite(entity.getDeliverySite().getIdx());
+        }
         return dto;
     }
 

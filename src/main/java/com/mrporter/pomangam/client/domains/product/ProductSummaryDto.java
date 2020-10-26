@@ -21,6 +21,8 @@ public class ProductSummaryDto implements Serializable {
     private String name;
     private String productImageMainPath;
 
+    private ProductType productType;
+
     public static ProductSummaryDto fromEntity(Product entity) {
         if(entity == null) return null;
         ProductSummaryDto dto = new ModelMapper().map(entity, ProductSummaryDto.class);
@@ -44,6 +46,8 @@ public class ProductSummaryDto implements Serializable {
 
         // cost
         dto.setSalePrice(entity.getCost().saleCost());
+
+        dto.setProductType(entity.getProductType());
 
         return dto;
     }

@@ -24,6 +24,7 @@ public class OwnerDto implements Serializable {
     private String id;
     @JsonIgnore
     private String password;
+    private Long idxStore;
     private String name;
     private String phoneNumber;
     private Sex sex;
@@ -33,7 +34,7 @@ public class OwnerDto implements Serializable {
     public Owner toEntity() {
         Owner entity = new ModelMapper().map(this, Owner.class);
         entity.setPassword(Password.builder()
-                .value(this.password)
+                .passwordValue(this.password)
                 .build());
         return entity;
     }
@@ -45,6 +46,7 @@ public class OwnerDto implements Serializable {
         dto.setRegisterDate(entity.getRegisterDate());
         dto.setModifyDate(entity.getModifyDate());
         dto.setId(entity.getId());
+        dto.setIdxStore(entity.getIdxStore());
         dto.setName(entity.getName());
         dto.setPhoneNumber(entity.getPhoneNumber());
         dto.setSex(entity.getSex());

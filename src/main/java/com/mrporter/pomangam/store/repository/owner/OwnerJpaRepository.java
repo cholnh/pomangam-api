@@ -15,6 +15,7 @@ public interface OwnerJpaRepository extends JpaRepository<Owner, Long>, OwnerCus
     Owner findByIdAndIsActiveIsTrue(String id);
     Boolean existsById(String id);
     void deleteById(String id);
+    List<Owner> findByIdxStoreAndIsActiveIsTrue(Long idxStore);
 }
 
 interface OwnerCustomRepository {

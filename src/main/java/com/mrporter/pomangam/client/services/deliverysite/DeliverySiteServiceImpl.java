@@ -34,7 +34,7 @@ public class DeliverySiteServiceImpl implements DeliverySiteService {
 
     @Override
     public List<DeliverySiteDto> search(String query) {
-        List<DeliverySite> entity = deliverySiteRepo.findAllByNameContainingOrLocationContainingOrCampusContaining(query, query, query);
+        List<DeliverySite> entity = deliverySiteRepo.search(query);
         return DeliverySiteDto.fromEntities(entity);
     }
 }

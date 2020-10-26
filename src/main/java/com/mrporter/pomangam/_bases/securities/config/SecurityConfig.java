@@ -3,6 +3,7 @@ package com.mrporter.pomangam._bases.securities.config;
 import com.mrporter.pomangam._bases.securities.handler.CustomLoginFailureHandler;
 import com.mrporter.pomangam._bases.securities.handler.CustomLoginSuccessHandler;
 import com.mrporter.pomangam._bases.securities.service.PostUserDetailsChecker;
+import com.mrporter.pomangam._bases.securities.service.PreUserDetailsChecker;
 import com.mrporter.pomangam._bases.securities.service.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private UserDetailsServiceImpl userDetailsService;
     private PostUserDetailsChecker postUserDetailsChecker;
+    private PreUserDetailsChecker preUserDetailsChecker;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -90,21 +92,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().ignoring().antMatchers("/tests/**")
                 .and().ignoring().antMatchers("/payments/**")
                 .and().ignoring().antMatchers("/policies/**")
-                .and().ignoring().antMatchers("/fcms")
-                .and().ignoring().antMatchers("/v2/api-docs",
-                                                        "/configuration/ui",
-                                                        "/swagger-resources",
-                                                        "/configuration/security",
-                                                        "/swagger-ui.html",
-                                                        "/webjars/**",
-                                                        "/swagger-resources/configuration/ui",
-                                                        "/swagger-resources/configuration/security");
+                .and().ignoring().antMatchers("/orders/callback")
+                .and().ignoring().antMatchers("/kakaos/callback");
     }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setPostAuthenticationChecks(postUserDetailsChecker);
+        authenticationProvider.setPreAuthenticationChecks(preUserDetailsChecker);
         authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder()); //패스워드를 암호활 경우 사용한다
         return authenticationProvider;

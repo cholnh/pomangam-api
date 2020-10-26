@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 /**
  * org.springframework.dao.DuplicateKeyException: PreparedStatementCallback 의 이슈 해결
  * oauth_access_token의 authentication_id (PK) 필드에서 중복 삽입 이슈
- * 네트워크 Heady load 시 문제가 간헐적으로 발생
+ * 네트워크 Heavy load 시 문제가 간헐적으로 발생
  * AOP 통해, 중복키 발생 시 지연 후 실행 시키는 방식으로 해결
  */
 

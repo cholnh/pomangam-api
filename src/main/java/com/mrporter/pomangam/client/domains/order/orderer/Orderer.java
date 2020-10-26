@@ -25,7 +25,7 @@ public class Orderer {
      * FcmToken 인덱스로 대체함.
      * 회원 주문 또한 비회원 인덱스를 채워넣어야함.
      */
-    @Column(name="idx_fcm_token", nullable = false)
+    @Column(name="idx_fcm_token", nullable = true)
     private Long idxFcmToken;
 
     /**
@@ -33,31 +33,31 @@ public class Orderer {
      * 단방향 매핑
      */
     @JoinColumn(name = "idx_user")
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
     private User user;
 
-    public Long getIdxOrderer() {
-        return ordererType == OrdererType.GUEST
-                ? idxFcmToken
-                : ordererType == OrdererType.USER
-                    ? user.getIdx()
-                    : null;
-    }
-
-    public void setUser(User orderer) {
-        if(orderer != null) {
-            this.user = orderer;
-            this.ordererType = OrdererType.USER;
-            this.idxFcmToken = orderer.getIdxFcmToken();
-        }
-    }
-
-    public void setGuest(Long idxFcmToken) {
-        if(idxFcmToken != null) {
-            this.ordererType = OrdererType.GUEST;
-            this.idxFcmToken = idxFcmToken;
-        }
-    }
+//    public Long getIdxOrderer() {
+//        return ordererType == OrdererType.GUEST
+//                ? idxFcmToken
+//                : ordererType == OrdererType.USER
+//                    ? user.getIdx()
+//                    : null;
+//    }
+//
+//    public void setUser(User orderer) {
+//        if(orderer != null) {
+//            this.user = orderer;
+//            this.ordererType = OrdererType.USER;
+//            this.idxFcmToken = orderer.getIdxFcmToken();
+//        }
+//    }
+//
+//    public void setGuest(Long idxFcmToken) {
+//        if(idxFcmToken != null) {
+//            this.ordererType = OrdererType.GUEST;
+//            this.idxFcmToken = idxFcmToken;
+//        }
+//    }
 
     @Builder
     public Orderer(OrdererType ordererType, Long idxFcmToken, User user) {

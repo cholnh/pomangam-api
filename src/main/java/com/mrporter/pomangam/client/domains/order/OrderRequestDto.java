@@ -35,10 +35,7 @@ public class OrderRequestDto implements Serializable {
     // 받는 장소
     private Long idxDeliveryDetailSite;
 
-    // Orderer
-    private OrdererType ordererType;
     private Long idxFcmToken;
-    private User user;  // 내부 작성용
 
     // PaymentInfo
     private PaymentType paymentType;
@@ -50,6 +47,12 @@ public class OrderRequestDto implements Serializable {
     private CashReceiptType cashReceiptType;
 
     List<OrderItemRequestDto> orderItems = new ArrayList<>();
+
+    // Orderer
+    private OrdererType ordererType;
+    private User user;  // 내부 작성용
+
+    private String vbankName;
 
     public Order toEntity() {
         Order entity = Order.builder()

@@ -22,7 +22,7 @@ public class CustomLoginFailureHandler implements AuthenticationFailureHandler {
         // Todo: USER.PASSWORD 에서 updateFailedCount(false) 실행 -> failedCount 증가
         System.out.println("fail~~~");
 
-//        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+//        response.setStatus(HttpStatus.UNAUTHORIZED.passwordValue());
 //        Map<String, Object> data = new HashMap<>();
 //        data.put(
 //                "timestamp",

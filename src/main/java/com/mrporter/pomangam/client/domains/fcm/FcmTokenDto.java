@@ -1,7 +1,8 @@
 package com.mrporter.pomangam.client.domains.fcm;
 
-import com.mrporter.pomangam.client.domains.user.User;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 
 import java.io.Serializable;
@@ -16,22 +17,17 @@ public class FcmTokenDto implements Serializable {
     private Long idx;
     private LocalDateTime registerDate;
     private LocalDateTime modifyDate;
+
     private String token;
-    private String phoneNumber;
 
     public FcmToken toEntity() {
         FcmToken entity = new ModelMapper().map(this, FcmToken.class);
-        User user = User.builder()
-                .phoneNumber(phoneNumber)
-                .build();
-        entity.setUser(user);
         return entity;
     }
 
     public static FcmTokenDto fromEntity(FcmToken entity) {
         if(entity == null) return null;
         FcmTokenDto dto = new ModelMapper().map(entity, FcmTokenDto.class);
-        dto.setPhoneNumber(entity.getUser().getPhoneNumber());
         return dto;
     }
 
@@ -39,8 +35,16 @@ public class FcmTokenDto implements Serializable {
         if(entities == null) return null;
         List<FcmTokenDto> dtos = new ArrayList<>();
         for(FcmToken entity : entities) {
-            dtos.add(fromEntity(entity));
+            FcmTokenDto dto = fromEntity(entity);
+            if(dto != null) {
+                dtos.add(dto);
+            }
         }
         return dtos;
+    }
+
+    @Builder
+    public FcmTokenDto(String token) {
+        this.token = token;
     }
 }

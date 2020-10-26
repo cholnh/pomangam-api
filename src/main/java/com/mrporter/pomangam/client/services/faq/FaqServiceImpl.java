@@ -1,7 +1,7 @@
 package com.mrporter.pomangam.client.services.faq;
 
-import com.mrporter.pomangam.client.domains.faq.Faq;
-import com.mrporter.pomangam.client.domains.faq.FaqDto;
+import com.mrporter.pomangam.client.domains.faq.FaqCategory;
+import com.mrporter.pomangam.client.domains.faq.FaqCategoryDto;
 import com.mrporter.pomangam.client.repositories.faq.FaqJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -16,8 +16,8 @@ public class FaqServiceImpl implements FaqService {
     private FaqJpaRepository faqRepo;
 
     @Override
-    public List<FaqDto> findByIdxDeliverySite(Long dIdx, Pageable pageable) {
-        List<Faq> faqs = faqRepo.findFetchJoinByIdxDeliverySiteAndIsActiveIsTrue(dIdx, pageable).getContent();
-        return FaqDto.fromEntities(faqs);
+    public List<FaqCategoryDto> findByIdxDeliverySite(Long dIdx, Pageable pageable) {
+        List<FaqCategory> faqs = faqRepo.findFetchJoinByIdxDeliverySiteAndIsActiveIsTrue(dIdx, pageable).getContent();
+        return FaqCategoryDto.fromEntities(faqs);
     }
 }

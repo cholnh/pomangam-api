@@ -51,7 +51,7 @@ public class PointRank extends EntityAuditing {
      * 혜택 - 포인트 적립률
      */
     @Column(name = "percent_save_point", nullable = false)
-    private Integer percentSavePoint;
+    private Float percentSavePoint;
 
     /**
      * 혜택 - 포인트 적립 금액
@@ -60,7 +60,7 @@ public class PointRank extends EntityAuditing {
     private Integer priceSavePoint;
 
     @Builder
-    public PointRank(Long idx, Short level, String title, Integer nextLowerLimitOrderCount, Integer nextLowerLimitRecommendCount, Integer rewardCouponPrice, Integer percentSavePoint, Integer priceSavePoint) {
+    public PointRank(Long idx, Short level, String title, Integer nextLowerLimitOrderCount, Integer nextLowerLimitRecommendCount, Integer rewardCouponPrice, Float percentSavePoint, Integer priceSavePoint) {
         super.setIdx(idx);
         this.level = level;
         this.title = title;

@@ -1,7 +1,9 @@
 package com.mrporter.pomangam.client.controllers.order;
 
+import com.mrporter.pomangam._bases.utils.bootpay.model.response.callback.CallbackResponse;
 import com.mrporter.pomangam.client.domains.order.OrderRequestDto;
 import com.mrporter.pomangam.client.domains.order.OrderResponseDto;
+import com.mrporter.pomangam.client.domains.order.bootpay.BootpayVbankDto;
 import com.mrporter.pomangam.client.domains.order.orderer.OrdererType;
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
@@ -25,17 +27,51 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderController {
 
+    final String BOOTPAY_PRIVATE_KEY = "/LokN9TIOXtFpmIo9iUEl76GllpuKljfbR0ndCviINU=";
+
     OrderServiceImpl orderService;
     UserJpaRepository userRepo;
 
-    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN') or ( #phoneNumber == principal.username ))")
-    @GetMapping("/{phn}")
-    public ResponseEntity<List<OrderResponseDto>> findByPhoneNumber(
-            @PathVariable(value = "phn", required = true) String phoneNumber,
-            @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping
+    public ResponseEntity<List<OrderResponseDto>> findAllByIdxFcmToken(
+            @RequestParam(value = "fIdx", required = false) Long fIdx,
+            @RequestParam(value = "pn", required = false) String phoneNumber,
+            @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable,
+            Authentication auth
     ) {
+        if(fIdx != null) {
+            return new ResponseEntity<>(orderService.findAllByIdxFcmToken(fIdx, pageable), HttpStatus.OK);
+        } else if(phoneNumber != null) {
+            if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
+                User user = userRepo.findByPhoneNumberAndIsActiveIsTrue(auth.getName());
+                if(user.getPhoneNumber().equals(phoneNumber)) {
+                    return new ResponseEntity<>(orderService.findAllByPhoneNumber(phoneNumber, pageable), HttpStatus.OK);
+                }
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 
-        return new ResponseEntity<>(orderService.findByPhoneNumber(phoneNumber, pageable), HttpStatus.OK);
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/today")
+    public ResponseEntity<List<OrderResponseDto>> findTodayByIdxFcmToken(
+            @RequestParam(value = "fIdx", required = false) Long fIdx,
+            @RequestParam(value = "pn", required = false) String phoneNumber,
+            @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable,
+            Authentication auth
+    ) {
+        if(fIdx != null) {
+            return new ResponseEntity<>(orderService.findTodayByIdxFcmToken(fIdx, pageable), HttpStatus.OK);
+        } else if(phoneNumber != null) {
+            if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
+                User user = userRepo.findByPhoneNumberAndIsActiveIsTrue(auth.getName());
+                if(user.getPhoneNumber().equals(phoneNumber)) {
+                    return new ResponseEntity<>(orderService.findTodayByPhoneNumber(phoneNumber, pageable), HttpStatus.OK);
+                }
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -47,7 +83,6 @@ public class OrderController {
         if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
             User user = userRepo.findByPhoneNumberAndIsActiveIsTrue(auth.getName());
             orderDto.setUser(user);
-            orderDto.setIdxFcmToken(user.getIdxFcmToken());
             orderDto.setOrdererType(OrdererType.USER);
         } else {
             if(orderDto.getIdxFcmToken() == null) {
@@ -62,9 +97,65 @@ public class OrderController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{oIdx}/verify")
     public ResponseEntity<Boolean> verify(
+            @PathVariable(value = "oIdx", required = true) Long oIdx,
+            @RequestParam(value = "receipt", required = true) String receipt_id
+    ) {
+        return new ResponseEntity<>(orderService.verify(oIdx, receipt_id), HttpStatus.OK);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{oIdx}/vbank")
+    public ResponseEntity<?> getVbank(
             @PathVariable(value = "oIdx", required = true) Long oIdx
     ) {
-        return new ResponseEntity<>(orderService.verify(oIdx), HttpStatus.OK);
+        return new ResponseEntity<>(orderService.getVbank(oIdx), HttpStatus.OK);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{oIdx}/vbank")
+    public ResponseEntity<?> postVbank(
+            @PathVariable(value = "oIdx", required = true) Long oIdx,
+            @RequestBody BootpayVbankDto dto
+    ) {
+        return new ResponseEntity<>(orderService.postVbank(dto), HttpStatus.OK);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{oIdx}/receipt")
+    public ResponseEntity<?> postReceipt(
+            @PathVariable(value = "oIdx", required = true) Long oIdx,
+            @RequestParam(value = "receiptId", required = true) String receiptId
+    ) {
+        orderService.postReceipt(oIdx, receiptId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_STORE_OWNER', 'ROLE_ADMIN', 'ROLE_STAFF'))")
+    @PostMapping("/{oIdx}/approve")
+    public ResponseEntity<?> approve(
+            @PathVariable(value = "oIdx", required = true) Long oIdx
+    ) {
+        orderService.approve(oIdx);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_STORE_OWNER', 'ROLE_ADMIN', 'ROLE_STAFF'))")
+    @PostMapping("/{oIdx}/disapprove")
+    public ResponseEntity<?> disapprove(
+            @PathVariable(value = "oIdx", required = true) Long oIdx,
+            @RequestParam(value = "reason", required = false) String reason
+    ) {
+        orderService.disapprove(oIdx, reason);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{oIdx}/paymentfail")
+    public ResponseEntity<?> paymentFail(
+            @PathVariable(value = "oIdx", required = true) Long oIdx
+    ) {
+        orderService.paymentFail(oIdx);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -76,8 +167,75 @@ public class OrderController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/search/count")
-    public ResponseEntity<?> count() {
-        return new ResponseEntity(HttpStatus.OK);
+    @PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_STORE_OWNER', 'ROLE_ADMIN', 'ROLE_STAFF'))")
+    @PostMapping("/{oIdx}/deliveries/pickup")
+    public ResponseEntity<?> deliveryPickup(
+            @PathVariable(value = "oIdx", required = true) Long oIdx
+    ) {
+        orderService.deliveryPickup(oIdx);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_STORE_OWNER', 'ROLE_ADMIN', 'ROLE_STAFF'))")
+    @PostMapping("/{oIdx}/deliveries/delay")
+    public ResponseEntity<?> deliveryDelay(
+            @PathVariable(value = "oIdx", required = true) Long oIdx,
+            @RequestParam(value = "min", required = true) Integer min,
+            @RequestParam(value = "reason", required = false) String reason
+    ) {
+        orderService.deliveryDelay(oIdx, min, reason);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_STORE_OWNER', 'ROLE_ADMIN', 'ROLE_STAFF'))")
+    @PostMapping("/{oIdx}/deliveries/success")
+    public ResponseEntity<?> deliverySuccess(
+            @PathVariable(value = "oIdx", required = true) Long oIdx
+    ) {
+        orderService.deliverySuccess(oIdx);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/callback")
+    public ResponseEntity<?> callback(
+            @RequestBody CallbackResponse response
+    ) {
+        // Ip.isBootpayIp()
+        try {
+            if(response.getPrivate_key().equals(BOOTPAY_PRIVATE_KEY)) {
+                orderService.callback(response);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
+
+    @GetMapping("/today/count")
+    public ResponseEntity<?> count(
+            @RequestParam(value = "fIdx", required = false) Long fIdx,
+            @RequestParam(value = "pn", required = false) String phoneNumber,
+            Authentication auth
+    ) {
+        if(fIdx != null) {
+            return new ResponseEntity<>(orderService.countByIdxFcmToken(fIdx), HttpStatus.OK);
+        } else if(phoneNumber != null) {
+            if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
+                User user = userRepo.findByPhoneNumberAndIsActiveIsTrue(auth.getName());
+                if(user.getPhoneNumber().equals(phoneNumber)) {
+                    return new ResponseEntity<>(orderService.countByPhoneNumber(phoneNumber), HttpStatus.OK);
+                }
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PatchMapping("/{oIdx}")
+    public ResponseEntity<OrderResponseDto> patchDetailSite(
+            @PathVariable(value = "oIdx", required = true) Long oIdx,
+            @RequestParam(value = "ddIdx", required = true) Long ddIdx
+    ) {
+        return new ResponseEntity<>(orderService.patchDetailSite(oIdx, ddIdx), HttpStatus.OK);
     }
 }

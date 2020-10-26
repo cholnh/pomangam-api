@@ -42,9 +42,10 @@ public class PointLogServiceImpl implements PointLogService {
             case ISSUED_BY_PROMOTION:
             case ISSUED_BY_BUY:
             case UPDATED_PLUS_BY_ADMIN:
+            case ROLLBACK_ISSUED_BY_PAYMENT_CANCEL:
                 totalPoint += point;
                 break;
-            case ROLLBACK_BY_PAYMENT_CANCEL:
+            case ROLLBACK_SAVED_BY_PAYMENT_CANCEL:
             case USED_BY_BUY:
             case UPDATED_MINUS_BY_ADMIN:
                 totalPoint -= point;

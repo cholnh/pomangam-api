@@ -19,7 +19,9 @@ public class OrderItemResponseDto implements Serializable {
     private LocalDateTime registerDate;
     private LocalDateTime modifyDate;
 
+    private Long idxStore;
     private String nameStore;
+    private Long idxProduct;
     private String nameProduct;
     private int saleCost;
     private Short quantity;
@@ -27,15 +29,21 @@ public class OrderItemResponseDto implements Serializable {
 
     List<OrderItemSubResponseDto> orderItemSubs = new ArrayList<>();
 
+    private boolean isReviewWrite;
+
     public static OrderItemResponseDto fromEntity(OrderItem entity) {
         if(entity == null) return null;
         OrderItemResponseDto dto = new ModelMapper().map(entity, OrderItemResponseDto.class);
 
+        dto.setIdxStore(entity.getStore().getIdx());
         dto.setNameStore(entity.getStore().getStoreInfo().getName());
+        dto.setIdxProduct(entity.getProduct().getIdx());
         dto.setNameProduct(entity.getProduct().getProductInfo().getName());
         dto.setSaleCost(entity.getProduct().getCost().saleCost());
 
         dto.setOrderItemSubs(convertOrderItemSub(entity.getOrderItemSubs()));
+
+        dto.setReviewWrite(entity.getIsReviewWrite());
 
         return dto;
     }

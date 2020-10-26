@@ -19,6 +19,7 @@ public class DeliverySiteData {
     public void of(Long idx, String name, DeliveryType deliveryType, Long rIdx, String campus, String location) {
         DeliverySite entity = DeliverySite.builder()
                 .idx(idx)
+                .isActive(idx == 1 ? true : false)
                 .name(name)
                 .deliveryType(deliveryType)
                 .region(Region.builder().idx(rIdx).build())

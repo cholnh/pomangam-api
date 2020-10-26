@@ -42,6 +42,12 @@ public class ProductSub extends EntityAuditing {
     private ProductSubInfo productSubInfo;
 
     /**
+     * 총 주문 개수
+     */
+    @Column(name = "cnt_order", nullable = false, columnDefinition = "INT default 0")
+    private Integer cntOrder;
+
+    /**
      * 순서
      */
     @Column(name = "sequence", nullable = false, columnDefinition = "INT default 0")
@@ -96,14 +102,16 @@ public class ProductSub extends EntityAuditing {
                 ? null
                 : numberMaximum < 0 ? null : numberMaximum;
         this.sequence = sequence == null ? 0 : sequence;
+        this.cntOrder = 0;
     }
 
     @Builder
-    public ProductSub(Long idx, Long idxStore, Cost cost, ProductSubInfo productSubInfo, Integer sequence, List<ProductSubImage> images, ProductSubCategory productSubCategory, Integer numberMinimum, Integer numberMaximum, List<ProductSubMapper> products) {
+    public ProductSub(Long idx, Long idxStore, Cost cost, ProductSubInfo productSubInfo, Integer cntOrder, Integer sequence, List<ProductSubImage> images, ProductSubCategory productSubCategory, Integer numberMinimum, Integer numberMaximum, List<ProductSubMapper> products) {
         super.setIdx(idx);
         this.idxStore = idxStore;
         this.cost = cost;
         this.productSubInfo = productSubInfo;
+        this.cntOrder = cntOrder;
         this.sequence = sequence;
         this.images = images;
         this.productSubCategory = productSubCategory;

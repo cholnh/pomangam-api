@@ -63,6 +63,12 @@ public class Product extends EntityAuditing {
     private Integer cntReply;
 
     /**
+     * 총 주문 개수
+     */
+    @Column(name = "cnt_order", nullable = false, columnDefinition = "INT default 0")
+    private Integer cntOrder;
+
+    /**
      * 순서
      */
     @Column(name = "sequence", nullable = false, columnDefinition = "INT default 0")
@@ -98,11 +104,12 @@ public class Product extends EntityAuditing {
     private void prePersist() {
         this.cntLike = 0; // always 0 when its insert
         this.cntReply = 0;
+        this.cntOrder = cntOrder == null ? 0 : cntOrder;
         this.sequence = sequence == null ? 0 : sequence;
     }
 
     @Builder
-    public Product(Long idx, Long idxStore, Cost cost, ProductInfo productInfo, ProductCategory productCategory, Integer cntLike, Integer cntReply, Integer sequence, List<ProductImage> images, List<ProductSubMapper> subs, ProductType productType) {
+    public Product(Long idx, Long idxStore, Cost cost, ProductInfo productInfo, ProductCategory productCategory, Integer cntLike, Integer cntReply, Integer cntOrder, Integer sequence, List<ProductImage> images, List<ProductSubMapper> subs, ProductType productType) {
         super.setIdx(idx);
         this.idxStore = idxStore;
         this.cost = cost;
@@ -110,6 +117,7 @@ public class Product extends EntityAuditing {
         this.productCategory = productCategory;
         this.cntLike = cntLike;
         this.cntReply = cntReply;
+        this.cntOrder = cntOrder;
         this.sequence = sequence;
         this.images = images;
         this.subs = subs;

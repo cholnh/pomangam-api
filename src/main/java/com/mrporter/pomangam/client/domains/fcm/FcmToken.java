@@ -1,20 +1,17 @@
 package com.mrporter.pomangam.client.domains.fcm;
 
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
-import com.mrporter.pomangam.client.domains.user.User;
-import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 
-@Entity
-@Table(name = "fcm_token_tbl")
-@DynamicUpdate
+@EqualsAndHashCode(callSuper = true)
+@MappedSuperclass
 @Data
-@EqualsAndHashCode(callSuper=false)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(exclude = {"user"})
-public class FcmToken extends EntityAuditing {
+public abstract class FcmToken extends EntityAuditing implements Serializable {
 
     /**
      * Fcm Token 값
@@ -23,20 +20,4 @@ public class FcmToken extends EntityAuditing {
     @Column(name = "token", nullable = true, length = 255)
     private String token;
 
-    /**
-     * User
-     * 연관관계 주인
-     */
-    @JoinColumn(name = "id_user")
-    @OneToOne(optional = true, fetch = FetchType.LAZY)
-    private User user;
-
-    @Builder
-    public FcmToken(Long idx, String token, User user) {
-        super.setIdx(idx);
-        this.token = token;
-        if(user != null) {
-            this.user = user;
-        }
-    }
 }

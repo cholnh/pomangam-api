@@ -50,7 +50,7 @@ public class StaffServiceImpl implements StaffService {
     @Transactional
     public StaffDto saveStaff(Staff staff) {
         staff.getPassword().setFailedCount(0);
-        staff.getPassword().setValue(passwordEncoder.encode(staff.getPassword().getValue()));
+        staff.getPassword().setPasswordValue(passwordEncoder.encode(staff.getPassword().getPasswordValue()));
         staff.setPhoneNumber(PhoneNumberFormatter.format(staff.getPhoneNumber()));
 
         StaffDto dto = StaffDto.fromEntity(StaffRepo.save(staff));
@@ -74,7 +74,7 @@ public class StaffServiceImpl implements StaffService {
         if (fetched == null) {
             return null;
         }
-        fetched.getPassword().setValue(passwordEncoder.encode(password));
+        fetched.getPassword().setPasswordValue(passwordEncoder.encode(password));
         fetched.setModifyDate(LocalDateTime.now());
 
         StaffRepo.save(fetched);

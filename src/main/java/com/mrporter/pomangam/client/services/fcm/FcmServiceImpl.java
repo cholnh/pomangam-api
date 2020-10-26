@@ -1,19 +1,28 @@
 package com.mrporter.pomangam.client.services.fcm;
 
-import com.mrporter.pomangam.client.domains.fcm.FcmToken;
-import com.mrporter.pomangam.client.repositories.fcm.FcmRepositoryImpl;
-import com.mrporter.pomangam.client.repositories.fcm.FcmTokenJpaRepository;
+import com.mrporter.pomangam.admin.repositories.staff.StaffJpaRepository;
+import com.mrporter.pomangam.client.domains.fcm.FcmRequestDto;
+import com.mrporter.pomangam.client.domains.fcm.FcmTokenDto;
+import com.mrporter.pomangam.client.domains.fcm.client.FcmClientToken;
+import com.mrporter.pomangam.client.domains.fcm.client.FcmClientTokenDto;
+import com.mrporter.pomangam.client.domains.fcm.owner.FcmOwnerToken;
+import com.mrporter.pomangam.client.domains.fcm.owner.FcmOwnerTokenDto;
+import com.mrporter.pomangam.client.domains.fcm.staff.FcmStaffToken;
+import com.mrporter.pomangam.client.domains.fcm.staff.FcmStaffTokenDto;
+import com.mrporter.pomangam.client.domains.user.User;
+import com.mrporter.pomangam.client.repositories.fcm.client.FcmClientTokenJpaRepository;
+import com.mrporter.pomangam.client.repositories.fcm.owner.FcmOwnerTokenJpaRepository;
+import com.mrporter.pomangam.client.repositories.fcm.staff.FcmStaffTokenJpaRepository;
+import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
+import com.mrporter.pomangam.store.repository.owner.OwnerJpaRepository;
 import lombok.AllArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -21,81 +30,36 @@ import java.util.concurrent.ExecutionException;
 @AllArgsConstructor
 public class FcmServiceImpl implements FcmService {
 
-    FcmRepositoryImpl fcmRepo;
-    FcmTokenJpaRepository fcmTokenRepo;
+    FcmClientTokenJpaRepository fcmClientTokenRepo;
+    FcmOwnerTokenJpaRepository fcmOwnerTokenRepo;
+    FcmStaffTokenJpaRepository fcmStaffTokenRepo;
     AndroidPushNotificationsServiceImpl androidPushNotificationsService;
+    UserJpaRepository userRepo;
+    OwnerJpaRepository ownerRepo;
+    StaffJpaRepository staffRepo;
 
     @Override
-    public FcmToken post(FcmToken token) {
-        assert token != null && token.getToken() != null && !token.getToken().isEmpty();
-        token.setRegisterDate(LocalDateTime.now());
-        return fcmTokenRepo.save(token);
-    }
-
-    @Override
-    public FcmToken patch(FcmToken token) {
-        assert token != null && token.getToken() != null && !token.getToken().isEmpty();
-        final FcmToken fetched = fcmTokenRepo.findByIdxAndIsActiveIsTrue(token.getIdx());
-
-        if (token.getToken() != null) {
-            fetched.setToken(token.getToken());
-        }
-        if (token.getUser() != null) {
-            fetched.setUser(token.getUser());
-        }
-        if (token.getIsActive() != null) {
-            fetched.setIsActive(token.getIsActive());
-        }
-        return fcmTokenRepo.save(fetched);
-    }
-
-    @Override
-    public String send(Map<String, Object> paramInfo) {
-        List<FcmToken> tokens = new ArrayList<>();
-        tokens.add(new FcmToken(null, paramInfo.get("fcmToken")+"", null));
-        return send(paramInfo, tokens);
-    }
-
-    @Override
-    public String sendToAll(Map<String, Object> paramInfo) {
-        List<FcmToken> tokens = fcmRepo.getTokens();
-        return send(paramInfo, tokens);
-    }
-
-    @Override
-    public String sendToDeliverySiteIdx(Map<String, Object> paramInfo, Long dIdx) {
-        List<FcmToken> tokens = fcmRepo.getTokensByDeliverySiteIdx(dIdx);
-        return send(paramInfo, tokens);
-    }
-
-    @Override
-    public String send(String title, String message, FcmToken...tokens) {
-        if(tokens == null || tokens.length == 0) return null;
-
-        Map<String, Object> paramInfo = new HashMap<>();
-        paramInfo.put("title", title);
-        paramInfo.put("message", message);
-
-        return send(paramInfo, Arrays.asList(tokens));
-    }
-
-    private String send(Map<String, Object> paramInfo, List<FcmToken> tokens) {
-        if(tokens == null) return null;
+    public String send(FcmRequestDto fcmRequest) {
+        if(fcmRequest.getTo() == null || fcmRequest.getTo().isEmpty()) return null;
 
         String firebaseResponse = null;
         JSONObject body = new JSONObject();
         JSONArray array = new JSONArray();
 
         // get token from db
-        for(FcmToken token : tokens) {
+        for(FcmTokenDto token : fcmRequest.getTo()) {
+            // System.out.println("token : " + token.getToken());
             array.put(token.getToken());
         }
 
         // set notification
         JSONObject notification = new JSONObject();
-        notification.put("title", paramInfo.get("title")+"");
-        notification.put("body", paramInfo.get("message")+"");
-        notification.put("sound", "default");
+        notification.put("title", fcmRequest.getTitle());
+        notification.put("body", fcmRequest.getBody());
+        notification.put("sound", fcmRequest.getSound() == null ? "default" : fcmRequest.getSound());
+        if(fcmRequest.getImage() != null) {
+            notification.put("image", fcmRequest.getImage());
+        }
 
         if(array.length() == 1) {
             body.put("to", array.get(0));
@@ -103,6 +67,7 @@ public class FcmServiceImpl implements FcmService {
             body.put("registration_ids", array);
         }
         body.put("notification", notification);
+        body.put("data", fcmRequest.getData());
 
         HttpEntity<String> request = new HttpEntity<>(body.toString());
         CompletableFuture<String> pushNotification = androidPushNotificationsService.send(request);
@@ -110,11 +75,87 @@ public class FcmServiceImpl implements FcmService {
 
         try {
             firebaseResponse = pushNotification.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return firebaseResponse;
+    }
+
+    @Override
+    public FcmClientTokenDto postClient(FcmClientTokenDto token) {
+        assert token != null && token.getToken() != null && !token.getToken().isEmpty();
+        FcmClientToken clientToken = fcmClientTokenRepo.findByToken(token.getToken());
+        if(clientToken != null) {
+            if(token.getPhoneNumber() != null && token.getPhoneNumber() != clientToken.getPhoneNumber()) {
+                clientToken.setPhoneNumber(token.getPhoneNumber());
+                clientToken = fcmClientTokenRepo.save(clientToken);
+            }
+        } else {
+            token.setRegisterDate(LocalDateTime.now());
+            clientToken = fcmClientTokenRepo.save(token.toEntity());
+        }
+        return FcmClientTokenDto.fromEntity(clientToken);
+    }
+
+    @Override
+    public FcmOwnerTokenDto postOwner(FcmOwnerTokenDto token) {
+        assert token != null && token.getToken() != null && !token.getToken().isEmpty();
+        FcmOwnerToken ownerToken = fcmOwnerTokenRepo.findByToken(token.getToken());
+        if(ownerToken != null) {
+            if(token.getId() != null && token.getId() != ownerToken.getIdOwner()) {
+                ownerToken.setIdOwner(token.getId());
+                ownerToken = fcmOwnerTokenRepo.save(ownerToken);
+            }
+        } else {
+            token.setRegisterDate(LocalDateTime.now());
+            ownerToken = fcmOwnerTokenRepo.save(token.toEntity());
+        }
+        return FcmOwnerTokenDto.fromEntity(ownerToken);
+    }
+
+    @Override
+    public FcmStaffTokenDto postStaff(FcmStaffTokenDto token) {
+        assert token != null && token.getToken() != null && !token.getToken().isEmpty();
+        FcmStaffToken staffToken = fcmStaffTokenRepo.findByToken(token.getToken());
+        if(staffToken != null) {
+            if(token.getId() != null && token.getId() != staffToken.getIdStaff()) {
+                staffToken.setIdStaff(token.getId());
+                staffToken = fcmStaffTokenRepo.save(staffToken);
+            }
+        } else {
+            token.setRegisterDate(LocalDateTime.now());
+            staffToken = fcmStaffTokenRepo.save(token.toEntity());
+        }
+        return FcmStaffTokenDto.fromEntity(staffToken);
+    }
+
+    @Override
+    public void deleteClient(Long fIdx) {
+        Optional<FcmClientToken> optional = fcmClientTokenRepo.findById(fIdx);
+        if(optional.isPresent()) {
+            FcmClientToken clientToken = optional.get();
+            clientToken.setPhoneNumber(null);
+            fcmClientTokenRepo.save(clientToken);
+        }
+    }
+
+    @Override
+    public void deleteOwner(Long fIdx) {
+        Optional<FcmOwnerToken> optional = fcmOwnerTokenRepo.findById(fIdx);
+        if(optional.isPresent()) {
+            FcmOwnerToken ownerToken = optional.get();
+            ownerToken.setIdOwner(null);
+            fcmOwnerTokenRepo.save(ownerToken);
+        }
+    }
+
+    @Override
+    public void deleteStaff(Long fIdx) {
+        Optional<FcmStaffToken> optional = fcmStaffTokenRepo.findById(fIdx);
+        if(optional.isPresent()) {
+            FcmStaffToken staffToken = optional.get();
+            staffToken.setIdStaff(null);
+            fcmStaffTokenRepo.save(staffToken);
+        }
     }
 }

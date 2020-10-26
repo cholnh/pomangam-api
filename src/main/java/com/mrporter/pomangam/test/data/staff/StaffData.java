@@ -22,7 +22,7 @@ public class StaffData {
                 .id(id)
                 .password(Password.builder()
                         .failedCount(0)
-                        .value(password)
+                        .passwordValue(password)
                         .build())
                 .name(name)
                 .phoneNumber(phoneNumber)

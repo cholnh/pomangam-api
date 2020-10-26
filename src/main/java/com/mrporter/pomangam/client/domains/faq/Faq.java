@@ -33,9 +33,9 @@ public class Faq extends EntityAuditing {
     private String contents;
 
     @Builder
-    public Faq(String title, String contents) {
+    public Faq(Long idx, String title, String contents) {
+        super.setIdx(idx);
         this.title = title;
         this.contents = contents;
     }
 }
-

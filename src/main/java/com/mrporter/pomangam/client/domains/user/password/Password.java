@@ -18,8 +18,8 @@ public class Password {
      * 암호화 된 패스워드
      * 글자수: utf8 기준 / 영문 255자 / 한글 255자
      */
-    @Column(name = "password", nullable = false, length = 255)
-    private String value;
+    @Column(name = "password_value", nullable = false, length = 255)
+    private String passwordValue;
 
     /**
      * 패스워드 비교 실패 횟수
@@ -29,8 +29,8 @@ public class Password {
     private int failedCount;
 
     @Builder
-    public Password(String value, @PositiveOrZero int failedCount) {
-        this.value = value;
+    public Password(String passwordValue, @PositiveOrZero int failedCount) {
+        this.passwordValue = passwordValue;
         this.failedCount = failedCount;
     }
 }

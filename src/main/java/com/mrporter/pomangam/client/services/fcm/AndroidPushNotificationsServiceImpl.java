@@ -1,6 +1,5 @@
 package com.mrporter.pomangam.client.services.fcm;
 
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.converter.StringHttpMessageConverter;

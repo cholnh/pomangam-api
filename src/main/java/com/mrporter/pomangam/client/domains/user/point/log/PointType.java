@@ -13,9 +13,14 @@ public enum PointType {
     ISSUED_BY_BUY,
 
     /**
-     * 주문취소에 의한 포인트 환급
+     * 주문취소에 의한 사용 포인트 재발급
      */
-    ROLLBACK_BY_PAYMENT_CANCEL,
+    ROLLBACK_ISSUED_BY_PAYMENT_CANCEL,
+
+    /**
+     * 주문취소에 의한 적립 포인트 회수
+     */
+    ROLLBACK_SAVED_BY_PAYMENT_CANCEL,
 
     /**
      * 구매활동에 의한 포인트 사용

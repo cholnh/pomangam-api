@@ -1,6 +1,7 @@
 package com.mrporter.pomangam._bases.securities.service;
 
 import com.mrporter.pomangam._bases.securities.kakaoauth.service.KakaoAuthServiceImpl;
+import com.mrporter.pomangam._bases.securities.kakaoauth.service.KakaoOauthServiceImpl;
 import com.mrporter.pomangam.admin.domains.staff.Staff;
 import com.mrporter.pomangam.admin.repositories.staff.StaffJpaRepository;
 import com.mrporter.pomangam.client.domains.user.User;
@@ -17,7 +18,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -27,18 +37,24 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private OwnerJpaRepository storeOwnerJpaRepo;
     private StaffJpaRepository staffJpaRepo;
     private KakaoAuthServiceImpl kakaoAuthService;
+    private KakaoOauthServiceImpl kakaoOauthService;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserDetailsServiceImpl(
         @Lazy UserJpaRepository userRepo,
         @Lazy OwnerJpaRepository storeOwnerJpaRepo,
         @Lazy StaffJpaRepository staffJpaRepo,
-        @Lazy KakaoAuthServiceImpl kakaoAuthService
+        @Lazy KakaoAuthServiceImpl kakaoAuthService,
+        @Lazy KakaoOauthServiceImpl kakaoOauthService,
+        @Lazy PasswordEncoder passwordEncoder
     ) {
         this.userRepo = userRepo;
         this.storeOwnerJpaRepo = storeOwnerJpaRepo;
         this.staffJpaRepo = staffJpaRepo;
         this.kakaoAuthService = kakaoAuthService;
+        this.kakaoOauthService = kakaoOauthService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -49,6 +65,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         org.springframework.security.core.userdetails.User userDetail = null;
 
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
+
             String clientName = authentication.getName();
             switch (clientName) {
                 case "guest":
@@ -72,12 +89,25 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if ( user == null ) {
             throw new UsernameNotFoundException(id);
         }
-        verifyAuthCode(authCode, id);
-        verifyFailCount(user);
-        return new org.springframework.security.core.userdetails.User(
-                user.getPhoneNumber(),
-                user.getPassword().getValue(),
-                AuthorityUtils.createAuthorityList(user.getAuthorities()));
+        if(authCode.equals("kakao")) {
+            String token = getPasswordByRequestBody();
+            String phoneNumber = id.replaceFirst("K", "");
+            if(!kakaoOauthService.verifyOauthLogin(phoneNumber, token)) {
+                throw new InternalAuthenticationServiceException("KAKAO_OAUTH_AUTHENTICATION_CLIENT");
+            }
+            return new org.springframework.security.core.userdetails.User(
+                    user.getPhoneNumber(),
+                    passwordEncoder.encode(token),
+                    AuthorityUtils.createAuthorityList(user.getAuthorities()));
+        } else {
+            verifyAuthCode(authCode, id);
+            verifyFailCount(user);
+            return new org.springframework.security.core.userdetails.User(
+                    user.getPhoneNumber(),
+                    passwordEncoder.encode(authCode),
+                    AuthorityUtils.createAuthorityList(user.getAuthorities()));
+        }
+
     }
 
     private org.springframework.security.core.userdetails.User verifyStoreOwner(String username) {
@@ -88,7 +118,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         verifyFailCount(storeOwner);
         return new org.springframework.security.core.userdetails.User(
                 storeOwner.getId(),
-                storeOwner.getPassword().getValue(),
+                storeOwner.getPassword().getPasswordValue(),
                 AuthorityUtils.createAuthorityList(storeOwner.getAuthorities()));
     }
 
@@ -100,7 +130,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         verifyFailCount(staff);
         return new org.springframework.security.core.userdetails.User(
                 staff.getId(),
-                staff.getPassword().getValue(),
+                staff.getPassword().getPasswordValue(),
                 AuthorityUtils.createAuthorityList(staff.getAuthorities()));
     }
 
@@ -142,5 +172,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         staff.getPassword().setFailedCount(++failCount); // login 성공시: PostUserDetailsChecker 에서 초기화
         staffJpaRepo.save(staff);
+    }
+
+    private String getPasswordByRequestBody() {
+        // HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+        // return req.getParameter("password");
+
+        HttpServletRequest currentRequest = Optional.ofNullable(RequestContextHolder.getRequestAttributes())
+                .filter(requestAttributes -> ServletRequestAttributes.class.isAssignableFrom(requestAttributes.getClass()))
+                .map(requestAttributes -> ((ServletRequestAttributes) requestAttributes))
+                .map(ServletRequestAttributes::getRequest).get();
+        return currentRequest.getParameter("password");
     }
 }

@@ -33,6 +33,12 @@ public class Owner extends EntityAuditing {
     private Password password;
 
     /**
+     * 담당 업체 인덱스
+     */
+    @Column(name = "idx_store", nullable = false)
+    private Long idxStore;
+
+    /**
      * 업주 실명
      * 글자수: utf8 기준 / 영문 30자 / 한글 30자
      */
@@ -88,11 +94,12 @@ public class Owner extends EntityAuditing {
     }
 
     @Builder
-    public Owner(Long idx, Boolean isActive, String id, Password password, String name, String phoneNumber, Sex sex, LocalDate birth, Long idxFcmToken, String authorities) {
+    public Owner(Long idx, Boolean isActive, String id, Password password, Long idxStore, String name, String phoneNumber, Sex sex, LocalDate birth, Long idxFcmToken, String authorities) {
         super.setIdx(idx);
         super.setIsActive(isActive);
         this.id = id;
         this.password = password;
+        this.idxStore = idxStore;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.sex = sex;

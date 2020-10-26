@@ -64,8 +64,19 @@ public class StoreReviewDto implements Serializable {
 
     private Boolean isImageUpdated; // patch 시, 이미지가 수정되는지 유무.
 
+    @JsonView(StoreReviewDtoView.CustomView.class)
+    private String productName;
+
+    @JsonView(StoreReviewDtoView.CustomView.class)
+    private String ownerReply;
+
+    @JsonView(StoreReviewDtoView.CustomView.class)
+    private LocalDateTime ownerReplyModifyDate;
+
     public StoreReview toEntity() {
         StoreReview entity = new ModelMapper().map(this, StoreReview.class);
+        entity.setOwnerReply(null);
+        entity.setOwnerReplyModifyDate(null);
         return entity;
     }
 

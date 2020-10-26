@@ -1,6 +1,7 @@
 package com.mrporter.pomangam.test;
 
 import com.mrporter.pomangam.client.domains.deliverysite.DeliveryType;
+import com.mrporter.pomangam.client.domains.faq.Faq;
 import com.mrporter.pomangam.client.domains.order.OrderType;
 import com.mrporter.pomangam.client.domains.payment.PaymentType;
 import com.mrporter.pomangam.client.domains.product.ProductType;
@@ -12,6 +13,7 @@ import com.mrporter.pomangam.test.data.coupon.CouponData;
 import com.mrporter.pomangam.test.data.deliverysite.DeliverySiteData;
 import com.mrporter.pomangam.test.data.detailsite.DeliveryDetailSiteData;
 import com.mrporter.pomangam.test.data.event.EventData;
+import com.mrporter.pomangam.test.data.faq.FaqCategoryData;
 import com.mrporter.pomangam.test.data.fcmtoken.FcmTokenData;
 import com.mrporter.pomangam.test.data.notice.NoticeData;
 import com.mrporter.pomangam.test.data.order.OrderData;
@@ -30,6 +32,7 @@ import com.mrporter.pomangam.test.data.staff.StaffData;
 import com.mrporter.pomangam.test.data.store.StoreData;
 import com.mrporter.pomangam.test.data.storeCategory.StoreCategoryData;
 import com.mrporter.pomangam.test.data.storeOwner.StoreOwnerData;
+import com.mrporter.pomangam.test.data.storeOwner.StoreOwnerTokenData;
 import com.mrporter.pomangam.test.data.storeReview.StoreReviewData;
 import com.mrporter.pomangam.test.data.storeReviewReply.StoreReviewReplyData;
 import com.mrporter.pomangam.test.data.user.UserData;
@@ -75,6 +78,8 @@ public class TestDataLoader implements ApplicationRunner {
     @Autowired StoreReviewData storeReviewData;
     @Autowired StoreReviewReplyData storeReviewReplyData;
     @Autowired StaffData staffData;
+    @Autowired StoreOwnerTokenData storeOwnerToken;
+    @Autowired FaqCategoryData faqCategory;
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddl;
@@ -138,36 +143,36 @@ public class TestDataLoader implements ApplicationRunner {
         advertisement.of(1L, 1L, null, 1);
         advertisement.of(2L, 1L, null, 2);
         advertisement.of(3L, 1L, null, 3);
-        advertisement.of(4L, 1L, null, 4);
-        advertisement.of(5L, 1L, null, 5);
+//        advertisement.of(4L, 1L, null, 4);
+//        advertisement.of(5L, 1L, null, 5);
 
-        advertisement.of(6L, 3L, null, 1);
-        advertisement.of(7L, 3L, null, 2);
-        advertisement.of(8L, 3L, null, 3);
-        advertisement.of(9L, 3L, null, 4);
-        advertisement.of(10L, 3L, null, 5);
-
-        advertisement.of(11L, 4L, null, 1);
-        advertisement.of(12L, 4L, null, 2);
-        advertisement.of(13L, 4L, null, 3);
-        advertisement.of(14L, 4L, null, 4);
-        advertisement.of(15L, 4L, null, 5);
+//        advertisement.of(6L, 3L, null, 1);
+//        advertisement.of(7L, 3L, null, 2);
+//        advertisement.of(8L, 3L, null, 3);
+//        advertisement.of(9L, 3L, null, 4);
+//        advertisement.of(10L, 3L, null, 5);
+//
+//        advertisement.of(11L, 4L, null, 1);
+//        advertisement.of(12L, 4L, null, 2);
+//        advertisement.of(13L, 4L, null, 3);
+//        advertisement.of(14L, 4L, null, 4);
+//        advertisement.of(15L, 4L, null, 5);
 
         /*
          * 이벤트
          */
         event.of(1L, 1L, "1일 1닭 이벤트", "1닭 을 받기 위해서는 블라블라",
-                LocalDateTime.parse("2020-02-15T00:00:00"), null);
+                LocalDateTime.parse("2020-07-01T00:00:00"), null);
         event.of(2L, 1L, "쿠폰 이벤트", "쿠폰 을 받기 위해서는 블라블라",
-                LocalDateTime.now(), LocalDateTime.parse("2020-09-01T00:00:00"));
+                LocalDateTime.parse("2020-07-01T00:00:00"), LocalDateTime.parse("2020-08-01T00:00:00"));
 
         /*
          * 공지사항
          */
         notice.of(1L, 1L, "개인정보 처리방침 변경 안내", "안녕하세요. 대한민국 1등 반찬 정기배송 앱 포만감입니다.\n포만감 개인정보 처리방침이 아래와 같이 변경됩니다.\n\n\n1. 변경 사항",
-                LocalDateTime.now(), null);
+                LocalDateTime.parse("2020-07-01T00:00:00"), null);
         notice.of(2L, 1L, "친구 초대 서비스 종료 안내", "친구 초대 서비스 종료 안내 블라블라",
-                LocalDateTime.now(), null);
+                LocalDateTime.parse("2020-07-01T00:00:00"), null);
 
         /*
          * fcm 토큰
@@ -181,31 +186,31 @@ public class TestDataLoader implements ApplicationRunner {
         /*
          * 포인트 계급
          */
-        pointRank.of(1L, "평범한", 1, 3, 0, 500, 0, 0);
-        pointRank.of(2L, "알뜰한", 2, 4, 0, 1000, 10, 1);
-        pointRank.of(3L, "살뜰한", 3, 5, 0, 2000, 20, 10);
-        pointRank.of(4L, "꾸준한", 4, 6, 0, 3000, 40, 20);
-        pointRank.of(5L, "현명한", 5, 7, 0, 10000, 60, 30);
-        pointRank.of(6L, "통달한", 6, 8, 0, 20000, 80, 40);
-        pointRank.of(7L, "포만한", 7, 9, 0, 40000, 100, 50);
+        pointRank.of(1L, "평범한", 1, 0.1F, 0, 500, 0, 0);
+        pointRank.of(2L, "알뜰한", 2, 0.2F, 0, 1000, 10, 1);
+        pointRank.of(3L, "살뜰한", 3, 0.3F, 0, 2000, 20, 10);
+        pointRank.of(4L, "꾸준한", 4, 0.4F, 0, 3000, 40, 20);
+        pointRank.of(5L, "현명한", 5, 0.5F, 0, 10000, 60, 30);
+        pointRank.of(6L, "통달한", 6, 0.6F, 0, 20000, 80, 40);
+        pointRank.of(7L, "포만한", 7, 0.7F, 0, 40000, 100, 50);
 
 
         /*
          * 유저
          */
-        userData.of(1L, 1L, 1L,
+        userData.of(1L, 1L,
                 "01064784899", "1234", "최낙형", "낙지", Sex.MALE, LocalDate.parse("1993-01-10"),
                 "ROLE_USER, ROLE_ADMIN");
-        userData.of(2L, 2L, 2L,
+        userData.of(2L, 2L,
                 "01011111111", "1234", "최은성", "은스타", Sex.MALE, LocalDate.parse("1993-01-10"),
                 "ROLE_STAFF");
-        userData.of(3L, 3L, 1L,
+        userData.of(3L, 1L,
                 "01022222222", "1234", "김영찬", "찬찬", Sex.MALE, LocalDate.parse("1993-01-10"),
                 "ROLE_USER");
-        userData.of(4L, 4L, 1L,
+        userData.of(4L, 1L,
                 "01033333333", "1234", "윤태인", "윤탱", Sex.MALE, LocalDate.parse("1993-01-10"),
                 "ROLE_USER");
-        userData.of(5L, 5L, 3L,
+        userData.of(5L, 3L,
                 "01044444444", "1234", "김태희", "태희", Sex.FEMALE, LocalDate.parse("1993-01-10"),
                 "ROLE_USER");
 
@@ -341,7 +346,7 @@ public class TestDataLoader implements ApplicationRunner {
         productSubCategory.of(6L, "선택1", ProductSubType.CUSTOMIZING_SUB);
         productSubCategory.of(7L, "선택2", ProductSubType.CUSTOMIZING_SUB);
         productSubCategory.of(8L, "선택3", ProductSubType.CUSTOMIZING_SUB);
-
+        productSubCategory.of(9L, "선택4", ProductSubType.CUSTOMIZING_SUB);
 
         /*
          * 서브 제품
@@ -376,6 +381,9 @@ public class TestDataLoader implements ApplicationRunner {
         productSub.of(25L, 1L, 7L, 8L, "무말랭이", "국내산 무말랭이 무침", "300g",5, 0, null, null, Arrays.asList(1));
         productSub.of(26L, 1L, 7L, 8L, "봄나물무침", "향긋한 봄나물", "200g",6, 0, null, null, Arrays.asList(1));
 
+        productSub.of(27L, 1L, 7L, 9L, "간장게장", "테스트", "200g",1, 1000, null, null, Arrays.asList(1));
+        productSub.of(28L, 1L, 7L, 9L, "양념게장", "테스트", "200g",1, 1000, null, null, Arrays.asList(1));
+
 
         /*
          * 제품-서브 연결
@@ -398,6 +406,7 @@ public class TestDataLoader implements ApplicationRunner {
 
         productSubMapper.of(16L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L);
         productSubMapper.of(17L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L, 24L, 25L, 26L);
+        productSubMapper.of(18L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L, 24L, 25L, 26L, 27L, 28L);
 
 
         /*
@@ -488,7 +497,7 @@ public class TestDataLoader implements ApplicationRunner {
                 3L, 1L, 2);
         order.of(12L, 12, 1L, LocalDate.now(), 11L, PaymentType.COMMON_CREDIT_CARD, OrderType.ORDER_READY,
                 4L, 1L, 1);
-        order.of(13L, 13, 1L, LocalDate.now(), 10L, PaymentType.COMMON_CREDIT_CARD, OrderType.DELIVERY_READY,
+        order.of(13L, 13, 1L, LocalDate.now(), 10L, PaymentType.COMMON_V_BANK, OrderType.PAYMENT_READY,
                 3L, 1L, 1);
 
 
@@ -520,27 +529,36 @@ public class TestDataLoader implements ApplicationRunner {
         /*
          * 업주
          */
-        storeOwner.of(1L, 31L, "store_1", "store_1_pw", "업체1", "010-1233-1231", Sex.MALE, LocalDate.now(), null);
-        storeOwner.of(2L, 32L, "store_2", "store_2_pw", "업체2", "010-1233-1232", Sex.FEMALE, LocalDate.now(), null);
-        storeOwner.of(3L, 33L, "store_3", "store_3_pw", "업체3", "010-1233-1233", Sex.MALE, LocalDate.now(), null);
+        storeOwner.of(1L, 1L, 1L, "store_1", "store_1_pw", "업체1", "010-6478-4899", Sex.MALE, LocalDate.now(), null);
+        storeOwner.of(2L, 2L, 2L, "store_2", "store_2_pw", "업체2", "010-6478-4899", Sex.FEMALE, LocalDate.now(), null);
+        storeOwner.of(3L, 3L, 3L, "store_3", "store_3_pw", "업체3", "010-6478-4899", Sex.MALE, LocalDate.now(), null);
 
+        storeOwnerToken.of(1L, "store_1", "cWSA3jZnTMWVayi9-mvZXn:APA91bGaPmklIy7V6lfyRX0ssvehBxrMptSmMAQ9Uf-olInaEJfGN0e88fMsQUEiAn3sl3ibohvoklgNyGCfN4M8UTf_MsXWXOklN-acwj8I2NAbaa8JrVc0yosbg1gUCjACPM85MVXP");
+        storeOwnerToken.of(2L, "store_2", "zz");
+        storeOwnerToken.of(3L, "store_3", "cWSA3jZnTMWVayi9-mvZXn:APA91bGaPmklIy7V6lfyRX0ssvehBxrMptSmMAQ9Uf-olInaEJfGN0e88fMsQUEiAn3sl3ibohvoklgNyGCfN4M8UTf_MsXWXOklN-acwj8I2NAbaa8JrVc0yosbg1gUCjACPM85MVXP");
 
         /*
          * 관리자
          */
-        staffData.of(1L, 41L, "staff_1", "staff_1_pw", "직원1", "010-1233-1231", Sex.MALE, LocalDate.now(), null);
-        staffData.of(2L, 42L, "staff_2", "staff_2_pw", "직원2", "010-1233-1232", Sex.FEMALE, LocalDate.now(), null);
-        staffData.of(3L, 43L, "staff_3", "staff_3_pw", "직원3", "010-1233-1233", Sex.FEMALE, LocalDate.now(), null);
-        staffData.of(4L, 44L, "staff_4", "staff_4_pw", "직원4", "010-1233-1234", Sex.MALE, LocalDate.now(), null);
-        staffData.of(5L, 45L, "admin", "1234", "관리자", "010-0000-0000", Sex.MALE, LocalDate.now(), "ROLE_ADMIN");
+        staffData.of(1L, 41L, "staff_1", "staff_1_pw", "직원1", "010-6478-4899", Sex.MALE, LocalDate.now(), null);
+        staffData.of(2L, 42L, "staff_2", "staff_2_pw", "직원2", "010-6478-4899", Sex.FEMALE, LocalDate.now(), null);
+        staffData.of(3L, 43L, "staff_3", "staff_3_pw", "직원3", "010-6478-4899", Sex.FEMALE, LocalDate.now(), null);
+        staffData.of(4L, 44L, "staff_4", "staff_4_pw", "직원4", "010-6478-4899", Sex.MALE, LocalDate.now(), null);
+        staffData.of(5L, 45L, "admin", "1234", "관리자", "010-6478-4899", Sex.MALE, LocalDate.now(), "ROLE_ADMIN");
 
 
         /*
          * 업체 리뷰
          */
-        storeReviewData.of(1L, 1L, 1L, 1L, "이 업체 너무 좋아요", "내용입니다~~", 4.5F, false, "1", "2", "3", "4", "5");
-        storeReviewData.of(2L, 2L, 1L, 1L, "여기 음식이 전반적으로 짜네요.", "조금만 더 싱거웠으면..", 3.0F, true, "1", "2", "3");
-        storeReviewData.of(3L, 3L, 1L, 1L, "조금 짜네요.", "밥도둑 ㅎㅎㅎ..", 2.5F, false);
+        storeReviewData.of(1L, 1L, 1L, 1L, "이 업체 너무 좋아요", "내용입니다~~", 4.5F, "싸이버거 세트",
+                "리뷰 감사드립니다~~ 쿠폰 증정해드렸어용 ㅎㅎ", LocalDateTime.now(),
+                false, "1", "2", "3", "4", "5");
+        storeReviewData.of(2L, 2L, 1L, 1L, "여기 음식이 전반적으로 짜네요.", "조금만 더 싱거웠으면..", 3.0F, "싸이버거 단품",
+                "감사합니다^^", LocalDateTime.now(),
+                true, "1", "2", "3");
+        storeReviewData.of(3L, 3L, 1L, 1L, "조금 짜네요.", "밥도둑 ㅎㅎㅎ..", 2.5F, "제품이름~~",
+                "사장 댓글이에용~", LocalDateTime.now(),
+                false);
 
 
         /*
@@ -549,6 +567,41 @@ public class TestDataLoader implements ApplicationRunner {
         storeReviewReplyData.of(4L, 1L, "저도 그렇게 생각합니다^^", false);
         storeReviewReplyData.of(4L, 2L, "저는 그렇게 생각하지않습니다ㅡㅡ", true);
         storeReviewReplyData.of(4L, 3L, "저도 그렇게 생각합니다^^**", false);
+
+
+        /*
+         * 자주 묻는 질문
+         */
+        Faq faq1 = Faq.builder().idx(1L)
+                .title("음식을 주문하려면 어떻게 해야 하나요?")
+                .contents("자주 묻는 질문 <b>테스트</b> 입니다.🎈🎃").build();
+        Faq faq2 = Faq.builder().idx(2L)
+                .title("정해진 시간에만 주문이 가능한가요?")
+                .contents("자주 묻는 질문 <b>테스트</b> 입니다.🎈🎃").build();
+        Faq faq3 = Faq.builder().idx(3L)
+                .title("정해진 장소에서만 받을 수 있나요?")
+                .contents("자주 묻는 질문 <b>테스트</b> 입니다.🎈🎃").build();
+        Faq faq4 = Faq.builder().idx(4L)
+                .title("결제 취소는 어떻게 하나요?")
+                .contents("자주 묻는 질문 <b>테스트</b> 입니다.🎈🎃").build();
+        Faq faq5 = Faq.builder().idx(5L)
+                .title("결제 환불을 하고 싶어요.")
+                .contents("자주 묻는 질문 <b>테스트</b> 입니다.🎈🎃").build();
+        Faq faq6 = Faq.builder().idx(6L)
+                .title("리뷰는 어떻게 작성하나요?")
+                .contents("자주 묻는 질문 <b>테스트</b> 입니다.🎈🎃").build();
+        Faq faq7 = Faq.builder().idx(7L)
+                .title("포인트 사용은 어떻게 하나요?")
+                .contents("자주 묻는 질문 <b>테스트</b> 입니다.🎈🎃").build();
+        Faq faq8 = Faq.builder().idx(8L)
+                .title("음식에서 이물질이 나왔는데 어디에 연락해야 하나요?")
+                .contents("자주 묻는 질문 <b>테스트</b> 입니다.🎈🎃").build();
+
+
+        faqCategory.of(1L, 1L, "주문문의", faq1,faq2,faq3);
+        faqCategory.of(2L, 1L, "결제문의", faq4,faq5);
+        faqCategory.of(3L, 1L, "이용문의", faq6,faq7);
+        faqCategory.of(4L, 1L, "기타", faq8);
 
 
         /*

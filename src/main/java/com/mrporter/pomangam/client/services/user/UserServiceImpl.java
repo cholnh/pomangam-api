@@ -5,6 +5,7 @@ import com.mrporter.pomangam._bases.utils.formatter.PhoneNumberFormatter;
 import com.mrporter.pomangam._bases.utils.reflection.ReflectionUtils;
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.domains.user.UserDto;
+import com.mrporter.pomangam.client.domains.user.password.Password;
 import com.mrporter.pomangam.client.domains.user.point.log.PointLog;
 import com.mrporter.pomangam.client.domains.user.point.log.PointType;
 import com.mrporter.pomangam.client.domains.user.point.rank.PointRank;
@@ -78,18 +79,23 @@ public class UserServiceImpl implements UserService {
         if(isEmptyNickname) {
             user.setNickname(randomNickname());
         }
-        user.getPassword().setFailedCount(0);
-        user.getPassword().setValue(passwordEncoder.encode(user.getPassword().getValue()));
-        user.setPhoneNumber(PhoneNumberFormatter.format(user.getPhoneNumber()));
-        user.setPointRank(PointRank.builder().idx(1L).build());
+        try {
+            user.getPassword().setFailedCount(0);
+            user.getPassword().setPasswordValue(passwordEncoder.encode(user.getPassword().getPasswordValue()));
+            user.setPhoneNumber(PhoneNumberFormatter.format(user.getPhoneNumber()));
+            user.setPointRank(PointRank.builder().idx(1L).build());
 
-        UserDto dto = UserDto.fromEntity(userRepo.save(user));
+            UserDto dto = UserDto.fromEntity(userRepo.save(user));
 
-        String authCode = kakaoAuthService.getAuthCode();
-        kakaoAuthService.saveAuthCode(dto.getPhoneNumber(), authCode);
-        dto.setPhoneNumber(dto.getPhoneNumber()+"#"+authCode);
-        dto.setUserPoint(0);
-        return dto;
+            String authCode = kakaoAuthService.getAuthCode();
+            kakaoAuthService.saveAuthCode(dto.getPhoneNumber(), authCode);
+            dto.setPhoneNumber(dto.getPhoneNumber()+"#"+authCode);
+            dto.setUserPoint(0);
+            return dto;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -117,7 +123,7 @@ public class UserServiceImpl implements UserService {
         if (fetchedUser == null) {
             return null;
         }
-        fetchedUser.getPassword().setValue(passwordEncoder.encode(password));
+        fetchedUser.getPassword().setPasswordValue(passwordEncoder.encode(password));
         fetchedUser.setModifyDate(LocalDateTime.now());
 
         userRepo.save(fetchedUser);
@@ -136,7 +142,9 @@ public class UserServiceImpl implements UserService {
         }
 
         try {
+            Password tempPassword = fetched.getPassword();
             ReflectionUtils.oldInstanceByNewInstance(fetched, user);
+            fetched.setPassword(tempPassword);
             userRepo.save(fetched);
 
             UserDto dto = UserDto.fromEntity(fetched);

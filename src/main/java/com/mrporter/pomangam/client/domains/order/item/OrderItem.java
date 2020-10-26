@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.client.domains.order.item;
 
+import com.mrporter.pomangam._bases.annotation.BooleanToYNConverter;
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import com.mrporter.pomangam.client.domains.order.item.sub.OrderItemSub;
 import com.mrporter.pomangam.client.domains.product.Product;
@@ -25,7 +26,7 @@ public class OrderItem extends EntityAuditing {
      * 단방향 매핑
      */
     @JoinColumn(name = "idx_store")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Store store;
 
     /**
@@ -33,7 +34,7 @@ public class OrderItem extends EntityAuditing {
      * 단방향 매핑
      */
     @JoinColumn(name = "idx_product")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Product product;
 
     /**
@@ -54,9 +55,24 @@ public class OrderItem extends EntityAuditing {
      * 단방향 매핑
      */
     @JoinColumn(name = "idx_order_item", nullable = false)
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("idx ASC")
     List<OrderItemSub> orderItemSubs = new ArrayList<>();
+
+    /**
+     * 리뷰 작성 여부 (Y/N)
+     * default: false(N)
+     * 대문자 필수
+     */
+    @Column(name = "is_review_write", nullable = false, length = 1)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isReviewWrite;
+
+    @PrePersist
+    private void prePersist() {
+        this.isReviewWrite = false;
+    }
+
 
     public int paymentCost() {
         int itemsTotalCost = 0;
@@ -78,12 +94,13 @@ public class OrderItem extends EntityAuditing {
     }
 
     @Builder
-    public OrderItem(Store store, Product product, Short quantity, String requirement, List<OrderItemSub> orderItemSubs) {
+    public OrderItem(Store store, Product product, Short quantity, String requirement, List<OrderItemSub> orderItemSubs, boolean isReviewWrite) {
         this.store = store;
         this.product = product;
         this.quantity = quantity;
         this.requirement = requirement;
         this.orderItemSubs = orderItemSubs;
+        this.isReviewWrite = isReviewWrite;
     }
 
     public void addItem(OrderItemSub orderItemSub) {

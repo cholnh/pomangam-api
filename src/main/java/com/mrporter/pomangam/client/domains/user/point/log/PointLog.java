@@ -36,7 +36,7 @@ public class PointLog implements Serializable {
     /**
      * 포인트 타입
      */
-    @Column(name = "point_type", nullable = false, length = 30)
+    @Column(name = "point_type", nullable = false, length = 40)
     @Enumerated(EnumType.STRING)
     private PointType pointType;
 

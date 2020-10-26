@@ -18,6 +18,10 @@ public class CustomTime {
         return new SimpleDateFormat("HH:mm:ss").format(new Date(System.currentTimeMillis()));
     }
 
+    public static String format(String pattern, LocalDateTime date) {
+        return date.format(DateTimeFormatter.ofPattern(pattern));
+    }
+
     public static String curDateTime() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()));
     }

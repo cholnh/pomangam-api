@@ -56,6 +56,7 @@ public class OrderData {
                 .product(Product.builder().idx(pIdx).build())
                 .quantity((short) quantity)
                 .requirement("box : " + boxIdx + " orderTime : " + oIdx + " detail : " + ddIdx)
+                .isReviewWrite(false)
                 .build();
         order.addItem(orderItem1);
         orderJpaRepository.save(order);

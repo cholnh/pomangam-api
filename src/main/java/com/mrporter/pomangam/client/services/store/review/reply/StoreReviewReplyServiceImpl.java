@@ -123,7 +123,7 @@ public class StoreReviewReplyServiceImpl implements StoreReviewReplyService {
             dto.setIsOwn(true);
             dto.setIsLike(storeReviewReplyLikeRepo.existsByIdxUserAndIdxStoreReviewReply(uIdx, entity.getIdx()));
             if (entity.getIsAnonymous()) { // anonymous 처리
-                dto.setNickname(user.getNickname()+"(익명)");
+                dto.setNickname("나 (익명)");
             } else {
                 dto.setNickname(user.getNickname());
             }

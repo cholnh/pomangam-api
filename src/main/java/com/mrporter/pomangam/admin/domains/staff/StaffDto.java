@@ -33,7 +33,7 @@ public class StaffDto implements Serializable {
     public Staff toEntity() {
         Staff entity = new ModelMapper().map(this, Staff.class);
         entity.setPassword(Password.builder()
-                .value(this.password)
+                .passwordValue(this.password)
                 .build());
         return entity;
     }

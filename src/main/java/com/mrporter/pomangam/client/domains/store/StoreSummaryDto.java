@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class StoreSummaryDto implements Serializable {
     private Integer couponType;
     private Integer couponValue;
     private Integer quantityOrderable;  // 주문 가능 수량
+    private LocalDateTime modifyDate;
 
     public static StoreSummaryDto fromEntity(Store entity) {
         StoreSummaryDto dto = new ModelMapper().map(entity, StoreSummaryDto.class);
@@ -72,6 +74,8 @@ public class StoreSummaryDto implements Serializable {
         dto.setName(storeInfo.getName());
         dto.setDescription(storeInfo.getDescription());
         dto.setSubDescription(storeInfo.getSubDescription());
+
+        dto.setModifyDate(entity.getModifyDate());
 
         return dto;
     }

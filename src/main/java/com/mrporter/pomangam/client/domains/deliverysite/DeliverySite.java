@@ -65,8 +65,9 @@ public class DeliverySite extends EntityAuditing {
     }
 
     @Builder
-    public DeliverySite(Long idx, String name, DeliveryType deliveryType, String location, String campus, Region region, List<DeliveryDetailSite> detailSites) {
+    public DeliverySite(Long idx, Boolean isActive, String name, DeliveryType deliveryType, String location, String campus, Region region, List<DeliveryDetailSite> detailSites) {
         super.setIdx(idx);
+        super.setIsActive(isActive);
         this.name = name;
         this.deliveryType = deliveryType;
         this.location = location;

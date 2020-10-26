@@ -18,6 +18,7 @@ public class OrderItemSubResponseDto implements Serializable {
     private LocalDateTime modifyDate;
 
     private String nameProductSub;
+    private Long idxProductSub;
     private int saleCost;
     private Short quantity;
 
@@ -26,6 +27,7 @@ public class OrderItemSubResponseDto implements Serializable {
         OrderItemSubResponseDto dto = new ModelMapper().map(entity, OrderItemSubResponseDto.class);
 
         dto.setNameProductSub(entity.getProductSub().getProductSubInfo().getName());
+        dto.setIdxProductSub(entity.getProductSub().getIdx());
         dto.setSaleCost(entity.getProductSub().getCost().saleCost());
 
         return dto;

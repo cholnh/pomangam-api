@@ -17,13 +17,14 @@ public class StoreOwnerData {
     OwnerServiceImpl ownerService;
 
     @Transactional
-    public void of(Long idx, Long fIdx, String id, String password, String name, String phoneNumber, Sex sex, LocalDate birth, String authorities) {
+    public void of(Long idx, Long fIdx, Long sIdx, String id, String password, String name, String phoneNumber, Sex sex, LocalDate birth, String authorities) {
         Owner owner = Owner.builder()
                 .idx(idx)
                 .id(id)
+                .idxStore(sIdx)
                 .password(Password.builder()
                         .failedCount(0)
-                        .value(password)
+                        .passwordValue(password)
                         .build())
                 .name(name)
                 .phoneNumber(phoneNumber)

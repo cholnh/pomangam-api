@@ -1,7 +1,7 @@
 package com.mrporter.pomangam._bases.securities.kakaoauth.service;
 
 import com.mrporter.pomangam._bases.securities.kakaoauth.repository.KakaoAuthRepositoryImpl;
-import com.mrporter.pomangam._bases.utils.apiclient.BizmApi;
+import com.mrporter.pomangam._bases.utils.bizm.template.AuthTemplate;
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import lombok.AllArgsConstructor;
@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -18,9 +20,6 @@ public class KakaoAuthServiceImpl implements KakaoAuthService {
     KakaoAuthRepositoryImpl kakaoAuthRepository;
     UserJpaRepository userRepo;
 
-    private final static String msg1 = "[포만감] 인증번호 : ";
-    private final static String msg2 = "\n정확히 입력해주세요.";
-    private final static String tmplId = "pmg_auth_1";
     private final static int authCodeLength = 4;
 
     public static int getAuthCodeLength() {
@@ -49,7 +48,9 @@ public class KakaoAuthServiceImpl implements KakaoAuthService {
 
     @Override
     public ResponseEntity<?> sendAuthCode(String phone_number, String auth_code) {
-        return BizmApi.send(phone_number, (msg1 + auth_code + msg2), tmplId);
+        Map<String, String> data = new HashMap<>();
+        data.put("auth_code", auth_code);
+        return AuthTemplate.send(phone_number, data);
     }
 
     @Override
@@ -59,24 +60,28 @@ public class KakaoAuthServiceImpl implements KakaoAuthService {
 
     @Override
     public boolean checkAuthCode(String phone_number, String auth_code) {
-        User user = userRepo.findByPhoneNumberAndIsActiveIsTrue(phone_number);
-        if(user == null) {
-            return false;
+        boolean isValid = kakaoAuthRepository.checkAuthCode(phone_number, auth_code);
+        if(isValid) {
+            resetFailCount(phone_number);
         }
-        user.getPassword().setFailedCount(0);
-        userRepo.save(user);
-        return kakaoAuthRepository.checkAuthCode(phone_number, auth_code);
+        return isValid;
+    }
+
+    public void resetFailCount(String phoneNumber) {
+        User user = userRepo.findByPhoneNumberAndIsActiveIsTrue(phoneNumber);
+        if(user != null) {
+            user.getPassword().setFailedCount(0);
+            userRepo.save(user);
+        }
     }
 
     @Override
     public boolean checkAuthCodeNotDelete(String phone_number, String auth_code) {
-        User user = userRepo.findByPhoneNumberAndIsActiveIsTrue(phone_number);
-        if(user == null) {
-            return false;
+        boolean isValid = kakaoAuthRepository.checkAuthCodeNotDelete(phone_number, auth_code);
+        if(isValid) {
+            resetFailCount(phone_number);
         }
-        user.getPassword().setFailedCount(0);
-        userRepo.save(user);
-        return kakaoAuthRepository.checkAuthCodeNotDelete(phone_number, auth_code);
+        return isValid;
     }
 
     public void deleteAuthCode(String phone_number) {

@@ -4,21 +4,21 @@ server:
   port: 9530
 
   servlet:
-    context-path: /api/v1
+    context-path: /api/v1.2
     session:
       tracking-modes: cookie
 
-#  ssl:
-#    # 배포용 key path -> C:/ssl/keystore
-#    # 개발용 key path -> /Users/nakzzi/Downloads/keystore
-#    key-store: C:/ssl/keystore
-#    key-store-password: eun*zzi92!
-#    key-password: eun*zzi92!
-#    key-alias: alias
+  ssl:
+    enabled: false
+    key-store: C:/ssl/poman.kr/sectigo/keystore.jks  # Mac key path -> /Users/nakzzi/Downloads/keystore
+    key-store-type: jks
+    key-store-password: 26809t
+    key-alias: www.poman.kr
 
   compression:
     enabled: true
     min-response-size: 2048
+
 ---
 spring:
   jpa:
@@ -31,9 +31,9 @@ spring:
         #show_sql: true              # sql 로깅
         #use_sql_comments: true      # sql 로깅
         #format_sql: true            # sql 로깅
-        generate_statistics: true
+        # generate_statistics: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
   datasource:
     hikari:
@@ -90,10 +90,10 @@ logging:
   level:
     org:
       hibernate:
-        SQL: debug       # sql 로깅
+        # SQL: debug       # sql 로깅
         type:
           descriptor:
-            sql: trace   # sql 로깅
+            # sql: trace   # sql 로깅
 ---
 management:
   health:

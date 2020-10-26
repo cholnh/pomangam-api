@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mrporter.pomangam._bases.securities.kakaoauth.domain.PhoneNumber;
 import com.mrporter.pomangam._bases.securities.kakaoauth.domain.UpdateInputDto;
 import com.mrporter.pomangam._bases.securities.kakaoauth.service.KakaoAuthServiceImpl;
+import com.mrporter.pomangam._bases.securities.kakaoauth.service.KakaoOauthServiceImpl;
 import com.mrporter.pomangam.client.domains.user.UserDto;
 import com.mrporter.pomangam.client.services.user.UserServiceImpl;
 import com.mrporter.pomangam._bases.utils.formatter.PhoneNumberFormatter;
@@ -24,6 +25,15 @@ public class KakaoAuthController {
 
     KakaoAuthServiceImpl kakaoAuthService;
     UserServiceImpl userService;
+    KakaoOauthServiceImpl kakaoOauthService;
+
+    @GetMapping("/verify")
+    public ResponseEntity<?> verify(
+            @RequestParam(value = "token") String token,
+            @RequestParam(value = "pn") String pn
+    ) {
+        return new ResponseEntity(kakaoOauthService.verifyOauthLogin(pn, token), HttpStatus.OK);
+    }
 
     @PostMapping("/code/join")
     public ResponseEntity<?> generateAuthCodeForJoin(@RequestBody PhoneNumber phone) {
@@ -73,13 +83,14 @@ public class KakaoAuthController {
         String phoneNumber = phone.getPhoneNumber();
         String authCode = phone.getCode();
         phoneNumber = PhoneNumberFormatter.format(phoneNumber);
-        UserDto user = userService.findByPhoneNumber(phoneNumber);
-        if(user == null) {
-            return new ResponseEntity(false, HttpStatus.OK);
-        }
         if(kakaoAuthService.checkAuthCodeNotDelete(phoneNumber, authCode)) {
-            user.setPassword(null);
-            return new ResponseEntity(true, HttpStatus.OK);
+            UserDto user = userService.findByPhoneNumber(phoneNumber);
+            if(user == null) {
+                return new ResponseEntity(false, HttpStatus.OK);
+            } else {
+                user.setPassword(null);
+                return new ResponseEntity(true, HttpStatus.OK);
+            }
         } else {
             return new ResponseEntity("INVALID CODE", HttpStatus.BAD_REQUEST);
         }
@@ -91,6 +102,7 @@ public class KakaoAuthController {
         String authCode = phone.getCode();
         phoneNumber = PhoneNumberFormatter.format(phoneNumber);
         boolean isValidAuthCode = kakaoAuthService.checkAuthCode(phoneNumber, authCode);
+
         if(isValidAuthCode) {
             return new ResponseEntity(isValidAuthCode, HttpStatus.OK);
         } else {
@@ -111,11 +123,12 @@ public class KakaoAuthController {
         String phoneNumber = dto.getPhoneNumber();
         String authCode = dto.getCode();
         phoneNumber = PhoneNumberFormatter.format(phoneNumber);
+
         if(kakaoAuthService.checkAuthCode(phoneNumber, authCode)) {
             if(userService.isExistByPhone(phoneNumber)) {
-                UserDto user = userService.updateUserPassword(phoneNumber, dto.getPassword());
-                user.setPassword(null);
-                return new ResponseEntity(user, HttpStatus.OK);
+                UserDto userDto = userService.updateUserPassword(phoneNumber, dto.getPassword());
+                userDto.setPassword(null);
+                return new ResponseEntity(userDto, HttpStatus.OK);
             } else {
                 return new ResponseEntity("USER NOT EXIST", HttpStatus.BAD_REQUEST);
             }

@@ -82,4 +82,8 @@ public class DeliveryDetailSite extends EntityAuditing {
         this.longitude = longitude;
         this.abbreviation = abbreviation;
     }
+
+    public String getFullName() {
+        return deliverySite.getName() + " " + name;
+    }
 }

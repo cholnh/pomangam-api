@@ -18,20 +18,19 @@ public class UserData {
     UserServiceImpl userService;
 
     @Transactional
-    public void of(Long idx, Long fIdx, Long ddIdx, String phoneNumber, String password, String name, String nickname, Sex sex, LocalDate birth, String authorities) {
+    public void of(Long idx, Long ddIdx, String phoneNumber, String password, String name, String nickname, Sex sex, LocalDate birth, String authorities) {
         User user = User.builder()
                 .idx(idx)
                 .deliveryDetailSite(DeliveryDetailSite.builder().idx(ddIdx).build())
                 .phoneNumber(phoneNumber)
                 .password(Password.builder()
                         .failedCount(0)
-                        .value(password)
+                        .passwordValue(password)
                         .build())
                 .name(name)
                 .nickname(nickname)
                 .sex(sex)
                 .birth(birth)
-                .idxFcmToken(fIdx)
                 .authorities(authorities)
                 .build();
         userService.saveUser(user);

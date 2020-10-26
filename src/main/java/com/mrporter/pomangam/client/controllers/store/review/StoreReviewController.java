@@ -1,8 +1,10 @@
 package com.mrporter.pomangam.client.controllers.store.review;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.mrporter.pomangam.client.domains.store.SortType;
 import com.mrporter.pomangam.client.domains.store.review.StoreReviewDto;
 import com.mrporter.pomangam.client.domains.store.review.StoreReviewDtoView;
+import com.mrporter.pomangam.client.domains.store.review.StoreReviewSortType;
 import com.mrporter.pomangam.client.services.store.review.StoreReviewServiceImpl;
 import com.mrporter.pomangam.client.services.user.UserServiceImpl;
 import lombok.AllArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/dsites/{dIdx}/stores/{sIdx}/reviews")
@@ -30,11 +33,12 @@ public class StoreReviewController {
     public ResponseEntity<?> findByIdxStore(
             @PathVariable(value = "dIdx", required = true) Long dIdx,
             @PathVariable(value = "sIdx", required = true) Long sIdx,
+            @RequestParam(value = "sortType", required = false, defaultValue = "SORT_BY_DATE_DESC") StoreReviewSortType sortType,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable,
             Principal principal
     ) {
         Long uIdx = userService.findIdxByPhoneNumber(principal.getName());
-        return new ResponseEntity(storeReviewService.findByIdxStore(sIdx, uIdx, pageable), HttpStatus.OK);
+        return new ResponseEntity(storeReviewService.findByIdxStore(sIdx, uIdx, sortType, pageable), HttpStatus.OK);
     }
 
     @GetMapping("/{idx}")
@@ -64,14 +68,15 @@ public class StoreReviewController {
             @PathVariable(value = "dIdx", required = true) Long dIdx,
             @PathVariable(value = "sIdx", required = true) Long sIdx,
             StoreReviewDto dto,
-            @RequestParam("images") MultipartFile[] images,
+            @RequestParam("images") List<MultipartFile> images,
+            @RequestParam(name = "idxesOrderItem", required = false) String idxesOrderItem,
             Principal principal
     ) {
         Long uIdx = userService.findIdxByPhoneNumber(principal.getName());
         dto.setIdxUser(uIdx);
         dto.setIdxStore(sIdx);
         dto.setIdxDeliverySite(dIdx);
-        return new ResponseEntity(storeReviewService.save(dto, images), HttpStatus.OK);
+        return new ResponseEntity(storeReviewService.save(dto, images, idxesOrderItem), HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated() and (hasRole('ROLE_USER') or hasRole('ROLE_ADMIN'))")
@@ -82,7 +87,7 @@ public class StoreReviewController {
             @PathVariable(value = "sIdx", required = true) Long sIdx,
             @PathVariable(value = "rIdx", required = true) Long rIdx,
             StoreReviewDto dto,
-            @RequestParam("images") MultipartFile[] images,
+            @RequestParam("images") List<MultipartFile> images,
             Principal principal
     ) {
         Long uIdx = userService.findIdxByPhoneNumber(principal.getName());

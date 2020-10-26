@@ -1,14 +1,14 @@
 package com.mrporter.pomangam.client.controllers.fcm;
 
-import com.mrporter.pomangam.client.domains.fcm.FcmToken;
+import com.mrporter.pomangam.client.domains.fcm.FcmRequestDto;
+import com.mrporter.pomangam.client.domains.fcm.client.FcmClientTokenDto;
+import com.mrporter.pomangam.client.domains.fcm.owner.FcmOwnerTokenDto;
+import com.mrporter.pomangam.client.domains.fcm.staff.FcmStaffTokenDto;
 import com.mrporter.pomangam.client.services.fcm.FcmServiceImpl;
 import lombok.AllArgsConstructor;
-import org.json.JSONException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/fcms")
@@ -17,53 +17,48 @@ public class FcmController {
 
     FcmServiceImpl fcmService;
 
-    @PostMapping(value = "/sends/dsites", produces = {"application/json"})
-    public ResponseEntity<?> sendToAll(
-        @RequestBody Map<String, Object> paramInfo
-    ) throws JSONException {
-
-        String firebaseResponse = fcmService.sendToAll(paramInfo);
-        if(firebaseResponse == null) {
-            return new ResponseEntity<>("Push Notification Error", HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<>(firebaseResponse, HttpStatus.OK);
-        }
+    @PostMapping("/send")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_STAFF') or hasRole('ROLE_ADMIN'))")
+    public ResponseEntity<?> send(@RequestBody FcmRequestDto request) {
+        return ResponseEntity.ok(fcmService.send(request));
     }
 
-    @PostMapping(value = "/sends", produces = {"application/json; charset=UTF-8"})
-    public ResponseEntity<?> send(
-            @RequestBody Map<String, Object> paramInfo
-    ) throws JSONException {
-
-        String firebaseResponse = fcmService.send(paramInfo);
-        if(firebaseResponse == null) {
-            return new ResponseEntity<>("Push Notification Error", HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<>(firebaseResponse, HttpStatus.OK);
-        }
+    @PostMapping("/client")
+    public ResponseEntity<?> postClient(@RequestBody FcmClientTokenDto token) {
+        return ResponseEntity.ok(fcmService.postClient(token));
     }
 
-    @PostMapping(value = "/sends/dsites/{dIdx}", produces = {"application/json"})
-    public ResponseEntity<?> sendToDeliverySiteIdx(
-        @RequestBody Map<String, Object> paramInfo,
-        @PathVariable(value = "dIdx", required = true) Long dIdx
-    ) throws JSONException {
-
-        String firebaseResponse = fcmService.sendToDeliverySiteIdx(paramInfo, dIdx);
-        if(firebaseResponse == null) {
-            return new ResponseEntity<>("Push Notification Error", HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<>(firebaseResponse, HttpStatus.OK);
-        }
+    @PostMapping("/owner")
+    public ResponseEntity<?> postOwner(@RequestBody FcmOwnerTokenDto token) {
+        return ResponseEntity.ok(fcmService.postOwner(token));
     }
 
-    @PostMapping
-    public ResponseEntity<?> post(@RequestBody FcmToken token) {
-        return ResponseEntity.ok(fcmService.post(token));
+    @PostMapping("/staff")
+    public ResponseEntity<?> postStaff(@RequestBody FcmStaffTokenDto token) {
+        return ResponseEntity.ok(fcmService.postStaff(token));
     }
 
-    @PatchMapping
-    public ResponseEntity<?> patch(@RequestBody FcmToken token) {
-        return ResponseEntity.ok(fcmService.patch(token));
+    @DeleteMapping("/client/{fIdx}")
+    public ResponseEntity<?> deleteClient(
+            @PathVariable(value = "fIdx") Long fIdx
+    ) {
+        fcmService.deleteClient(fIdx);
+        return ResponseEntity.ok(true);
+    }
+
+    @DeleteMapping("/owner/{fIdx}")
+    public ResponseEntity<?> deleteOwner(
+            @PathVariable(value = "fIdx") Long fIdx
+    ) {
+        fcmService.deleteOwner(fIdx);
+        return ResponseEntity.ok(true);
+    }
+
+    @DeleteMapping("/staff/{fIdx}")
+    public ResponseEntity<?> deleteStaff(
+            @PathVariable(value = "fIdx") Long fIdx
+    ) {
+        fcmService.deleteStaff(fIdx);
+        return ResponseEntity.ok(true);
     }
 }

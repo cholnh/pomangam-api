@@ -53,7 +53,7 @@ public class Order extends EntityAuditing {
      * 단방향 매핑
      */
     @JoinColumn(name = "idx_delivery_detail_site")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private DeliveryDetailSite deliveryDetailSite;
 
     /**
@@ -75,9 +75,21 @@ public class Order extends EntityAuditing {
      * 단방향 매핑
      */
     @JoinColumn(name = "idx_order", nullable = false)
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("idx ASC")
-    List<OrderItem> orderItems = new ArrayList<>();
+    private List<OrderItem> orderItems = new ArrayList<>();
+
+    /**
+     * PG에서 부여하는 결제 고유 id
+     */
+    @Column(name = "receipt_id", nullable = true, length = 255)
+    private String receiptId;
+
+    /**
+     * 결제금액
+     */
+    @Column(name = "payment_cost", nullable = true, columnDefinition = "INT default 0")
+    private Integer paymentCost;
 
     /**
      * 고객이 결제해야 할 요금 반환
@@ -116,7 +128,7 @@ public class Order extends EntityAuditing {
     }
 
     @Builder
-    public Order(Long idx, OrderType orderType, Short boxNumber, Orderer orderer, PaymentInfo paymentInfo, DeliveryDetailSite deliveryDetailSite, LocalDate orderDate, OrderTime orderTime, List<OrderItem> orderItems) {
+    public Order(Long idx, OrderType orderType, Short boxNumber, Orderer orderer, PaymentInfo paymentInfo, DeliveryDetailSite deliveryDetailSite, LocalDate orderDate, OrderTime orderTime, List<OrderItem> orderItems, String receiptId, Integer paymentCost) {
         super.setIdx(idx);
         this.orderType = orderType;
         this.boxNumber = boxNumber;
@@ -126,6 +138,8 @@ public class Order extends EntityAuditing {
         this.orderDate = orderDate;
         this.orderTime = orderTime;
         this.orderItems = orderItems;
+        this.receiptId = receiptId;
+        this.paymentCost = paymentCost;
     }
 
     public void addItem(OrderItem orderItem) {
