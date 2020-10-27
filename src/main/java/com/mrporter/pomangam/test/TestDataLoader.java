@@ -86,7 +86,7 @@ public class TestDataLoader implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        if( ddl.equals("create") ) {
+        if( ddl.equals("create")) {
             run();
         }
     }
@@ -324,13 +324,13 @@ public class TestDataLoader implements ApplicationRunner {
                 2L, 3L, 11, 3_500, 1_000, 300,
                 1);
 
-        product.of(16L,"도시락(S)", ProductType.CUSTOMIZING_2,
+        product.of(16L,"도시락(S)", ProductType.CUSTOMIZING_3,
                 7L, 20L, 1, 3_000, 1_000, 500,
                 1);
-        product.of(17L,"도시락(M)", ProductType.CUSTOMIZING_3,
+        product.of(17L,"도시락(M)", ProductType.CUSTOMIZING_4,
                 7L, 20L, 2, 4_500, 1_000, 500,
                 1);
-        product.of(18L,"도시락(L)", ProductType.CUSTOMIZING_4,
+        product.of(18L,"도시락(L)", ProductType.CUSTOMIZING_5,
                 7L, 20L, 3, 6_000, 1_000, 500,
                 1);
 
@@ -347,6 +347,7 @@ public class TestDataLoader implements ApplicationRunner {
         productSubCategory.of(7L, "선택2", ProductSubType.CUSTOMIZING_SUB);
         productSubCategory.of(8L, "선택3", ProductSubType.CUSTOMIZING_SUB);
         productSubCategory.of(9L, "선택4", ProductSubType.CUSTOMIZING_SUB);
+        productSubCategory.of(10L, "선택5", ProductSubType.CUSTOMIZING_SUB);
 
         /*
          * 서브 제품
@@ -381,8 +382,14 @@ public class TestDataLoader implements ApplicationRunner {
         productSub.of(25L, 1L, 7L, 8L, "무말랭이", "국내산 무말랭이 무침", "300g",5, 0, null, null, Arrays.asList(1));
         productSub.of(26L, 1L, 7L, 8L, "봄나물무침", "향긋한 봄나물", "200g",6, 0, null, null, Arrays.asList(1));
 
-        productSub.of(27L, 1L, 7L, 9L, "간장게장", "테스트", "200g",1, 1000, null, null, Arrays.asList(1));
-        productSub.of(28L, 1L, 7L, 9L, "양념게장", "테스트", "200g",1, 1000, null, null, Arrays.asList(1));
+        productSub.of(27L, 1L, 7L, 9L, "간장게장", "국내산 암게", "200g",1, 1000, null, null, Arrays.asList(1));
+        productSub.of(28L, 1L, 7L, 9L, "양념게장", "국내산 암게", "200g",2, 1000, null, null, Arrays.asList(1));
+
+        productSub.of(29L, 1L, 7L, 10L, "소세지볶음", null, "150g",1, 0, null, null, Arrays.asList(1));
+        productSub.of(30L, 1L, 7L, 10L, "미트볼", "부드러운 미트볼", "150g",2, 0, null, null, Arrays.asList(1));
+        productSub.of(31L, 1L, 7L, 10L, "미니돈까스", "수제 돈까스", "150g",3, 0, null, null, Arrays.asList(1));
+        productSub.of(32L, 1L, 7L, 10L, "새우튀김", "30미 새우", "새우 2개",4, 0, null, null, Arrays.asList(1));
+        productSub.of(33L, 1L, 7L, 10L, "계란후라이", null, null,5, 0, null, null, Arrays.asList(1));
 
 
         /*
@@ -404,9 +411,9 @@ public class TestDataLoader implements ApplicationRunner {
         productSubMapper.of(14L, 1L, 2L, 3L, 5L, 8L, 9L);
         productSubMapper.of(15L, 1L, 2L, 3L, 5L, 8L, 9L);
 
-        productSubMapper.of(16L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L);
-        productSubMapper.of(17L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L, 24L, 25L, 26L);
-        productSubMapper.of(18L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L, 24L, 25L, 26L, 27L, 28L);
+        productSubMapper.of(16L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L, 24L, 25L, 26L);
+        productSubMapper.of(17L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L, 24L, 25L, 26L, 27L, 28L);
+        productSubMapper.of(18L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L, 24L, 25L, 26L, 27L, 28L, 29L, 30L, 31L, 32L, 33L);
 
 
         /*

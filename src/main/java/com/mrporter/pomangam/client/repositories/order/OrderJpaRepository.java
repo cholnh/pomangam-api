@@ -75,6 +75,7 @@ class OrderCustomRepositoryImpl extends QuerydslRepositorySupport implements Ord
         return from(order)
                 .select(order)
                 .where(order.orderer.idxFcmToken.eq(fIdx)
+                        .and(isToday(order.registerDate))
                         .and(order.isActive.isTrue()))
                 .fetchCount();
     }
@@ -85,6 +86,7 @@ class OrderCustomRepositoryImpl extends QuerydslRepositorySupport implements Ord
         return from(order)
                 .select(order)
                 .where(order.orderer.user.phoneNumber.eq(phoneNumber)
+                        .and(isToday(order.registerDate))
                         .and(order.isActive.isTrue()))
                 .fetchCount();
     }

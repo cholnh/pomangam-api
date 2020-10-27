@@ -33,7 +33,7 @@ spring:
         #format_sql: true            # sql 로깅
         # generate_statistics: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
 
   datasource:
     hikari:
