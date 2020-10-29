@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface CommonMapService {
     List<CommonMap> findAllByKey(String key);
+    String findValueByKey(String key);
 }

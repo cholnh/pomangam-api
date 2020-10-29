@@ -43,6 +43,8 @@ public class ProductDto implements Serializable {
 
     private ProductType productType;
 
+    private Boolean isTempActive;
+
     public Product toEntity() {
         Product entity = new ModelMapper().map(this, Product.class);
         return entity;

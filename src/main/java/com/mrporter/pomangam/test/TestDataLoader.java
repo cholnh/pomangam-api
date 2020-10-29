@@ -15,6 +15,7 @@ import com.mrporter.pomangam.test.data.detailsite.DeliveryDetailSiteData;
 import com.mrporter.pomangam.test.data.event.EventData;
 import com.mrporter.pomangam.test.data.faq.FaqCategoryData;
 import com.mrporter.pomangam.test.data.fcmtoken.FcmTokenData;
+import com.mrporter.pomangam.test.data.map.MapData;
 import com.mrporter.pomangam.test.data.notice.NoticeData;
 import com.mrporter.pomangam.test.data.order.OrderData;
 import com.mrporter.pomangam.test.data.ordertime.OrderTimeData;
@@ -80,6 +81,7 @@ public class TestDataLoader implements ApplicationRunner {
     @Autowired StaffData staffData;
     @Autowired StoreOwnerTokenData storeOwnerToken;
     @Autowired FaqCategoryData faqCategory;
+    @Autowired MapData map;
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddl;
@@ -93,6 +95,11 @@ public class TestDataLoader implements ApplicationRunner {
 
     @Transactional
     void run() {
+
+        /*
+         * common map
+         */
+        map.of("boolean_vbank_service_onoff", "false");
 
         /*
          * 지역
@@ -484,19 +491,19 @@ public class TestDataLoader implements ApplicationRunner {
                 1L, 1L, 2, 1L);
         order.of(2L, 2, 1L, LocalDate.now(), 1L, PaymentType.COMMON_CREDIT_CARD, OrderType.ORDER_READY,
                 1L, 1L, 2);
-        order.of(3L, 3, 1L, LocalDate.now(), 2L, PaymentType.PERIODIC_CREDIT_CARD, OrderType.ORDER_READY,
+        order.of(3L, 3, 1L, LocalDate.now(), 2L, PaymentType.COMMON_CREDIT_CARD, OrderType.ORDER_READY,
                 1L, 1L, 1);
-        order.of(4L, 4, 1L, LocalDate.now(), 1L, PaymentType.PERIODIC_CREDIT_CARD, OrderType.DELIVERY_READY,
+        order.of(4L, 4, 1L, LocalDate.now(), 1L, PaymentType.COMMON_CREDIT_CARD, OrderType.DELIVERY_READY,
                 1L, 1L, 1);
-        order.of(5L, 5, 1L, LocalDate.now(), 1L, PaymentType.PERIODIC_CREDIT_CARD, OrderType.ORDER_READY,
+        order.of(5L, 5, 1L, LocalDate.now(), 1L, PaymentType.COMMON_CREDIT_CARD, OrderType.ORDER_READY,
                 1L, 1L, 2);
         order.of(6L, 6, 1L, LocalDate.now(), 2L, PaymentType.COMMON_CREDIT_CARD, OrderType.ORDER_READY,
                 1L, 1L, 1);
         order.of(7L, 7, 1L, LocalDate.now(), 1L, PaymentType.COMMON_CREDIT_CARD, OrderType.DELIVERY_READY,
                 1L, 1L, 1);
-        order.of(8L, 8, 1L, LocalDate.now(), 10L, PaymentType.COMMON_KAKAOPAY, OrderType.ORDER_READY,
+        order.of(8L, 8, 1L, LocalDate.now(), 10L, PaymentType.COMMON_CREDIT_CARD, OrderType.ORDER_READY,
                 3L, 1L, 2);
-        order.of(9L, 9, 1L, LocalDate.now(), 10L, PaymentType.COMMON_KAKAOPAY, OrderType.DELIVERY_READY,
+        order.of(9L, 9, 1L, LocalDate.now(), 10L, PaymentType.COMMON_CREDIT_CARD, OrderType.DELIVERY_READY,
                 4L, 1L, 1);
         order.of(10L, 10, 1L, LocalDate.now(), 10L, PaymentType.COMMON_CREDIT_CARD, OrderType.ORDER_READY,
                 3L, 1L, 1);

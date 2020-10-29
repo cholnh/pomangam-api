@@ -23,6 +23,8 @@ public class ProductSummaryDto implements Serializable {
 
     private ProductType productType;
 
+    private Boolean isTempActive;
+
     public static ProductSummaryDto fromEntity(Product entity) {
         if(entity == null) return null;
         ProductSummaryDto dto = new ModelMapper().map(entity, ProductSummaryDto.class);

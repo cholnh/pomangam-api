@@ -1,18 +1,17 @@
 package com.mrporter.pomangam.client.domains.product;
 
+import com.mrporter.pomangam._bases.annotation.BooleanToYNConverter;
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import com.mrporter.pomangam.client.domains.product.category.ProductCategory;
 import com.mrporter.pomangam.client.domains.product.cost.Cost;
 import com.mrporter.pomangam.client.domains.product.image.ProductImage;
 import com.mrporter.pomangam.client.domains.product.info.ProductInfo;
 import com.mrporter.pomangam.client.domains.product.sub.ProductSubMapper;
-import com.mrporter.pomangam.client.domains.product.sub.category.ProductSubCategory;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -100,6 +99,14 @@ public class Product extends EntityAuditing {
     @Enumerated(EnumType.STRING)
     private ProductType productType;
 
+    /**
+     * 임시 활성화 여부 (Y/N)
+     * 대문자 필수
+     */
+    @Column(name = "is_temp_active", nullable = false, length = 1)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isTempActive;
+
     @PrePersist
     private void prePersist() {
         this.cntLike = 0; // always 0 when its insert
@@ -109,7 +116,7 @@ public class Product extends EntityAuditing {
     }
 
     @Builder
-    public Product(Long idx, Long idxStore, Cost cost, ProductInfo productInfo, ProductCategory productCategory, Integer cntLike, Integer cntReply, Integer cntOrder, Integer sequence, List<ProductImage> images, List<ProductSubMapper> subs, ProductType productType) {
+    public Product(Long idx, Long idxStore, Cost cost, ProductInfo productInfo, ProductCategory productCategory, Integer cntLike, Integer cntReply, Integer cntOrder, Integer sequence, List<ProductImage> images, List<ProductSubMapper> subs, ProductType productType, Boolean isTempActive) {
         super.setIdx(idx);
         this.idxStore = idxStore;
         this.cost = cost;
@@ -122,6 +129,7 @@ public class Product extends EntityAuditing {
         this.images = images;
         this.subs = subs;
         this.productType = productType;
+        this.isTempActive = isTempActive;
     }
 
     public void addImage(ProductImage productImage) {

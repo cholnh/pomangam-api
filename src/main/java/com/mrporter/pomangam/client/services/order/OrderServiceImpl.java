@@ -25,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -70,6 +71,31 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderResponseDto> findTodayByPhoneNumber(String phoneNumber, Pageable pageable) {
         return OrderResponseDto.fromEntities(orderRepo.findTodayByPhoneNumber(phoneNumber, pageable));
+    }
+
+    public List<OrderResponseDto> findAllByIdxStore(Long sIdx, Long dIdx, Long ddIdx, Long otIdx, LocalDate oDate, Long last, Pageable pageable) {
+        // ddIdx
+        if(ddIdx != null) {
+            if(otIdx != null) {
+                return OrderResponseDto.fromEntities(orderRepo.findAllByIdxStoreAndIdxDetailDeliverySiteAndIdxOrderTime(sIdx, ddIdx, otIdx, oDate, last, pageable));
+            } else {
+                return OrderResponseDto.fromEntities(orderRepo.findAllByIdxStoreAndIdxDetailDeliverySite(sIdx, ddIdx, oDate, last, pageable));
+            }
+        }
+        // dIdx
+        if(dIdx != null) {
+            if(otIdx != null) {
+                return OrderResponseDto.fromEntities(orderRepo.findAllByIdxStoreAndIdxDeliverySiteAndIdxOrderTime(sIdx, dIdx, otIdx, oDate, last, pageable));
+            } else {
+                return OrderResponseDto.fromEntities(orderRepo.findAllByIdxStoreAndIdxDeliverySite(sIdx, dIdx, oDate, last, pageable));
+            }
+        }
+        // 전체
+        if(otIdx != null) {
+            return OrderResponseDto.fromEntities(orderRepo.findAllByIdxStoreAndIdxOrderTime(sIdx, otIdx, oDate, last, pageable));
+        } else {
+            return OrderResponseDto.fromEntities(orderRepo.findAllByIdxStore(sIdx, oDate, last, pageable));
+        }
     }
 
     public long countByIdxFcmToken(Long fIdx) {

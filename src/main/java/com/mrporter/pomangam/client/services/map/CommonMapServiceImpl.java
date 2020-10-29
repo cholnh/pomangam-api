@@ -17,4 +17,14 @@ public class CommonMapServiceImpl implements CommonMapService {
     public List<CommonMap> findAllByKey(String key) {
         return commonMapRepo.findByKeyAndIsActiveIsTrue(key);
     }
+
+    @Override
+    public String findValueByKey(String key) {
+        List<CommonMap> maps = commonMapRepo.findByKeyAndIsActiveIsTrue(key);
+        if(maps == null || maps.isEmpty()) {
+            return null;
+        } else {
+            return maps.get(0).getValue();
+        }
+    }
 }

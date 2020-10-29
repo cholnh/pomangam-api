@@ -8,6 +8,7 @@ import com.mrporter.pomangam.client.domains.vbank.VBankStatus;
 import com.mrporter.pomangam.client.repositories.order.OrderJpaRepository;
 import com.mrporter.pomangam.client.repositories.vbank.VBankDepositJpaRepository;
 import com.mrporter.pomangam.client.repositories.vbank.VBankReadyJpaRepository;
+import com.mrporter.pomangam.client.services.map.CommonMapServiceImpl;
 import com.mrporter.pomangam.client.services.order.OrderServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,11 +42,11 @@ public class VBankServiceImpl implements VBankService {
     VBankReadyJpaRepository vBankReadyRepo;
     OrderServiceImpl orderService;
     OrderJpaRepository orderRepo;
+    CommonMapServiceImpl commonMapService;
 
     @Transactional
     public void autoCheckDeposit(boolean isForceUpdate) {
-
-        try {
+        if(isOnService()) {
             if(!isForceUpdate && isReadyEmpty()) return;
             List<VBankDepositDto> deposits = parseVBank();
 
@@ -53,20 +54,24 @@ public class VBankServiceImpl implements VBankService {
                 VBankDeposit saved = vBankDepositRepo.save(deposits.get(i).toEntity());
                 checkVBank(saved);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
     }
 
     @Transactional
     public void clearOldReady() {
-        log.info("clearOldReady");
-        vBankReadyRepo.deleteByRegisterDateBefore(LocalDateTime.now().minusDays(2));
+        if(isOnService()) {
+            log.info("clearOldReady");
+            vBankReadyRepo.deleteByRegisterDateBefore(LocalDateTime.now().minusDays(2));
+        }
     }
 
     private boolean isReadyEmpty() {
         return vBankReadyRepo.count() == 0;
+    }
+
+    private boolean isOnService() {
+        String val = commonMapService.findValueByKey("boolean_vbank_service_onoff");
+        return val.toLowerCase().equals("true");
     }
 
     private void checkVBank(VBankDeposit deposit) {

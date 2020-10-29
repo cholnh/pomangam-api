@@ -4,9 +4,11 @@ import com.mrporter.pomangam.client.domains.order.Order;
 import com.mrporter.pomangam.client.domains.order.OrderType;
 import com.mrporter.pomangam.client.domains.order.QOrder;
 import com.mrporter.pomangam.client.domains.order.item.QOrderItem;
-import com.mrporter.pomangam.client.domains.payment.PaymentType;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.DatePath;
 import com.querydsl.core.types.dsl.DateTimePath;
+import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -60,6 +62,12 @@ interface OrderCustomRepository {
     long countByIdxFcmToken(Long fIdx);
     long countByPhoneNumber(String phoneNumber);
 
+    List<Order> findAllByIdxStoreAndIdxDeliverySiteAndIdxOrderTime(Long sIdx, Long dIdx, Long otIdx, LocalDate oDate, Long last, Pageable pageable);
+    List<Order> findAllByIdxStoreAndIdxDeliverySite(Long sIdx, Long dIdx, LocalDate oDate, Long last, Pageable pageable);
+    List<Order> findAllByIdxStoreAndIdxDetailDeliverySiteAndIdxOrderTime(Long sIdx, Long ddIdx, Long otIdx, LocalDate oDate, Long last, Pageable pageable);
+    List<Order> findAllByIdxStoreAndIdxDetailDeliverySite(Long sIdx, Long ddIdx, LocalDate oDate, Long last, Pageable pageable);
+    List<Order> findAllByIdxStoreAndIdxOrderTime(Long sIdx, Long otIdx, LocalDate oDate, Long last, Pageable pageable);
+    List<Order> findAllByIdxStore(Long sIdx, LocalDate oDate, Long last, Pageable pageable);
 }
 
 @Transactional(readOnly = true)
@@ -67,6 +75,152 @@ class OrderCustomRepositoryImpl extends QuerydslRepositorySupport implements Ord
 
     public OrderCustomRepositoryImpl() {
         super(Order.class);
+    }
+
+    @Override
+    public List<Order> findAllByIdxStoreAndIdxDeliverySiteAndIdxOrderTime(Long sIdx, Long dIdx, Long otIdx, LocalDate oDate, Long last, Pageable pageable) {
+        QOrder order = QOrder.order;
+        QOrderItem orderItem = QOrderItem.orderItem;
+
+        BooleanExpression where = orderItem.store.idx.eq(sIdx)
+                .and(order.deliveryDetailSite.deliverySite.idx.eq(dIdx))
+                .and(order.orderTime.idx.eq(otIdx))
+                .and(isSameDay(order.orderDate, oDate))
+                .and(order.isActive.isTrue());
+
+        if(last != null) {
+            where = where.and(order.idx.gt(last));
+        }
+
+        return from(order)
+                .select(order)
+                .leftJoin(order.orderItems, orderItem)
+                .where(where)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(order.boxNumber.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<Order> findAllByIdxStoreAndIdxDeliverySite(Long sIdx, Long dIdx, LocalDate oDate, Long last, Pageable pageable) {
+        QOrder order = QOrder.order;
+        QOrderItem orderItem = QOrderItem.orderItem;
+
+        BooleanExpression where = orderItem.store.idx.eq(sIdx)
+                .and(order.deliveryDetailSite.deliverySite.idx.eq(dIdx))
+                .and(isSameDay(order.orderDate, oDate))
+                .and(order.isActive.isTrue());
+
+        if(last != null) {
+            where = where.and(order.idx.gt(last));
+        }
+
+        return from(order)
+                .select(order)
+                .leftJoin(order.orderItems, orderItem)
+                .where(where)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(order.orderTime.idx.desc(), order.boxNumber.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<Order> findAllByIdxStoreAndIdxDetailDeliverySite(Long sIdx, Long ddIdx, LocalDate oDate, Long last, Pageable pageable) {
+        QOrder order = QOrder.order;
+        QOrderItem orderItem = QOrderItem.orderItem;
+
+        BooleanExpression where = orderItem.store.idx.eq(sIdx)
+                .and(order.deliveryDetailSite.idx.eq(ddIdx))
+                .and(isSameDay(order.orderDate, oDate))
+                .and(order.isActive.isTrue());
+
+        if(last != null) {
+            where = where.and(order.idx.gt(last));
+        }
+
+        return from(order)
+                .select(order)
+                .leftJoin(order.orderItems, orderItem)
+                .where(where)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(order.orderTime.idx.desc(), order.boxNumber.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<Order> findAllByIdxStoreAndIdxDetailDeliverySiteAndIdxOrderTime(Long sIdx, Long ddIdx, Long otIdx, LocalDate oDate, Long last, Pageable pageable) {
+        QOrder order = QOrder.order;
+        QOrderItem orderItem = QOrderItem.orderItem;
+
+        BooleanExpression where = orderItem.store.idx.eq(sIdx)
+                .and(order.deliveryDetailSite.idx.eq(ddIdx))
+                .and(order.orderTime.idx.eq(otIdx))
+                .and(isSameDay(order.orderDate, oDate))
+                .and(order.isActive.isTrue());
+
+        if(last != null) {
+            where = where.and(order.idx.gt(last));
+        }
+
+        return from(order)
+                .select(order)
+                .leftJoin(order.orderItems, orderItem)
+                .where(where)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(order.boxNumber.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<Order> findAllByIdxStoreAndIdxOrderTime(Long sIdx, Long otIdx, LocalDate oDate, Long last, Pageable pageable) {
+        QOrder order = QOrder.order;
+        QOrderItem orderItem = QOrderItem.orderItem;
+
+        BooleanExpression where = orderItem.store.idx.eq(sIdx)
+                .and(order.orderTime.idx.eq(otIdx))
+                .and(isSameDay(order.orderDate, oDate))
+                .and(order.isActive.isTrue());
+
+        if(last != null) {
+            where = where.and(order.idx.gt(last));
+        }
+
+        return from(order)
+                .select(order)
+                .leftJoin(order.orderItems, orderItem)
+                .where(where)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(order.deliveryDetailSite.sequence.desc(), order.boxNumber.desc())
+                .fetch();
+    }
+
+
+    @Override
+    public List<Order> findAllByIdxStore(Long sIdx, LocalDate oDate, Long last, Pageable pageable) {
+        QOrder order = QOrder.order;
+        QOrderItem orderItem = QOrderItem.orderItem;
+
+        BooleanExpression where = orderItem.store.idx.eq(sIdx)
+                .and(isSameDay(order.orderDate, oDate))
+                .and(order.isActive.isTrue());
+
+        if(last != null) {
+            where = where.and(order.idx.gt(last));
+        }
+
+        return from(order)
+                .select(order)
+                .leftJoin(order.orderItems, orderItem)
+                .where(where)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(order.deliveryDetailSite.sequence.desc(), order.orderTime.idx.desc(), order.boxNumber.desc())
+                .fetch();
     }
 
     @Override
@@ -158,6 +312,12 @@ class OrderCustomRepositoryImpl extends QuerydslRepositorySupport implements Ord
         return dt.year().eq(now.getYear())
                 .and(dt.month().eq(now.getMonthValue())
                 .and(dt.dayOfMonth().eq(now.getDayOfMonth())));
+    }
+
+    private BooleanExpression isSameDay(DatePath<LocalDate> dt1, LocalDate dt2) {
+        return dt1.year().eq(dt2.getYear())
+                .and(dt1.month().eq(dt2.getMonthValue())
+                        .and(dt1.dayOfMonth().eq(dt2.getDayOfMonth())));
     }
 
     @Override

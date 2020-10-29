@@ -1,8 +1,8 @@
 package com.mrporter.pomangam.client.domains.product.sub;
 
+import com.mrporter.pomangam._bases.annotation.BooleanToYNConverter;
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import com.mrporter.pomangam.client.domains.product.cost.Cost;
-import com.mrporter.pomangam.client.domains.product.info.ProductInfo;
 import com.mrporter.pomangam.client.domains.product.sub.category.ProductSubCategory;
 import com.mrporter.pomangam.client.domains.product.sub.image.ProductSubImage;
 import com.mrporter.pomangam.client.domains.product.sub.info.ProductSubInfo;
@@ -93,6 +93,14 @@ public class ProductSub extends EntityAuditing {
     @OneToMany(mappedBy = "productSub", fetch = FetchType.LAZY)
     private List<ProductSubMapper> products = new ArrayList<>();
 
+    /**
+     * 임시 활성화 여부 (Y/N)
+     * 대문자 필수
+     */
+    @Column(name = "is_temp_active", nullable = false, length = 1)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isTempActive;
+
     @PrePersist
     private void prePersist() {
         this.numberMinimum = numberMinimum == null
@@ -106,7 +114,7 @@ public class ProductSub extends EntityAuditing {
     }
 
     @Builder
-    public ProductSub(Long idx, Long idxStore, Cost cost, ProductSubInfo productSubInfo, Integer cntOrder, Integer sequence, List<ProductSubImage> images, ProductSubCategory productSubCategory, Integer numberMinimum, Integer numberMaximum, List<ProductSubMapper> products) {
+    public ProductSub(Long idx, Long idxStore, Cost cost, ProductSubInfo productSubInfo, Integer cntOrder, Integer sequence, List<ProductSubImage> images, ProductSubCategory productSubCategory, Integer numberMinimum, Integer numberMaximum, List<ProductSubMapper> products, Boolean isTempActive) {
         super.setIdx(idx);
         this.idxStore = idxStore;
         this.cost = cost;
@@ -118,6 +126,7 @@ public class ProductSub extends EntityAuditing {
         this.numberMinimum = numberMinimum;
         this.numberMaximum = numberMaximum;
         this.products = products;
+        this.isTempActive = isTempActive;
     }
 
     public void addImage(ProductSubImage productSubImage) {

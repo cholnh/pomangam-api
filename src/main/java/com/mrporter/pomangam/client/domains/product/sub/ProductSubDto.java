@@ -30,6 +30,8 @@ public class ProductSubDto implements Serializable {
     private String productImageMainPath;
     private List<String> productImageSubPaths = new ArrayList<>();
 
+    private Boolean isTempActive;
+
     public ProductSub toEntity() {
         ProductSub entity = new ModelMapper().map(this, ProductSub.class);
         return entity;

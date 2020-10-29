@@ -130,25 +130,6 @@ public class OrderController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_STORE_OWNER', 'ROLE_ADMIN', 'ROLE_STAFF'))")
-    @PostMapping("/{oIdx}/approve")
-    public ResponseEntity<?> approve(
-            @PathVariable(value = "oIdx", required = true) Long oIdx
-    ) {
-        orderService.approve(oIdx);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_STORE_OWNER', 'ROLE_ADMIN', 'ROLE_STAFF'))")
-    @PostMapping("/{oIdx}/disapprove")
-    public ResponseEntity<?> disapprove(
-            @PathVariable(value = "oIdx", required = true) Long oIdx,
-            @RequestParam(value = "reason", required = false) String reason
-    ) {
-        orderService.disapprove(oIdx, reason);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{oIdx}/paymentfail")
     public ResponseEntity<?> paymentFail(
@@ -164,35 +145,6 @@ public class OrderController {
             @PathVariable(value = "oIdx", required = true) Long oIdx
     ) {
         orderService.cancel(oIdx);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_STORE_OWNER', 'ROLE_ADMIN', 'ROLE_STAFF'))")
-    @PostMapping("/{oIdx}/deliveries/pickup")
-    public ResponseEntity<?> deliveryPickup(
-            @PathVariable(value = "oIdx", required = true) Long oIdx
-    ) {
-        orderService.deliveryPickup(oIdx);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_STORE_OWNER', 'ROLE_ADMIN', 'ROLE_STAFF'))")
-    @PostMapping("/{oIdx}/deliveries/delay")
-    public ResponseEntity<?> deliveryDelay(
-            @PathVariable(value = "oIdx", required = true) Long oIdx,
-            @RequestParam(value = "min", required = true) Integer min,
-            @RequestParam(value = "reason", required = false) String reason
-    ) {
-        orderService.deliveryDelay(oIdx, min, reason);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_STORE_OWNER', 'ROLE_ADMIN', 'ROLE_STAFF'))")
-    @PostMapping("/{oIdx}/deliveries/success")
-    public ResponseEntity<?> deliverySuccess(
-            @PathVariable(value = "oIdx", required = true) Long oIdx
-    ) {
-        orderService.deliverySuccess(oIdx);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

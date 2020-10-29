@@ -20,11 +20,4 @@ public class OrderTimeController {
     ) {
         return new ResponseEntity(orderTimeService.findByIdxDeliverySite(dIdx), HttpStatus.OK);
     }
-
-    @GetMapping("/stores/{sIdx}/ordertimes")
-    public ResponseEntity<?> findByIdxDeliverySiteAndIdxStore(
-            @PathVariable(value = "sIdx", required = true) Long sIdx
-    ) {
-        return new ResponseEntity(orderTimeService.findByIdxStore(sIdx), HttpStatus.OK);
-    }
 }
