@@ -28,34 +28,34 @@ public class ImagePath {
 
     /**
      * 업체
-     * C:/assets/images/dsites/{dIdx}/stores/{sIdx}/
+     * C:/assets/images/stores/{sIdx}/
      */
-    public static String stores(Long dIdx, Long sIdx) {
-        return "assets/images/dsites/" + dIdx + "/stores/" + sIdx + "/";
+    public static String stores(Long sIdx) {
+        return "assets/images/stores/" + sIdx + "/";
     }
 
     /**
      * 제픔
-     * C:/assets/images/dsites/{dIdx}/stores/{sIdx}/products/{pIdx}
+     * C:/assets/images/stores/{sIdx}/products/{pIdx}
      */
-    public static String products(Long dIdx, Long sIdx, Long pIdx) {
-        return "assets/images/dsites/" + dIdx + "/stores/" + sIdx + "/products/" + pIdx + "/";
+    public static String products(Long sIdx, Long pIdx) {
+        return "assets/images/stores/" + sIdx + "/products/" + pIdx + "/";
     }
 
     /**
      * 서브 제품
-     * C:/assets/images/dsites/{dIdx}/stores/{sIdx}/subs/{subIdx}
+     * C:/assets/images/stores/{sIdx}/subs/{subIdx}
      */
-    public static String subs(Long dIdx, Long sIdx, Long subIdx) {
-        return "assets/images/dsites/" + dIdx + "/stores/" + sIdx + "/subs/" + subIdx + "/";
+    public static String subs(Long sIdx, Long subIdx) {
+        return "assets/images/stores/" + sIdx + "/subs/" + subIdx + "/";
     }
 
     /**
      * 업체 리뷰
-     * C:/assets/images/dsites/{dIdx}/stores/{sIdx}/reviews/{rIdx}/
+     * C:/assets/images/stores/{sIdx}/reviews/{rIdx}/
      */
-    public static String reviews(Long dIdx, Long sIdx, Long rIdx) {
-        return "assets/images/dsites/" + dIdx + "/stores/" + sIdx + "/reviews/" + rIdx + "/";
+    public static String reviews(Long sIdx, Long rIdx) {
+        return "assets/images/stores/" + sIdx + "/reviews/" + rIdx + "/";
     }
 
     /**

@@ -15,7 +15,6 @@ import com.mrporter.pomangam.client.repositories.store.review.StoreReviewJpaRepo
 import com.mrporter.pomangam.client.repositories.store.review.like.StoreReviewLikeJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.UserJpaRepository;
 import com.mrporter.pomangam.client.services._bases.ImagePath;
-import com.mrporter.pomangam.client.services.order.exception.OrderException;
 import com.mrporter.pomangam.client.services.store.review.reply.StoreReviewReplyServiceImpl;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
@@ -67,7 +66,7 @@ public class StoreReviewServiceImpl implements StoreReviewService {
 
         // 리뷰 이미지 저장
         if(images != null) {
-            String imagePath = ImagePath.reviews(dto.getIdxDeliverySite(), dto.getIdxStore(), entity.getIdx());
+            String imagePath = ImagePath.reviews(dto.getIdxStore(), entity.getIdx());
             List<StoreReviewImage> savedImages = saveImage(imagePath, images);
             entity.addImages(savedImages);
         }
@@ -94,7 +93,7 @@ public class StoreReviewServiceImpl implements StoreReviewService {
         boolean isImageUpdated = dto.getIsImageUpdated() != null && dto.getIsImageUpdated().booleanValue();
         if(isImageUpdated) {
             // 기존 이미지 파일 삭제
-            String imagePath = ImagePath.reviews(dto.getIdxDeliverySite(), dto.getIdxStore(), dto.getIdx());
+            String imagePath = ImagePath.reviews(dto.getIdxStore(), dto.getIdx());
             fileStorageService.deleteFile(imagePath, true);
             entity.clearImages();
 
@@ -117,7 +116,7 @@ public class StoreReviewServiceImpl implements StoreReviewService {
         storeReviewRepo.deleteById(idx);
 
         // 리뷰 이미지 삭제
-        String imagePath = ImagePath.reviews(dIdx, sIdx, idx);
+        String imagePath = ImagePath.reviews(sIdx, idx);
         fileStorageService.deleteFile(imagePath, true);
     }
 

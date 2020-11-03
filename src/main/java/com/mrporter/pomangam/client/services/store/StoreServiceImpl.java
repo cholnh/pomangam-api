@@ -33,7 +33,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public List<StoreDto> findByIdxDeliverySite(Long dIdx, Pageable pageable) {
-        List<Store> stores = storeRepo.findByIdxDeliverySiteAndIsActiveIsTrueOrderBySequenceAsc(dIdx, pageable).getContent();
+        List<Store> stores = storeRepo.findByIdxDeliverySite(dIdx, pageable);
         return StoreDto.fromEntities(stores);
     }
 

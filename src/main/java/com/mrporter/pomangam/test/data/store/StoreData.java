@@ -48,7 +48,6 @@ public class StoreData {
                         .isOpening(true)
                         .pauseDescription("임시휴무")
                         .build())
-                .idxDeliverySite(dIdx)
                 .avgStar(avgStar)
                 .cntLike(cntLike)
                 .cntReview(cntComment)
@@ -59,13 +58,13 @@ public class StoreData {
 
         // image
         StoreImage storeBrandImage = StoreImage.builder()
-                .imagePath(ImagePath.stores(dIdx, idx) + "brand.png")
+                .imagePath(ImagePath.stores(idx) + "brand.png")
                 .imageType(StoreImageType.BRAND)
                 .build();
         store.addImages(storeBrandImage);
         for(int i=0; i<imagePaths.size(); i++) {
             StoreImage storeImage = StoreImage.builder()
-                    .imagePath(ImagePath.stores(dIdx, idx) + (imagePaths.get(i)) + ".png")
+                    .imagePath(ImagePath.stores(idx) + (imagePaths.get(i)) + ".png")
                     .imageType(i==0 ? StoreImageType.MAIN : StoreImageType.SUB)
                     .sequence(i+1)
                     .build();
@@ -79,11 +78,11 @@ public class StoreData {
                     .build();
             storeStory.addImages(
                     StoreStoryImage.builder()
-                            .imagePath(ImagePath.reviews(dIdx, idx, 1L)+"1.jpg")
+                            .imagePath(ImagePath.reviews(idx, 1L)+"1.jpg")
                             .sequence(1)
                             .build(),
                     StoreStoryImage.builder()
-                            .imagePath(ImagePath.reviews(dIdx, idx, 1L)+"2.jpg")
+                            .imagePath(ImagePath.reviews(idx, 1L)+"2.jpg")
                             .sequence(2)
                             .build());
             store.addStories(storeStory);

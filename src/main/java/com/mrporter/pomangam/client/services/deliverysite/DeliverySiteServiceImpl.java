@@ -21,6 +21,11 @@ public class DeliverySiteServiceImpl implements DeliverySiteService {
         return DeliverySiteDto.fromEntities(deliverySites);
     }
 
+    public List<DeliverySiteDto> findAllByIdxStore(Long sIdx) {
+        List<DeliverySite> deliverySites = deliverySiteRepo.findAllByIdxStore(sIdx);
+        return DeliverySiteDto.fromEntities(deliverySites);
+    }
+
     @Override
     public DeliverySiteDto findByIdx(Long dIdx) {
         DeliverySite entity = deliverySiteRepo.findByIdxAndIsActiveIsTrue(dIdx);

@@ -26,13 +26,6 @@ import java.util.List;
 public class Store extends EntityAuditing {
 
     /**
-     * 배달지 인덱스
-     * cf. (업체와 배달지는 서로)에그리거트 단위를 벗어남 -> 불필요한 객체탐색이 포함됨 -> 연관관계 끊음
-     */
-    @Column(name = "idx_delivery_site", nullable = false)
-    private Long idxDeliverySite;
-
-    /**
      * 업체 분류
      */
     @JoinColumn(name = "idx_store_category")
@@ -124,9 +117,8 @@ public class Store extends EntityAuditing {
     }
 
     @Builder
-    public Store(Long idx, Long idxDeliverySite, StoreCategory storeCategory, StoreInfo storeInfo, ProductionInfo productionInfo, StoreSchedule storeSchedule, Float avgStar, Integer cntLike, Integer cntReview, Integer cntOrder, Integer sequence, List<StoreImage> images, List<ProductCategory> productCategories, List<StoreStory> stories) {
+    public Store(Long idx, StoreCategory storeCategory, StoreInfo storeInfo, ProductionInfo productionInfo, StoreSchedule storeSchedule, Float avgStar, Integer cntLike, Integer cntReview, Integer cntOrder, Integer sequence, List<StoreImage> images, List<ProductCategory> productCategories, List<StoreStory> stories) {
         super.setIdx(idx);
-        this.idxDeliverySite = idxDeliverySite;
         this.storeCategory = storeCategory;
         this.storeInfo = storeInfo;
         this.productionInfo = productionInfo;

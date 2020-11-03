@@ -46,7 +46,7 @@ public class ProductData {
         for(int i=0; i<idxesImage.length; i++) {
             int idxImage = idxesImage[i];
             ProductImage productImage = ProductImage.builder()
-                    .imagePath(ImagePath.products(1L, sIdx, idx)+idxImage+".jpg")
+                    .imagePath(ImagePath.products(sIdx, idx)+idxImage+".jpg")
                     .imageType(i==0 ? ProductImageType.MAIN : ProductImageType.SUB)
                     .sequence(i+1)
                     .build();

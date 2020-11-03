@@ -42,7 +42,7 @@ public class ProductSubData {
         // image
         for(int i=0; i<imagePaths.size(); i++) {
             ProductSubImage productSubImage = ProductSubImage.builder()
-                    .imagePath(ImagePath.subs(dIdx, sIdx, idx) + (imagePaths.get(i)) + ".jpg")
+                    .imagePath(ImagePath.subs(sIdx, idx) + (imagePaths.get(i)) + ".jpg")
                     .imageType(i==0 ? ProductSubImageType.MAIN : ProductSubImageType.SUB)
                     .sequence(i+1)
                     .build();

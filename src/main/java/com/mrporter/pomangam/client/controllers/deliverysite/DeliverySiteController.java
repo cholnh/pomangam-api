@@ -21,9 +21,14 @@ public class DeliverySiteController {
 
     @GetMapping
     public ResponseEntity<List<DeliverySiteDto>> findAll(
+            @RequestParam(value = "sIdx", required = false) Long sIdx,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, page = 0, size = 10) Pageable pageable
     ) {
-        return new ResponseEntity(deliverySiteService.findAll(pageable), HttpStatus.OK);
+        if(sIdx == null) {
+            return new ResponseEntity(deliverySiteService.findAll(pageable), HttpStatus.OK);
+        } else {
+            return new ResponseEntity(deliverySiteService.findAllByIdxStore(sIdx), HttpStatus.OK);
+        }
     }
 
     @GetMapping("/{idx}")

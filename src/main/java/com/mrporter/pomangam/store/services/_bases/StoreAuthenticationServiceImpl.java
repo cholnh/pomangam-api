@@ -20,7 +20,7 @@ public class StoreAuthenticationServiceImpl implements StoreAuthenticationServic
         }
         if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_STORE_OWNER"))) {
             Owner owner = ownerRepo.findByIdAndIsActiveIsTrue(auth.getName());
-            if(owner.getIdx().equals(sIdx)) {
+            if(owner.getIdxStore().equals(sIdx)) {
                 return true;
             }
         }

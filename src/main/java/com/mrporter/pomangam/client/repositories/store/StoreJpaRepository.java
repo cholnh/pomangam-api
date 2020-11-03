@@ -3,30 +3,24 @@ package com.mrporter.pomangam.client.repositories.store;
 import com.mrporter.pomangam.client.domains.ordertime.QOrderTime;
 import com.mrporter.pomangam.client.domains.ordertime.QOrderTimeMapper;
 import com.mrporter.pomangam.client.domains.store.QStore;
+import com.mrporter.pomangam.client.domains.store.QStoreMapper;
 import com.mrporter.pomangam.client.domains.store.SortType;
 import com.mrporter.pomangam.client.domains.store.Store;
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.SimplePath;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.*;
 import java.util.List;
-import java.util.Optional;
 
 
 @RepositoryRestResource(exported = false)
 public interface StoreJpaRepository extends JpaRepository<Store, Long>, StoreCustomRepository {
-    Page<Store> findByIdxDeliverySiteAndIsActiveIsTrueOrderBySequenceAsc(Long dIdx, Pageable pageable);
+    // Page<Store> findByIdxDeliverySiteAndIsActiveIsTrueOrderBySequenceAsc(Long dIdx, Pageable pageable);
     Store findByIdxAndIsActiveIsTrue(Long idx);
     long countByIsActiveIsTrue();
 }
@@ -45,6 +39,8 @@ interface StoreCustomRepository {
     Page<Store> findStoreByIdxOrderTimeAndIdxDeliverySiteAndIsActiveIsTrue(Long oIdx, Long dIdx, Pageable pageable, SortType sortType);
 
     long countByIdxOrderTimeAndIdxDeliverySiteAndIsActiveIsTrue(Long oIdx, Long dIdx);
+
+    List<Store> findByIdxDeliverySite(Long dIdx, Pageable pageable);
 }
 
 @Transactional(readOnly = true)
@@ -55,19 +51,36 @@ class StoreCustomRepositoryImpl extends QuerydslRepositorySupport implements Sto
     }
 
     @Override
+    public List<Store> findByIdxDeliverySite(Long dIdx, Pageable pageable) {
+        final QStoreMapper storeMapper = QStoreMapper.storeMapper;
+        final QStore store = QStore.store;
+        return from(store)
+                .select(store)
+                .join(storeMapper).on(store.idx.eq(storeMapper.store.idx))
+                .where(storeMapper.deliverySite.idx.eq(dIdx)
+                        .and(storeMapper.isActive.isTrue())
+                        .and(storeMapper.deliverySite.isActive.isTrue())
+                        .and(store.isActive.isTrue())
+                        .and(storeMapper.deliverySite.idx.eq(dIdx)))
+                .orderBy(store.sequence.asc())
+                .fetch();
+    }
+
+    @Override
     public Page<Store> findStoreByIdxOrderTimeAndIdxDeliverySiteAndIsActiveIsTrue(Long oIdx, Long dIdx, Pageable pageable, SortType sortType) {
         final QOrderTimeMapper mapper = QOrderTimeMapper.orderTimeMapper;
         final QOrderTime orderTime = QOrderTime.orderTime;
-
+        final QStoreMapper storeMapper = QStoreMapper.storeMapper;
         JPQLQuery<Store> query =
                 from(orderTime)
                 .select(mapper.store)
                 .join(mapper).on(orderTime.idx.eq(mapper.orderTime.idx))
+                .join(storeMapper).on(mapper.store.idx.eq(storeMapper.store.idx))
                 .where(mapper.orderTime.idx.eq(oIdx)
                 .and(mapper.isActive.isTrue())
                 .and(mapper.store.isActive.isTrue())
                 .and(orderTime.isActive.isTrue())
-                .and(mapper.store.idxDeliverySite.eq(dIdx)))
+                .and(storeMapper.deliverySite.idx.eq(dIdx)))
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset());
 
@@ -92,15 +105,16 @@ class StoreCustomRepositoryImpl extends QuerydslRepositorySupport implements Sto
     public long countByIdxOrderTimeAndIdxDeliverySiteAndIsActiveIsTrue(Long oIdx, Long dIdx) {
         final QOrderTimeMapper mapper = QOrderTimeMapper.orderTimeMapper;
         final QOrderTime orderTime = QOrderTime.orderTime;
-
+        final QStoreMapper storeMapper = QStoreMapper.storeMapper;
         return from(orderTime)
             .select(mapper.store.count())
             .join(mapper).on(orderTime.idx.eq(mapper.orderTime.idx))
+            .join(storeMapper).on(mapper.store.idx.eq(storeMapper.store.idx))
             .where(mapper.orderTime.idx.eq(oIdx)
             .and(mapper.isActive.isTrue())
             .and(mapper.store.isActive.isTrue())
             .and(orderTime.isActive.isTrue())
-            .and(mapper.store.idxDeliverySite.eq(dIdx)))
+            .and(storeMapper.deliverySite.idx.eq(dIdx)))
             .fetchFirst();
     }
 }

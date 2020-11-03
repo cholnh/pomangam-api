@@ -19,6 +19,7 @@ import com.mrporter.pomangam.test.data.map.MapData;
 import com.mrporter.pomangam.test.data.notice.NoticeData;
 import com.mrporter.pomangam.test.data.order.OrderData;
 import com.mrporter.pomangam.test.data.ordertime.OrderTimeData;
+import com.mrporter.pomangam.test.data.ordertimeDsiteMapper.OrderTimeDeliverySiteMapperData;
 import com.mrporter.pomangam.test.data.ordertimeMapper.OrderTimeMapperData;
 import com.mrporter.pomangam.test.data.point.PointLogData;
 import com.mrporter.pomangam.test.data.point.PointRankData;
@@ -32,6 +33,7 @@ import com.mrporter.pomangam.test.data.region.RegionData;
 import com.mrporter.pomangam.test.data.staff.StaffData;
 import com.mrporter.pomangam.test.data.store.StoreData;
 import com.mrporter.pomangam.test.data.storeCategory.StoreCategoryData;
+import com.mrporter.pomangam.test.data.storeMapper.StoreMapperData;
 import com.mrporter.pomangam.test.data.storeOwner.StoreOwnerData;
 import com.mrporter.pomangam.test.data.storeOwner.StoreOwnerTokenData;
 import com.mrporter.pomangam.test.data.storeReview.StoreReviewData;
@@ -82,6 +84,8 @@ public class TestDataLoader implements ApplicationRunner {
     @Autowired StoreOwnerTokenData storeOwnerToken;
     @Autowired FaqCategoryData faqCategory;
     @Autowired MapData map;
+    @Autowired StoreMapperData storeMapper;
+    @Autowired OrderTimeDeliverySiteMapperData orderTimeDeliverySiteMapper;
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddl;
@@ -112,10 +116,10 @@ public class TestDataLoader implements ApplicationRunner {
         /*
          * 배달지
          */
-        deliverySite.of(1L, "한국항공대", DeliveryType.BUNDLE,1L, "본캠", "경기도 고양시 덕양구 항공대학로 76");
-        deliverySite.of(2L, "연세대", DeliveryType.BUNDLE,1L, "미래캠", "강원도 원주시 연세대길 1");
-        deliverySite.of(3L, "탄현 풍림아파트 14단지", DeliveryType.BUNDLE,1L, "14단지", "경기도 고양시 탄현로 143-32");
-        deliverySite.of(4L, "탄현 풍림아파트 15단지", DeliveryType.BUNDLE,1L, "15단지", "경기도 고양시 탄현로 143-32");
+        deliverySite.of(1L, "한국항공대 본캠", DeliveryType.BUNDLE,1L, "본캠", "경기도 고양시 덕양구 항공대학로 76");
+        deliverySite.of(2L, "연세대 미래캠", DeliveryType.BUNDLE,1L, "미래캠", "강원도 원주시 연세대길 1");
+        deliverySite.of(3L, "한국경제신문사 빌딩", DeliveryType.BUNDLE,1L, "", "서울 중구 청파로 463 한국경제신문사");
+        deliverySite.of(4L, "28청춘 창업소", DeliveryType.BUNDLE,1L, "", "경기 고양시 덕양구 화중로104번길 33");
 
 
         /*
@@ -125,23 +129,17 @@ public class TestDataLoader implements ApplicationRunner {
                 "ㅎ",1, 37.600326, 126.864485, 0);
         deliveryDetailSite.of(2L, 1L, "기숙사 식당", "기숙사 내부 식당",
                 "ㄱ",2, 37.598048, 126.866489, 5);
+
         deliveryDetailSite.of(3L, 2L, "별관", "별관 식당",
                 "ㄱ",1, 37.598048, 126.866489, 0);
         deliveryDetailSite.of(4L, 2L, "미디어관", "미디어 플레이스",
                 "ㄴ",2, 37.598048, 126.866489, 7);
 
-        deliveryDetailSite.of(5L, 3L, "101동", "101동",
-                "101",1, 37.598048, 126.866489, 0);
-        deliveryDetailSite.of(6L, 3L, "102동", "102동",
-                "102",2, 37.598048, 126.866489, 10);
-        deliveryDetailSite.of(7L, 3L, "103동", "103동",
-                "103",3, 37.598048, 126.866489, 20);
-        deliveryDetailSite.of(8L, 4L, "104동", "104동",
-                "104",1, 37.598048, 126.866489, 0);
-        deliveryDetailSite.of(9L, 4L, "105동", "105동",
-                "105",2, 37.598048, 126.866489, 10);
-        deliveryDetailSite.of(10L, 4L, "106동", "106동",
-                "106",3, 37.598048, 126.866489, 20);
+        deliveryDetailSite.of(5L, 3L, "직원식당 입구", "직원식당 입구",
+                "ㄱ",1, 37.598048, 126.866489, 0);
+
+        deliveryDetailSite.of(6L, 4L, "창업소 입구", "창업소 입구",
+                "ㄱ",1, 37.598048, 126.866489, 10);
 
 
         /*
@@ -150,27 +148,41 @@ public class TestDataLoader implements ApplicationRunner {
         advertisement.of(1L, 1L, null, 1);
         advertisement.of(2L, 1L, null, 2);
         advertisement.of(3L, 1L, null, 3);
-//        advertisement.of(4L, 1L, null, 4);
-//        advertisement.of(5L, 1L, null, 5);
 
-//        advertisement.of(6L, 3L, null, 1);
-//        advertisement.of(7L, 3L, null, 2);
-//        advertisement.of(8L, 3L, null, 3);
-//        advertisement.of(9L, 3L, null, 4);
-//        advertisement.of(10L, 3L, null, 5);
-//
-//        advertisement.of(11L, 4L, null, 1);
-//        advertisement.of(12L, 4L, null, 2);
-//        advertisement.of(13L, 4L, null, 3);
-//        advertisement.of(14L, 4L, null, 4);
-//        advertisement.of(15L, 4L, null, 5);
+        advertisement.of(4L, 2L, null, 1);
+        advertisement.of(5L, 2L, null, 2);
+        advertisement.of(6L, 2L, null, 3);
+
+        advertisement.of(7L, 3L, null, 1);
+        advertisement.of(8L, 3L, null, 2);
+        advertisement.of(9L, 3L, null, 3);
+
+        advertisement.of(10L, 4L, null, 1);
+        advertisement.of(11L, 4L, null, 2);
+        advertisement.of(12L, 4L, null, 3);
+
 
         /*
          * 이벤트
          */
-        event.of(1L, 1L, "1일 1닭 이벤트", "1닭 을 받기 위해서는 블라블라",
+        event.of(1L, 1L, "항공대 이벤트", "1닭 을 받기 위해서는 블라블라",
                 LocalDateTime.parse("2020-07-01T00:00:00"), null);
         event.of(2L, 1L, "쿠폰 이벤트", "쿠폰 을 받기 위해서는 블라블라",
+                LocalDateTime.parse("2020-07-01T00:00:00"), LocalDateTime.parse("2020-08-01T00:00:00"));
+
+        event.of(3L, 2L, "연세대 이벤트", "1닭 을 받기 위해서는 블라블라",
+                LocalDateTime.parse("2020-07-01T00:00:00"), null);
+        event.of(4L, 2L, "쿠폰 이벤트", "쿠폰 을 받기 위해서는 블라블라",
+                LocalDateTime.parse("2020-07-01T00:00:00"), LocalDateTime.parse("2020-08-01T00:00:00"));
+
+        event.of(5L, 3L, "한국경제신문사 빌딩 이벤트", "1닭 을 받기 위해서는 블라블라",
+                LocalDateTime.parse("2020-07-01T00:00:00"), null);
+        event.of(6L, 3L, "쿠폰 이벤트", "쿠폰 을 받기 위해서는 블라블라",
+                LocalDateTime.parse("2020-07-01T00:00:00"), LocalDateTime.parse("2020-08-01T00:00:00"));
+
+        event.of(7L, 4L, "28청춘 창업소 이벤트", "1닭 을 받기 위해서는 블라블라",
+                LocalDateTime.parse("2020-07-01T00:00:00"), null);
+        event.of(8L, 4L, "쿠폰 이벤트", "쿠폰 을 받기 위해서는 블라블라",
                 LocalDateTime.parse("2020-07-01T00:00:00"), LocalDateTime.parse("2020-08-01T00:00:00"));
 
         /*
@@ -178,7 +190,22 @@ public class TestDataLoader implements ApplicationRunner {
          */
         notice.of(1L, 1L, "개인정보 처리방침 변경 안내", "안녕하세요. 대한민국 1등 반찬 정기배송 앱 포만감입니다.\n포만감 개인정보 처리방침이 아래와 같이 변경됩니다.\n\n\n1. 변경 사항",
                 LocalDateTime.parse("2020-07-01T00:00:00"), null);
-        notice.of(2L, 1L, "친구 초대 서비스 종료 안내", "친구 초대 서비스 종료 안내 블라블라",
+        notice.of(2L, 1L, "항공대 친구 초대 서비스 종료 안내", "친구 초대 서비스 종료 안내 블라블라",
+                LocalDateTime.parse("2020-07-01T00:00:00"), null);
+
+        notice.of(3L, 2L, "개인정보 처리방침 변경 안내", "안녕하세요. 대한민국 1등 반찬 정기배송 앱 포만감입니다.\n포만감 개인정보 처리방침이 아래와 같이 변경됩니다.\n\n\n1. 변경 사항",
+                LocalDateTime.parse("2020-07-01T00:00:00"), null);
+        notice.of(4L, 2L, "연세대 친구 초대 서비스 종료 안내", "친구 초대 서비스 종료 안내 블라블라",
+                LocalDateTime.parse("2020-07-01T00:00:00"), null);
+
+        notice.of(5L, 3L, "개인정보 처리방침 변경 안내", "안녕하세요. 대한민국 1등 반찬 정기배송 앱 포만감입니다.\n포만감 개인정보 처리방침이 아래와 같이 변경됩니다.\n\n\n1. 변경 사항",
+                LocalDateTime.parse("2020-07-01T00:00:00"), null);
+        notice.of(6L, 3L, "한국경제신문사 친구 초대 서비스 종료 안내", "친구 초대 서비스 종료 안내 블라블라",
+                LocalDateTime.parse("2020-07-01T00:00:00"), null);
+
+        notice.of(7L, 4L, "개인정보 처리방침 변경 안내", "안녕하세요. 대한민국 1등 반찬 정기배송 앱 포만감입니다.\n포만감 개인정보 처리방침이 아래와 같이 변경됩니다.\n\n\n1. 변경 사항",
+                LocalDateTime.parse("2020-07-01T00:00:00"), null);
+        notice.of(8L, 4L, "28청춘 친구 초대 서비스 종료 안내", "친구 초대 서비스 종료 안내 블라블라",
                 LocalDateTime.parse("2020-07-01T00:00:00"), null);
 
         /*
@@ -243,6 +270,7 @@ public class TestDataLoader implements ApplicationRunner {
                 Arrays.asList(1,2,3),
                 Arrays.asList("new Arrival", "도시락증정"),
                 Arrays.asList("보울도시락", "사각도시락", "프리미엄", "간식"));
+
         store.of(3L, 2L, 2L, "맘스터치(연세대)", "엄마의 손맛, 수제햄버거 전문점 맘스터치 -연세점-", null,
                 4.6F, 209, 57, 0, 1,
                 Arrays.asList(1,2,3),
@@ -253,6 +281,7 @@ public class TestDataLoader implements ApplicationRunner {
                 Arrays.asList(1,2,3),
                 Arrays.asList("new Arrival", "도시락증정"),
                 Arrays.asList("보울도시락", "사각도시락", "프리미엄", "간식"));
+
         store.of(5L, 1L, 2L, "피자매니", "껍질치밥으로 유명한 피자매니란다 \uD83C\uDF55\uD83C\uDF5F\uD83C\uDF2E", "리뷰이벤트 중입니다 \uD83E\uDD27\uD83E\uDD2D",
                 2.7F, 32, 129, 0, 3,
                 Arrays.asList(1,2,3),
@@ -263,23 +292,26 @@ public class TestDataLoader implements ApplicationRunner {
                 Arrays.asList(1,2,3),
                 Arrays.asList(),
                 Arrays.asList("메인", "서브", "프리미엄"));
-        store.of(7L, 1L, 1L, "포만감 도시락", "\uD83D\uDE0E내가 먹고싶은 음식만 골라 담아 \uD83C\uDF71 도시락을 만들어 먹는다. \uD83D\uDE0B신개념 커스터마이징 도시락\uD83D\uDC40", "\uD83D\uDD25항공대 이벤트 중입니다.\uD83D\uDD25",
+        store.of(7L, 1L, 1L, "포만감 도시락", "\uD83D\uDE0E내가 먹고싶은 음식만 골라 담아 \uD83C\uDF71 도시락을 만들어 먹는다. \uD83D\uDE0B신개념 커스터마이징 도시락\uD83D\uDC40", "\uD83D\uDD25이벤트 중입니다.\uD83D\uDD25",
                 4.9F, 627, 311, 0, 3,
                 Arrays.asList(1,2,3),
                 Arrays.asList("고객리뷰", "이벤트안내"),
                 Arrays.asList("메인 도시락", "서브 도시락", "프리미엄 도시락"));
 
-        store.of(8L, 3L, 1L, "반찬탁", "\uD83C\uDF71 싼맛! 싼마이 도시락! 한솥도시락 \uD83C\uDF71 \uD83D\uDE0E", "\uD83D\uDD25탄현 이벤트 중입니다.\uD83D\uDD25",
+        store.of(8L, 3L, 1L, "반찬탁", "\uD83C\uDF71 싼맛! 싼마이 도시락! 한솥도시락 \uD83C\uDF71 \uD83D\uDE0E", "\uD83D\uDD25이벤트 중입니다.\uD83D\uDD25",
                 4.3F, 4687, 988, 0, 1,
                 Arrays.asList(1,2,3),
                 Arrays.asList("고객리뷰", "이벤트안내"),
                 Arrays.asList("메인 도시락", "서브 도시락", "프리미엄 도시락"));
 
-        store.of(9L, 3L, 1L, "포만감 도시락", "\uD83D\uDE0E내가 먹고싶은 음식만 골라 담아 \uD83C\uDF71 도시락을 만들어 먹는다. \uD83D\uDE0B신개념 커스터마이징 도시락\uD83D\uDC40", "\uD83D\uDD25탄현 이벤트 중입니다.\uD83D\uDD25",
-                4.9F, 627, 311, 0, 2,
-                Arrays.asList(1,2,3),
-                Arrays.asList("고객리뷰", "이벤트안내"),
-                Arrays.asList("메인 도시락", "서브 도시락", "프리미엄 도시락"));
+
+        /*
+         * 배달지 - 업체 연결
+         */
+        storeMapper.of(1L, 1L,2L,5L,6L,7L);
+        storeMapper.of(2L, 3L,4L,7L,8L);
+        storeMapper.of(3L, 7L,8L);
+        storeMapper.of(4L, 7L,8L);
 
         /*
          * 제품
@@ -441,11 +473,12 @@ public class TestDataLoader implements ApplicationRunner {
         orderTime.of(10L, LocalTime.parse("12:30:00"), LocalTime.parse("12:45:00"), LocalTime.parse("13:10:00"));
         orderTime.of(11L, LocalTime.parse("17:30:00"), LocalTime.parse("17:45:00"), LocalTime.parse("18:10:00"));
         orderTime.of(12L, LocalTime.parse("18:30:00"), LocalTime.parse("18:45:00"), LocalTime.parse("19:10:00"));
-
-        /// 탄현
-        orderTime.of(13L, LocalTime.parse("06:30:00"), LocalTime.parse("06:45:00"), LocalTime.parse("07:00:00"));
-        orderTime.of(14L, LocalTime.parse("11:30:00"), LocalTime.parse("11:45:00"), LocalTime.parse("12:00:00"));
-        orderTime.of(15L, LocalTime.parse("17:30:00"), LocalTime.parse("17:45:00"), LocalTime.parse("18:00:00"));
+        /// 한경
+        orderTime.of(13L, LocalTime.parse("11:30:00"), LocalTime.parse("11:45:00"), LocalTime.parse("12:00:00"));
+        orderTime.of(14L, LocalTime.parse("17:30:00"), LocalTime.parse("17:45:00"), LocalTime.parse("18:00:00"));
+        /// 28청춘
+        orderTime.of(15L, LocalTime.parse("11:30:00"), LocalTime.parse("11:45:00"), LocalTime.parse("12:00:00"));
+        orderTime.of(16L, LocalTime.parse("17:30:00"), LocalTime.parse("17:45:00"), LocalTime.parse("18:00:00"));
 
 
         /*
@@ -457,10 +490,14 @@ public class TestDataLoader implements ApplicationRunner {
         orderTimeMapper.of(4L, 9L, 10L, 11L, 12L);  // 연세대 미래캠 한솥도시락
         orderTimeMapper.of(5L, 5L, 6L, 7L, 8L);     // 항공대 피자매니
         orderTimeMapper.of(6L, 5L, 6L, 7L, 8L);     // 항공대 항공반점
-        orderTimeMapper.of(7L, 1L, 2L, 3L, 4L);     // 항공대 포만감 도시락
+        orderTimeMapper.of(7L, 1L, 2L, 3L, 4L, 13L, 14L, 15L, 16L);     // 포만감 도시락
+        orderTimeMapper.of(8L, 13L, 14L, 15L, 16L);     // 반찬탁
 
-        orderTimeMapper.of(8L, 13L, 14L, 15L);     // 탄현 반찬탁
-        orderTimeMapper.of(9L, 13L, 14L, 15L);     // 탄현 포만감 도시락
+        orderTimeDeliverySiteMapper.of(1L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L); // 항공대 시간표
+        orderTimeDeliverySiteMapper.of(2L, 9L, 10L, 11L, 12L);              // 연세대 시간표
+        orderTimeDeliverySiteMapper.of(3L, 13L, 14L, 15L, 16L);             // 한경 시간표
+        orderTimeDeliverySiteMapper.of(4L, 13L, 14L, 15L, 16L);             // 28청춘 시간표
+
 
         /*
          * 쿠폰
@@ -543,7 +580,7 @@ public class TestDataLoader implements ApplicationRunner {
         /*
          * 업주
          */
-        storeOwner.of(1L, 1L, 1L, "store_1", "store_1_pw", "업체1", "010-6478-4899", Sex.MALE, LocalDate.now(), null);
+        storeOwner.of(1L, 1L, 7L, "store_1", "store_1_pw", "업체1", "010-6478-4899", Sex.MALE, LocalDate.now(), null);
         storeOwner.of(2L, 2L, 2L, "store_2", "store_2_pw", "업체2", "010-6478-4899", Sex.FEMALE, LocalDate.now(), null);
         storeOwner.of(3L, 3L, 3L, "store_3", "store_3_pw", "업체3", "010-6478-4899", Sex.MALE, LocalDate.now(), null);
 

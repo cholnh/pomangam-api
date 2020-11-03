@@ -35,7 +35,7 @@ public class StoreReviewData {
         if(images != null) {
             for(int i=0; i<images.length; i++) {
                 StoreReviewImage image = StoreReviewImage.builder()
-                    .imagePath(ImagePath.reviews(dIdx, sIdx, idx) + (Long.parseLong(images[i])) + ".jpg")
+                    .imagePath(ImagePath.reviews(sIdx, idx) + (Long.parseLong(images[i])) + ".jpg")
                     .imageType(i==0 ? StoreReviewImageType.MAIN : StoreReviewImageType.SUB)
                     .sequence(i+1)
                     .build();
