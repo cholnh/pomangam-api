@@ -149,7 +149,7 @@ public class UserServiceImpl implements UserService {
 
             UserDto dto = UserDto.fromEntity(fetched);
             dto.setUserPoint(pointLogService.findByIdxUser(dto.getIdx()));
-            return UserDto.fromEntity(fetched);
+            return dto;
         } catch (Exception e) {
             e.printStackTrace();
             return null;

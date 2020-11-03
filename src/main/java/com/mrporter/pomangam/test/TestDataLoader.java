@@ -580,7 +580,7 @@ public class TestDataLoader implements ApplicationRunner {
         /*
          * 업주
          */
-        storeOwner.of(1L, 1L, 7L, "store_1", "store_1_pw", "업체1", "010-6478-4899", Sex.MALE, LocalDate.now(), null);
+        storeOwner.of(1L, 1L, 1L, "store_1", "store_1_pw", "업체1", "010-6478-4899", Sex.MALE, LocalDate.now(), null);
         storeOwner.of(2L, 2L, 2L, "store_2", "store_2_pw", "업체2", "010-6478-4899", Sex.FEMALE, LocalDate.now(), null);
         storeOwner.of(3L, 3L, 3L, "store_3", "store_3_pw", "업체3", "010-6478-4899", Sex.MALE, LocalDate.now(), null);
 

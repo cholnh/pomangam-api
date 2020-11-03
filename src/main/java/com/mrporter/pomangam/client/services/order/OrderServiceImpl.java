@@ -7,8 +7,11 @@ import com.mrporter.pomangam.client.domains.order.OrderRequestDto;
 import com.mrporter.pomangam.client.domains.order.OrderResponseDto;
 import com.mrporter.pomangam.client.domains.order.OrderType;
 import com.mrporter.pomangam.client.domains.order.bootpay.BootpayVbankDto;
+import com.mrporter.pomangam.client.domains.order.orderer.OrdererType;
 import com.mrporter.pomangam.client.domains.payment.PaymentType;
 import com.mrporter.pomangam.client.domains.vbank.VBankReady;
+import com.mrporter.pomangam.client.domains.vbank.VBankRefund;
+import com.mrporter.pomangam.client.domains.vbank.VBankRefundStatus;
 import com.mrporter.pomangam.client.repositories.deliverysite.detail.DeliveryDetailSiteJpaRepository;
 import com.mrporter.pomangam.client.repositories.fcm.client.FcmClientTokenJpaRepository;
 import com.mrporter.pomangam.client.repositories.order.BootpayVbankJpaRepository;
@@ -16,6 +19,7 @@ import com.mrporter.pomangam.client.repositories.order.OrderJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.coupon.CouponJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.coupon.CouponMapperJpaRepository;
 import com.mrporter.pomangam.client.repositories.vbank.VBankReadyJpaRepository;
+import com.mrporter.pomangam.client.repositories.vbank.VBankRefundJpaRepository;
 import com.mrporter.pomangam.client.services.fcm.FcmServiceImpl;
 import com.mrporter.pomangam.client.services.order.exception.OrderException;
 import com.mrporter.pomangam.client.services.order.sub_service.*;
@@ -42,6 +46,7 @@ public class OrderServiceImpl implements OrderService {
     UserServiceImpl userService;
     BootpayVbankJpaRepository bootpayVbankRepo;
     VBankReadyJpaRepository vBankReadyRepo;
+    VBankRefundJpaRepository vBankRefundRepo;
 
     CommonSubService commonSubService;
     OrderReadySubService readySubService;
@@ -200,16 +205,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void approve(Long oIdx) {
+    public OrderResponseDto approve(Long oIdx) {
         Order order = orderRepo.findByIdxAndIsActiveIsTrue(oIdx)
                 .orElseThrow(() -> new OrderException("invalid order approve."));
         approveSubService.sendFcm(order);
         approveSubService.sendKakaoAT(order);
         commonSubService.log(oIdx, OrderType.ORDER_SUCCESS, OrderType.DELIVERY_READY);
+
+        return OrderResponseDto.fromEntity(order);
     }
 
     @Override
-    public void disapprove(Long oIdx, String reason) {
+    public OrderResponseDto disapprove(Long oIdx, String reason) {
         Order order = orderRepo.findByIdxAndIsActiveIsTrue(oIdx)
                 .orElseThrow(() -> new OrderException("invalid order disapprove."));
 
@@ -221,11 +228,10 @@ public class OrderServiceImpl implements OrderService {
         disapproveSubService.sendFcm(order, reason);
         disapproveSubService.sendKakaoAT(order, reason);
 
-        commonSubService.log(oIdx, OrderType.ORDER_REFUSE, OrderType.ORDER_CANCEL);
+        _refund(order, "업체 거절");
+        commonSubService.log(oIdx, OrderType.ORDER_REFUSE, OrderType.ORDER_CANCEL, OrderType.PAYMENT_REFUND);
 
-        // PG 환불
-        refundSubService.refundPG(order.getReceiptId(), "시스템", reason, order.paymentCost().doubleValue());
-        commonSubService.log(oIdx, OrderType.PAYMENT_REFUND);
+        return OrderResponseDto.fromEntity(order);
     }
 
     @Override
@@ -254,17 +260,20 @@ public class OrderServiceImpl implements OrderService {
         cancelSubService.sendFcm(order);
         cancelSubService.sendKakaoAT(order);
 
-        refundSubService.refundPG(order.getReceiptId(), "시스템", "구매자 취소요청", order.paymentCost().doubleValue());
+        _refund(order, "구매자 취소 요청");
         commonSubService.log(oIdx, OrderType.ORDER_CANCEL, OrderType.PAYMENT_REFUND);
     }
 
     @Override
-    public void deliveryPickup(Long oIdx) {
+    public OrderResponseDto deliveryPickup(Long oIdx) {
+        Order order = orderRepo.findByIdxAndIsActiveIsTrue(oIdx)
+                .orElseThrow(() -> new OrderException("invalid order deliveryPickup."));
         commonSubService.log(oIdx, OrderType.DELIVERY_PICKUP);
+        return OrderResponseDto.fromEntity(order);
     }
 
     @Override
-    public void deliveryDelay(Long oIdx, int min, String reason) {
+    public OrderResponseDto deliveryDelay(Long oIdx, int min, String reason) {
         Order order = orderRepo.findByIdxAndIsActiveIsTrue(oIdx)
                 .orElseThrow(() -> new OrderException("invalid order deliveryDelay."));
 
@@ -272,10 +281,12 @@ public class OrderServiceImpl implements OrderService {
         delaySubService.sendKakaoAT(order, min, reason);
 
         commonSubService.log(oIdx, OrderType.DELIVERY_DELAY);
+
+        return OrderResponseDto.fromEntity(order);
     }
 
     @Override
-    public void deliverySuccess(Long oIdx) {
+    public OrderResponseDto deliverySuccess(Long oIdx) {
         Order order = orderRepo.findByIdxAndIsActiveIsTrue(oIdx)
                 .orElseThrow(() -> new OrderException("invalid order deliverySuccess."));
 
@@ -283,6 +294,8 @@ public class OrderServiceImpl implements OrderService {
         commonSubService.commitSavedPoint(order);
 
         commonSubService.log(oIdx, OrderType.DELIVERY_SUCCESS);
+
+        return OrderResponseDto.fromEntity(order);
     }
 
     @Override
@@ -292,8 +305,7 @@ public class OrderServiceImpl implements OrderService {
 
         refundSubService.verifyIsValidRefundOrder(order.getOrderType());
 
-        // PG 환불
-        refundSubService.refundPG(order.getReceiptId(), "시스템", "구매자 환불요청", order.paymentCost().doubleValue());
+        _refund(order, "구매자 환불 요청");
 
         // 적립 포인트 회수
         commonSubService.rollbackSavedPoint(order);
@@ -306,6 +318,37 @@ public class OrderServiceImpl implements OrderService {
         refundSubService.sendKakaoAT(order);
 
         commonSubService.log(oIdx, OrderType.PAYMENT_REFUND);
+    }
+
+    private void _refund(Order order, String reason) {
+        switch (order.getPaymentInfo().getPaymentType()) {
+            case CONTACT_CREDIT_CARD:
+            case CONTACT_CASH:
+                // do nothing
+                break;
+            case COMMON_CREDIT_CARD:
+            case COMMON_PHONE:
+            case COMMON_BANK:
+            case COMMON_KAKAOPAY:
+            case COMMON_REMOTE_PAY:
+            case PERIODIC_CREDIT_CARD:
+            case PERIODIC_FIRM_BANK:
+                // PG 환불
+                refundSubService.refundPG(order.getReceiptId(), "시스템", reason, order.paymentCost().doubleValue());
+                break;
+            case COMMON_V_BANK:
+                // 자체 가상계좌 환불리스트에 등록
+                vBankRefundRepo.save(VBankRefund.builder()
+                        .refundPrice(order.paymentCost())
+                        .clientName(order.getOrderer().getOrdererType() == OrdererType.USER
+                                ? order.getOrderer().getUser().getName()
+                                : "비회원")
+                        .note(reason)
+                        .status(VBankRefundStatus.READY)
+                        .idxOrder(order.getIdx())
+                        .build());
+                break;
+        }
     }
 
     public void callback(Long oIdx) {

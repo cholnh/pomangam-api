@@ -52,7 +52,7 @@ public interface OrderService {
      *
      * @param oIdx 승인할 주문 인덱스
      */
-    void approve(Long oIdx);
+    OrderResponseDto approve(Long oIdx);
 
     /**
      * 주문 내역 거절
@@ -60,7 +60,7 @@ public interface OrderService {
      * @param oIdx 승인할 주문 인덱스
      * @param reason 거절 사유
      */
-    void disapprove(Long oIdx, String reason);
+    OrderResponseDto disapprove(Long oIdx, String reason);
 
     /**
      * 주문 내역 취소
@@ -79,11 +79,11 @@ public interface OrderService {
      */
     void refund(Long oIdx);
 
-    void deliveryPickup(Long oIdx);
+    OrderResponseDto deliveryPickup(Long oIdx);
 
-    void deliveryDelay(Long oIdx, int min, String reason);
+    OrderResponseDto deliveryDelay(Long oIdx, int min, String reason);
 
-    void deliverySuccess(Long oIdx);
+    OrderResponseDto deliverySuccess(Long oIdx);
 
     void callback(CallbackResponse response);
 

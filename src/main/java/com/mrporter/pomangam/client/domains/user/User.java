@@ -1,6 +1,5 @@
 package com.mrporter.pomangam.client.domains.user;
 
-import com.mrporter.pomangam._bases.utils.validation.annotation.Phone;
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSite;
 import com.mrporter.pomangam.client.domains.user.password.Password;

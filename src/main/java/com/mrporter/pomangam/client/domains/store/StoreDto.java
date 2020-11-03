@@ -24,7 +24,6 @@ public class StoreDto implements Serializable {
     private LocalDateTime registerDate;
     private LocalDateTime modifyDate;
 
-    private Long idxDeliverySite;
     private String storeCategory;
     private StoreInfo storeInfo;
     private ProductionInfo productionInfo;

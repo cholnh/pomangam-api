@@ -22,7 +22,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class StoreServiceImpl implements StoreService {
+public class ClientStoreServiceImpl implements ClientStoreService {
 
     StoreJpaRepository storeRepo;
     OrderJpaRepository orderRepo;

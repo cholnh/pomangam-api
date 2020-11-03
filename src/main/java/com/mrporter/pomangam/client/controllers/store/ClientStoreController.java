@@ -1,7 +1,7 @@
 package com.mrporter.pomangam.client.controllers.store;
 
 import com.mrporter.pomangam.client.domains.store.SortType;
-import com.mrporter.pomangam.client.services.store.StoreServiceImpl;
+import com.mrporter.pomangam.client.services.store.ClientStoreServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,9 +19,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/dsites/{dIdx}/stores")
 @AllArgsConstructor
-public class StoreController {
+public class ClientStoreController {
 
-    StoreServiceImpl storeService;
+    ClientStoreServiceImpl storeService;
 
     @GetMapping
     public ResponseEntity<?> findByIdxDeliverySite(

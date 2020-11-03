@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface StoreService {
+public interface ClientStoreService {
     List<StoreDto> findByIdxDeliverySite(Long dIdx, Pageable pageable);
     StoreDto findByIdx(Long idx, String phoneNumber);
     long count();

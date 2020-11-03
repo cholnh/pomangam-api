@@ -38,11 +38,8 @@ public class StoreOrderController {
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable,
             Authentication auth
     ) {
-        if(authenticationService.isStoreOwner(auth, sIdx)) {
-            return new ResponseEntity(orderService.findAllByIdxStore(sIdx, dIdx, ddIdx, otIdx, oDate, last, pageable), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        authenticationService.authenticate(auth, sIdx);
+        return new ResponseEntity(orderService.findAllByIdxStore(sIdx, dIdx, ddIdx, otIdx, oDate, last, pageable), HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_STORE_OWNER', 'ROLE_ADMIN', 'ROLE_STAFF'))")
@@ -52,12 +49,8 @@ public class StoreOrderController {
             @PathVariable(value = "oIdx", required = true) Long oIdx,
             Authentication auth
     ) {
-        if(authenticationService.isStoreOwner(auth, sIdx)) {
-            orderService.approve(oIdx);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        authenticationService.authenticate(auth, sIdx);
+        return new ResponseEntity<>(orderService.approve(oIdx), HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_STORE_OWNER', 'ROLE_ADMIN', 'ROLE_STAFF'))")
@@ -68,12 +61,8 @@ public class StoreOrderController {
             @RequestParam(value = "reason", required = false) String reason,
             Authentication auth
     ) {
-        if(authenticationService.isStoreOwner(auth, sIdx)) {
-            orderService.disapprove(oIdx, reason);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        authenticationService.authenticate(auth, sIdx);
+        return new ResponseEntity<>( orderService.disapprove(oIdx, reason), HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_STORE_OWNER', 'ROLE_ADMIN', 'ROLE_STAFF'))")
@@ -83,12 +72,8 @@ public class StoreOrderController {
             @PathVariable(value = "oIdx", required = true) Long oIdx,
             Authentication auth
     ) {
-        if(authenticationService.isStoreOwner(auth, sIdx)) {
-            orderService.deliveryPickup(oIdx);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        authenticationService.authenticate(auth, sIdx);
+        return new ResponseEntity<>(orderService.deliveryPickup(oIdx), HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_STORE_OWNER', 'ROLE_ADMIN', 'ROLE_STAFF'))")
@@ -100,12 +85,8 @@ public class StoreOrderController {
             @RequestParam(value = "reason", required = false) String reason,
             Authentication auth
     ) {
-        if(authenticationService.isStoreOwner(auth, sIdx)) {
-            orderService.deliveryDelay(oIdx, min, reason);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        authenticationService.authenticate(auth, sIdx);
+        return new ResponseEntity<>( orderService.deliveryDelay(oIdx, min, reason), HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_STORE_OWNER', 'ROLE_ADMIN', 'ROLE_STAFF'))")
@@ -115,11 +96,7 @@ public class StoreOrderController {
             @PathVariable(value = "oIdx", required = true) Long oIdx,
             Authentication auth
     ) {
-        if(authenticationService.isStoreOwner(auth, sIdx)) {
-            orderService.deliverySuccess(oIdx);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        authenticationService.authenticate(auth, sIdx);
+        return new ResponseEntity<>(orderService.deliverySuccess(oIdx), HttpStatus.OK);
     }
 }

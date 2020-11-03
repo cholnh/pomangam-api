@@ -26,15 +26,11 @@ public class StoreOrderTimeController {
             @RequestParam(value = "dIdx", required = false) Long dIdx,
             Authentication auth
     ) {
-        if(authenticationService.isStoreOwner(auth, sIdx)) {
-            if(dIdx == null) {
-                return new ResponseEntity(orderTimeService.findByIdxStore(sIdx), HttpStatus.OK);
-            } else {
-                return new ResponseEntity(orderTimeService.findByIdxDeliverySite(dIdx), HttpStatus.OK);
-            }
-
+        authenticationService.authenticate(auth, sIdx);
+        if(dIdx == null) {
+            return new ResponseEntity(orderTimeService.findByIdxStore(sIdx), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(orderTimeService.findByIdxDeliverySite(dIdx), HttpStatus.OK);
         }
     }
 }
