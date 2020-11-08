@@ -70,17 +70,19 @@ public class OrderRefundSubService {
 
             List<FcmTokenDto> to = new ArrayList<>();
             FcmClientToken clientToken = clientTokenRepo.findByIdxAndIsActiveIsTrue(order.getOrderer().getIdxFcmToken());
-            to.add(FcmTokenDto.builder()
-                    .token(clientToken.getToken())
-                    .build());
+            if(clientToken != null) {
+                to.add(FcmTokenDto.builder()
+                        .token(clientToken.getToken())
+                        .build());
 
-            // fcm build
-            FcmRequestDto dto = FcmRequestDto.builder()
-                    .title("(" + order.getBoxNumber() + "번) 환불 요청이 성공적으로 접수되었습니다.")
-                    .data(data)
-                    .to(to)
-                    .build();
-            fcmService.send(dto);
+                // fcm build
+                FcmRequestDto dto = FcmRequestDto.builder()
+                        .title("(" + order.getBoxNumber() + "번) 환불 요청이 성공적으로 접수되었습니다.")
+                        .data(data)
+                        .to(to)
+                        .build();
+                fcmService.send(dto);
+            }
         } catch (Exception msgException) {
             msgException.printStackTrace();
         }

@@ -31,17 +31,18 @@ public class OrderApproveSubService {
 
             List<FcmTokenDto> to = new ArrayList<>();
             FcmClientToken clientToken = clientTokenRepo.findByIdxAndIsActiveIsTrue(order.getOrderer().getIdxFcmToken());
-            to.add(FcmTokenDto.builder()
-                    .token(clientToken.getToken())
-                    .build());
-
-            // fcm build
-            FcmRequestDto dto = FcmRequestDto.builder()
-                    .title("(" + order.getBoxNumber() + "번) 주문이 정상적으로 접수되었습니다.")
-                    .data(data)
-                    .to(to)
-                    .build();
-            fcmService.send(dto);
+            if(clientToken != null) {
+                to.add(FcmTokenDto.builder()
+                        .token(clientToken.getToken())
+                        .build());
+                // fcm build
+                FcmRequestDto dto = FcmRequestDto.builder()
+                        .title("(" + order.getBoxNumber() + "번) 주문이 정상적으로 접수되었습니다.")
+                        .data(data)
+                        .to(to)
+                        .build();
+                fcmService.send(dto);
+            }
         } catch (Exception msgException) {
             msgException.printStackTrace();
         }

@@ -102,16 +102,19 @@ public class OrderReadySubService{
             for(Long idxStore : CommonSubService.getIdxStores(order)) {
                 List<FcmOwnerToken> ownerTokens = ownerTokenRepo.findByStore(idxStore);
                 for(FcmOwnerToken ownerToken : ownerTokens) {
-                    to.add(FcmTokenDto.builder()
-                            .token(ownerToken.getToken())
-                            .build());
+                    if(ownerToken != null) {
+                        to.add(FcmTokenDto.builder()
+                                .token(ownerToken.getToken())
+                                .build());
+                    }
                 }
             }
 
             // fcm build
             FcmRequestDto dto = FcmRequestDto.builder()
                     .title(CommonSubService.getOrderTime(order) + " (" + order.getBoxNumber() + "번) 새로운 주문이 등록되었습니다.")
-                    .body("[no." + order.getIdx() + "] " + CommonSubService.orderItemShortText(order))
+                    //.body("[no." + order.getIdx() + "] " + CommonSubService.orderItemLongText(order))
+                    .body("")
                     .data(data)
                     .to(to)
                     .build();
@@ -123,30 +126,23 @@ public class OrderReadySubService{
 
     public void sendKakaoAT(Order order) {
         try {
-            Map<String, String> data = new HashMap<>();
-            data.put("order_time", CommonSubService.getOrderTime(order));
-            data.put("order_idx", "no."+order.getIdx());
-            data.put("order_bn", order.getBoxNumber() + "번");
-            data.put("order_date", CommonSubService.getOrderDate(order));
-            data.put("order_addr", order.getDeliveryDetailSite().getFullName());
-            data.put("order_pn", CommonSubService.getOrdererPhoneNumber(order));
-            data.put("order_items", CommonSubService.orderItemLongText(order));
-            OrderReadyTemplate.send(ownersPhoneNumbers(order), data);
+            for(Long idxStore : CommonSubService.getIdxStores(order)) {
+                List<Owner> owners = ownerRepo.findByIdxStoreAndIsActiveIsTrue(idxStore);
+                for(Owner owner : owners) {
+                    Map<String, String> data = new HashMap<>();
+                    data.put("order_time", CommonSubService.getOrderTime(order));
+                    data.put("order_idx", "no."+order.getIdx());
+                    data.put("order_bn", order.getBoxNumber() + "번");
+                    data.put("order_date", CommonSubService.getOrderDate(order));
+                    data.put("order_addr", order.getDeliveryDetailSite().getFullName());
+                    data.put("order_pn", CommonSubService.getOrdererPhoneNumber(order));
+                    data.put("order_items", CommonSubService.orderItemLongText(order, idxStore));
+                    OrderReadyTemplate.send(owner.getPhoneNumber(), data);
+                }
+            }
         } catch (Exception msgException) {
             msgException.printStackTrace();
         }
     }
 
-    private List<String> ownersPhoneNumbers(Order order) {
-        List<String> phoneNumbers = new ArrayList<>();
-
-        for(Long idxStore : CommonSubService.getIdxStores(order)) {
-            List<Owner> owners = ownerRepo.findByIdxStoreAndIsActiveIsTrue(idxStore);
-            for(Owner owner : owners) {
-                phoneNumbers.add(owner.getPhoneNumber());
-            }
-        }
-
-        return phoneNumbers;
-    }
 }

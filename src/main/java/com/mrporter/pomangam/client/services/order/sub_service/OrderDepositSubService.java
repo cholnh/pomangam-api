@@ -31,17 +31,19 @@ public class OrderDepositSubService {
 
             List<FcmTokenDto> to = new ArrayList<>();
             FcmClientToken clientToken = clientTokenRepo.findByIdxAndIsActiveIsTrue(order.getOrderer().getIdxFcmToken());
-            to.add(FcmTokenDto.builder()
-                    .token(clientToken.getToken())
-                    .build());
+            if(clientToken != null) {
+                to.add(FcmTokenDto.builder()
+                        .token(clientToken.getToken())
+                        .build());
 
-            // fcm build
-            FcmRequestDto dto = FcmRequestDto.builder()
-                    .title("결제가 정상적으로 처리되어, 주문내역이 음식점으로 전달되었습니다.")
-                    .data(data)
-                    .to(to)
-                    .build();
-            fcmService.send(dto);
+                // fcm build
+                FcmRequestDto dto = FcmRequestDto.builder()
+                        .title("결제가 정상적으로 처리되어, 주문내역이 음식점으로 전달되었습니다.")
+                        .data(data)
+                        .to(to)
+                        .build();
+                fcmService.send(dto);
+            }
         } catch (Exception msgException) {
             msgException.printStackTrace();
         }

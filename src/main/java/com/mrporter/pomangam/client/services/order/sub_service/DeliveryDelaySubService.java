@@ -32,18 +32,20 @@ public class DeliveryDelaySubService {
 
             List<FcmTokenDto> to = new ArrayList<>();
             FcmClientToken clientToken = clientTokenRepo.findByIdxAndIsActiveIsTrue(order.getOrderer().getIdxFcmToken());
-            to.add(FcmTokenDto.builder()
-                    .token(clientToken.getToken())
-                    .build());
+            if(clientToken != null) {
+                to.add(FcmTokenDto.builder()
+                        .token(clientToken.getToken())
+                        .build());
 
-            // fcm build
-            FcmRequestDto dto = FcmRequestDto.builder()
-                    .title("(배달 지연 안내) 배달 도착시간이 약 " + min + "분 간 지연되어 안내드립니다.")
-                    .body(reason)
-                    .data(data)
-                    .to(to)
-                    .build();
-            fcmService.send(dto);
+                // fcm build
+                FcmRequestDto dto = FcmRequestDto.builder()
+                        .title("(배달 지연 안내) 배달 도착시간이 약 " + min + "분 간 지연되어 안내드립니다.")
+                        .body(reason)
+                        .data(data)
+                        .to(to)
+                        .build();
+                fcmService.send(dto);
+            }
         } catch (Exception msgException) {
             msgException.printStackTrace();
         }

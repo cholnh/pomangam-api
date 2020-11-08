@@ -173,16 +173,6 @@ public class CommonSubService {
         }
     }
 
-    public static String orderItemShortText(Order order) {
-        List<OrderItem> items = order.getOrderItems();
-        String text = items.get(0).getProduct().getProductInfo().getName();
-        int size = items.size();
-        if(size > 1) {
-            text += " 외 " + (items.size() - 1) + "개";
-        }
-        return text;
-    }
-
     public static Set<Long> getIdxStores(Order order) {
         Set<Long> idxStores = new HashSet<>();
         for(OrderItem item : order.getOrderItems()) {
@@ -207,11 +197,34 @@ public class CommonSubService {
     }
 
     public static String orderItemLongText(Order order) {
+        return orderItemLongText(order, null);
+    }
+
+    public static String orderItemLongText(Order order, Long idxStore) {
         List<OrderItem> items = order.getOrderItems();
-        String text = items.get(0).getProduct().getProductInfo().getName();
-        int size = items.size();
-        if(size > 1) {
-            text += " 외 " + (items.size() - 1) + "개";
+        List<OrderItem> storeItems;
+
+        if(idxStore == null) {
+            storeItems = items;
+        } else {
+            storeItems = new ArrayList<>();
+            for(OrderItem item : items) {
+                if(item.getStore().getIdx().intValue() == idxStore.intValue()) {
+                    storeItems.add(item);
+                }
+            }
+        }
+
+        String text = storeItems.get(0).getProduct().getProductInfo().getName();
+        int size = storeItems.size();
+        if(size == 1) {
+            if(storeItems.get(0).getQuantity() != 1) {
+                text += " " + storeItems.get(0).getQuantity() + "개";
+            }
+        } else if(size > 1) {
+            text += " 외 " + (storeItems.size() - 1) + "개";
+        } else {
+            text = "오류";
         }
         return text;
     }

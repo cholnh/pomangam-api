@@ -56,18 +56,20 @@ public class OrderDisapproveSubService {
 
             List<FcmTokenDto> to = new ArrayList<>();
             FcmClientToken clientToken = clientTokenRepo.findByIdxAndIsActiveIsTrue(order.getOrderer().getIdxFcmToken());
-            to.add(FcmTokenDto.builder()
-                    .token(clientToken.getToken())
-                    .build());
+            if(clientToken != null) {
+                to.add(FcmTokenDto.builder()
+                        .token(clientToken.getToken())
+                        .build());
 
-            // fcm build
-            FcmRequestDto dto = FcmRequestDto.builder()
-                    .title("(주문 실패 안내) 가게 사정으로 인해 주문이 취소되었습니다.")
-                    .body(reason)
-                    .data(data)
-                    .to(to)
-                    .build();
-            fcmService.send(dto);
+                // fcm build
+                FcmRequestDto dto = FcmRequestDto.builder()
+                        .title("(주문 실패 안내) 가게 사정으로 인해 주문이 취소되었습니다.")
+                        .body(reason)
+                        .data(data)
+                        .to(to)
+                        .build();
+                fcmService.send(dto);
+            }
         } catch (Exception msgException) {
             msgException.printStackTrace();
         }
@@ -79,7 +81,7 @@ public class OrderDisapproveSubService {
 
             Map<String, String> data = new HashMap<>();
 
-            data.put("order_idx", "no." + order.getIdx());
+            data.put("order_idx", "no." + order.getIdx() + " (" + order.getBoxNumber() + "번)");
             data.put("order_date", CommonSubService.getOrderDate(order));
             data.put("order_items", CommonSubService.orderItemLongText(order));
             data.put("reason", reason);
