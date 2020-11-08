@@ -93,6 +93,7 @@ class OrderCustomRepositoryImpl extends QuerydslRepositorySupport implements Ord
         }
 
         return from(order)
+                .distinct()
                 .select(order)
                 .leftJoin(order.orderItems, orderItem)
                 .where(where)
@@ -117,6 +118,7 @@ class OrderCustomRepositoryImpl extends QuerydslRepositorySupport implements Ord
         }
 
         return from(order)
+                .distinct()
                 .select(order)
                 .leftJoin(order.orderItems, orderItem)
                 .where(where)
@@ -141,6 +143,7 @@ class OrderCustomRepositoryImpl extends QuerydslRepositorySupport implements Ord
         }
 
         return from(order)
+                .distinct()
                 .select(order)
                 .leftJoin(order.orderItems, orderItem)
                 .where(where)
@@ -166,6 +169,7 @@ class OrderCustomRepositoryImpl extends QuerydslRepositorySupport implements Ord
         }
 
         return from(order)
+                .distinct()
                 .select(order)
                 .leftJoin(order.orderItems, orderItem)
                 .where(where)
@@ -190,6 +194,7 @@ class OrderCustomRepositoryImpl extends QuerydslRepositorySupport implements Ord
         }
 
         return from(order)
+                .distinct()
                 .select(order)
                 .leftJoin(order.orderItems, orderItem)
                 .where(where)
@@ -206,20 +211,24 @@ class OrderCustomRepositoryImpl extends QuerydslRepositorySupport implements Ord
         QOrderItem orderItem = QOrderItem.orderItem;
 
         BooleanExpression where = orderItem.store.idx.eq(sIdx)
-                .and(isSameDay(order.orderDate, oDate))
                 .and(order.isActive.isTrue());
+
+        if(oDate != null) {
+            where = where.and(isSameDay(order.orderDate, oDate));
+        }
 
         if(last != null) {
             where = where.and(order.idx.gt(last));
         }
 
         return from(order)
+                .distinct()
                 .select(order)
                 .leftJoin(order.orderItems, orderItem)
                 .where(where)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(order.deliveryDetailSite.sequence.desc(), order.orderTime.idx.desc(), order.boxNumber.desc())
+                .orderBy(order.idx.desc())
                 .fetch();
     }
 

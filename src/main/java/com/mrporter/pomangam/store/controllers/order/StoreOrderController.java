@@ -33,7 +33,7 @@ public class StoreOrderController {
             @RequestParam(value = "ddIdx", required = false) Long ddIdx,
             @RequestParam(value = "otIdx", required = false) Long otIdx,
             @DateTimeFormat(pattern = "yyyy-MM-dd")
-            @RequestParam(value = "oDate", required = true) LocalDate oDate,
+            @RequestParam(value = "oDate", required = false) LocalDate oDate,
             @RequestParam(value = "last", required = false) Long last,
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable,
             Authentication auth
