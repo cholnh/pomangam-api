@@ -78,11 +78,11 @@ public class StoreData {
                     .build();
             storeStory.addImages(
                     StoreStoryImage.builder()
-                            .imagePath(ImagePath.reviews(idx, 1L)+"1.jpg")
+                            .imagePath(ImagePath.story(idx, 1L)+"1.jpg")
                             .sequence(1)
                             .build(),
                     StoreStoryImage.builder()
-                            .imagePath(ImagePath.reviews(idx, 1L)+"2.jpg")
+                            .imagePath(ImagePath.story(idx, 1L)+"2.jpg")
                             .sequence(2)
                             .build());
             store.addStories(storeStory);

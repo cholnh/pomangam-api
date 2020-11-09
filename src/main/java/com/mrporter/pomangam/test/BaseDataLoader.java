@@ -52,7 +52,7 @@ import java.time.LocalTime;
 import java.util.Arrays;
 
 @Component
-public class TestDataLoader implements ApplicationRunner {
+public class BaseDataLoader implements ApplicationRunner {
 
     @Autowired RegionData region;
     @Autowired DeliverySiteData deliverySite;
@@ -93,7 +93,7 @@ public class TestDataLoader implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         if( ddl.equals("create")) {
-            run();
+            //run();
         }
     }
 
@@ -103,23 +103,18 @@ public class TestDataLoader implements ApplicationRunner {
         /*
          * common map
          */
-        map.of("boolean_vbank_service_onoff", "false");
+        map.of("boolean_vbank_service_onoff", "true");
 
         /*
          * 지역
          */
         region.of(1L, "경기");
-        region.of(2L, "강원");
-        region.of(3L, "제주");
 
 
         /*
          * 배달지
          */
         deliverySite.of(1L, "한국항공대 본캠", DeliveryType.BUNDLE,1L, "본캠", "경기도 고양시 덕양구 항공대학로 76");
-        deliverySite.of(2L, "연세대 미래캠", DeliveryType.BUNDLE,1L, "미래캠", "강원도 원주시 연세대길 1");
-        deliverySite.of(3L, "한국경제신문사 빌딩", DeliveryType.BUNDLE,1L, "", "서울 중구 청파로 463 한국경제신문사");
-        deliverySite.of(4L, "28청춘 창업소", DeliveryType.BUNDLE,1L, "", "경기 고양시 덕양구 화중로104번길 33");
 
 
         /*
@@ -128,18 +123,7 @@ public class TestDataLoader implements ApplicationRunner {
         deliveryDetailSite.of(1L, 1L, "학생회관 뒤", "학생회관 뒤 족구장 있는 곳",
                 "ㅎ",1, 37.600326, 126.864485, 0);
         deliveryDetailSite.of(2L, 1L, "기숙사 식당", "기숙사 내부 식당",
-                "ㄱ",2, 37.598048, 126.866489, 5);
-
-        deliveryDetailSite.of(3L, 2L, "별관", "별관 식당",
-                "ㄱ",1, 37.598048, 126.866489, 0);
-        deliveryDetailSite.of(4L, 2L, "미디어관", "미디어 플레이스",
-                "ㄴ",2, 37.598048, 126.866489, 7);
-
-        deliveryDetailSite.of(5L, 3L, "직원식당 입구", "직원식당 입구",
-                "ㄱ",1, 37.598048, 126.866489, 0);
-
-        deliveryDetailSite.of(6L, 4L, "창업소 입구", "창업소 입구",
-                "ㄱ",1, 37.598048, 126.866489, 10);
+                "ㄱ",2, 37.598048, 126.866489, 10);
 
 
         /*
@@ -149,104 +133,37 @@ public class TestDataLoader implements ApplicationRunner {
         advertisement.of(2L, 1L, null, 2);
         advertisement.of(3L, 1L, null, 3);
 
-        advertisement.of(4L, 2L, null, 1);
-        advertisement.of(5L, 2L, null, 2);
-        advertisement.of(6L, 2L, null, 3);
-
-        advertisement.of(7L, 3L, null, 1);
-        advertisement.of(8L, 3L, null, 2);
-        advertisement.of(9L, 3L, null, 3);
-
-        advertisement.of(10L, 4L, null, 1);
-        advertisement.of(11L, 4L, null, 2);
-        advertisement.of(12L, 4L, null, 3);
-
 
         /*
          * 이벤트
          */
-        event.of(1L, 1L, "항공대 이벤트", "1닭 을 받기 위해서는 블라블라",
-                LocalDateTime.parse("2020-07-01T00:00:00"), null);
-        event.of(2L, 1L, "쿠폰 이벤트", "쿠폰 을 받기 위해서는 블라블라",
-                LocalDateTime.parse("2020-07-01T00:00:00"), LocalDateTime.parse("2020-08-01T00:00:00"));
 
-        event.of(3L, 2L, "연세대 이벤트", "1닭 을 받기 위해서는 블라블라",
-                LocalDateTime.parse("2020-07-01T00:00:00"), null);
-        event.of(4L, 2L, "쿠폰 이벤트", "쿠폰 을 받기 위해서는 블라블라",
-                LocalDateTime.parse("2020-07-01T00:00:00"), LocalDateTime.parse("2020-08-01T00:00:00"));
-
-        event.of(5L, 3L, "한국경제신문사 빌딩 이벤트", "1닭 을 받기 위해서는 블라블라",
-                LocalDateTime.parse("2020-07-01T00:00:00"), null);
-        event.of(6L, 3L, "쿠폰 이벤트", "쿠폰 을 받기 위해서는 블라블라",
-                LocalDateTime.parse("2020-07-01T00:00:00"), LocalDateTime.parse("2020-08-01T00:00:00"));
-
-        event.of(7L, 4L, "28청춘 창업소 이벤트", "1닭 을 받기 위해서는 블라블라",
-                LocalDateTime.parse("2020-07-01T00:00:00"), null);
-        event.of(8L, 4L, "쿠폰 이벤트", "쿠폰 을 받기 위해서는 블라블라",
-                LocalDateTime.parse("2020-07-01T00:00:00"), LocalDateTime.parse("2020-08-01T00:00:00"));
 
         /*
          * 공지사항
          */
-        notice.of(1L, 1L, "개인정보 처리방침 변경 안내", "안녕하세요. 대한민국 1등 반찬 정기배송 앱 포만감입니다.\n포만감 개인정보 처리방침이 아래와 같이 변경됩니다.\n\n\n1. 변경 사항",
-                LocalDateTime.parse("2020-07-01T00:00:00"), null);
-        notice.of(2L, 1L, "항공대 친구 초대 서비스 종료 안내", "친구 초대 서비스 종료 안내 블라블라",
-                LocalDateTime.parse("2020-07-01T00:00:00"), null);
 
-        notice.of(3L, 2L, "개인정보 처리방침 변경 안내", "안녕하세요. 대한민국 1등 반찬 정기배송 앱 포만감입니다.\n포만감 개인정보 처리방침이 아래와 같이 변경됩니다.\n\n\n1. 변경 사항",
-                LocalDateTime.parse("2020-07-01T00:00:00"), null);
-        notice.of(4L, 2L, "연세대 친구 초대 서비스 종료 안내", "친구 초대 서비스 종료 안내 블라블라",
-                LocalDateTime.parse("2020-07-01T00:00:00"), null);
-
-        notice.of(5L, 3L, "개인정보 처리방침 변경 안내", "안녕하세요. 대한민국 1등 반찬 정기배송 앱 포만감입니다.\n포만감 개인정보 처리방침이 아래와 같이 변경됩니다.\n\n\n1. 변경 사항",
-                LocalDateTime.parse("2020-07-01T00:00:00"), null);
-        notice.of(6L, 3L, "한국경제신문사 친구 초대 서비스 종료 안내", "친구 초대 서비스 종료 안내 블라블라",
-                LocalDateTime.parse("2020-07-01T00:00:00"), null);
-
-        notice.of(7L, 4L, "개인정보 처리방침 변경 안내", "안녕하세요. 대한민국 1등 반찬 정기배송 앱 포만감입니다.\n포만감 개인정보 처리방침이 아래와 같이 변경됩니다.\n\n\n1. 변경 사항",
-                LocalDateTime.parse("2020-07-01T00:00:00"), null);
-        notice.of(8L, 4L, "28청춘 친구 초대 서비스 종료 안내", "친구 초대 서비스 종료 안내 블라블라",
-                LocalDateTime.parse("2020-07-01T00:00:00"), null);
 
         /*
          * fcm 토큰
          */
-        fcmToken.of(1L, "__FCM_TOKEN_1__");
-        fcmToken.of(2L, "__FCM_TOKEN_2__");
-        fcmToken.of(3L, "__FCM_TOKEN_3__");
-        fcmToken.of(4L, "__FCM_TOKEN_4__");
 
 
         /*
          * 포인트 계급
          */
-        pointRank.of(1L, "평범한", 1, 0.1F, 0, 500, 0, 0);
-        pointRank.of(2L, "알뜰한", 2, 0.2F, 0, 1000, 10, 1);
-        pointRank.of(3L, "살뜰한", 3, 0.3F, 0, 2000, 20, 10);
-        pointRank.of(4L, "꾸준한", 4, 0.4F, 0, 3000, 40, 20);
-        pointRank.of(5L, "현명한", 5, 0.5F, 0, 10000, 60, 30);
-        pointRank.of(6L, "통달한", 6, 0.6F, 0, 20000, 80, 40);
-        pointRank.of(7L, "포만한", 7, 0.7F, 0, 40000, 100, 50);
+        pointRank.of(1L, "브론즈", 1, 0.1F, 0, 500, 0, 0);
+        pointRank.of(2L, "실버", 2, 0.2F, 0, 1000, 10, 1);
+        pointRank.of(3L, "골드", 3, 0.3F, 0, 2000, 20, 10);
+        pointRank.of(4L, "플레티넘", 4, 0.4F, 0, 3000, 40, 20);
+        pointRank.of(5L, "다이아몬드", 5, 0.5F, 0, 10000, 60, 30);
+        pointRank.of(6L, "마스터", 6, 0.6F, 0, 20000, 80, 40);
+        pointRank.of(7L, "챌린저", 7, 0.7F, 0, 40000, 100, 50);
 
 
         /*
          * 유저
          */
-        userData.of(1L, 1L,
-                "01064784899", "1234", "최낙형", "낙지", Sex.MALE, LocalDate.parse("1993-01-10"),
-                "ROLE_USER, ROLE_ADMIN");
-        userData.of(2L, 2L,
-                "01011111111", "1234", "최은성", "은스타", Sex.MALE, LocalDate.parse("1993-01-10"),
-                "ROLE_STAFF");
-        userData.of(3L, 1L,
-                "01022222222", "1234", "김영찬", "찬찬", Sex.MALE, LocalDate.parse("1993-01-10"),
-                "ROLE_USER");
-        userData.of(4L, 1L,
-                "01033333333", "1234", "윤태인", "윤탱", Sex.MALE, LocalDate.parse("1993-01-10"),
-                "ROLE_USER");
-        userData.of(5L, 3L,
-                "01044444444", "1234", "김태희", "태희", Sex.FEMALE, LocalDate.parse("1993-01-10"),
-                "ROLE_USER");
 
 
         /*
@@ -260,199 +177,115 @@ public class TestDataLoader implements ApplicationRunner {
         /*
          * 업체
          */
-        store.of(1L, 1L, 2L, "맘스터치(항공대)", "엄마의 손맛, 수제햄버거 전문점 맘스터치", null,
-                3.7F, 178, 54, 1, 1,
-                Arrays.asList(1,2,3),
-                Arrays.asList("고객리뷰", "이벤트안내"),
-                Arrays.asList("세트", "단품"));
-        store.of(2L, 1L, 1L, "한솥도시락(항공대)", "\uD83C\uDF71 싼맛! 싼마이 도시락! 한솥도시락 \uD83C\uDF71", "리뷰이벤트 중입니다 ♥",
-                4.2F, 132, 79, 0, 2,
-                Arrays.asList(1,2,3),
-                Arrays.asList("new Arrival", "도시락증정"),
-                Arrays.asList("보울도시락", "사각도시락", "프리미엄", "간식"));
 
-        store.of(3L, 2L, 2L, "맘스터치(연세대)", "엄마의 손맛, 수제햄버거 전문점 맘스터치 -연세점-", null,
-                4.6F, 209, 57, 0, 1,
+        store.of(1L, 1L, 1L, "포만감 도시락", "🍱 내가 먹고싶은 음식만 골라 담는 가성비 커스터마이징 도시락 \uD83C\uDF71", null,
+                0F, 0, 0, 0, 1,
                 Arrays.asList(1,2,3),
-                Arrays.asList("연세이벤트"),
-                Arrays.asList("세트", "단품"));
-        store.of(4L, 2L, 1L, "한솥도시락(연세대)", "\uD83C\uDF71 싼맛! 싼마이 도시락! 한솥도시락 \uD83C\uDF71", "항상 감사합니다.",
-                4.0F, 343, 61, 0, 2,
-                Arrays.asList(1,2,3),
-                Arrays.asList("new Arrival", "도시락증정"),
-                Arrays.asList("보울도시락", "사각도시락", "프리미엄", "간식"));
-
-        store.of(5L, 1L, 2L, "피자매니", "껍질치밥으로 유명한 피자매니란다 \uD83C\uDF55\uD83C\uDF5F\uD83C\uDF2E", "리뷰이벤트 중입니다 \uD83E\uDD27\uD83E\uDD2D",
-                2.7F, 32, 129, 0, 3,
-                Arrays.asList(1,2,3),
-                Arrays.asList("항공대이벤트", "1일 1닭"),
-                Arrays.asList("피자", "치킨", "껍질", "간식"));
-        store.of(6L, 1L, 3L, "항공반점", "항슐랭 \uD83C\uDF08 맛집 인증. 항공반점입니다.", null,
-                4.4F, 56, 43, 0, 4,
-                Arrays.asList(1,2,3),
-                Arrays.asList(),
-                Arrays.asList("메인", "서브", "프리미엄"));
-        store.of(7L, 1L, 1L, "포만감 도시락", "\uD83D\uDE0E내가 먹고싶은 음식만 골라 담아 \uD83C\uDF71 도시락을 만들어 먹는다. \uD83D\uDE0B신개념 커스터마이징 도시락\uD83D\uDC40", "\uD83D\uDD25이벤트 중입니다.\uD83D\uDD25",
-                4.9F, 627, 311, 0, 3,
-                Arrays.asList(1,2,3),
-                Arrays.asList("고객리뷰", "이벤트안내"),
-                Arrays.asList("메인 도시락", "서브 도시락", "프리미엄 도시락"));
-
-        store.of(8L, 3L, 1L, "반찬탁", "\uD83C\uDF71 싼맛! 싼마이 도시락! 한솥도시락 \uD83C\uDF71 \uD83D\uDE0E", "\uD83D\uDD25이벤트 중입니다.\uD83D\uDD25",
-                4.3F, 4687, 988, 0, 1,
-                Arrays.asList(1,2,3),
-                Arrays.asList("고객리뷰", "이벤트안내"),
-                Arrays.asList("메인 도시락", "서브 도시락", "프리미엄 도시락"));
+                Arrays.asList("", ""),
+                Arrays.asList("메인 도시락"));
 
 
         /*
          * 배달지 - 업체 연결
          */
-        storeMapper.of(1L, 1L,2L,5L,6L,7L);
-        storeMapper.of(2L, 3L,4L,7L,8L);
-        storeMapper.of(3L, 7L,8L);
-        storeMapper.of(4L, 7L,8L);
+        storeMapper.of(1L, 1L);
+
 
         /*
          * 제품
          */
-        product.of(1L,"싸이버거 세트", ProductType.NORMAL,
-                1L, 1L, 1, 6_000, 1_000, 500,
-                1, 2, 3);
-        product.of(2L,"싸이버거", ProductType.NORMAL,
-                1L, 2L, 2, 4_000, 1_000, 500,
-                1, 2, 3);
-        product.of(3L,"휠렛버거 세트", ProductType.NORMAL,
-                1L, 1L, 3, 5_500, 1_000, 500,
-                1, 2, 3);
-        product.of(4L,"휠렛버거", ProductType.NORMAL,
-                1L, 2L, 4, 3_500, 1_000, 500,
-                1, 2, 3);
-
-        product.of(5L,"갈비치킨마요", ProductType.NORMAL,
-                2L, 3L, 1, 3_200, 1_000, 300,
-                1,2,3);
-        product.of(6L,"메가치킨마요", ProductType.NORMAL,
-                2L, 3L, 2, 5_500, 1_000, 300,
-                1,2,3);
-        product.of(7L,"메가치킨제육", ProductType.NORMAL,
-                2L, 4L, 3, 6_900, 1_000, 300,
-                1,2,3);
-        product.of(8L,"치킨마요", ProductType.NORMAL,
-                2L, 3L, 4, 2_900, 1_000, 300,
-                1,2,3);
-        product.of(9L,"빅치킨마요", ProductType.NORMAL,
-                2L, 3L, 5, 3_500, 1_000, 300,
+        product.of(1L,"도시락(S)", ProductType.CUSTOMIZING_3,
+                1L, 1L, 1, 4_000, 0, 0,
                 1);
-        product.of(10L,"숯불직화구이 덮밥", ProductType.NORMAL,
-                2L, 5L, 6, 5_700, 1_000, 300,
+        product.of(2L,"도시락(M)", ProductType.CUSTOMIZING_4,
+                1L, 1L, 2, 5_000, 0, 0,
                 1);
-        product.of(11L,"왕치킨마요", ProductType.NORMAL,
-                2L, 3L, 7, 4_200, 1_000, 300,
-                1);
-        product.of(12L,"한솥 철판볶음밥", ProductType.NORMAL,
-                2L, 4L, 8, 3_700, 1_000, 300,
-                1);
-        product.of(13L,"돈까스 카레", ProductType.NORMAL,
-                2L, 3L, 9, 3_900, 1_000, 300,
-                1);
-        product.of(14L,"불닭비빔밥", ProductType.NORMAL,
-                2L, 5L, 10, 4_500, 1_000, 300,
-                1);
-        product.of(15L,"돈치마요", ProductType.NORMAL,
-                2L, 3L, 11, 3_500, 1_000, 300,
-                1);
-
-        product.of(16L,"도시락(S)", ProductType.CUSTOMIZING_3,
-                7L, 20L, 1, 3_000, 1_000, 500,
-                1);
-        product.of(17L,"도시락(M)", ProductType.CUSTOMIZING_4,
-                7L, 20L, 2, 4_500, 1_000, 500,
-                1);
-        product.of(18L,"도시락(L)", ProductType.CUSTOMIZING_5,
-                7L, 20L, 3, 6_000, 1_000, 500,
+        product.of(3L,"도시락(L)", ProductType.CUSTOMIZING_5,
+                1L, 1L, 3, 6_000, 0, 0,
                 1);
 
 
         /*
          * 서브 카테고리
          */
-        productSubCategory.of(1L, "맛 필수 선택", ProductSubType.RADIO, false);
-        productSubCategory.of(2L, "서브", ProductSubType.CHECKBOX, false);
-        productSubCategory.of(3L, "음료", ProductSubType.CHECKBOX, false);
-        productSubCategory.of(4L, "서브", ProductSubType.CHECKBOX, false);
-        productSubCategory.of(5L, "음료", ProductSubType.CHECKBOX, false);
-        productSubCategory.of(6L, "선택1", ProductSubType.CUSTOMIZING_SUB, true);
-        productSubCategory.of(7L, "선택2", ProductSubType.CUSTOMIZING_SUB, true);
-        productSubCategory.of(8L, "선택3", ProductSubType.CUSTOMIZING_SUB, true);
-        productSubCategory.of(9L, "선택4", ProductSubType.CUSTOMIZING_SUB, true);
-        productSubCategory.of(10L, "선택5", ProductSubType.CUSTOMIZING_SUB, true);
+        productSubCategory.of(1L, "필수선택1", ProductSubType.CUSTOMIZING_SUB, true);
+        productSubCategory.of(2L, "필수선택2", ProductSubType.CUSTOMIZING_SUB, true);
+        productSubCategory.of(3L, "필수선택3", ProductSubType.CUSTOMIZING_SUB, true);
+        productSubCategory.of(4L, "필수선택4", ProductSubType.CUSTOMIZING_SUB, true);
+        productSubCategory.of(5L, "필수선택5", ProductSubType.CUSTOMIZING_SUB, true);
+
+        productSubCategory.of(6L, "국", ProductSubType.CUSTOMIZING_SUB, false);
+        productSubCategory.of(7L, "음료", ProductSubType.CUSTOMIZING_SUB, false);
+
 
         /*
          * 서브 제품
          */
-        productSub.of(1L, 1L, 1L, 1L, "착한맛", null, null,1, 0, null, null, Arrays.asList());
-        productSub.of(2L, 1L, 1L, 1L, "보통맛", null, null,2, 0, null, null, Arrays.asList());
-        productSub.of(3L, 1L, 1L, 1L, "매운맛", null, null,3, 0, null, null, Arrays.asList());
-        productSub.of(4L, 1L, 1L, 2L, "케이준양념감자", "쫀딕쫀딕 케이준감자에 양념 뭍힌것이여~", "쪼끔 맵땅깨~",1, 160, 0, 10, Arrays.asList(1,2));
-        productSub.of(5L, 1L, 1L, 4L, "사이즈업", null, null,4, 1000, null, null, Arrays.asList());
-        productSub.of(6L, 1L, 1L, 3L, "콜라", "코카콜라", "500ml",2, 1300, null, null, Arrays.asList(1));
-        productSub.of(7L, 1L, 1L, 3L, "사이다", "칠성사이다", "500ml",3, 1300, null, null, Arrays.asList(1));
-        productSub.of(8L, 1L, 1L, 5L, "콜라375", "코카콜라375", "375ml",5, 1000, null, null, Arrays.asList(1));
-        productSub.of(9L, 1L, 1L, 5L, "사이다375", "칠성사이다375", "375ml",6, 1000, null, null, Arrays.asList(1));
+        productSub.of(1L, 1L, 1L, 7L, "콜라", "코카콜라", "500ml",1, 1000, null, null, Arrays.asList(1));
+        productSub.of(2L, 1L, 1L, 7L, "사이다", "칠성사이다", "500ml",2, 1000, null, null, Arrays.asList(1));
 
-        productSub.of(10L, 1L, 7L, 6L, "흰쌀밥", null, null,1, 0, null, null, Arrays.asList(1));
-        productSub.of(11L, 1L, 7L, 6L, "현미밥", "국내산 현미 100%", null,2, 0, null, null, Arrays.asList(1));
-        productSub.of(12L, 1L, 7L, 6L, "잡곡밥", "국내산 잡곡 100%", null,3, 0, null, null, Arrays.asList(1));
-        productSub.of(13L, 1L, 7L, 6L, "서리태밥", "국내산 서리태 100%", null,4, 300, null, null, Arrays.asList(1));
-        productSub.of(14L, 1L, 7L, 6L, "김치베이컨 필라프", "김치와 베이컨을 볶은 필라프", null,5, 1000, null, null, Arrays.asList(1));
+        productSub.of(3L, 1L, 1L, 6L, "김치찌개", "", "",1, 3000, null, null, Arrays.asList(1));
 
-        productSub.of(15L, 1L, 7L, 7L, "제육볶음", "국내산 돼지고기", "650g",1, 0, null, null, Arrays.asList(1));
-        productSub.of(16L, 1L, 7L, 7L, "제육볶음 곱빼기", "국내산 돼지고기", "850g",2, 1000, null, null, Arrays.asList(1));
-        productSub.of(17L, 1L, 7L, 7L, "돈까스", "수제 돈까스", "500g",3, 0, null, null, Arrays.asList(1));
-        productSub.of(18L, 1L, 7L, 7L, "치즈돈까스", "임실치즈 수제 돈까스", "600g",4, 500, null, null, Arrays.asList(1));
-        productSub.of(19L, 1L, 7L, 7L, "고등어조림", "국내산 고등어 조림", "고등어 2개",5, 0, null, null, Arrays.asList(1));
-        productSub.of(20L, 1L, 7L, 7L, "고기산적", "다진고기로 만든 산적", "산적 3개",6, 0, null, null, Arrays.asList(1));
+        // 3찬
+        productSub.of(4L, 1L, 1L, 1L, "흰쌀밥", null, "250g",1, 0, null, null, Arrays.asList(1));
+        productSub.of(5L, 1L, 1L, 1L, "볶음밥", null, "250g",2, 0, null, null, Arrays.asList(1));
+        productSub.of(6L, 1L, 1L, 1L, "제육볶음", null, "200g",3, 0, null, null, Arrays.asList(1));
+        productSub.of(7L, 1L, 1L, 1L, "돼지불백", null, "190g",4, 0, null, null, Arrays.asList(1));
 
-        productSub.of(21L, 1L, 7L, 8L, "김치", "국내산 김치", "250g",1, 0, null, null, Arrays.asList(1));
-        productSub.of(22L, 1L, 7L, 8L, "볶음김치", "국내산 김치", "250g",2, 0, null, null, Arrays.asList(1));
-        productSub.of(23L, 1L, 7L, 8L, "멸치볶음", "국내산 멸치볶음", "150g",3, 0, null, null, Arrays.asList(1));
-        productSub.of(24L, 1L, 7L, 8L, "연근조림", "싱싱한 연근조림", "200g",4, 0, null, null, Arrays.asList(1));
-        productSub.of(25L, 1L, 7L, 8L, "무말랭이", "국내산 무말랭이 무침", "300g",5, 0, null, null, Arrays.asList(1));
-        productSub.of(26L, 1L, 7L, 8L, "봄나물무침", "향긋한 봄나물", "200g",6, 0, null, null, Arrays.asList(1));
+        productSub.of(6L, 1L, 1L, 2L, "무생채", null, "60g",1, 0, null, null, Arrays.asList(1));
+        productSub.of(7L, 1L, 1L, 2L, "감자볶음", null, "45g",2, 0, null, null, Arrays.asList(1));
+        productSub.of(8L, 1L, 1L, 2L, "애호박", null, "60g",3, 0, null, null, Arrays.asList(1));
+        productSub.of(9L, 1L, 1L, 2L, "메추리알", null, "7알",4, 0, null, null, Arrays.asList(1));
+        productSub.of(10L, 1L, 1L, 2L, "오이소박이", null, "90g",5, 0, null, null, Arrays.asList(1));
+        productSub.of(11L, 1L, 1L, 2L, "깻잎절임", null, "18g",6, 0, null, null, Arrays.asList(1));
+        productSub.of(12L, 1L, 1L, 2L, "무말랭이", null, "60g",7, 0, null, null, Arrays.asList(1));
+        productSub.of(13L, 1L, 1L, 2L, "낙지젓갈", null, "50g",8, 0, null, null, Arrays.asList(1));
+        productSub.of(14L, 1L, 1L, 2L, "오징어젓갈", null, "50g",9, 0, null, null, Arrays.asList(1));
+        productSub.of(15L, 1L, 1L, 2L, "김치", "국내산 김치", "50g",10, 0, null, null, Arrays.asList(1));
+        productSub.of(16L, 1L, 1L, 2L, "볶음김치", "국내산 김치", "50g",11, 0, null, null, Arrays.asList(1));
+        productSub.of(17L, 1L, 1L, 2L, "제육볶음", null, "85g",1, 0, null, null, Arrays.asList(1));
+        productSub.of(18L, 1L, 1L, 2L, "돼지불백", null, "75g",2, 0, null, null, Arrays.asList(1));
 
-        productSub.of(27L, 1L, 7L, 9L, "간장게장", "국내산 암게", "200g",1, 1000, null, null, Arrays.asList(1));
-        productSub.of(28L, 1L, 7L, 9L, "양념게장", "국내산 암게", "200g",2, 1000, null, null, Arrays.asList(1));
+        productSub.of(6L, 1L, 1L, 3L, "무생채", null, "60g",1, 0, null, null, Arrays.asList(1));
+        productSub.of(7L, 1L, 1L, 3L, "감자볶음", null, "45g",2, 0, null, null, Arrays.asList(1));
+        productSub.of(8L, 1L, 1L, 3L, "애호박", null, "60g",3, 0, null, null, Arrays.asList(1));
+        productSub.of(9L, 1L, 1L, 3L, "메추리알", null, "7알",4, 0, null, null, Arrays.asList(1));
+        productSub.of(10L, 1L, 1L, 3L, "오이소박이", null, "90g",5, 0, null, null, Arrays.asList(1));
+        productSub.of(11L, 1L, 1L, 3L, "깻잎절임", null, "18g",6, 0, null, null, Arrays.asList(1));
+        productSub.of(12L, 1L, 1L, 3L, "무말랭이", null, "60g",7, 0, null, null, Arrays.asList(1));
+        productSub.of(13L, 1L, 1L, 3L, "낙지젓갈", null, "50g",8, 0, null, null, Arrays.asList(1));
+        productSub.of(14L, 1L, 1L, 3L, "오징어젓갈", null, "50g",9, 0, null, null, Arrays.asList(1));
+        productSub.of(15L, 1L, 1L, 3L, "김치", "국내산 김치", "50g",10, 0, null, null, Arrays.asList(1));
+        productSub.of(16L, 1L, 1L, 3L, "볶음김치", "국내산 김치", "50g",11, 0, null, null, Arrays.asList(1));
+        productSub.of(17L, 1L, 1L, 3L, "제육볶음", null, "85g",1, 0, null, null, Arrays.asList(1));
+        productSub.of(18L, 1L, 1L, 3L, "돼지불백", null, "75g",2, 0, null, null, Arrays.asList(1));
 
-        productSub.of(29L, 1L, 7L, 10L, "소세지볶음", null, "150g",1, 0, null, null, Arrays.asList(1));
-        productSub.of(30L, 1L, 7L, 10L, "미트볼", "부드러운 미트볼", "150g",2, 0, null, null, Arrays.asList(1));
-        productSub.of(31L, 1L, 7L, 10L, "미니돈까스", "수제 돈까스", "150g",3, 0, null, null, Arrays.asList(1));
-        productSub.of(32L, 1L, 7L, 10L, "새우튀김", "30미 새우", "새우 2개",4, 0, null, null, Arrays.asList(1));
-        productSub.of(33L, 1L, 7L, 10L, "계란후라이", null, null,5, 0, null, null, Arrays.asList(1));
+        // 4찬
+        productSub.of(4L, 1L, 1L, 1L, "흰쌀밥", null, "185g",1, 0, null, null, Arrays.asList(1));
+        productSub.of(5L, 1L, 1L, 1L, "볶음밥", null, "185g",2, 0, null, null, Arrays.asList(1));
+        productSub.of(6L, 1L, 1L, 1L, "제육볶음", null, "190g",3, 0, null, null, Arrays.asList(1));
+        productSub.of(7L, 1L, 1L, 1L, "돼지불백", null, "180g",4, 0, null, null, Arrays.asList(1));
+        productSub.of(6L, 1L, 1L, 2L, "무생채", null, "60g",1, 0, null, null, Arrays.asList(1));
+        productSub.of(7L, 1L, 1L, 2L, "감자볶음", null, "45g",2, 0, null, null, Arrays.asList(1));
+        productSub.of(8L, 1L, 1L, 2L, "애호박", null, "60g",3, 0, null, null, Arrays.asList(1));
+        productSub.of(9L, 1L, 1L, 2L, "메추리알", null, "7알",4, 0, null, null, Arrays.asList(1));
+        productSub.of(10L, 1L, 1L, 2L, "오이소박이", null, "90g",5, 0, null, null, Arrays.asList(1));
+        productSub.of(11L, 1L, 1L, 2L, "깻잎절임", null, "18g",6, 0, null, null, Arrays.asList(1));
+        productSub.of(12L, 1L, 1L, 2L, "무말랭이", null, "60g",7, 0, null, null, Arrays.asList(1));
+        productSub.of(13L, 1L, 1L, 2L, "낙지젓갈", null, "50g",8, 0, null, null, Arrays.asList(1));
+        productSub.of(14L, 1L, 1L, 2L, "오징어젓갈", null, "50g",9, 0, null, null, Arrays.asList(1));
+        productSub.of(15L, 1L, 1L, 2L, "김치", "국내산 김치", "250g",10, 0, null, null, Arrays.asList(1));
+        productSub.of(16L, 1L, 1L, 2L, "볶음김치", "국내산 김치", "250g",11, 0, null, null, Arrays.asList(1));
 
+        productSub.of(17L, 1L, 1L, 3L, "제육볶음", null, "85g",1, 0, null, null, Arrays.asList(1));
+        productSub.of(18L, 1L, 1L, 3L, "돼지불백", null, "75g",2, 0, null, null, Arrays.asList(1));
 
         /*
          * 제품-서브 연결
          */
-        productSubMapper.of(1L, 4L, 6L, 7L);
-        productSubMapper.of(2L, 4L, 6L, 7L);
-        productSubMapper.of(3L, 4L, 6L, 7L);
-        productSubMapper.of(4L, 4L, 6L, 7L);
-        productSubMapper.of(5L, 1L, 2L, 3L, 5L, 8L, 9L);
-        productSubMapper.of(6L, 1L, 2L, 3L, 5L, 8L, 9L);
-        productSubMapper.of(7L, 1L, 2L, 3L, 5L, 8L, 9L);
-        productSubMapper.of(8L, 1L, 2L, 3L, 5L, 8L, 9L);
-        productSubMapper.of(9L, 1L, 2L, 3L, 5L, 8L, 9L);
-        productSubMapper.of(10L, 1L, 2L, 3L, 5L, 8L, 9L);
-        productSubMapper.of(11L, 1L, 2L, 3L, 5L, 8L, 9L);
-        productSubMapper.of(12L, 1L, 2L, 3L, 5L, 8L, 9L);
-        productSubMapper.of(13L, 1L, 2L, 3L, 5L, 8L, 9L);
-        productSubMapper.of(14L, 1L, 2L, 3L, 5L, 8L, 9L);
-        productSubMapper.of(15L, 1L, 2L, 3L, 5L, 8L, 9L);
-
-        productSubMapper.of(16L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L, 24L, 25L, 26L);
-        productSubMapper.of(17L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L, 24L, 25L, 26L, 27L, 28L);
-        productSubMapper.of(18L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L, 24L, 25L, 26L, 27L, 28L, 29L, 30L, 31L, 32L, 33L);
+        productSubMapper.of(1L, 4L, 5L, 6L, 7L);
+        productSubMapper.of(2L, 4L, 5L, 6L, 7L);
+        productSubMapper.of(3L, 4L, 5L, 6L, 7L);
 
 
         /*

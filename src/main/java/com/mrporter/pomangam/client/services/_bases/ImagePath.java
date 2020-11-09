@@ -59,6 +59,14 @@ public class ImagePath {
     }
 
     /**
+     * 업체 스토리
+     * C:/assets/images/stores/{sIdx}/stories/{stIdx}/
+     */
+    public static String story(Long sIdx, Long stIdx) {
+        return "assets/images/stores/" + sIdx + "/stories/" + stIdx + "/";
+    }
+
+    /**
      * 광고
      * C:/assets/images/dsites/{dIdx}/advertisements/{adIdx}/
      */

@@ -14,11 +14,12 @@ public class ProductSubCategoryData {
     ProductSubCategoryJpaRepository productSubCategoryJpaRepository;
 
     @Transactional
-    public void of(Long idx, String title, ProductSubType type) {
+    public void of(Long idx, String title, ProductSubType type, boolean isNecessary) {
         ProductSubCategory productSubCategory = ProductSubCategory.builder()
                 .idx(idx)
                 .categoryTitle(title)
                 .productSubType(type)
+                .isNecessary(isNecessary)
                 .build();
         productSubCategoryJpaRepository.save(productSubCategory);
     }

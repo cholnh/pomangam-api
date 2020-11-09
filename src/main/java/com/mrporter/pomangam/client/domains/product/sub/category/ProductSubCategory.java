@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.client.domains.product.sub.category;
 
+import com.mrporter.pomangam._bases.annotation.BooleanToYNConverter;
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import com.mrporter.pomangam.client.domains.product.sub.ProductSub;
 import com.mrporter.pomangam.client.domains.product.sub.ProductSubType;
@@ -25,6 +26,10 @@ public class ProductSubCategory extends EntityAuditing {
     @Column(name = "category_title", nullable = false, length = 20)
     private String categoryTitle;
 
+    @Column(name = "is_necessary", nullable = false, length = 1)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isNecessary;
+
     /**
      * 서브 제품 종류
      * 다중선택: ProductSubType.CHECKBOX
@@ -42,9 +47,10 @@ public class ProductSubCategory extends EntityAuditing {
     private List<ProductSub> productSubs;
 
     @Builder
-    public ProductSubCategory(Long idx, String categoryTitle, ProductSubType productSubType, List<ProductSub> productSubs) {
+    public ProductSubCategory(Long idx, String categoryTitle, Boolean isNecessary, ProductSubType productSubType, List<ProductSub> productSubs) {
         super.setIdx(idx);
         this.categoryTitle = categoryTitle;
+        this.isNecessary = isNecessary;
         this.productSubType = productSubType;
         this.productSubs = productSubs;
     }
