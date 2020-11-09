@@ -9,7 +9,7 @@ server:
       tracking-modes: cookie
 
   ssl:
-    enabled: false
+    enabled: true
     key-store: C:/ssl/poman.kr/sectigo/keystore.jks  # Mac key path -> /Users/nakzzi/Downloads/keystore
     key-store-type: jks
     key-store-password: 26809t

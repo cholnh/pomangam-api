@@ -19,6 +19,7 @@ public class ProductSubCategoryDto implements Serializable {
     private LocalDateTime registerDate;
     private LocalDateTime modifyDate;
     private String categoryTitle;
+    private Boolean isNecessary;
     private ProductSubType productSubType;
     private List<ProductSubDto> productSubs;
 
@@ -34,6 +35,7 @@ public class ProductSubCategoryDto implements Serializable {
         dto.setRegisterDate(entity.getRegisterDate());
         dto.setModifyDate(entity.getModifyDate());
         dto.setCategoryTitle(entity.getCategoryTitle());
+        dto.setIsNecessary(entity.getIsNecessary());
         dto.setProductSubType(entity.getProductSubType());
         dto.setProductSubs(ProductSubDto.fromEntities(entity.getProductSubs()));
         return dto;
