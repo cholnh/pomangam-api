@@ -13,11 +13,19 @@ public class BizmApi {
     private static final String subUrl = "/v2/sender/send";
     private static final boolean isSsl = true;
 
+    public static ResponseEntity<?> sendMsg(String phn, String msg, String tmplId) {
+        return send(phn, msg, tmplId, null, true);
+    }
+
     public static ResponseEntity<?> send(String phn, String msg, String tmplId) {
-        return send(phn, msg, tmplId, null);
+        return send(phn, msg, tmplId, null, false);
     }
 
     public static ResponseEntity<?> send(String phn, String msg, String tmplId, String title) {
+        return send(phn, msg, tmplId, title, false);
+    }
+
+    public static ResponseEntity<?> send(String phn, String msg, String tmplId, String title, Boolean isMsg) {
         ApiClientUtils apiClientUtils = new ApiClientUtils(domain, isSsl);
 
         Map<String, String> header = new HashMap<>();
@@ -31,6 +39,12 @@ public class BizmApi {
         body.put("tmplId", tmplId);
         if(title != null) {
             body.put("title", title);
+        }
+        if(isMsg) {
+            body.put("smsOnly", "Y");
+            body.put("smsSender", "0507-1300-6906");
+            body.put("smsKind", "L");
+            body.put("msgSms", msg);
         }
         return apiClientUtils.sendByPost(header, body, subUrl);
     }

@@ -68,7 +68,7 @@ public class Owner extends EntityAuditing {
     /**
      * Fcm token 인덱스
      */
-    @Column(name = "idx_fcm_token", nullable = false)
+    @Column(name = "idx_fcm_token", nullable = true)
     private Long idxFcmToken;
 
     /**

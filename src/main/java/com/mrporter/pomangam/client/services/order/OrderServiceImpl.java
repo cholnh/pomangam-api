@@ -1,6 +1,8 @@
 package com.mrporter.pomangam.client.services.order;
 
 import com.mrporter.pomangam._bases.utils.bootpay.model.response.callback.CallbackResponse;
+import com.mrporter.pomangam._bases.utils.time.CustomTime;
+import com.mrporter.pomangam._bases.utils.time.DateUtils;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSite;
 import com.mrporter.pomangam.client.domains.order.Order;
 import com.mrporter.pomangam.client.domains.order.OrderRequestDto;
@@ -346,6 +348,7 @@ public class OrderServiceImpl implements OrderService {
                         .note(reason)
                         .status(VBankRefundStatus.READY)
                         .idxOrder(order.getIdx())
+                        .refundDate(CustomTime.curDateTime())
                         .build());
                 break;
         }

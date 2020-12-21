@@ -39,6 +39,8 @@ public class OrderResponseDto implements Serializable {
     private Short boxNumber;
     private PaymentType paymentType;
     private OrdererType ordererType;
+    private String ordererName;
+    private String ordererPn;
 
     // 결제 정보
     private Integer usingPoint;
@@ -82,6 +84,13 @@ public class OrderResponseDto implements Serializable {
         dto.setBoxNumber(entity.getBoxNumber());
         dto.setPaymentType(paymentInfo.getPaymentType());
         dto.setOrdererType(entity.getOrderer().getOrdererType());
+        if(entity.getOrderer().getUser() != null) {
+            dto.setOrdererName(entity.getOrderer().getUser().getName());
+            dto.setOrdererPn(entity.getOrderer().getUser().getPhoneNumber());
+        } else {
+            dto.setOrdererName("비회원");
+        }
+
 
         // 결제 정보
         dto.setUsingPoint(paymentInfo.getUsingPoint());

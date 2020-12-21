@@ -93,7 +93,7 @@ public class TestDataLoader implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         if( ddl.equals("create")) {
-            run();
+            //run();
         }
     }
 

@@ -1,6 +1,8 @@
 package com.mrporter.pomangam.client.services.vbank;
 
 import com.mrporter.pomangam._bases.utils.bizm.template.VBankDepositTemplate;
+import com.mrporter.pomangam.client.domains.event.Event;
+import com.mrporter.pomangam.client.domains.event.EventViewDto;
 import com.mrporter.pomangam.client.domains.vbank.VBankDeposit;
 import com.mrporter.pomangam.client.domains.vbank.VBankDepositDto;
 import com.mrporter.pomangam.client.domains.vbank.VBankReady;
@@ -16,6 +18,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -44,6 +47,13 @@ public class VBankServiceImpl implements VBankService {
     OrderJpaRepository orderRepo;
     CommonMapServiceImpl commonMapService;
 
+    @Override
+    public List<VBankDepositDto> findDeposit(Pageable pageable) {
+        List<VBankDeposit> deposits = vBankDepositRepo.findAll(pageable).getContent();
+        return VBankDepositDto.fromEntities(deposits);
+    }
+
+    @Override
     @Transactional
     public void autoCheckDeposit(boolean isForceUpdate) {
         if(isOnService()) {
@@ -57,6 +67,7 @@ public class VBankServiceImpl implements VBankService {
         }
     }
 
+    @Override
     @Transactional
     public void clearOldReady() {
         if(isOnService()) {

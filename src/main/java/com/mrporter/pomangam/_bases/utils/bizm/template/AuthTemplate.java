@@ -13,7 +13,7 @@ public class AuthTemplate {
     private final static String tmplId = "pmg_auth_1";
 
     public static ResponseEntity<?> send(String phoneNumber, Map<String, String> data) {
-        return BizmApi.send(PhoneNumberFormatter.format(phoneNumber), (msg1 + data.get("auth_code") + msg2), tmplId);
+        return BizmApi.sendMsg(PhoneNumberFormatter.format(phoneNumber), (msg1 + data.get("auth_code") + msg2), tmplId);
     }
 
     public static void send(List<String> phoneNumbers, Map<String, String> data) {

@@ -109,7 +109,7 @@ public class ClientStoreServiceImpl implements ClientStoreService {
         int pp = info.getParallelProduction();       // 평균 병렬 생산량
         int mt = info.getMinimumTime();              // 최소 생산 가능 시간
         int max = info.getMaximumProduction();       // 최대 주문 가능 수량
-        int avp = pp / mt * dMinute;                 // 생산 가능 수량
+        int avp = (pp / mt) * dMinute;                 // 생산 가능 수량
         avp = avp >= max ? max : avp;
         return avp - aov < 0 ? 0 : avp - aov;
     }

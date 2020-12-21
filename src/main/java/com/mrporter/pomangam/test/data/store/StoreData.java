@@ -64,7 +64,7 @@ public class StoreData {
         store.addImages(storeBrandImage);
         for(int i=0; i<imagePaths.size(); i++) {
             StoreImage storeImage = StoreImage.builder()
-                    .imagePath(ImagePath.stores(idx) + (imagePaths.get(i)) + ".png")
+                    .imagePath(ImagePath.stores(idx) + (imagePaths.get(i)) + ".jpg")
                     .imageType(i==0 ? StoreImageType.MAIN : StoreImageType.SUB)
                     .sequence(i+1)
                     .build();

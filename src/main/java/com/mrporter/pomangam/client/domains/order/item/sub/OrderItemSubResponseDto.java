@@ -26,7 +26,7 @@ public class OrderItemSubResponseDto implements Serializable {
         if(entity == null) return null;
         OrderItemSubResponseDto dto = new ModelMapper().map(entity, OrderItemSubResponseDto.class);
 
-        dto.setNameProductSub(entity.getProductSub().getProductSubInfo().getName());
+        dto.setNameProductSub("("+entity.getProductSub().getProductSubCategory().getCategoryTitle()+") "+entity.getProductSub().getProductSubInfo().getName());
         dto.setIdxProductSub(entity.getProductSub().getIdx());
         dto.setSaleCost(entity.getProductSub().getCost().saleCost());
 
