@@ -92,6 +92,12 @@ public class Order extends EntityAuditing {
     private Integer paymentCost;
 
     /**
+     * 비고란
+     */
+    @Column(name = "note", nullable = true, length = 255)
+    private String note;
+
+    /**
      * 고객이 결제해야 할 요금 반환
      * @return 결제 총 요금
      */
@@ -124,11 +130,15 @@ public class Order extends EntityAuditing {
      * @return 할인 내역 총 가격
      */
     public int discountCost() {
-        return paymentInfo.discountCost();
+        int q = 0;
+        for(OrderItem item : orderItems) {
+            q += item.getQuantity();
+        }
+        return paymentInfo.discountCost(q);
     }
 
     @Builder
-    public Order(Long idx, OrderType orderType, Short boxNumber, Orderer orderer, PaymentInfo paymentInfo, DeliveryDetailSite deliveryDetailSite, LocalDate orderDate, OrderTime orderTime, List<OrderItem> orderItems, String receiptId, Integer paymentCost) {
+    public Order(Long idx, OrderType orderType, Short boxNumber, Orderer orderer, PaymentInfo paymentInfo, DeliveryDetailSite deliveryDetailSite, LocalDate orderDate, OrderTime orderTime, List<OrderItem> orderItems, String receiptId, Integer paymentCost, String note) {
         super.setIdx(idx);
         this.orderType = orderType;
         this.boxNumber = boxNumber;
@@ -140,6 +150,7 @@ public class Order extends EntityAuditing {
         this.orderItems = orderItems;
         this.receiptId = receiptId;
         this.paymentCost = paymentCost;
+        this.note = note;
     }
 
     public void addItem(OrderItem orderItem) {

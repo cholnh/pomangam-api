@@ -96,7 +96,7 @@ public class OrderRefundSubService {
 
             data.put("order_idx", order.getBoxNumber() + "번");
             data.put("order_date", order.getDeliveryDetailSite().getFullName());
-            data.put("order_items", CommonSubService.getOrderDate(order));
+            data.put("order_items", CommonSubService.getOrderDateWithAdditionalTime(order));
             data.put("order_refund_price", order.paymentCost() + "원");
             OrdeRefundTemplate.send(PhoneNumberFormatter.format(order.getOrderer().getUser().getPhoneNumber()), data);
         } catch (Exception msgException) {

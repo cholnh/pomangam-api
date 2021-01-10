@@ -9,7 +9,6 @@ import com.mrporter.pomangam.client.domains.fcm.owner.FcmOwnerToken;
 import com.mrporter.pomangam.client.domains.fcm.owner.FcmOwnerTokenDto;
 import com.mrporter.pomangam.client.domains.fcm.staff.FcmStaffToken;
 import com.mrporter.pomangam.client.domains.fcm.staff.FcmStaffTokenDto;
-import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.repositories.fcm.client.FcmClientTokenJpaRepository;
 import com.mrporter.pomangam.client.repositories.fcm.owner.FcmOwnerTokenJpaRepository;
 import com.mrporter.pomangam.client.repositories.fcm.staff.FcmStaffTokenJpaRepository;

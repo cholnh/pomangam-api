@@ -66,7 +66,7 @@ public class PaymentInfo {
         return cashReceipt != null && !cashReceipt.isEmpty();
     }
 
-    public int discountCost() {
+    public int discountCost(int q) {
         int discountTotalCost = 0;
         // int promotionTotalCost = 0;
 
@@ -79,7 +79,7 @@ public class PaymentInfo {
                 Promotion promotion = promotionMapper.getPromotion();
                 if(promotion.isValid()) {
                     int promotionCost = promotion.getDiscountCost();
-                    discountTotalCost += promotionCost;
+                    discountTotalCost += promotionCost * q;
                     // promotionTotalCost += promotionCost;
                 }
             }

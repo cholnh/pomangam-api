@@ -56,7 +56,7 @@ public class OrderApproveSubService {
 
             data.put("order_bn", order.getBoxNumber() + "번");
             data.put("order_addr", order.getDeliveryDetailSite().getFullName());
-            data.put("order_date", CommonSubService.getOrderDate(order));
+            data.put("order_date", CommonSubService.getOrderDateWithAdditionalTime(order));
             data.put("order_items", CommonSubService.orderItemLongText(order));
             OrderApproveTemplate.send(PhoneNumberFormatter.format(order.getOrderer().getUser().getPhoneNumber()), data);
         } catch (Exception msgException) {

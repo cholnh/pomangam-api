@@ -2,6 +2,7 @@ package com.mrporter.pomangam.client.services.order.sub_service;
 
 import com.mrporter.pomangam._bases.utils.bizm.template.OrderReadyTemplate;
 import com.mrporter.pomangam._bases.utils.bootpay.BootpayApi;
+import com.mrporter.pomangam._bases.utils.time.CustomTime;
 import com.mrporter.pomangam.client.domains.fcm.FcmRequestDto;
 import com.mrporter.pomangam.client.domains.fcm.FcmTokenDto;
 import com.mrporter.pomangam.client.domains.fcm.owner.FcmOwnerToken;
@@ -112,7 +113,7 @@ public class OrderReadySubService{
 
             // fcm build
             FcmRequestDto dto = FcmRequestDto.builder()
-                    .title(CommonSubService.getOrderTime(order) + " (" + order.getBoxNumber() + "번) 새로운 주문이 등록되었습니다.")
+                    .title(CustomTime.format("HH:mm", order.getModifyDate()) + " (" + order.getBoxNumber() + "번) 새로운 주문이 등록되었습니다.")
                     //.body("[no." + order.getIdx() + "] " + CommonSubService.orderItemLongText(order))
                     .body("")
                     .data(data)
@@ -130,10 +131,10 @@ public class OrderReadySubService{
                 List<Owner> owners = ownerRepo.findByIdxStoreAndIsActiveIsTrue(idxStore);
                 for(Owner owner : owners) {
                     Map<String, String> data = new HashMap<>();
-                    data.put("order_time", CommonSubService.getOrderTime(order));
+                    data.put("order_time", CustomTime.format("HH:mm", order.getModifyDate()));
                     data.put("order_idx", "no."+order.getIdx());
                     data.put("order_bn", order.getBoxNumber() + "번");
-                    data.put("order_date", CommonSubService.getOrderDate(order));
+                    data.put("order_date", CommonSubService.getOrderDateWithAdditionalTime(order));
                     data.put("order_addr", order.getDeliveryDetailSite().getFullName());
                     data.put("order_pn", CommonSubService.getOrdererPhoneNumber(order));
                     data.put("order_items", CommonSubService.orderItemLongText(order, idxStore));

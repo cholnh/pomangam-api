@@ -7,12 +7,16 @@ import com.mrporter.pomangam.client.domains.order.item.OrderItem;
 import com.mrporter.pomangam.client.domains.order.log.OrderLog;
 import com.mrporter.pomangam.client.domains.order.orderer.Orderer;
 import com.mrporter.pomangam.client.domains.order.orderer.OrdererType;
+import com.mrporter.pomangam.client.domains.promotion.Promotion;
+import com.mrporter.pomangam.client.domains.promotion.PromotionMapper;
 import com.mrporter.pomangam.client.domains.user.User;
 import com.mrporter.pomangam.client.domains.user.coupon.Coupon;
 import com.mrporter.pomangam.client.domains.user.coupon.CouponMapper;
 import com.mrporter.pomangam.client.domains.user.point.log.PointType;
 import com.mrporter.pomangam.client.repositories.order.OrderJpaRepository;
 import com.mrporter.pomangam.client.repositories.order.OrderLogJpaRepository;
+import com.mrporter.pomangam.client.repositories.promotion.PromotionJpaRepository;
+import com.mrporter.pomangam.client.repositories.promotion.PromotionMapperJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.coupon.CouponJpaRepository;
 import com.mrporter.pomangam.client.repositories.user.coupon.CouponMapperJpaRepository;
 import com.mrporter.pomangam.client.services.order.exception.OrderException;
@@ -21,6 +25,9 @@ import com.mrporter.pomangam.client.services.user.point.log.PointLogServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 @Component
@@ -33,6 +40,8 @@ public class CommonSubService {
     CouponJpaRepository couponRepo;
     CouponMapperJpaRepository couponMapperRepo;
     PointLogServiceImpl pointLogService;
+    PromotionJpaRepository promotionRepo;
+    PromotionMapperJpaRepository promotionMapperRepo;
 
     public void log(Long idxOrder, OrderType...orderTypes) {
         if(orderTypes == null || orderTypes.length == 0) return;
@@ -60,6 +69,7 @@ public class CommonSubService {
             int userPoint = pointLogService.findByIdxUser(user.getIdx());
             int usingPoint = order.getPaymentInfo().getUsingPoint();
             if(usingPoint == 0) return;
+            System.out.println(userPoint + " " + usingPoint);
             if(userPoint < usingPoint || usingPoint < 0) {
                 log(order.getIdx(), OrderType.PAYMENT_READY_FAIL_POINT);
                 throw new OrderException("invalid using point.");
@@ -90,6 +100,7 @@ public class CommonSubService {
         }
     }
 
+
     public void verifyUsingCouponCode(Order order, String couponCode) {
         if(couponCode != null) {
             Optional<Coupon> optional = couponRepo.findByCodeAndIsActiveIsTrueAndUserIsNull(couponCode);
@@ -110,7 +121,21 @@ public class CommonSubService {
     }
 
     public void verifyUsingPromotions(Order order, Set<Long> idxesUsingPromotions) {
-        // Todo. 프로모션 개발
+        if(idxesUsingPromotions != null) {
+            for(Long pIdx : idxesUsingPromotions) {
+                Optional<Promotion> optional = promotionRepo.findById(pIdx);
+                if(optional.isPresent() && optional.get().isValid()) {
+                    Promotion promotion = optional.get();
+                    promotionMapperRepo.save(PromotionMapper.builder()
+                            .order(order)
+                            .promotion(promotion)
+                            .build());
+                } else {
+                    log(order.getIdx(), OrderType.PAYMENT_READY_FAIL_PROMOTION);
+                    throw new OrderException("invalid promotion.");
+                }
+            }
+        }
     }
 
     public void verifySavedPoint(Order order) {
@@ -182,11 +207,33 @@ public class CommonSubService {
     }
 
     public static String getOrderTime(Order order) {
-        return CustomTime.format("HH:mm", order.getModifyDate());
+        LocalDateTime arriveDateTime = LocalDateTime.of(
+                order.getOrderDate(),
+                order.getOrderTime().getArrivalTime()
+        );
+        return CustomTime.format("HH:mm", arriveDateTime);
     }
 
     public static String getOrderDate(Order order) {
-        return CustomTime.format("yyyy/MM/dd HH:mm", order.getModifyDate());
+        LocalDateTime arriveDateTime = LocalDateTime.of(
+                order.getOrderDate(),
+                order.getOrderTime().getArrivalTime()
+        );
+        return CustomTime.format("yyyy/MM/dd HH:mm", arriveDateTime);
+    }
+
+    public static String getOrderDateWithAdditionalTime(Order order) {
+        LocalDateTime arriveDateTime = LocalDateTime.of(
+                order.getOrderDate(),
+                order.getOrderTime().getArrivalTime()
+        );
+        LocalTime additionalTime = order.getDeliveryDetailSite().getAdditionalTime();
+        arriveDateTime = arriveDateTime
+                .plusHours(additionalTime.getHour())
+                .plusMinutes(additionalTime.getMinute())
+                .plusSeconds(additionalTime.getSecond());
+
+        return CustomTime.format("yyyy/MM/dd HH:mm", arriveDateTime);
     }
 
     public static String getOrdererPhoneNumber(Order order) {

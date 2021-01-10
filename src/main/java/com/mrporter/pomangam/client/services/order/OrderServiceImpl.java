@@ -2,7 +2,6 @@ package com.mrporter.pomangam.client.services.order;
 
 import com.mrporter.pomangam._bases.utils.bootpay.model.response.callback.CallbackResponse;
 import com.mrporter.pomangam._bases.utils.time.CustomTime;
-import com.mrporter.pomangam._bases.utils.time.DateUtils;
 import com.mrporter.pomangam.client.domains.deliverysite.detail.DeliveryDetailSite;
 import com.mrporter.pomangam.client.domains.order.Order;
 import com.mrporter.pomangam.client.domains.order.OrderRequestDto;
@@ -29,6 +28,7 @@ import com.mrporter.pomangam.client.services.user.UserServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -122,12 +122,32 @@ public class OrderServiceImpl implements OrderService {
         return OrderResponseDto.fromEntity(orderRepo.save(order));
     }
 
+    @Transactional
+    public OrderResponseDto customSave(OrderRequestDto dto) {
+        if(dto.getOrderItems() == null || dto.getOrderItems().isEmpty())
+            throw new OrderException("empty order items");
+
+        Long idxOrder = _save(dto).getIdx();
+        em.clear();
+
+        Order order = orderRepo.findByIdxAndIsActiveIsTrue(idxOrder)
+                .orElseThrow(() -> new OrderException("invalid order customSave"));
+
+        commonSubService.log(idxOrder, OrderType.ORDER_READY);
+
+        order.setPaymentCost(order.paymentCost());
+        orderRepo.save(order);
+        return OrderResponseDto.fromEntity(order);
+    }
+
     @Override
+    @Transactional
     public OrderResponseDto save(OrderRequestDto dto) {
         if(dto.getOrderItems() == null || dto.getOrderItems().isEmpty())
             throw new OrderException("empty order items");
 
         Long idxOrder = _save(dto).getIdx();
+
         commonSubService.log(idxOrder, OrderType.PAYMENT_READY);
         em.clear(); // 1차 캐시 제거 -> 새로운 entity 받아옴 (이전 saved entity 는 빈 껍데기..)
 
@@ -135,10 +155,11 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new OrderException("invalid order save"));
 
         commonSubService.verifyUsingPoint(order); // 사용 포인트 검증
-        commonSubService.verifyUsingCouponCode(order, dto.getUsingCouponCode());
+        commonSubService.verifyUsingCouponCode(order, dto.getUsingCouponCode()); // Todo. 어디선가 실패시 롤백..
         commonSubService.verifyUsingCoupons(order, dto.getIdxesUsingCoupons()); // 사용 쿠폰 검증
         commonSubService.verifyUsingPromotions(order, dto.getIdxesUsingPromotions()); // 프로모션 검증
         commonSubService.verifySavedPoint(order); // 적립 포인트 검증
+
 
         PaymentType paymentType = order.getPaymentInfo().getPaymentType();
         if(paymentType == PaymentType.CONTACT_CREDIT_CARD || paymentType == PaymentType.CONTACT_CASH || order.paymentCost() <= 0) {
@@ -147,7 +168,6 @@ public class OrderServiceImpl implements OrderService {
             readySubService.sendKakaoAT(order);
             commonSubService.log(order.getIdx(), OrderType.PAYMENT_SUCCESS, OrderType.ORDER_READY);
         }
-
         if(paymentType == PaymentType.COMMON_V_BANK) {
             vBankReadyRepo.save(VBankReady.builder()
                     .idxOrder(order.getIdx())
@@ -156,12 +176,14 @@ public class OrderServiceImpl implements OrderService {
                     .build());
         }
 
+
         order.setPaymentCost(order.paymentCost());
         orderRepo.save(order);
         return OrderResponseDto.fromEntity(order);
     }
 
     @Override
+    @Transactional
     public boolean verify(Long oIdx, String receipt_id) {
         Order order = orderRepo.findByIdxAndOrderTypeAndIsActiveIsTrue(oIdx, OrderType.PAYMENT_READY)
                 .orElseThrow(() -> new OrderException("invalid order verify."));
@@ -190,11 +212,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public BootpayVbankDto postVbank(BootpayVbankDto dto) {
         return BootpayVbankDto.fromEntity(bootpayVbankRepo.save(dto.toEntity()));
     }
 
     @Override
+    @Transactional
     public void postReceipt(Long oIdx, String receiptId) {
         Order order = orderRepo.findByIdxAndIsActiveIsTrue(oIdx)
                 .orElseThrow(() -> new OrderException("invalid order postReceipt."));
@@ -207,6 +231,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderResponseDto approve(Long oIdx) {
         Order order = orderRepo.findByIdxAndIsActiveIsTrue(oIdx)
                 .orElseThrow(() -> new OrderException("invalid order approve."));
@@ -218,6 +243,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderResponseDto disapprove(Long oIdx, String reason) {
         Order order = orderRepo.findByIdxAndIsActiveIsTrue(oIdx)
                 .orElseThrow(() -> new OrderException("invalid order disapprove."));
@@ -237,6 +263,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void paymentFail(Long oIdx) {
         Order order = orderRepo.findByIdxAndIsActiveIsTrue(oIdx)
                 .orElseThrow(() -> new OrderException("invalid order paymentFail."));
@@ -250,6 +277,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void cancel(Long oIdx) {
         Order order = orderRepo.findByIdxAndIsActiveIsTrue(oIdx)
                 .orElseThrow(() -> new OrderException("invalid order cancel."));
@@ -267,6 +295,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderResponseDto deliveryPickup(Long oIdx) {
         Order order = orderRepo.findByIdxAndIsActiveIsTrue(oIdx)
                 .orElseThrow(() -> new OrderException("invalid order deliveryPickup."));
@@ -275,6 +304,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderResponseDto deliveryDelay(Long oIdx, int min, String reason) {
         Order order = orderRepo.findByIdxAndIsActiveIsTrue(oIdx)
                 .orElseThrow(() -> new OrderException("invalid order deliveryDelay."));
@@ -288,6 +318,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderResponseDto deliverySuccess(Long oIdx) {
         Order order = orderRepo.findByIdxAndIsActiveIsTrue(oIdx)
                 .orElseThrow(() -> new OrderException("invalid order deliverySuccess."));
@@ -301,6 +332,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void refund(Long oIdx) {
         Order order = orderRepo.findByIdxAndIsActiveIsTrue(oIdx)
                 .orElseThrow(() -> new OrderException("invalid order refund."));
@@ -386,5 +418,12 @@ public class OrderServiceImpl implements OrderService {
         entity.setBoxNumber(orderRepo.boxNumber(ddSite.getDeliverySite().getIdx(), dto.getIdxOrderTime(), dto.getOrderDate()));
         entity.getPaymentInfo().setSavedPoint(0);
         return orderRepo.saveAndFlush(entity);
+    }
+
+    public OrderResponseDto patchNote(Long oIdx, String note) {
+        Order order = orderRepo.findById(oIdx)
+                .orElseThrow(() -> new OrderException("invalid order patchNote."));
+        order.setNote(note);
+        return OrderResponseDto.fromEntity(orderRepo.save(order));
     }
 }

@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.client.controllers.promotion;
 
+import com.mrporter.pomangam.client.services.promotion.PromotionServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -9,15 +10,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/promotions")
+@RequestMapping("/dsites/{dIdx}/promotions")
 @AllArgsConstructor
 public class PromotionController {
 
+    PromotionServiceImpl promotionService;
+
     @GetMapping
-    public ResponseEntity<?> findAll(
-            @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, page = 0, size = 10) Pageable pageable
+    public ResponseEntity<?> findByIdxDeliverySite(
+            @PathVariable(value = "dIdx", required = true) Long dIdx
     ) {
-        return new ResponseEntity(HttpStatus.OK);
+
+        return new ResponseEntity(promotionService.findByIdxDeliverySite(dIdx), HttpStatus.OK);
     }
 
     @GetMapping("/{idx}")

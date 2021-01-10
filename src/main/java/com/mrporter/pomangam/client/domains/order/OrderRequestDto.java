@@ -9,6 +9,7 @@ import com.mrporter.pomangam.client.domains.order.orderer.OrdererType;
 import com.mrporter.pomangam.client.domains.order.payment_info.PaymentInfo;
 import com.mrporter.pomangam.client.domains.ordertime.OrderTime;
 import com.mrporter.pomangam.client.domains.payment.PaymentType;
+import com.mrporter.pomangam.client.domains.promotion.PromotionMapper;
 import com.mrporter.pomangam.client.domains.user.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -54,6 +55,8 @@ public class OrderRequestDto implements Serializable {
 
     private String vbankName;
 
+    private String note;
+
     public Order toEntity() {
         Order entity = Order.builder()
                 .orderType(OrderType.PAYMENT_READY)
@@ -76,6 +79,7 @@ public class OrderRequestDto implements Serializable {
                         .cashReceiptType(this.cashReceiptType)
                         .build())
                 .orderItems(convertOrderItem(this.orderItems))
+                .note(this.note)
                 .build();
         return entity;
     }

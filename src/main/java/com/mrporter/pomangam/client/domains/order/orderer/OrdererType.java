@@ -1,3 +1,3 @@
 package com.mrporter.pomangam.client.domains.order.orderer;
 
-public enum OrdererType { GUEST, USER, WEB }
+public enum OrdererType { GUEST, USER, WEB, ADMIN }

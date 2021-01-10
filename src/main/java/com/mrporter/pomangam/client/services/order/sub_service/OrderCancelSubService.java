@@ -94,7 +94,7 @@ public class OrderCancelSubService {
                 List<Owner> owners = ownerRepo.findByIdxStoreAndIsActiveIsTrue(idxStore);
                 for(Owner owner : owners) {
                     Map<String, String> data = new HashMap<>();
-                    data.put("order_date", CommonSubService.getOrderDate(order));
+                    data.put("order_date", CommonSubService.getOrderDateWithAdditionalTime(order));
                     data.put("order_bn", CommonSubService.getOrderTime(order) + " " + order.getBoxNumber());
                     data.put("order_idx", "no." + order.getIdx() + " (" + order.getBoxNumber() + "번)");
                     data.put("order_addr", order.getDeliveryDetailSite().getFullName());

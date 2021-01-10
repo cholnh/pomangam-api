@@ -82,7 +82,7 @@ public class OrderDisapproveSubService {
             Map<String, String> data = new HashMap<>();
 
             data.put("order_idx", "no." + order.getIdx() + " (" + order.getBoxNumber() + "번)");
-            data.put("order_date", CommonSubService.getOrderDate(order));
+            data.put("order_date", CommonSubService.getOrderDateWithAdditionalTime(order));
             data.put("order_items", CommonSubService.orderItemLongText(order));
             data.put("reason", reason);
             OrderDisapproveTemplate.send(PhoneNumberFormatter.format(order.getOrderer().getUser().getPhoneNumber()), data);

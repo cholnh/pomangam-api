@@ -8,8 +8,11 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @RepositoryRestResource(exported = false)
 public interface ProductJpaRepository extends JpaRepository<Product, Long>, ProductCustomRepository {
+    List<Product> findByIdxStoreAndIsActiveIsTrueOrderBySequenceAsc(Long idxStore);
     Page<Product> findByIdxStoreAndIsActiveIsTrueOrderBySequenceAsc(Long idxStore, Pageable pageable);
     Page<Product> findByProductCategory_IdxAndIsActiveIsTrueOrderBySequenceAsc(Long idxProductCategory, Pageable pageable);
 

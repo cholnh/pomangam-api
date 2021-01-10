@@ -27,6 +27,11 @@ public class ProductServiceImpl implements ProductService {
     ProductReplyServiceImpl productReplyService;
     ProductSubJpaRepository productSubRepo;
 
+    public List<ProductDto> findByIdxStore(Long sIdx) {
+        List<Product> products = productRepo.findByIdxStoreAndIsActiveIsTrueOrderBySequenceAsc(sIdx);
+        return ProductDto.fromEntities(products);
+    }
+
     @Override
     public List<ProductSummaryDto> findByIdxStore(Long sIdx, Pageable pageable) {
         List<Product> products = productRepo.findByIdxStoreAndIsActiveIsTrueOrderBySequenceAsc(sIdx, pageable).getContent();
