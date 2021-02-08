@@ -23,7 +23,7 @@ public class StoreImage extends EntityAuditing {
     private String imagePath;
 
     /**
-     * 대표이미지(StoreImageType.MAIN), 일반이미지(StoreImageType.SUB)
+     * 대표이미지(CarteImageType.MAIN), 일반이미지(CarteImageType.SUB)
      * 글자수: utf8 기준 / 영문 20자 / 한글 20자
      */
     @Column(name="image_type", nullable = false, length = 20)

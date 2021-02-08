@@ -90,7 +90,6 @@ public class StoreJpaRepositoryTest {
     }
     private Store makeStoreDummy(StoreCategory storeCategory) {
         return Store.builder()
-                .idxDeliverySite(1L)
                 .storeCategory(storeCategory)
                 .storeInfo(StoreInfo.builder()
                         .name("음식점 이름")

@@ -7,12 +7,14 @@ import com.mrporter.pomangam._bases.utils.formatter.PhoneNumberFormatter;
 import com.mrporter.pomangam.client.domains.fcm.FcmRequestDto;
 import com.mrporter.pomangam.client.domains.fcm.FcmTokenDto;
 import com.mrporter.pomangam.client.domains.fcm.client.FcmClientToken;
+import com.mrporter.pomangam.client.domains.map.CommonMap;
 import com.mrporter.pomangam.client.domains.order.Order;
 import com.mrporter.pomangam.client.domains.order.OrderType;
 import com.mrporter.pomangam.client.domains.order.orderer.OrdererType;
 import com.mrporter.pomangam.client.repositories.fcm.client.FcmClientTokenJpaRepository;
 import com.mrporter.pomangam.client.repositories.fcm.owner.FcmOwnerTokenJpaRepository;
 import com.mrporter.pomangam.client.services.fcm.FcmServiceImpl;
+import com.mrporter.pomangam.client.services.map.CommonMapServiceImpl;
 import com.mrporter.pomangam.client.services.order.exception.OrderException;
 import com.mrporter.pomangam.store.repository.owner.OwnerJpaRepository;
 import lombok.AllArgsConstructor;
@@ -31,6 +33,7 @@ public class OrderRefundSubService {
     FcmClientTokenJpaRepository clientTokenRepo;
     FcmOwnerTokenJpaRepository ownerTokenRepo;
     OwnerJpaRepository ownerRepo;
+    CommonMapServiceImpl commonMapService;
     private static BootpayApi bootpayApi = new BootpayApi();
 
     public boolean refundPG(String receipt_id, String name, String reason, Double price) {
@@ -90,15 +93,26 @@ public class OrderRefundSubService {
 
     public void sendKakaoAT(Order order) {
         try {
-            if(order.getOrderer().getOrdererType() == OrdererType.GUEST) return;
-
             Map<String, String> data = new HashMap<>();
 
             data.put("order_idx", order.getBoxNumber() + "번");
             data.put("order_date", order.getDeliveryDetailSite().getFullName());
             data.put("order_items", CommonSubService.getOrderDateWithAdditionalTime(order));
             data.put("order_refund_price", order.paymentCost() + "원");
-            OrdeRefundTemplate.send(PhoneNumberFormatter.format(order.getOrderer().getUser().getPhoneNumber()), data);
+
+            // 관리자 전송
+            List<CommonMap> adminPhoneNumbers = commonMapService.findAllByKey("string_phonenumber_vbank_admin");
+            for(CommonMap adminPhoneNumber : adminPhoneNumbers) {
+                OrdeRefundTemplate.send(adminPhoneNumber.getValue(), data);
+            }
+
+            if(order.getOrderer().getOrdererType() == OrdererType.GUEST && order.getOrderer().getPhoneNumber() == null) return;
+            if(order.getOrderer().getUser() != null){
+                OrdeRefundTemplate.send(PhoneNumberFormatter.format(order.getOrderer().getUser().getPhoneNumber()), data);
+            } else {
+                OrdeRefundTemplate.send(PhoneNumberFormatter.format(order.getOrderer().getPhoneNumber()), data);
+            }
+
         } catch (Exception msgException) {
             msgException.printStackTrace();
         }

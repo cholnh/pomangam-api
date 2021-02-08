@@ -9,7 +9,7 @@ server:
       tracking-modes: cookie
 
   ssl:
-    enabled: true
+    enabled: false
     key-store: C:/ssl/poman.kr/sectigo/keystore.jks  # Mac key path -> /Users/nakzzi/Downloads/keystore
     key-store-type: jks
     key-store-password: 26809t
@@ -74,6 +74,16 @@ spring:
       charset: UTF-8
       enabled: true
       force: true
+
+  mail:
+    host: mail.poman.kr
+    port: 25
+    username: contact@poman.kr
+
+    password: eun*zzi92!
+    properties:
+      mail.smtp.auth: false
+      mail.smtp.ssl.enable: false
 ---
 file:
   # 프로젝트 안 upload-dir: ./uploads

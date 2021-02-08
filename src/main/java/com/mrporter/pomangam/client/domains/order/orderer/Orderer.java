@@ -36,6 +36,12 @@ public class Orderer {
     @ManyToOne(optional = true, fetch = FetchType.EAGER)
     private User user;
 
+    /**
+     * 주문자 핸드폰번호
+     */
+    @Column(name = "phone_number", nullable = true, length = 15)
+    private String phoneNumber;
+
 //    public Long getIdxOrderer() {
 //        return ordererType == OrdererType.GUEST
 //                ? idxFcmToken
@@ -60,9 +66,10 @@ public class Orderer {
 //    }
 
     @Builder
-    public Orderer(OrdererType ordererType, Long idxFcmToken, User user) {
+    public Orderer(OrdererType ordererType, Long idxFcmToken, User user, String phoneNumber) {
         this.ordererType = ordererType;
         this.idxFcmToken = idxFcmToken;
         this.user = user;
+        this.phoneNumber = phoneNumber;
     }
 }

@@ -58,6 +58,7 @@ public class PomangamApplication implements CommandLineRunner {
     @Override
     /* 구동 시점에 실행되는 코드 */
     public void run(String... args) throws Exception {
+
     }
 
     @Bean

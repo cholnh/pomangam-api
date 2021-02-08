@@ -1,9 +1,11 @@
 package com.mrporter.pomangam._bases.utils.bizm;
 
-        import org.springframework.http.ResponseEntity;
+import com.mrporter.pomangam._bases.utils.formatter.PhoneNumberFormatter;
+import org.jsoup.helper.StringUtil;
+import org.springframework.http.ResponseEntity;
 
-        import java.util.HashMap;
-        import java.util.Map;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BizmApi {
     private static final String userId = "mrporter";
@@ -33,7 +35,7 @@ public class BizmApi {
 
         Map<String, Object> body = new HashMap<>();
         body.put("message_type", message_type);
-        body.put("phn", phn);
+        body.put("phn", PhoneNumberFormatter.format(phn));
         body.put("profile", profile);
         body.put("msg", msg);
         body.put("tmplId", tmplId);
@@ -42,7 +44,7 @@ public class BizmApi {
         }
         if(isMsg) {
             body.put("smsOnly", "Y");
-            body.put("smsSender", "0507-1300-6906");
+            body.put("smsSender", "0507-1386-4446");
             body.put("smsKind", "L");
             body.put("msgSms", msg);
         }
@@ -61,7 +63,7 @@ public class BizmApi {
 
         Map<String, Object> body = new HashMap<>();
         body.put("message_type", message_type);
-        body.put("phn", phn);
+        body.put("phn", PhoneNumberFormatter.format(phn));
         body.put("profile", profile);
         body.put("msg", msg);
         body.put("tmplId", tmplId);
@@ -89,7 +91,7 @@ public class BizmApi {
 
         Map<String, Object> body = new HashMap<>();
         body.put("message_type", message_type);
-        body.put("phn", phn);
+        body.put("phn", PhoneNumberFormatter.format(phn));
         body.put("profile", profile);
         body.put("msg", msg);
         body.put("tmplId", tmplId);

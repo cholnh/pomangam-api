@@ -88,11 +88,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .ignoring().antMatchers("/assets/**")
                 .and().ignoring().antMatchers("/js/**")
                 .and().ignoring().antMatchers("/health")
+                .and().ignoring().antMatchers("/versions/**")
                 .and().ignoring().antMatchers("/actuator/**")
                 .and().ignoring().antMatchers("/tests/**")
                 .and().ignoring().antMatchers("/payments/**")
                 .and().ignoring().antMatchers("/policies/**")
                 .and().ignoring().antMatchers("/orders/callback")
+                .and().ignoring().antMatchers("/emails/**")
                 .and().ignoring().antMatchers("/kakaos/callback");
     }
 

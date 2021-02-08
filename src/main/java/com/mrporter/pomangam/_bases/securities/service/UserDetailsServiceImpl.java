@@ -63,7 +63,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         org.springframework.security.core.userdetails.User userDetail = null;
-
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
 
             String clientName = authentication.getName();
@@ -79,6 +78,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private org.springframework.security.core.userdetails.User verifyClient(String username) {
+
         if( !username.contains("#") ) {
             throw new InternalAuthenticationServiceException("INVALID_AUTH_CODE");
         }

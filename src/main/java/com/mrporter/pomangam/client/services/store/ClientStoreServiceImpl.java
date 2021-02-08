@@ -63,10 +63,11 @@ public class ClientStoreServiceImpl implements ClientStoreService {
         LocalDateTime now = LocalDateTime.now();
 
         if(now.isBefore(orderEndTime)) {
-            int dMinute = (int) Duration.between(now, orderEndTime).toMinutes();  // 주문 마감까지 남은 시간
+            // int dMinute = (int) Duration.between(now, orderEndTime).toMinutes();  // 주문 마감까지 남은 시간
             for(Store store : _orderableStores(dIdx, oIdx, pageable, sortType)) {
                 StoreSummaryDto dto = StoreSummaryDto.fromEntity(store);
-                dto.setQuantityOrderable(qo(store.getProductionInfo(), dMinute, aov(dIdx, store.getIdx(), oIdx, oDate)));
+                // dto.setQuantityOrderable(qo(store.getProductionInfo(), dMinute, aov(dIdx, store.getIdx(), oIdx, oDate)));
+                dto.setQuantityOrderable(qo2(store.getProductionInfo(), aov(dIdx, store.getIdx(), oIdx, oDate)));
                 summaries.add(dto);
             }
         }
@@ -77,12 +78,13 @@ public class ClientStoreServiceImpl implements ClientStoreService {
     public List<StoreQuantityOrderableDto> findQuantityOrderableByIdxes(Long dIdx, Long oIdx, LocalDate oDate, List<Long> sIdxes) {
         List<StoreQuantityOrderableDto> quantities = new ArrayList<>();
 
-        int dMinute = (int) Duration.between(LocalDateTime.now(), LocalDateTime.of(oDate, _orderEndTime(oIdx))).toMinutes(); // 주문 마감까지 남은 시간
+        // int dMinute = (int) Duration.between(LocalDateTime.now(), LocalDateTime.of(oDate, _orderEndTime(oIdx))).toMinutes(); // 주문 마감까지 남은 시간
         for(Store store : storeRepo.findAllById(sIdxes)) {
             if(orderTimeMapperRepo.existsByOrderTime_IdxAndStore_Idx(oIdx, store.getIdx())) {
                 quantities.add(StoreQuantityOrderableDto.builder()
                         .idx(store.getIdx())
-                        .quantityOrderable(qo(store.getProductionInfo(), dMinute, aov(dIdx, store.getIdx(), oIdx, oDate)))
+                        // .quantityOrderable(qo(store.getProductionInfo(), dMinute, aov(dIdx, store.getIdx(), oIdx, oDate)))
+                        .quantityOrderable(qo2(store.getProductionInfo(), aov(dIdx, store.getIdx(), oIdx, oDate)))
                         .build());
             }
         }
@@ -101,6 +103,11 @@ public class ClientStoreServiceImpl implements ClientStoreService {
         }
     }
 
+    private int qo2(ProductionInfo info, int aov) {
+        int max = info.getMaximumProduction();       // 최대 주문 가능 수량
+        return max - aov < 0 ? 0 : max - aov;
+    }
+
     /**
      * 주문 가능 수량
      * quantityOrderable
@@ -111,6 +118,7 @@ public class ClientStoreServiceImpl implements ClientStoreService {
         int max = info.getMaximumProduction();       // 최대 주문 가능 수량
         int avp = (pp / mt) * dMinute;                 // 생산 가능 수량
         avp = avp >= max ? max : avp;
+
         return avp - aov < 0 ? 0 : avp - aov;
     }
 

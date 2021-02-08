@@ -24,21 +24,21 @@ public abstract class EntityAuditing implements Serializable {
      * default: true(Y)
      * 대문자 필수
      */
-    @Column(name = "is_active", nullable = false, length = 1)
+    @Column(name = "is_active", nullable = false, length = 1, columnDefinition = "VARCHAR(1) DEFAULT 'Y'")
     @Convert(converter = BooleanToYNConverter.class)
     private Boolean isActive;
 
     /**
      * 등록 날짜
      */
-    @Column(name = "register_date", nullable = false)
+    @Column(name = "register_date", nullable = false, columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @CreationTimestamp
     private LocalDateTime registerDate;
 
     /**
      * 수정 날짜
      */
-    @Column(name = "modify_date", nullable = false)
+    @Column(name = "modify_date", nullable = false, columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @UpdateTimestamp
     private LocalDateTime modifyDate;
 }

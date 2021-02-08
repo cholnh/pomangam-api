@@ -1,8 +1,7 @@
 package com.mrporter.pomangam.client.services.vbank;
 
 import com.mrporter.pomangam._bases.utils.bizm.template.VBankDepositTemplate;
-import com.mrporter.pomangam.client.domains.event.Event;
-import com.mrporter.pomangam.client.domains.event.EventViewDto;
+import com.mrporter.pomangam.client.domains.map.CommonMap;
 import com.mrporter.pomangam.client.domains.vbank.VBankDeposit;
 import com.mrporter.pomangam.client.domains.vbank.VBankDepositDto;
 import com.mrporter.pomangam.client.domains.vbank.VBankReady;
@@ -113,10 +112,11 @@ public class VBankServiceImpl implements VBankService {
 
     private void sendNotify(VBankDeposit deposit, String cause) {
         try {
-            String[] admins = {
-                "01064784899",
-                //"01036490064"
-            };
+            List<String> admins = new ArrayList<>();
+            List<CommonMap> adminPhoneNumbers = commonMapService.findAllByKey("string_phonenumber_vbank_admin");
+            for(CommonMap adminPhoneNumber : adminPhoneNumbers) {
+                admins.add(adminPhoneNumber.getValue());
+            }
 
             Map<String, String> data = new HashMap<>();
             data.put("name", deposit.getName());
@@ -130,7 +130,7 @@ public class VBankServiceImpl implements VBankService {
             button.put("url_mobile", "https://www.pomangam.com/admin");
             button.put("url_pc", "https://www.pomangam.com/admin");
 
-            VBankDepositTemplate.send(Arrays.asList(admins), data, button);
+            VBankDepositTemplate.send(admins, data, button);
         } catch (Exception msgException) {
             msgException.printStackTrace();
         }

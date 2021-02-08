@@ -42,6 +42,7 @@ public class OrderResponseDto implements Serializable {
     private String ordererName;
     private String ordererPn;
     private String note;
+    private String phoneNumber;
 
     // 결제 정보
     private Integer usingPoint;
@@ -92,6 +93,7 @@ public class OrderResponseDto implements Serializable {
             dto.setOrdererName("비회원");
         }
         dto.setNote(entity.getNote());
+        dto.setPhoneNumber(entity.getOrderer().getPhoneNumber());
 
         // 결제 정보
         dto.setUsingPoint(paymentInfo.getUsingPoint());

@@ -1,6 +1,7 @@
 package com.mrporter.pomangam.client.services.order.sub_service;
 
 import com.mrporter.pomangam._bases.utils.bizm.template.OrdeDepositTemplate;
+import com.mrporter.pomangam._bases.utils.bizm.template.OrderApproveTemplate;
 import com.mrporter.pomangam._bases.utils.formatter.PhoneNumberFormatter;
 import com.mrporter.pomangam.client.domains.fcm.FcmRequestDto;
 import com.mrporter.pomangam.client.domains.fcm.FcmTokenDto;
@@ -51,14 +52,18 @@ public class OrderDepositSubService {
 
     public void sendKakaoAT(Order order) {
         try {
-            if(order.getOrderer().getOrdererType() == OrdererType.GUEST) return;
+            if(order.getOrderer().getOrdererType() == OrdererType.GUEST && order.getOrderer().getPhoneNumber() == null) return;
 
             Map<String, String> data = new HashMap<>();
 
             data.put("order_idx", "no." + order.getIdx());
-            data.put("order_user", order.getOrderer().getUser().getName());
+            data.put("order_user", order.getOrderer().getUser() == null ? "비회원" : order.getOrderer().getUser().getName());
             data.put("order_price", order.paymentCost() + "원");
-            OrdeDepositTemplate.send(PhoneNumberFormatter.format(order.getOrderer().getUser().getPhoneNumber()), data);
+            if(order.getOrderer().getUser() != null){
+                OrdeDepositTemplate.send(PhoneNumberFormatter.format(order.getOrderer().getUser().getPhoneNumber()), data);
+            } else {
+                OrdeDepositTemplate.send(PhoneNumberFormatter.format(order.getOrderer().getPhoneNumber()), data);
+            }
         } catch (Exception msgException) {
             msgException.printStackTrace();
         }

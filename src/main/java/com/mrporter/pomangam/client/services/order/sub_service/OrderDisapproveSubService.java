@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.client.services.order.sub_service;
 
+import com.mrporter.pomangam._bases.utils.bizm.template.OrderApproveTemplate;
 import com.mrporter.pomangam._bases.utils.bizm.template.OrderDisapproveTemplate;
 import com.mrporter.pomangam._bases.utils.formatter.PhoneNumberFormatter;
 import com.mrporter.pomangam.client.domains.fcm.FcmRequestDto;
@@ -77,7 +78,7 @@ public class OrderDisapproveSubService {
 
     public void sendKakaoAT(Order order, String reason) {
         try {
-            if(order.getOrderer().getOrdererType() == OrdererType.GUEST) return;
+            if(order.getOrderer().getOrdererType() == OrdererType.GUEST && order.getOrderer().getPhoneNumber() == null) return;
 
             Map<String, String> data = new HashMap<>();
 
@@ -85,7 +86,11 @@ public class OrderDisapproveSubService {
             data.put("order_date", CommonSubService.getOrderDateWithAdditionalTime(order));
             data.put("order_items", CommonSubService.orderItemLongText(order));
             data.put("reason", reason);
-            OrderDisapproveTemplate.send(PhoneNumberFormatter.format(order.getOrderer().getUser().getPhoneNumber()), data);
+            if(order.getOrderer().getUser() != null) {
+                OrderDisapproveTemplate.send(PhoneNumberFormatter.format(order.getOrderer().getUser().getPhoneNumber()), data);
+            } else {
+                OrderDisapproveTemplate.send(PhoneNumberFormatter.format(order.getOrderer().getPhoneNumber()), data);
+            }
         } catch (Exception msgException) {
             msgException.printStackTrace();
         }

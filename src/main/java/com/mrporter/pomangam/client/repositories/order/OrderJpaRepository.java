@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.client.repositories.order;
 
+import com.mrporter.pomangam._bases.utils.time.CustomTime;
 import com.mrporter.pomangam.client.domains.order.Order;
 import com.mrporter.pomangam.client.domains.order.OrderType;
 import com.mrporter.pomangam.client.domains.order.QOrder;
@@ -68,6 +69,8 @@ interface OrderCustomRepository {
     List<Order> findAllByIdxStoreAndIdxDetailDeliverySite(Long sIdx, Long ddIdx, LocalDate oDate, Long last, Pageable pageable);
     List<Order> findAllByIdxStoreAndIdxOrderTime(Long sIdx, Long otIdx, LocalDate oDate, Long last, Pageable pageable);
     List<Order> findAllByIdxStore(Long sIdx, LocalDate oDate, Long last, Pageable pageable);
+
+    List<Order> findTodayByOrderType(OrderType ... orderType);
 }
 
 @Transactional(readOnly = true)
@@ -75,6 +78,16 @@ class OrderCustomRepositoryImpl extends QuerydslRepositorySupport implements Ord
 
     public OrderCustomRepositoryImpl() {
         super(Order.class);
+    }
+
+    public List<Order> findTodayByOrderType(OrderType ... orderType) {
+        QOrder order = QOrder.order;
+        return from(order)
+                .select(order)
+                .where(order.orderDate.eq(LocalDate.now())
+                .and(order.orderType.in(orderType))
+                .and(order.isActive.isTrue()))
+                .fetch();
     }
 
     @Override
@@ -266,7 +279,7 @@ class OrderCustomRepositoryImpl extends QuerydslRepositorySupport implements Ord
                 .and(order.deliveryDetailSite.deliverySite.isActive.isTrue())
                 .and(order.orderDate.eq(oDate))
                 .and(order.orderTime.idx.eq(oIdx))
-                .and(order.orderType.eq(OrderType.DELIVERY_READY))
+                .and(order.orderType.in(OrderType.DELIVERY_READY, OrderType.ORDER_READY))
                 .and(order.isActive.isTrue())
                 .and(item.store.idx.eq(sIdx))
                 .and(item.isActive.isTrue()))
@@ -321,6 +334,13 @@ class OrderCustomRepositoryImpl extends QuerydslRepositorySupport implements Ord
         return dt.year().eq(now.getYear())
                 .and(dt.month().eq(now.getMonthValue())
                 .and(dt.dayOfMonth().eq(now.getDayOfMonth())));
+    }
+
+    private BooleanExpression isToday(DatePath<LocalDate> dt) {
+        LocalDateTime now = LocalDateTime.now();
+        return dt.year().eq(now.getYear())
+                .and(dt.month().eq(now.getMonthValue())
+                        .and(dt.dayOfMonth().eq(now.getDayOfMonth())));
     }
 
     private BooleanExpression isSameDay(DatePath<LocalDate> dt1, LocalDate dt2) {

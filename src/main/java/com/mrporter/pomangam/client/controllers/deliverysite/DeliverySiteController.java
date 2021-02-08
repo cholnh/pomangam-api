@@ -22,7 +22,7 @@ public class DeliverySiteController {
     @GetMapping
     public ResponseEntity<List<DeliverySiteDto>> findAll(
             @RequestParam(value = "sIdx", required = false) Long sIdx,
-            @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, page = 0, size = 10) Pageable pageable
+            @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, page = 0, size = 100) Pageable pageable
     ) {
         if(sIdx == null) {
             return new ResponseEntity(deliverySiteService.findAll(pageable), HttpStatus.OK);

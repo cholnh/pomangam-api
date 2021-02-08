@@ -86,7 +86,7 @@ public class OrderController {
             orderDto.setOrdererType(OrdererType.USER);
         } else {
             if(orderDto.getIdxFcmToken() == null) {
-                throw new OrderException("fcm Token index is null");
+                //throw new OrderException("fcm Token index is null");
             }
             orderDto.setUser(null);
             orderDto.setOrdererType(OrdererType.GUEST);

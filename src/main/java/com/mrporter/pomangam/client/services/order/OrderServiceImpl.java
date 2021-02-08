@@ -59,6 +59,11 @@ public class OrderServiceImpl implements OrderService {
     DeliveryDelaySubService delaySubService;
     OrderDepositSubService orderDepositSubService;
 
+    public List<Order> findToday(OrderType ... orderType) {
+        List<Order> todayOrders = orderRepo.findTodayByOrderType(orderType);
+        return todayOrders;
+    }
+
 
     @Override
     public List<OrderResponseDto> findAllByIdxFcmToken(Long fIdx, Pageable pageable) {
@@ -133,6 +138,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepo.findByIdxAndIsActiveIsTrue(idxOrder)
                 .orElseThrow(() -> new OrderException("invalid order customSave"));
 
+        commonSubService.verifyUsingPromotions(order, dto.getIdxesUsingPromotions()); // 프로모션 검증
         commonSubService.log(idxOrder, OrderType.ORDER_READY);
 
         order.setPaymentCost(order.paymentCost());

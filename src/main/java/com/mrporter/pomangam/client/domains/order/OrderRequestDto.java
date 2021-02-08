@@ -57,6 +57,8 @@ public class OrderRequestDto implements Serializable {
 
     private String note;
 
+    private String phoneNumber;
+
     public Order toEntity() {
         Order entity = Order.builder()
                 .orderType(OrderType.PAYMENT_READY)
@@ -71,6 +73,7 @@ public class OrderRequestDto implements Serializable {
                         .ordererType(this.ordererType)
                         .idxFcmToken(this.idxFcmToken)
                         .user(this.user)
+                        .phoneNumber(this.phoneNumber)
                         .build())
                 .paymentInfo(PaymentInfo.builder()
                         .paymentType(this.paymentType)

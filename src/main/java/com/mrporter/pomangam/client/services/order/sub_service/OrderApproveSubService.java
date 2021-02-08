@@ -50,7 +50,7 @@ public class OrderApproveSubService {
 
     public void sendKakaoAT(Order order) {
         try {
-            if(order.getOrderer().getOrdererType() == OrdererType.GUEST) return;
+            if(order.getOrderer().getOrdererType() == OrdererType.GUEST && order.getOrderer().getPhoneNumber() == null) return;
 
             Map<String, String> data = new HashMap<>();
 
@@ -58,7 +58,11 @@ public class OrderApproveSubService {
             data.put("order_addr", order.getDeliveryDetailSite().getFullName());
             data.put("order_date", CommonSubService.getOrderDateWithAdditionalTime(order));
             data.put("order_items", CommonSubService.orderItemLongText(order));
-            OrderApproveTemplate.send(PhoneNumberFormatter.format(order.getOrderer().getUser().getPhoneNumber()), data);
+            if(order.getOrderer().getUser() != null) {
+                OrderApproveTemplate.send(PhoneNumberFormatter.format(order.getOrderer().getUser().getPhoneNumber()), data);
+            } else {
+                OrderApproveTemplate.send(PhoneNumberFormatter.format(order.getOrderer().getPhoneNumber()), data);
+            }
         } catch (Exception msgException) {
             msgException.printStackTrace();
         }

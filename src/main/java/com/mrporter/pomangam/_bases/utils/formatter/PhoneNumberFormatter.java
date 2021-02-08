@@ -7,6 +7,7 @@ public class PhoneNumberFormatter {
             return "";
         }
         return phoneNumber
+                .replaceAll("a-zA-Z", "")
                 .replaceAll("-", "")
                 .replaceAll("\\p{Z}", "");
 

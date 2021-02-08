@@ -62,7 +62,9 @@ public class DeliveryDelaySubService {
             data.put("order_idx", "no." + order.getIdx());
             data.put("order_delay_reason", reason);
             data.put("order_eta", eta(order, min));
-            OrdeDelayTemplate.send(PhoneNumberFormatter.format(order.getOrderer().getUser().getPhoneNumber()), data);
+            if(order.getOrderer().getUser() != null){
+                OrdeDelayTemplate.send(PhoneNumberFormatter.format(order.getOrderer().getUser().getPhoneNumber()), data);
+            }
         } catch (Exception msgException) {
             msgException.printStackTrace();
         }
