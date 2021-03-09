@@ -32,6 +32,7 @@ public class DeliverySiteDto implements Serializable {
     }
 
     public static DeliverySiteDto fromEntity(DeliverySite entity) {
+        if(entity.getIdx() == 0) return null;
         DeliverySiteDto dto = new ModelMapper().map(entity, DeliverySiteDto.class);
         dto.setIdxRegion(entity.getRegion().getIdx());
         return dto;
@@ -40,7 +41,9 @@ public class DeliverySiteDto implements Serializable {
     public static List<DeliverySiteDto> fromEntities(List<DeliverySite> entities) {
         List<DeliverySiteDto> dtos = new ArrayList<>();
         for(DeliverySite entity : entities) {
-            dtos.add(fromEntity(entity));
+            if(entity.getIdx() != 0) {
+                dtos.add(fromEntity(entity));
+            }
         }
         return dtos;
     }

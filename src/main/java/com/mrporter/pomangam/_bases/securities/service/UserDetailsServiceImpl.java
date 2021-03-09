@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +27,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -78,36 +81,47 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private org.springframework.security.core.userdetails.User verifyClient(String username) {
+        String userId;
+        String userPw;
+        List authorities;
 
-        if( !username.contains("#") ) {
-            throw new InternalAuthenticationServiceException("INVALID_AUTH_CODE");
-        }
-        String id = username.split("#")[0];
-        String authCode = username.split("#")[1];
-
-        User user = userRepo.findByPhoneNumberAndIsActiveIsTrue(id);
-        if ( user == null ) {
-            throw new UsernameNotFoundException(id);
-        }
-        if(authCode.equals("kakao")) {
-            String token = getPasswordByRequestBody();
-            String phoneNumber = id.replaceFirst("K", "");
-            if(!kakaoOauthService.verifyOauthLogin(phoneNumber, token)) {
-                throw new InternalAuthenticationServiceException("KAKAO_OAUTH_AUTHENTICATION_CLIENT");
+        if(getGrantTypeByRequestBody().equals("refresh_token")) {
+            User user = userRepo.findByPhoneNumberAndIsActiveIsTrue(username);
+            if ( user == null ) {
+                throw new UsernameNotFoundException(username);
             }
-            return new org.springframework.security.core.userdetails.User(
-                    user.getPhoneNumber(),
-                    passwordEncoder.encode(token),
-                    AuthorityUtils.createAuthorityList(user.getAuthorities()));
+            userId = user.getPhoneNumber();
+            userPw = passwordEncoder.encode(user.getPassword().getPasswordValue());
+            authorities = AuthorityUtils.createAuthorityList(user.getAuthorities());
         } else {
-            verifyAuthCode(authCode, id);
-            verifyFailCount(user);
-            return new org.springframework.security.core.userdetails.User(
-                    user.getPhoneNumber(),
-                    passwordEncoder.encode(authCode),
-                    AuthorityUtils.createAuthorityList(user.getAuthorities()));
-        }
+            if( !username.contains("#") ) {
+                throw new InternalAuthenticationServiceException("INVALID_AUTH_CODE");
+            }
+            String id = username.split("#")[0];
+            String authCode = username.split("#")[1];
 
+            User user = userRepo.findByPhoneNumberAndIsActiveIsTrue(id);
+            if ( user == null ) {
+                throw new UsernameNotFoundException(id);
+            }
+            userId = user.getPhoneNumber();
+            authorities = AuthorityUtils.createAuthorityList(user.getAuthorities());
+
+            if(authCode.equals("kakao")) {
+                String token = getPasswordByRequestBody();
+                String phoneNumber = id.replaceFirst("K", "");
+                if(!kakaoOauthService.verifyOauthLogin(phoneNumber, token)) {
+                    throw new InternalAuthenticationServiceException("KAKAO_OAUTH_AUTHENTICATION_CLIENT");
+                }
+                userPw =  passwordEncoder.encode(token);
+            } else {
+                verifyAuthCode(authCode, id);
+                verifyFailCount(user);
+                userPw = passwordEncoder.encode(authCode);
+            }
+
+        }
+        return new org.springframework.security.core.userdetails.User(userId, userPw, authorities);
     }
 
     private org.springframework.security.core.userdetails.User verifyStoreOwner(String username) {
@@ -115,7 +129,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if ( storeOwner == null ) {
             throw new UsernameNotFoundException(username);
         }
-        verifyFailCount(storeOwner);
+        if(!getGrantTypeByRequestBody().equals("refresh_token")) {
+            verifyFailCount(storeOwner);
+        }
         return new org.springframework.security.core.userdetails.User(
                 storeOwner.getId(),
                 storeOwner.getPassword().getPasswordValue(),
@@ -127,7 +143,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if ( staff == null ) {
             throw new UsernameNotFoundException(username);
         }
-        verifyFailCount(staff);
+        if(!getGrantTypeByRequestBody().equals("refresh_token")) {
+            verifyFailCount(staff);
+        }
         return new org.springframework.security.core.userdetails.User(
                 staff.getId(),
                 staff.getPassword().getPasswordValue(),
@@ -183,5 +201,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .map(requestAttributes -> ((ServletRequestAttributes) requestAttributes))
                 .map(ServletRequestAttributes::getRequest).get();
         return currentRequest.getParameter("password");
+    }
+
+    private String getGrantTypeByRequestBody() {
+        HttpServletRequest currentRequest = Optional.ofNullable(RequestContextHolder.getRequestAttributes())
+                .filter(requestAttributes -> ServletRequestAttributes.class.isAssignableFrom(requestAttributes.getClass()))
+                .map(requestAttributes -> ((ServletRequestAttributes) requestAttributes))
+                .map(ServletRequestAttributes::getRequest).get();
+        return currentRequest.getParameter("grant_type");
     }
 }
