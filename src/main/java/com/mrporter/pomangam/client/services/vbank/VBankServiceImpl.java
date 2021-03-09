@@ -1,5 +1,6 @@
 package com.mrporter.pomangam.client.services.vbank;
 
+import com.mrporter.pomangam._bases.scheduler.VBankConfig;
 import com.mrporter.pomangam._bases.utils.bizm.template.VBankDepositTemplate;
 import com.mrporter.pomangam.client.domains.map.CommonMap;
 import com.mrporter.pomangam.client.domains.vbank.VBankDeposit;
@@ -17,6 +18,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -45,6 +47,7 @@ public class VBankServiceImpl implements VBankService {
     OrderServiceImpl orderService;
     OrderJpaRepository orderRepo;
     CommonMapServiceImpl commonMapService;
+    VBankConfig vBankConfig;
 
     @Override
     public List<VBankDepositDto> findDeposit(Pageable pageable) {
@@ -139,6 +142,7 @@ public class VBankServiceImpl implements VBankService {
     private List<VBankDepositDto> parseVBank() {
         List<VBankDepositDto> result = new ArrayList<>();
         try {
+
             // db에 저장된 최상위 내역 1개 patch
             VBankDepositDto last = VBankDepositDto.fromEntity(vBankDepositRepo.findTopByOrderByIdxDesc());
 
@@ -147,9 +151,9 @@ public class VBankServiceImpl implements VBankService {
             Calendar today = Calendar.getInstance();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
-            parameters.add("계좌번호", "59800101361949");
-            parameters.add("고객식별번호", "MRPORTER92");
-            parameters.add("비밀번호", "0272");
+            parameters.add("계좌번호", vBankConfig.getAccount());
+            parameters.add("고객식별번호", vBankConfig.getId());
+            parameters.add("비밀번호", vBankConfig.getPw());
             parameters.add("빠른조회", "Y");
             parameters.add("응답방법", "2");
             parameters.add("조회구분", "3");
