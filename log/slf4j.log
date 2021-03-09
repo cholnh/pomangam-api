@@ -860,3 +860,283 @@ Consider defining a bean of type 'java.lang.String' in your configuration.
 2021-03-09 19:08:29.674  INFO 22636 --- [RMI TCP Connection(4)-192.168.200.141] o.a.c.c.C.[.[localhost].[/api/v1.2]      : Initializing Spring DispatcherServlet 'dispatcherServlet'
 2021-03-09 19:08:29.674  INFO 22636 --- [RMI TCP Connection(4)-192.168.200.141] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2021-03-09 19:08:29.696  INFO 22636 --- [RMI TCP Connection(4)-192.168.200.141] o.s.web.servlet.DispatcherServlet        : Completed initialization in 21 ms
+2021-03-09 19:13:16.798 ERROR 23088 --- [main] o.s.b.c.l.LoggingApplicationListener     : Cannot set level '' for 'org.hibernate.type.descriptor'
+2021-03-09 19:13:16.891  INFO 23088 --- [main] c.mrporter.pomangam.PomangamApplication  : Starting PomangamApplication on Choi with PID 23088 (N:\projects\pomangam_v2_projects\pomangam-api-v2\out\production\classes started by Choi in N:\projects\pomangam_v2_projects\pomangam-api-v2)
+2021-03-09 19:13:16.895  INFO 23088 --- [main] c.mrporter.pomangam.PomangamApplication  : No active profile set, falling back to default profiles: default
+2021-03-09 19:13:18.704  INFO 23088 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
+2021-03-09 19:13:19.252  INFO 23088 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 542ms. Found 57 repository interfaces.
+2021-03-09 19:13:19.737  INFO 23088 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$8c9ab39a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-03-09 19:13:19.838  INFO 23088 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.config.annotation.configuration.ObjectPostProcessorConfiguration' of type [org.springframework.security.config.annotation.configuration.ObjectPostProcessorConfiguration$$EnhancerBySpringCGLIB$$25487bd4] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-03-09 19:13:19.843  INFO 23088 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'objectPostProcessor' of type [org.springframework.security.config.annotation.configuration.AutowireBeanFactoryObjectPostProcessor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-03-09 19:13:19.845  INFO 23088 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@3a11c0eb' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-03-09 19:13:19.851  INFO 23088 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration' of type [org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration$$EnhancerBySpringCGLIB$$4a1d1e86] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-03-09 19:13:19.855  INFO 23088 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-03-09 19:13:19.889  INFO 23088 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.hateoas.config.HateoasConfiguration' of type [org.springframework.hateoas.config.HateoasConfiguration$$EnhancerBySpringCGLIB$$c1b00cc] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-03-09 19:13:20.360  INFO 23088 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 9530 (http)
+2021-03-09 19:13:20.376  INFO 23088 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-03-09 19:13:20.377  INFO 23088 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/9.0.13
+2021-03-09 19:13:20.383  INFO 23088 --- [main] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_121\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files (x86)\NAT Service;C:\oraclexe\app\oracle\product\11.2.0\server\bin;C:\ProgramData\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;c:\dev\mingw\bin;C:\Program Files\Git\cmd;C:\Program Files (x86)\Brackets\command;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\ePapyrus\Papyrus-PlugIn-ntas;C:\Program Files (x86)\ePapyrus\Papyrus-PlugIn-ntas\Addins;C:\Program Files\Java\jre1.8.0_112\bin;C:\Program Files\OpenSSL-Win64\bin;C:\Program Files\nodejs\;C:\Dev\flutter_windows_v1.12.13+hotfix.5-stable\flutter\bin;C:\Users\choln\AppData\Local\Programs\Fiddler;C:\Program Files\JetBrains\IntelliJ IDEA 2018.3.2\bin;;C:\Program Files\JetBrains\WebStorm 2020.3.2\bin;;C:\Users\choln\AppData\Roaming\npm;c:\Users\choln\AppData\Local\Android\Sdk\platform-tools;C:\Users\choln\AppData\Local\Microsoft\WindowsApps;;.]
+2021-03-09 19:13:20.518  INFO 23088 --- [main] o.a.c.c.C.[.[localhost].[/api/v1.2]      : Initializing Spring embedded WebApplicationContext
+2021-03-09 19:13:20.518  INFO 23088 --- [main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 3574 ms
+2021-03-09 19:13:21.936  INFO 23088 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+2021-03-09 19:13:21.991  INFO 23088 --- [main] org.hibernate.Version                    : HHH000412: Hibernate Core {5.3.7.Final}
+2021-03-09 19:13:21.992  INFO 23088 --- [main] org.hibernate.cfg.Environment            : HHH000206: hibernate.properties not found
+2021-03-09 19:13:22.109  INFO 23088 --- [main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+2021-03-09 19:13:22.396  INFO 23088 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2021-03-09 19:13:22.515  INFO 23088 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2021-03-09 19:13:22.526  INFO 23088 --- [main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+2021-03-09 19:13:24.923  INFO 23088 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-03-09 19:13:26.606  INFO 23088 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2021-03-09 19:13:28.407  WARN 23088 --- [main] aWebConfiguration$JpaWebMvcConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-03-09 19:13:28.922  INFO 23088 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 3 endpoint(s) beneath base path '/actuator'
+2021-03-09 19:13:29.605  INFO 23088 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/assets/**'], []
+2021-03-09 19:13:29.605  INFO 23088 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/js/**'], []
+2021-03-09 19:13:29.605  INFO 23088 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/health'], []
+2021-03-09 19:13:29.605  INFO 23088 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/versions/**'], []
+2021-03-09 19:13:29.605  INFO 23088 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/actuator/**'], []
+2021-03-09 19:13:29.605  INFO 23088 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/tests/**'], []
+2021-03-09 19:13:29.605  INFO 23088 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/payments/**'], []
+2021-03-09 19:13:29.605  INFO 23088 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/policies/**'], []
+2021-03-09 19:13:29.606  INFO 23088 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/orders/callback'], []
+2021-03-09 19:13:29.606  INFO 23088 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/emails/**'], []
+2021-03-09 19:13:29.606  INFO 23088 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/kakaos/callback'], []
+2021-03-09 19:13:29.720  INFO 23088 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: OrRequestMatcher [requestMatchers=[Ant [pattern='/oauth/token'], Ant [pattern='/oauth/token_key'], Ant [pattern='/oauth/check_token']]], [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6eb8fd79, org.springframework.security.web.context.SecurityContextPersistenceFilter@49842c0d, org.springframework.security.web.header.HeaderWriterFilter@2b284acc, org.springframework.security.web.authentication.logout.LogoutFilter@6162d87c, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@67e42fd6, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5e05f3eb, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@74239871, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@59b78925, org.springframework.security.web.session.SessionManagementFilter@3ef2816a, org.springframework.security.web.access.ExceptionTranslationFilter@65263248, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@61cf810c]
+2021-03-09 19:13:29.734  INFO 23088 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfiguration$NotOAuthRequestMatcher@7cb8109, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2779acb2, org.springframework.security.web.context.SecurityContextPersistenceFilter@ab2ac08, org.springframework.security.web.header.HeaderWriterFilter@61b5c8a3, org.springframework.web.filter.CharacterEncodingFilter@2af781f3, org.springframework.security.web.authentication.logout.LogoutFilter@c21c296, org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationProcessingFilter@76b195d, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4d73b25b, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@24c8b86, org.springframework.security.web.session.SessionManagementFilter@2f7432f3, org.springframework.security.web.access.ExceptionTranslationFilter@10cae98c, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@7ba821ef]
+2021-03-09 19:13:29.878  INFO 23088 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@5b83545d, org.springframework.security.web.context.SecurityContextPersistenceFilter@207512c3, org.springframework.security.web.header.HeaderWriterFilter@2f71bb66, org.springframework.web.filter.CorsFilter@f5475d7, org.springframework.web.filter.CharacterEncodingFilter@2108d503, org.springframework.security.web.authentication.logout.LogoutFilter@689afbb0, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@74cf108b, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@56c72fff, org.springframework.security.web.session.SessionManagementFilter@4d8e6daa, org.springframework.security.web.access.ExceptionTranslationFilter@2caf182e, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@6dd729]
+2021-03-09 19:13:30.128  INFO 23088 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-03-09 19:13:30.829  INFO 23088 --- [main] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+2021-03-09 19:13:30.855  INFO 23088 --- [main] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+2021-03-09 19:13:30.873  INFO 23088 --- [main] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+2021-03-09 19:13:30.963  INFO 23088 --- [scheduling-1] o.h.h.i.QueryTranslatorFactoryInitiator  : HHH000397: Using ASTQueryTranslatorFactory
+2021-03-09 19:13:31.203  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxDeliverySiteUsingGET_1
+2021-03-09 19:13:31.213  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_1
+2021-03-09 19:13:31.216  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_1
+2021-03-09 19:13:31.217  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxDeliverySiteUsingGET_2
+2021-03-09 19:13:31.219  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_2
+2021-03-09 19:13:31.224  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_1
+2021-03-09 19:13:31.227  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_2
+2021-03-09 19:13:31.251  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_3
+2021-03-09 19:13:31.259  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxDeliverySiteUsingGET_3
+2021-03-09 19:13:31.309  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: indexUsingGET_1
+2021-03-09 19:13:31.329  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_4
+2021-03-09 19:13:31.331  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxDeliverySiteWithoutContentsUsingGET_1
+2021-03-09 19:13:31.332  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getUsingGET_1
+2021-03-09 19:13:31.335  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: handleUsingGET_1
+2021-03-09 19:13:31.336  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: handleUsingGET_2
+2021-03-09 19:13:31.337  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: handleUsingGET_3
+2021-03-09 19:13:31.338  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: handleUsingGET_4
+2021-03-09 19:13:31.354  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_3
+2021-03-09 19:13:31.413  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: postUsingPOST_1
+2021-03-09 19:13:31.425  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxDeliverySiteUsingGET_4
+2021-03-09 19:13:31.438  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: postUsingPOST_2
+2021-03-09 19:13:31.442  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_2
+2021-03-09 19:13:31.459  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_4
+2021-03-09 19:13:31.461  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_5
+2021-03-09 19:13:31.465  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_5
+2021-03-09 19:13:31.467  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_3
+2021-03-09 19:13:31.468  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_6
+2021-03-09 19:13:31.476  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_6
+2021-03-09 19:13:31.479  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deleteUsingDELETE_1
+2021-03-09 19:13:31.481  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_7
+2021-03-09 19:13:31.486  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: patchUsingPATCH_1
+2021-03-09 19:13:31.488  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: postUsingPOST_3
+2021-03-09 19:13:31.490  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: likeUsingPATCH_1
+2021-03-09 19:13:31.493  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: toggleUsingPATCH_1
+2021-03-09 19:13:31.495  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: unlikeUsingPATCH_1
+2021-03-09 19:13:31.496  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_7
+2021-03-09 19:13:31.498  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_8
+2021-03-09 19:13:31.499  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxProductUsingGET_1
+2021-03-09 19:13:31.500  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_8
+2021-03-09 19:13:31.501  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_9
+2021-03-09 19:13:31.502  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxDeliverySiteUsingGET_5
+2021-03-09 19:13:31.503  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_9
+2021-03-09 19:13:31.504  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_4
+2021-03-09 19:13:31.505  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_10
+2021-03-09 19:13:31.506  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deleteUsingDELETE_2
+2021-03-09 19:13:31.508  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: isExistByIdUsingGET_1
+2021-03-09 19:13:31.512  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: patchUsingPATCH_2
+2021-03-09 19:13:31.513  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: postUsingPOST_4
+2021-03-09 19:13:31.515  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: searchInfoUsingGET_1
+2021-03-09 19:13:31.517  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_11
+2021-03-09 19:13:31.523  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: patchUsingPATCH_3
+2021-03-09 19:13:31.526  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_10
+2021-03-09 19:13:31.528  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_5
+2021-03-09 19:13:31.529  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_12
+2021-03-09 19:13:31.530  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: indexUsingGET_2
+2021-03-09 19:13:31.532  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: likeUsingPATCH_2
+2021-03-09 19:13:31.533  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: toggleUsingPATCH_2
+2021-03-09 19:13:31.535  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: unlikeUsingPATCH_2
+2021-03-09 19:13:31.565  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxStoreUsingGET_1
+2021-03-09 19:13:31.566  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxStoreUsingGET_2
+2021-03-09 19:13:31.569  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_11
+2021-03-09 19:13:31.573  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deleteUsingDELETE_3
+2021-03-09 19:13:31.576  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_13
+2021-03-09 19:13:31.579  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxStoreUsingGET_3
+2021-03-09 19:13:31.582  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: patchUsingPATCH_4
+2021-03-09 19:13:31.586  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: postUsingPOST_5
+2021-03-09 19:13:31.588  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_12
+2021-03-09 19:13:31.590  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_6
+2021-03-09 19:13:31.592  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_14
+2021-03-09 19:13:31.595  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: likeUsingPATCH_3
+2021-03-09 19:13:31.596  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: toggleUsingPATCH_3
+2021-03-09 19:13:31.598  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: unlikeUsingPATCH_3
+2021-03-09 19:13:31.601  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_13
+2021-03-09 19:13:31.605  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deleteUsingDELETE_4
+2021-03-09 19:13:31.608  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_15
+2021-03-09 19:13:31.613  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: patchUsingPATCH_5
+2021-03-09 19:13:31.617  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: postUsingPOST_6
+2021-03-09 19:13:31.619  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: likeUsingPATCH_4
+2021-03-09 19:13:31.661  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: toggleUsingPATCH_4
+2021-03-09 19:13:31.664  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: unlikeUsingPATCH_4
+2021-03-09 19:13:31.678  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deleteUsingDELETE_5
+2021-03-09 19:13:31.685  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: patchUsingPATCH_6
+2021-03-09 19:13:31.687  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: postUsingPOST_7
+2021-03-09 19:13:31.691  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: searchInfoUsingGET_2
+2021-03-09 19:13:31.692  INFO 23088 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_14
+2021-03-09 19:13:31.748  INFO 23088 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 9530 (http) with context path '/api/v1.2'
+2021-03-09 19:13:31.750  INFO 23088 --- [main] c.mrporter.pomangam.PomangamApplication  : Started PomangamApplication in 15.566 seconds (JVM running for 17.581)
+2021-03-09 19:13:32.863  INFO 23088 --- [RMI TCP Connection(7)-192.168.200.141] o.a.c.c.C.[.[localhost].[/api/v1.2]      : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-03-09 19:13:32.863  INFO 23088 --- [RMI TCP Connection(7)-192.168.200.141] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-03-09 19:13:32.883  INFO 23088 --- [RMI TCP Connection(7)-192.168.200.141] o.s.web.servlet.DispatcherServlet        : Completed initialization in 20 ms
+2021-03-09 19:13:46.628 ERROR 23608 --- [main] o.s.b.c.l.LoggingApplicationListener     : Cannot set level '' for 'org.hibernate.type.descriptor'
+2021-03-09 19:13:46.745  INFO 23608 --- [main] c.mrporter.pomangam.PomangamApplication  : Starting PomangamApplication on Choi with PID 23608 (N:\projects\pomangam_v2_projects\pomangam-api-v2\out\production\classes started by Choi in N:\projects\pomangam_v2_projects\pomangam-api-v2)
+2021-03-09 19:13:46.746  INFO 23608 --- [main] c.mrporter.pomangam.PomangamApplication  : No active profile set, falling back to default profiles: default
+2021-03-09 19:13:49.231  INFO 23608 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
+2021-03-09 19:13:49.695  INFO 23608 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 458ms. Found 57 repository interfaces.
+2021-03-09 19:13:50.142  INFO 23608 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$37acbe81] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-03-09 19:13:50.280  INFO 23608 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.config.annotation.configuration.ObjectPostProcessorConfiguration' of type [org.springframework.security.config.annotation.configuration.ObjectPostProcessorConfiguration$$EnhancerBySpringCGLIB$$d05a86bb] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-03-09 19:13:50.288  INFO 23608 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'objectPostProcessor' of type [org.springframework.security.config.annotation.configuration.AutowireBeanFactoryObjectPostProcessor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-03-09 19:13:50.292  INFO 23608 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@4b9dbf07' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-03-09 19:13:50.299  INFO 23608 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration' of type [org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration$$EnhancerBySpringCGLIB$$f52f296d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-03-09 19:13:50.304  INFO 23608 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-03-09 19:13:50.359  INFO 23608 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.hateoas.config.HateoasConfiguration' of type [org.springframework.hateoas.config.HateoasConfiguration$$EnhancerBySpringCGLIB$$b72d0bb3] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-03-09 19:13:50.873  INFO 23608 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 9530 (http)
+2021-03-09 19:13:50.890  INFO 23608 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-03-09 19:13:50.890  INFO 23608 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/9.0.13
+2021-03-09 19:13:50.896  INFO 23608 --- [main] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_121\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files (x86)\NAT Service;C:\oraclexe\app\oracle\product\11.2.0\server\bin;C:\ProgramData\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;c:\dev\mingw\bin;C:\Program Files\Git\cmd;C:\Program Files (x86)\Brackets\command;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\ePapyrus\Papyrus-PlugIn-ntas;C:\Program Files (x86)\ePapyrus\Papyrus-PlugIn-ntas\Addins;C:\Program Files\Java\jre1.8.0_112\bin;C:\Program Files\OpenSSL-Win64\bin;C:\Program Files\nodejs\;C:\Dev\flutter_windows_v1.12.13+hotfix.5-stable\flutter\bin;C:\Users\choln\AppData\Local\Programs\Fiddler;C:\Program Files\JetBrains\IntelliJ IDEA 2018.3.2\bin;;C:\Program Files\JetBrains\WebStorm 2020.3.2\bin;;C:\Users\choln\AppData\Roaming\npm;c:\Users\choln\AppData\Local\Android\Sdk\platform-tools;C:\Users\choln\AppData\Local\Microsoft\WindowsApps;;.]
+2021-03-09 19:13:51.032  INFO 23608 --- [main] o.a.c.c.C.[.[localhost].[/api/v1.2]      : Initializing Spring embedded WebApplicationContext
+2021-03-09 19:13:51.032  INFO 23608 --- [main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 4238 ms
+2021-03-09 19:13:52.393  INFO 23608 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+2021-03-09 19:13:52.465  INFO 23608 --- [main] org.hibernate.Version                    : HHH000412: Hibernate Core {5.3.7.Final}
+2021-03-09 19:13:52.466  INFO 23608 --- [main] org.hibernate.cfg.Environment            : HHH000206: hibernate.properties not found
+2021-03-09 19:13:52.583  INFO 23608 --- [main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+2021-03-09 19:13:52.856  INFO 23608 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2021-03-09 19:13:52.948  INFO 23608 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2021-03-09 19:13:52.957  INFO 23608 --- [main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+2021-03-09 19:13:55.113  INFO 23608 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-03-09 19:13:56.899  INFO 23608 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2021-03-09 19:13:58.784  WARN 23608 --- [main] aWebConfiguration$JpaWebMvcConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-03-09 19:13:59.561  INFO 23608 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 3 endpoint(s) beneath base path '/actuator'
+2021-03-09 19:14:00.301  INFO 23608 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/assets/**'], []
+2021-03-09 19:14:00.301  INFO 23608 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/js/**'], []
+2021-03-09 19:14:00.301  INFO 23608 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/health'], []
+2021-03-09 19:14:00.301  INFO 23608 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/versions/**'], []
+2021-03-09 19:14:00.302  INFO 23608 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/actuator/**'], []
+2021-03-09 19:14:00.302  INFO 23608 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/tests/**'], []
+2021-03-09 19:14:00.302  INFO 23608 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/payments/**'], []
+2021-03-09 19:14:00.302  INFO 23608 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/policies/**'], []
+2021-03-09 19:14:00.303  INFO 23608 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/orders/callback'], []
+2021-03-09 19:14:00.303  INFO 23608 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/emails/**'], []
+2021-03-09 19:14:00.304  INFO 23608 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/kakaos/callback'], []
+2021-03-09 19:14:00.450  INFO 23608 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: OrRequestMatcher [requestMatchers=[Ant [pattern='/oauth/token'], Ant [pattern='/oauth/token_key'], Ant [pattern='/oauth/check_token']]], [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@393e6bdd, org.springframework.security.web.context.SecurityContextPersistenceFilter@79a68d4e, org.springframework.security.web.header.HeaderWriterFilter@6bc6400e, org.springframework.security.web.authentication.logout.LogoutFilter@21259314, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@2153f0d7, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@60483dcf, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1cea4fdf, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7d5e165, org.springframework.security.web.session.SessionManagementFilter@77d771a2, org.springframework.security.web.access.ExceptionTranslationFilter@3310bb28, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@28261231]
+2021-03-09 19:14:00.464  INFO 23608 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfiguration$NotOAuthRequestMatcher@33681da, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1a5df070, org.springframework.security.web.context.SecurityContextPersistenceFilter@5d4042fc, org.springframework.security.web.header.HeaderWriterFilter@6f53e863, org.springframework.web.filter.CharacterEncodingFilter@1070308e, org.springframework.security.web.authentication.logout.LogoutFilter@9da8b97, org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationProcessingFilter@72a522f1, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@6b06da60, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1be62793, org.springframework.security.web.session.SessionManagementFilter@186149f9, org.springframework.security.web.access.ExceptionTranslationFilter@402ecbc7, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@29fae990]
+2021-03-09 19:14:00.584  INFO 23608 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2d0f850, org.springframework.security.web.context.SecurityContextPersistenceFilter@46a6f51b, org.springframework.security.web.header.HeaderWriterFilter@3ca9e72d, org.springframework.web.filter.CorsFilter@62a30701, org.springframework.web.filter.CharacterEncodingFilter@a6017f9, org.springframework.security.web.authentication.logout.LogoutFilter@10cae98c, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7287811f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1e490ed, org.springframework.security.web.session.SessionManagementFilter@4dcb8e8b, org.springframework.security.web.access.ExceptionTranslationFilter@7118a1b9, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@13ecedf6]
+2021-03-09 19:14:00.905  INFO 23608 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-03-09 19:14:01.733  INFO 23608 --- [main] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+2021-03-09 19:14:01.749  INFO 23608 --- [main] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+2021-03-09 19:14:01.761  INFO 23608 --- [main] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+2021-03-09 19:14:01.805  INFO 23608 --- [scheduling-1] o.h.h.i.QueryTranslatorFactoryInitiator  : HHH000397: Using ASTQueryTranslatorFactory
+2021-03-09 19:14:02.010  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxDeliverySiteUsingGET_1
+2021-03-09 19:14:02.017  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_1
+2021-03-09 19:14:02.018  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_1
+2021-03-09 19:14:02.020  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxDeliverySiteUsingGET_2
+2021-03-09 19:14:02.021  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_2
+2021-03-09 19:14:02.026  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_1
+2021-03-09 19:14:02.029  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_2
+2021-03-09 19:14:02.042  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_3
+2021-03-09 19:14:02.047  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxDeliverySiteUsingGET_3
+2021-03-09 19:14:02.083  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: indexUsingGET_1
+2021-03-09 19:14:02.100  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_4
+2021-03-09 19:14:02.101  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxDeliverySiteWithoutContentsUsingGET_1
+2021-03-09 19:14:02.102  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getUsingGET_1
+2021-03-09 19:14:02.105  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: handleUsingGET_1
+2021-03-09 19:14:02.106  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: handleUsingGET_2
+2021-03-09 19:14:02.106  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: handleUsingGET_3
+2021-03-09 19:14:02.107  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: handleUsingGET_4
+2021-03-09 19:14:02.120  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_3
+2021-03-09 19:14:02.172  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: postUsingPOST_1
+2021-03-09 19:14:02.182  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxDeliverySiteUsingGET_4
+2021-03-09 19:14:02.199  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: postUsingPOST_2
+2021-03-09 19:14:02.203  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_2
+2021-03-09 19:14:02.219  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_4
+2021-03-09 19:14:02.222  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_5
+2021-03-09 19:14:02.226  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_5
+2021-03-09 19:14:02.230  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_3
+2021-03-09 19:14:02.232  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_6
+2021-03-09 19:14:02.239  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_6
+2021-03-09 19:14:02.244  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deleteUsingDELETE_1
+2021-03-09 19:14:02.247  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_7
+2021-03-09 19:14:02.252  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: patchUsingPATCH_1
+2021-03-09 19:14:02.254  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: postUsingPOST_3
+2021-03-09 19:14:02.257  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: likeUsingPATCH_1
+2021-03-09 19:14:02.259  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: toggleUsingPATCH_1
+2021-03-09 19:14:02.262  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: unlikeUsingPATCH_1
+2021-03-09 19:14:02.264  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_7
+2021-03-09 19:14:02.265  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_8
+2021-03-09 19:14:02.267  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxProductUsingGET_1
+2021-03-09 19:14:02.268  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_8
+2021-03-09 19:14:02.269  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_9
+2021-03-09 19:14:02.269  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxDeliverySiteUsingGET_5
+2021-03-09 19:14:02.271  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_9
+2021-03-09 19:14:02.272  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_4
+2021-03-09 19:14:02.273  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_10
+2021-03-09 19:14:02.274  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deleteUsingDELETE_2
+2021-03-09 19:14:02.277  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: isExistByIdUsingGET_1
+2021-03-09 19:14:02.280  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: patchUsingPATCH_2
+2021-03-09 19:14:02.281  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: postUsingPOST_4
+2021-03-09 19:14:02.284  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: searchInfoUsingGET_1
+2021-03-09 19:14:02.285  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_11
+2021-03-09 19:14:02.292  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: patchUsingPATCH_3
+2021-03-09 19:14:02.294  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_10
+2021-03-09 19:14:02.295  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_5
+2021-03-09 19:14:02.297  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_12
+2021-03-09 19:14:02.297  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: indexUsingGET_2
+2021-03-09 19:14:02.299  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: likeUsingPATCH_2
+2021-03-09 19:14:02.300  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: toggleUsingPATCH_2
+2021-03-09 19:14:02.301  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: unlikeUsingPATCH_2
+2021-03-09 19:14:02.326  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxStoreUsingGET_1
+2021-03-09 19:14:02.326  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxStoreUsingGET_2
+2021-03-09 19:14:02.329  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_11
+2021-03-09 19:14:02.332  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deleteUsingDELETE_3
+2021-03-09 19:14:02.334  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_13
+2021-03-09 19:14:02.336  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxStoreUsingGET_3
+2021-03-09 19:14:02.338  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: patchUsingPATCH_4
+2021-03-09 19:14:02.340  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: postUsingPOST_5
+2021-03-09 19:14:02.342  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_12
+2021-03-09 19:14:02.344  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_6
+2021-03-09 19:14:02.346  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_14
+2021-03-09 19:14:02.348  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: likeUsingPATCH_3
+2021-03-09 19:14:02.350  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: toggleUsingPATCH_3
+2021-03-09 19:14:02.351  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: unlikeUsingPATCH_3
+2021-03-09 19:14:02.353  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_13
+2021-03-09 19:14:02.356  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deleteUsingDELETE_4
+2021-03-09 19:14:02.358  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdxUsingGET_15
+2021-03-09 19:14:02.363  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: patchUsingPATCH_5
+2021-03-09 19:14:02.366  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: postUsingPOST_6
+2021-03-09 19:14:02.368  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: likeUsingPATCH_4
+2021-03-09 19:14:02.370  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: toggleUsingPATCH_4
+2021-03-09 19:14:02.372  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: unlikeUsingPATCH_4
+2021-03-09 19:14:02.386  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deleteUsingDELETE_5
+2021-03-09 19:14:02.393  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: patchUsingPATCH_6
+2021-03-09 19:14:02.395  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: postUsingPOST_7
+2021-03-09 19:14:02.398  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: searchInfoUsingGET_2
+2021-03-09 19:14:02.400  INFO 23608 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: countUsingGET_14
+2021-03-09 19:14:02.460  INFO 23608 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 9530 (http) with context path '/api/v1.2'
+2021-03-09 19:14:02.463  INFO 23608 --- [main] c.mrporter.pomangam.PomangamApplication  : Started PomangamApplication in 16.452 seconds (JVM running for 18.843)
+2021-03-09 19:14:02.976  INFO 23608 --- [RMI TCP Connection(5)-192.168.200.141] o.a.c.c.C.[.[localhost].[/api/v1.2]      : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-03-09 19:14:02.976  INFO 23608 --- [RMI TCP Connection(5)-192.168.200.141] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-03-09 19:14:02.998  INFO 23608 --- [RMI TCP Connection(5)-192.168.200.141] o.s.web.servlet.DispatcherServlet        : Completed initialization in 22 ms
