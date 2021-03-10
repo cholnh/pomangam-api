@@ -29,14 +29,9 @@ import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CsrfFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.CorsUtils;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import javax.sql.DataSource;
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -64,7 +59,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/staff/**").hasRole("ADMIN") // Not Working
                 .antMatchers("/jpa").denyAll()
                 .antMatchers("/jpa/**").denyAll()
-	            //.antMatchers("/**").permitAll()
                 //.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 //.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .and().userDetailsService(userDetailsService)
@@ -84,18 +78,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web
-                //.ignoring().antMatchers("/**");
-                .ignoring().antMatchers("/assets/**")
-                .and().ignoring().antMatchers("/js/**")
-                .and().ignoring().antMatchers("/health")
-                .and().ignoring().antMatchers("/versions/**")
-                .and().ignoring().antMatchers("/actuator/**")
-                .and().ignoring().antMatchers("/tests/**")
-                .and().ignoring().antMatchers("/payments/**")
-                .and().ignoring().antMatchers("/policies/**")
-                .and().ignoring().antMatchers("/orders/callback")
-                .and().ignoring().antMatchers("/emails/**")
-                .and().ignoring().antMatchers("/kakaos/callback");
+            .ignoring().antMatchers("/assets/**")
+            .and().ignoring().antMatchers("/js/**")
+            .and().ignoring().antMatchers("/health")
+            .and().ignoring().antMatchers("/versions/**")
+            .and().ignoring().antMatchers("/actuator/**")
+            .and().ignoring().antMatchers("/tests/**")
+            .and().ignoring().antMatchers("/payments/**")
+            .and().ignoring().antMatchers("/policies/**")
+            .and().ignoring().antMatchers("/orders/callback")
+            .and().ignoring().antMatchers("/emails/**")
+            .and().ignoring().antMatchers("/kakaos/callback");
     }
 
     @Bean
@@ -104,21 +97,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         authenticationProvider.setPostAuthenticationChecks(postUserDetailsChecker);
         authenticationProvider.setPreAuthenticationChecks(preUserDetailsChecker);
         authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder()); //패스워드를 암호활 경우 사용한다
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
 
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList("*"));
-//        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-//        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-//        configuration.setAllowCredentials(true);
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder() {};
