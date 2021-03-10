@@ -23,7 +23,6 @@
 - Spring Boot로 제작된 REST API 서버. 앱과 웹에서 보내는 데이터 요청을 받아 처리하여 응답.
 
 ### 주요특징
-
 |키워드|설명|링크|
 |--|--|--|
 | 공통 설계 | DB Layer, Service Layer, Controller Layer, CrossCutting Concerns Layer 로 나누어 SoC 개념 및 의존성 규칙 적용. |[:arrow_right:](https://github.com/)|
@@ -40,6 +39,10 @@
 | 번호 로그인 구현 | 문자메시지 API를 사용하여 인증모듈 구현, Spring Security 의 UserDetailService 를 implements 하여 인증모듈과 연동. |[:arrow_right:](https://github.com/) |
 | 카카오 로그인 구현 | Kakao API를 사용하여 간편로그인을 구현. |[:arrow_right:](https://github.com/) |
 
+### 설계모델
+|Server Architecture|
+|--|
+|![sys](https://user-images.githubusercontent.com/23611497/110599915-b8de0d80-81c6-11eb-9068-1048438c61b7.jpg)|
 
 ### 결과
 - v1.2 API 서버 ( https://poman.kr:9530/api/v1.2 )
