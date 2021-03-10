@@ -26,9 +26,9 @@ public class ProductController {
             @PageableDefault(sort = {"idx"}, direction = Sort.Direction.DESC, size = 10) Pageable pageable
     ) {
         if(cIdx == null) {
-            return new ResponseEntity(productService.findByIdxStore(sIdx, pageable), HttpStatus.OK);
+            return new ResponseEntity(productService.findSummaryByIdxStore(sIdx, pageable), HttpStatus.OK);
         } else {
-            return new ResponseEntity(productService.findByIdxProductCategory(cIdx, pageable), HttpStatus.OK);
+            return new ResponseEntity(productService.findSummaryByIdxProductCategory(cIdx, pageable), HttpStatus.OK);
         }
     }
 
