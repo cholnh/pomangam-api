@@ -1,3 +1,3 @@
-|Server Architecture|
+|GRAFANA SCREEN SHOT|
 |--|
-|![sys](https://user-images.githubusercontent.com/23611497/110599915-b8de0d80-81c6-11eb-9068-1048438c61b7.jpg)|
+|![grafana](https://user-images.githubusercontent.com/23611497/110613711-eb8f0280-81d4-11eb-8445-60540b501ac2.jpg)|
