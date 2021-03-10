@@ -36,7 +36,7 @@
 | Spring OAuth | OAuth Authorization Server 및 Resource Server 구현. Grant-Type 중 Client Credential, Password 정보를 받아 Token 응답 및 Token 유효성 검사. |[:arrow_right:](https://github.com/cholnh/pomangam-api/tree/master/src/main/java/com/mrporter/pomangam/_bases/securities/config) |
 | Spring Actuator | 서버 health 관리 및 모니터링. Prometheus Server를 통해 health 매트릭을 수집, Grafana를 통해 서버상태를 시각화하여 에러 모니터링 및 대응. |[:arrow_right:](https://github.com/cholnh/pomangam-api/blob/master/src/main/java/com/mrporter/pomangam/_bases/securities/filter/grafana.md) |
 | NCP | Naver Cloud Platform 서버 호스팅 서비스 사용. | |
-| 번호 로그인 구현 | 문자메시지 API를 사용하여 인증모듈 구현, Spring Security 의 UserDetailService 를 implements 하여 인증모듈과 연동. |[:arrow_right:](https://github.com/cholnh/pomangam-api/blob/master/src/main/java/com/mrporter/pomangam/_bases/securities/service/UserDetailsServiceImpl.java) |
+| 번호 로그인 구현 | 문자메시지 API를 사용하여 인증모듈 구현, Spring Security 의 UserDetailService 를 implements 하여 인증모듈과 연동. |[:arrow_right:](https://github.com/cholnh/pomangam-api/blob/a9c059db7b641b0206671b4faeac028a1f0695ef/src/main/java/com/mrporter/pomangam/_bases/securities/service/UserDetailsServiceImpl.java#L155-L166) |
 | 카카오 로그인 구현 | Kakao API를 사용하여 간편로그인을 구현. |[:arrow_right:](https://github.com/cholnh/pomangam-api/blob/master/src/main/java/com/mrporter/pomangam/_bases/securities/kakaoauth/service/KakaoOauthServiceImpl.java) |
 
 ### 설계모델
