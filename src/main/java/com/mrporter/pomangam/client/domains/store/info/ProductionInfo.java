@@ -29,7 +29,7 @@ public class ProductionInfo {
     private Short parallelProduction;
 
     /**
-     * 최대 생상 가능 수량
+     * 최대 생성 가능 수량
      */
     @Column(name = "maximumProduction", nullable = false)
     private Short maximumProduction;
