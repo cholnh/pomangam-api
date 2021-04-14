@@ -3,7 +3,7 @@ package com.mrporter.pomangam.client.domains.advertisement;
 import com.mrporter.pomangam.client.domains._bases.EntityAuditing;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import javax.persistence.*;
 
 @Entity
