@@ -88,7 +88,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and().ignoring().antMatchers("/policies/**")
             .and().ignoring().antMatchers("/orders/callback")
             .and().ignoring().antMatchers("/emails/**")
-            .and().ignoring().antMatchers("/kakaos/callback");
+            .and().ignoring().antMatchers("/kakaos/callback")
+            .and().ignoring().antMatchers("/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**");
     }
 
     @Bean

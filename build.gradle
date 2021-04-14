@@ -45,9 +45,6 @@ dependencies {
     compileOnly "org.springframework.boot:spring-boot-configuration-processor"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
-
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.4.0'
-    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.4.0'
     
     compile 'ch.simas.qlrm:qlrm:1.7.1'
     compile "org.springframework.boot:spring-boot-starter-tomcat"
@@ -75,6 +72,7 @@ dependencies {
     compile("com.querydsl:querydsl-apt") // querydsl
     
     // implementation 'com.google.firebase:firebase-staff:6.8.1'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.5.5'
 }
 
 // querydsl 적용
